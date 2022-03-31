@@ -1,0 +1,25 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Game.Enemy
+{
+    public class EnemyHealthBar : MonoBehaviour
+    {
+        [SerializeField] private Image fill;
+        [SerializeField] private Material colorA, colorB;
+        [SerializeField] private GameObject canvas;
+
+        public void SetHealth(float currentHealth, float maxHealth)
+        {
+            fill.fillAmount = currentHealth / maxHealth;
+            fill.color = Color.Lerp(colorB.color, colorA.color, fill.fillAmount);
+            canvas.gameObject.SetActive(fill.fillAmount != currentHealth / maxHealth);
+        }
+
+        private void LateUpdate()
+        {
+            if (!canvas) return;
+            canvas.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
+        }
+    }
+}

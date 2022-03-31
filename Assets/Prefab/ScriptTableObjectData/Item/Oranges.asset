@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd2ba5fb387e47e4c90bae5d27f4db05, type: 3}
+  m_Name: Oranges
+  m_EditorClassIdentifier: 
+  itemName: Oranges
+  valueReceive: 8
+  soundCollection: {fileID: 8300000, guid: 3f711525e7aa548438f26675e2910de2, type: 3}
+  soundHurtCollection: {fileID: 8300000, guid: 6dd7024f00606b44eb5884197a66a893, type: 3}
