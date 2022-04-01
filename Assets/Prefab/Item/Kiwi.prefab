@@ -250,7 +250,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 466fac77caade1c4583f02ddc6bd1717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scoreData: {fileID: 11400000, guid: f8222b860886af9448e9b80d49666f6b, type: 2}
   states: 1
+  itemType: 2
   itemData: {fileID: 11400000, guid: a7dd95a2afeced8488f69640957f0a40, type: 2}
   volume: 1
   itemObj: {fileID: 4561303245840038318}

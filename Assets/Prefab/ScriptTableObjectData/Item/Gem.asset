@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd2ba5fb387e47e4c90bae5d27f4db05, type: 3}
-  m_Name: Apples
+  m_Name: Gem
   m_EditorClassIdentifier: 
-  itemName: Apples
-  valueReceive: 10
-  scoreReceive: 7
-  moneyReceive: 8
-  diamondReceive: 0
+  itemName: Gem
+  valueReceive: 0
+  scoreReceive: 10
+  moneyReceive: 0
+  diamondReceive: 1
   soundCollection: {fileID: 8300000, guid: 3f711525e7aa548438f26675e2910de2, type: 3}
   soundHurtCollection: {fileID: 8300000, guid: 6dd7024f00606b44eb5884197a66a893, type: 3}

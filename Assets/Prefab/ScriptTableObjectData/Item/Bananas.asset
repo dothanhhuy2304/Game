@@ -14,5 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Bananas
   valueReceive: 7
+  scoreReceive: 6
+  moneyReceive: 4
+  diamondReceive: 0
   soundCollection: {fileID: 8300000, guid: 3f711525e7aa548438f26675e2910de2, type: 3}
   soundHurtCollection: {fileID: 8300000, guid: 6dd7024f00606b44eb5884197a66a893, type: 3}
