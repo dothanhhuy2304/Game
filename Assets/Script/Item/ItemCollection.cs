@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
-using System.Globalization;
-using TMPro;
+using Game.GamePlay;
 using UnityEngine;
 
 namespace Game.Item
@@ -12,21 +11,20 @@ namespace Game.Item
         [SerializeField] private States states;
         [SerializeField] private ItemType itemType;
         [SerializeField] private ItemData itemData;
-        [Range(0, 1)] public float volume = 1f;
+        private const float Volume = 1f;
         [SerializeField] private GameObject itemObj, effectCollectedObj;
         [SerializeField] private Collider2D itemCollider;
         private PlayerHealth playerHealthBar;
-        [SerializeField] private TextMeshProUGUI txtScore;
-        [SerializeField] private TextMeshProUGUI txtDiamond;
-        [SerializeField] private TextMeshProUGUI txtMoney;
+        private GameManager gameManager;
 
         private void Awake()
         {
-            txtScore.text = scoreData.currentScore.ToString(CultureInfo.InvariantCulture);
-            txtDiamond.text = scoreData.diamond.ToString(CultureInfo.CurrentCulture);
-            txtMoney.text = scoreData.money.ToString(CultureInfo.CurrentCulture) + " $";
-            scoreData.currentScore = 0f;
+            gameManager = FindObjectOfType<GameManager>().GetComponent<GameManager>();
             playerHealthBar = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
+            scoreData.currentScore = 0f;
+            gameManager.SetScore(scoreData.currentScore);
+            gameManager.SetDiamond(scoreData.diamond);
+            gameManager.SetMoney(scoreData.money);
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -41,15 +39,15 @@ namespace Game.Item
                         case ItemType.Money:
                             scoreData.money += itemData.moneyReceive;
                             scoreData.currentScore += itemData.scoreReceive;
-                            txtScore.text = scoreData.currentScore.ToString(CultureInfo.InvariantCulture);
-                            txtMoney.text = scoreData.money.ToString(CultureInfo.CurrentCulture) + " $";
+                            gameManager.SetScore(scoreData.currentScore);
+                            gameManager.SetMoney(scoreData.money);
                             ScoreAndDiamondItems();
 
                             break;
                         case ItemType.Diamond:
                             scoreData.currentScore += itemData.scoreReceive;
                             scoreData.diamond += itemData.diamondReceive;
-                            txtDiamond.text = scoreData.diamond.ToString(CultureInfo.InvariantCulture);
+                            gameManager.SetDiamond(scoreData.diamond);
                             ScoreAndDiamondItems();
                             break;
                         case ItemType.None:
@@ -84,7 +82,7 @@ namespace Game.Item
             itemObj.SetActive(false);
             effectCollectedObj.SetActive(true);
             playerHealthBar.GetDamage(value);
-            AudioSource.PlayClipAtPoint(itemData.soundHurtCollection, transform.position, volume);
+            AudioSource.PlayClipAtPoint(itemData.soundHurtCollection, transform.position, Volume);
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);
         }
@@ -94,7 +92,7 @@ namespace Game.Item
             itemObj.SetActive(false);
             effectCollectedObj.SetActive(true);
             playerHealthBar.Heal(value);
-            AudioSource.PlayClipAtPoint(itemData.soundCollection, transform.position, volume);
+            AudioSource.PlayClipAtPoint(itemData.soundCollection, transform.position, Volume);
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);
         }
@@ -103,7 +101,7 @@ namespace Game.Item
         {
             itemObj.SetActive(false);
             effectCollectedObj.SetActive(true);
-            AudioSource.PlayClipAtPoint(itemData.soundCollection, transform.position, volume);
+            AudioSource.PlayClipAtPoint(itemData.soundCollection, transform.position, Volume);
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);
         }

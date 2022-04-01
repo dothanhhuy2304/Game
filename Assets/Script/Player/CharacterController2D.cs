@@ -1,7 +1,6 @@
 using UnityEngine;
 using Game.Core;
 using UnityEngine.SceneManagement;
-using AnimationState = Game.Core.AnimationState;
 
 namespace Game.Player
 {
@@ -23,7 +22,7 @@ namespace Game.Player
         private Animator animator;
         [SerializeField] private float clampMinX, clampMaxX;
         private PlayerHealth playerHealth;
-        private readonly AnimationState animationState = new AnimationState();
+        private readonly AnimationStates animationState = new AnimationStates();
 
         public override void Awake()
         {

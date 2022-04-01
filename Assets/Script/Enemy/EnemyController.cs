@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine;
 using Game.Player;
 using Game.Core;
-using AnimationState = Game.Core.AnimationState;
 
 namespace Game.Enemy
 {
@@ -34,7 +33,7 @@ namespace Game.Enemy
         private EnemyHealth enemyHealth;
         private Vector3 posAwake;
         private FireProjectile fireProjectile;
-        private readonly AnimationState animationState = new AnimationState();
+        private readonly AnimationStates animationState = new AnimationStates();
 
         public override void Awake()
         {

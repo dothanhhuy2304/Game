@@ -1,6 +1,5 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
+using Game.Core;
 using UnityEngine;
 
 public class FireTrap : MonoBehaviour
@@ -8,6 +7,7 @@ public class FireTrap : MonoBehaviour
     private Animator animator;
     private PlayerHealth playerHealth;
     private bool isOut;
+    private readonly AnimationStates animationState = new AnimationStates();
 
     private void Awake()
     {
@@ -19,7 +19,7 @@ public class FireTrap : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
         isOut = false;
-        animator.SetBool("hit", true);
+        animator.SetBool(animationState.fireTrapHit, true);
         StartCoroutine(nameof(WaitingForFireOn), 1f);
     }
 
@@ -34,14 +34,14 @@ public class FireTrap : MonoBehaviour
         yield return new WaitForSeconds(delay);
         if (!isOut)
         {
-            animator.SetBool("on", true);
+            animator.SetBool(animationState.fireTrapON, true);
             playerHealth.GetDamage(1f);
             StartCoroutine(nameof(WaitingForFireOn), 0.5f);
         }
         else
         {
-            animator.SetBool("hit", false);
-            animator.SetBool("on", false);
+            animator.SetBool(animationState.fireTrapHit, false);
+            animator.SetBool(animationState.fireTrapON, false);
             yield return null;
         }
     }

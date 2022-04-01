@@ -14,8 +14,8 @@ public class FireProjectile : BaseObject
     [SerializeField] private GameObject bulletPrefab, explosionPrefab;
     [SerializeField] private AudioClip[] soundExplosion;
     private Transform player;
-    private Vector3 target = Vector3.zero;
-    private Vector3 targetPetEnemy = Vector3.zero;
+    private Vector2 target = Vector2.zero;
+    private Vector2 targetPetEnemy = Vector2.zero;
     private PlayerHealth playerHealth;
     private PetAI petAI;
 
@@ -24,7 +24,7 @@ public class FireProjectile : BaseObject
         base.Awake();
         player = FindObjectOfType<CharacterController2D>().transform;
         playerHealth = player.GetComponent<PlayerHealth>();
-        petAI = FindObjectOfType<PetAI>();
+        petAI = FindObjectOfType<PetAI>().GetComponent<PetAI>();
     }
 
     private void OnEnable()
@@ -36,7 +36,7 @@ public class FireProjectile : BaseObject
         {
             case EnemyType.SNINJA:
             {
-                body.velocity = SetAngle() * bulletSpeed;
+                body.velocity = SetAngleSNinja() * bulletSpeed;
                 break;
             }
 
@@ -139,7 +139,7 @@ public class FireProjectile : BaseObject
         }
     }
 
-    private Vector3 SetAngle()
+    private Vector2 SetAngleSNinja()
     {
         target = (player.position - transform.position).normalized;
         return target;

@@ -1,12 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
-using Game.Enemy;
+using TMPro;
 
 namespace Game.GamePlay
 {
     public class GameManager : MonoBehaviour
     {
+        [SerializeField] private TextMeshProUGUI txtScore;
+        [SerializeField] private TextMeshProUGUI txtDiamond;
+        [SerializeField] private TextMeshProUGUI txtMoney;
+
+        public void SetScore(float score)
+        {
+            txtScore.text = score.ToString(CultureInfo.CurrentCulture);
+        }
+
+        public void SetDiamond(float diamond)
+        {
+            txtDiamond.text = diamond.ToString(CultureInfo.CurrentCulture);
+        }
+
+        public void SetMoney(float money)
+        {
+            txtMoney.text = money.ToString(CultureInfo.CurrentCulture) + " $";
+        }
 
     }
 }

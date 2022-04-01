@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.Core
 {
-    public class AnimationState
+    public class AnimationStates
     {
         public readonly int playerRun = Animator.StringToHash("m_Run");
 
@@ -13,12 +13,17 @@ namespace Game.Core
 
         public readonly int petIsDeath = Animator.StringToHash("isDeath");
 
-        //
+        //carnivorousPlant
         public readonly int carnivorousPlantIsAttack = Animator.StringToHash("isAttack");
 
-        //
+        //SNinja
         public readonly int sNinjaIsRun = Animator.StringToHash("isRun");
+
         public readonly int sNinjaIsAttack1 = Animator.StringToHash("isAttack1");
+
+        //fireTrap
+        public readonly int fireTrapHit = Animator.StringToHash("hit");
+        public readonly int fireTrapON = Animator.StringToHash("on");
 
     }
 }

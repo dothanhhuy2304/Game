@@ -1,12 +1,11 @@
 using UnityEngine;
 using Game.Core;
 using Game.Player;
-using AnimationState = Game.Core.AnimationState;
 
 public class PetAI : BaseObject
 {
     public Data petData;
-    private CharacterController2D playerPos;
+    private Transform playerPos;
     private Vector2 velocity = Vector2.zero;
     [SerializeField] private GameObject[] bulletHolder;
     public GameObject[] multipleEnemy;
@@ -17,18 +16,18 @@ public class PetAI : BaseObject
     private FireProjectile fireProjectile;
     private PlayerHealth playerHealth;
     private Animator animator;
-    private readonly AnimationState animationState = new AnimationState();
+    private readonly AnimationStates animationState = new AnimationStates();
 
     public override void Awake()
     {
         base.Awake();
         animator = GetComponent<Animator>();
-        playerPos = FindObjectOfType<CharacterController2D>();
+        playerPos = FindObjectOfType<CharacterController2D>().transform;
         closestEnemy = null;
         enemyContact = false;
         multipleEnemy = GameObject.FindGameObjectsWithTag("Enemy");
-        fireProjectile= bulletHolder[FindBullet()].GetComponent<FireProjectile>();
-        playerHealth =  playerPos.GetComponent<PlayerHealth>();
+        fireProjectile = bulletHolder[FindBullet()].GetComponent<FireProjectile>();
+        playerHealth = playerPos.GetComponent<PlayerHealth>();
     }
 
     private void FixedUpdate()
@@ -40,6 +39,7 @@ public class PetAI : BaseObject
             {
                 currentTimeAttack -= Time.deltaTime;
             }
+
             if (Vector3.Distance(transform.position, playerPos.transform.position) < 3f)
             {
                 body.velocity = Vector2.zero;
