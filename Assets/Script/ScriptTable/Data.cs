@@ -12,4 +12,5 @@ public class Data : ScriptableObject
     public float hpIc;
     public float damageAttack;
     public Vector3 position;
+    public int currentScenes;
 }
