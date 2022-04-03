@@ -8,7 +8,6 @@ namespace Game.Item
     public class ItemCollection : MonoBehaviour
     {
         [SerializeField] private ScoreData scoreData;
-        [SerializeField] private States states;
         [SerializeField] private ItemType itemType;
         [SerializeField] private ItemData itemData;
         private const float Volume = 1f;
@@ -30,50 +29,39 @@ namespace Game.Item
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!other.gameObject.CompareTag("Player")) return;
-            switch (states)
+            switch (itemType)
             {
-                case States.Score:
+                case ItemType.Money:
                 {
-                    switch (itemType)
-                    {
-                        case ItemType.Money:
-                            scoreData.money += itemData.moneyReceive;
-                            scoreData.currentScore += itemData.scoreReceive;
-                            gameManager.SetScore(scoreData.currentScore);
-                            gameManager.SetMoney(scoreData.money);
-                            ScoreAndDiamondItems();
-
-                            break;
-                        case ItemType.Diamond:
-                            scoreData.currentScore += itemData.scoreReceive;
-                            scoreData.diamond += itemData.diamondReceive;
-                            gameManager.SetDiamond(scoreData.diamond);
-                            ScoreAndDiamondItems();
-                            break;
-                        case ItemType.None:
-                        {
-                            break;
-                        }
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-
+                    scoreData.money += itemData.moneyReceive;
+                    scoreData.currentScore += itemData.scoreReceive;
+                    gameManager.SetScore(scoreData.currentScore);
+                    gameManager.SetMoney(scoreData.money);
+                    ScoreAndDiamondItems();
                     break;
                 }
-
-                case States.Heal:
+                case ItemType.Diamond:
                 {
-
+                    scoreData.currentScore += itemData.scoreReceive;
+                    scoreData.diamond += itemData.diamondReceive;
+                    gameManager.SetDiamond(scoreData.diamond);
+                    ScoreAndDiamondItems();
+                    break;
+                }
+                case ItemType.Heal:
+                {
                     HealItems(itemData.valueReceive);
                     break;
                 }
-                case States.Hurt:
+                case ItemType.Hurt:
                 {
                     HurtItems(itemData.valueReceive);
                     break;
                 }
                 default:
+                {
                     throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -120,18 +108,13 @@ namespace Game.Item
             }
         }
     }
-
-    public enum States
-    {
-        Heal,
-        Hurt,
-        Score
-    }
+    
 
     public enum ItemType
     {
         Money,
         Diamond,
-        None
+        Heal,
+        Hurt
     }
 }

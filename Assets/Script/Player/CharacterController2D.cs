@@ -12,24 +12,23 @@ namespace Game.Player
         [Space] [Header("Flip")] private bool mFacingRight = true;
         public float dashSpeed = 100f;
         private bool isDashing;
-        private Transform groundCheck;
         private bool mGrounded;
         [Space] [SerializeField] public LayerMask whatIsGround;
-        private const float GroundedRadius = .2f;
-        public bool mDBJump;
-        public float fallMultiplier = 5f;
-        public float lowJumpMultiplier = 2f;
+        private bool mDBJump;
         private Animator animator;
         [SerializeField] private float clampMinX, clampMaxX;
         private PlayerHealth playerHealth;
         private readonly AnimationStates animationState = new AnimationStates();
+        private Collider2D controllerCollider;
+        private PlayerAudio playerAudio;
 
         public override void Awake()
         {
             base.Awake();
-            playerHealth = GetComponent<PlayerHealth>();
-            groundCheck = GameObject.Find("ground_check").transform;
             animator = GetComponent<Animator>();
+            controllerCollider = GetComponent<Collider2D>();
+            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+            playerHealth = GetComponent<PlayerHealth>();
         }
 
         private void Update()
@@ -78,7 +77,7 @@ namespace Game.Player
 
         private void OnCollision()
         {
-            mGrounded = Physics2D.OverlapCircle(groundCheck.position, GroundedRadius, whatIsGround);
+            mGrounded = controllerCollider.IsTouchingLayers(whatIsGround);
         }
 
         private void Move(float move)
@@ -106,6 +105,7 @@ namespace Game.Player
                 mDBJump = true;
                 PlayerJump();
                 isDashing = true;
+                playerAudio.PlayerJump();
             }
             else if (mDBJump)
             {
@@ -113,6 +113,7 @@ namespace Game.Player
                 mDBJump = false;
                 PlayerJump();
                 isDashing = true;
+                playerAudio.PlayerJump();
             }
         }
 
@@ -120,16 +121,6 @@ namespace Game.Player
         {
             body.velocity = new Vector2(body.velocity.x, 0f);
             body.AddForce(Vector2.up * playerHealth.playerData.jumpForce, ForceMode2D.Impulse);
-            if (body.velocity.y < 0f)
-            {
-                body.velocity += Vector2.up * (Physics2D.gravity.y * (fallMultiplier - 1f) * Time.deltaTime);
-            }
-            else if (body.velocity.y > 0f && Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                body.velocity += Vector2.up * (Physics2D.gravity.y * (lowJumpMultiplier - 1f) * Time.deltaTime);
-            }
-
-            //m_Rigidbody2D.velocity = Vector3.up * m_JumpForce;
         }
 
         private void Dash(float horizontal)
@@ -157,5 +148,12 @@ namespace Game.Player
         {
             animator.SetTrigger(animationState.playerIsJump);
         }
+    }
+
+    public enum JumpState
+    {
+        Normal,
+        DoubleJump,
+        None
     }
 }

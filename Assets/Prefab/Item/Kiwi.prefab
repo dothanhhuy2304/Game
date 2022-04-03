@@ -251,10 +251,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreData: {fileID: 11400000, guid: f8222b860886af9448e9b80d49666f6b, type: 2}
-  states: 1
-  itemType: 2
+  itemType: 3
   itemData: {fileID: 11400000, guid: a7dd95a2afeced8488f69640957f0a40, type: 2}
-  volume: 1
   itemObj: {fileID: 4561303245840038318}
   effectCollectedObj: {fileID: 4290496433790853842}
   itemCollider: {fileID: 4911807256140850816}

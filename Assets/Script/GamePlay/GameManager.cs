@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using UnityEngine;
 using TMPro;
@@ -9,6 +10,11 @@ namespace Game.GamePlay
         [SerializeField] private TextMeshProUGUI txtScore;
         [SerializeField] private TextMeshProUGUI txtDiamond;
         [SerializeField] private TextMeshProUGUI txtMoney;
+
+        private void Awake()
+        {
+            DontDestroyOnLoad(this);
+        }
 
         public void SetScore(float score)
         {
