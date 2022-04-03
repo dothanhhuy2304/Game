@@ -38,7 +38,7 @@ namespace Game.Enemy
         public override void Awake()
         {
             base.Awake();
-            player = FindObjectOfType<CharacterController2D>()?.transform;
+            player = FindObjectOfType<CharacterController2D>().transform;
             Debug.Assert(player != null, nameof(player) + " != null");
             playerHealth = player.GetComponent<PlayerHealth>();
             currentTime = 0f;
@@ -60,9 +60,9 @@ namespace Game.Enemy
                 {
                     case EnemyType.SNINJA:
                     {
-                        bool hit = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.down,
+                        var hit = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.down,
                             Distance, 1 << LayerMask.NameToLayer("ground"));
-                        bool hitRight = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.right,
+                        var hitRight = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.right,
                             0.5f, 1 << LayerMask.NameToLayer("ground"));
                         if (!hit || hitRight)
                         {
@@ -74,8 +74,7 @@ namespace Game.Enemy
                     }
                     case EnemyType.CarnivorousPlant:
                     {
-                        if (Vector3.Distance(transform.position, player.position) < rangeAttack &&
-                            !playerHealth.PlayerIsDeath())
+                        if (Vector3.Distance(transform.position, player.position) < rangeAttack)
                         {
                             Flip();
                             currentTime -= Time.deltaTime;
@@ -220,7 +219,8 @@ namespace Game.Enemy
             fireProjectile.transform.position = (transform2 = transform).TransformPoint(offsetAttack);
             var transform1 = transform2;
             var rotation = transform1.rotation;
-            fireProjectile.transform.rotation = Quaternion.Euler(rotation.x, rotation.y, lookRotation.eulerAngles.z + 90f);
+            fireProjectile.transform.rotation =
+                Quaternion.Euler(rotation.x, rotation.y, lookRotation.eulerAngles.z + 90f);
             fireProjectile.SetActives();
             //Instantiate(prefab, transform.TransformPoint(offsetAttack), Quaternion.Euler(transform.rotation.x, transform.rotation.y, lookRotation.eulerAngles.z + 90));
         }

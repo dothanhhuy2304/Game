@@ -5,6 +5,7 @@ public class Data : ScriptableObject
 {
     public float movingSpeed;
     public float jumpForce;
+    public float dashSpeed;
     public float heathDefault;
     public float currentHealth;
     public float maxHealth;

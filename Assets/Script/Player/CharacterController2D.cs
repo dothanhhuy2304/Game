@@ -10,7 +10,7 @@ namespace Game.Player
         private Vector2 velocity = Vector2.zero;
         private float mHorizontal;
         [Space] [Header("Flip")] private bool mFacingRight = true;
-        public float dashSpeed = 100f;
+        //public float dashSpeed = 100f;
         private bool isDashing;
         private bool mGrounded;
         [Space] [SerializeField] public LayerMask whatIsGround;
@@ -37,7 +37,7 @@ namespace Game.Player
             mHorizontal = Input.GetAxisRaw("Horizontal");
             if (!mGrounded || mDBJump == false)
             {
-                if (Input.GetMouseButtonDown(1) && isDashing)
+                if (Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1) && isDashing)
                 {
                     Dash(mHorizontal);
                 }
@@ -57,7 +57,7 @@ namespace Game.Player
                 Move(mHorizontal * playerHealth.playerData.movingSpeed * Time.fixedDeltaTime);
                 var position = transform.position;
                 position = new Vector3(Mathf.Clamp(position.x, clampMinX, clampMaxX), position.y, position.z);
-                transform.position = position;
+                body.transform.position = position;
                 if (Input.GetKey(KeyCode.G))
                 {
                     SceneManager.LoadScene(2);
@@ -70,7 +70,7 @@ namespace Game.Player
             }
             else
             {
-                body.velocity = new Vector2(0, body.velocity.y);
+                body.velocity = new Vector2(0f, body.velocity.y);
                 PlayerRun(0f);
             }
         }
@@ -86,11 +86,11 @@ namespace Game.Player
             body.velocity = Vector2.SmoothDamp(velocity1, new Vector2(move * 10f, velocity1.y), ref velocity,
                 MovementSmoothing);
             PlayerRun(Mathf.Abs(move));
-            if (move > 0 && !mFacingRight)
+            if (move > 0f && !mFacingRight)
             {
                 Flip();
             }
-            else if (move < 0 && mFacingRight)
+            else if (move < 0f && mFacingRight)
             {
                 Flip();
             }
@@ -125,7 +125,7 @@ namespace Game.Player
 
         private void Dash(float horizontal)
         {
-            body.AddForce(Vector2.right * (horizontal * dashSpeed), ForceMode2D.Impulse);
+            body.AddForce(Vector2.right * (horizontal * playerHealth.playerData.dashSpeed), ForceMode2D.Impulse);
             isDashing = false;
         }
 
