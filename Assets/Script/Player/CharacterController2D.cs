@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
 using Game.Core;
-using UnityEngine.SceneManagement;
+using Game.Enemy;
 
 namespace Game.Player
 {
@@ -9,24 +10,28 @@ namespace Game.Player
         [Header("Movement")] private const float MovementSmoothing = .05f;
         private Vector2 velocity = Vector2.zero;
         private float mHorizontal;
+
         [Space] [Header("Flip")] private bool mFacingRight = true;
+
         //public float dashSpeed = 100f;
         private bool isDashing;
         private bool mGrounded;
+        private const float GroundedRadius = .2f;
+        private Transform groundCheck;
         [Space] [SerializeField] public LayerMask whatIsGround;
         private bool mDBJump;
         private Animator animator;
         [SerializeField] private float clampMinX, clampMaxX;
         private PlayerHealth playerHealth;
         private readonly AnimationStates animationState = new AnimationStates();
-        private Collider2D controllerCollider;
         private PlayerAudio playerAudio;
+        private bool isOnCar;
 
         public override void Awake()
         {
             base.Awake();
+            groundCheck = GameObject.Find("ground_check").transform;
             animator = GetComponent<Animator>();
-            controllerCollider = GetComponent<Collider2D>();
             playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
             playerHealth = GetComponent<PlayerHealth>();
         }
@@ -58,15 +63,6 @@ namespace Game.Player
                 var position = transform.position;
                 position = new Vector3(Mathf.Clamp(position.x, clampMinX, clampMaxX), position.y, position.z);
                 body.transform.position = position;
-                if (Input.GetKey(KeyCode.G))
-                {
-                    SceneManager.LoadScene(2);
-                }
-
-                if (Input.GetKey(KeyCode.C))
-                {
-                    SceneManager.LoadScene(3);
-                }
             }
             else
             {
@@ -77,7 +73,7 @@ namespace Game.Player
 
         private void OnCollision()
         {
-            mGrounded = controllerCollider.IsTouchingLayers(whatIsGround);
+            mGrounded = Physics2D.OverlapCircle(groundCheck.position, GroundedRadius, whatIsGround);
         }
 
         private void Move(float move)
@@ -85,7 +81,8 @@ namespace Game.Player
             var velocity1 = body.velocity;
             body.velocity = Vector2.SmoothDamp(velocity1, new Vector2(move * 10f, velocity1.y), ref velocity,
                 MovementSmoothing);
-            PlayerRun(Mathf.Abs(move));
+            PlayerRun(!isOnCar ? Mathf.Abs(move) : 0f);
+
             if (move > 0f && !mFacingRight)
             {
                 Flip();
@@ -148,12 +145,28 @@ namespace Game.Player
         {
             animator.SetTrigger(animationState.playerIsJump);
         }
+
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            if (other.CompareTag("Car"))
+            {
+                isOnCar = true;
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.CompareTag("Car"))
+            {
+                isOnCar = false;
+            }
+        }
     }
 
-    public enum JumpState
-    {
-        Normal,
-        DoubleJump,
-        None
-    }
+    // public enum JumpState
+    // {
+    //     Normal,
+    //     DoubleJump,
+    //     None
+    // }
 }

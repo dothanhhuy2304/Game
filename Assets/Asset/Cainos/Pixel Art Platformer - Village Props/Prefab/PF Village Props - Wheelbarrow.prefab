@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 5148866573228178009}
   - component: {fileID: 8689569378063993332}
   - component: {fileID: 4943143807696646567}
-  m_Layer: 0
+  - component: {fileID: 1107210031}
+  m_Layer: 7
   m_Name: TX Village Props Wheelbarrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,6 +178,32 @@ HingeJoint2D:
   m_AngleLimits:
     m_LowerAngle: 0
     m_UpperAngle: 359
+--- !u!61 &1107210031
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2225699740878207581}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.96987534, y: 0.36756605}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.6772346, y: 0.3914589}
+    oldSize: {x: 3, y: 1.25}
+    newSize: {x: 3, y: 1.25}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.0007706, y: 0.79613984}
+  m_EdgeRadius: 0
 --- !u!1 &3199234433168532602
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,9 +213,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3199234433168532604}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PF Village Props - Wheelbarrow
-  m_TagString: Untagged
+  m_TagString: Car
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -221,7 +248,7 @@ GameObject:
   - component: {fileID: 3199234433696566349}
   - component: {fileID: 2503521201049667834}
   - component: {fileID: 7633690333504443610}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: TX Village Props Wheelbarrow Wheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
