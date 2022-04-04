@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Bullet
   - Car
+  - Box
   layers:
   - Default
   - TransparentFX

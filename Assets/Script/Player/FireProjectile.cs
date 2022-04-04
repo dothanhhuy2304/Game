@@ -66,15 +66,15 @@ public class FireProjectile : BaseObject
         {
             case EnemyType.SNINJA:
             {
-                if (other.gameObject.CompareTag("ground"))
+                if (other.CompareTag("ground"))
                 {
                     Explosions();
                 }
-                else if (other.gameObject.CompareTag("Bullet"))
+                else if (other.CompareTag("Bullet"))
                 {
                     Explosions();
                 }
-                else if (other.gameObject.CompareTag("Player"))
+                else if (other.CompareTag("Player"))
                 {
                     //playerHealth.GetDamage(20f);
                     playerHealth.GetDamage(datas[2].damageAttack);
@@ -85,15 +85,15 @@ public class FireProjectile : BaseObject
             }
             case EnemyType.CarnivorousPlant:
             {
-                if (other.gameObject.CompareTag("ground"))
+                if (other.CompareTag("ground"))
                 {
                     Explosions();
                 }
-                else if (other.gameObject.CompareTag("Bullet"))
+                else if (other.CompareTag("Bullet"))
                 {
                     Explosions();
                 }
-                else if (other.gameObject.CompareTag("Player"))
+                else if (other.CompareTag("Player"))
                 {
                     //playerHealth.GetDamage(14f);
                     playerHealth.GetDamage(datas[3].damageAttack);
@@ -108,14 +108,18 @@ public class FireProjectile : BaseObject
                 {
                     Explosions();
                 }
-                else if (other.gameObject.CompareTag("Enemy"))
+                else if (other.CompareTag("Enemy"))
                 {
                     other.GetComponent<EnemyHealth>().GetDamage(playerHealth.playerData.damageAttack);
                     Explosions();
                 }
-                else if (other.gameObject.CompareTag("Bullet"))
+                else if (other.CompareTag("Bullet"))
                 {
                     Explosions();
+                }
+                else if (other.CompareTag("Box"))
+                {
+                    Destroy(other.gameObject);
                 }
 
                 break;
