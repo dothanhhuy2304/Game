@@ -7,7 +7,7 @@ using UnityEngine;
 public class Chest : MonoBehaviour
 {
     [SerializeField] private ScoreData scoreData;
-    [SerializeField] private GameObject UIGuild, item;
+    [SerializeField] private GameObject uIGuild, item;
     private bool isOpen;
     private Animator animator;
     private GameManager gameManager;
@@ -26,7 +26,7 @@ public class Chest : MonoBehaviour
 
     private void OnEnable()
     {
-        txtValueItem.text = value.ToString(CultureInfo.CurrentCulture);
+        txtValueItem.text = "x" + value.ToString(CultureInfo.CurrentCulture);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -34,7 +34,7 @@ public class Chest : MonoBehaviour
         if (isOpen) return;
         if (other.CompareTag("Player"))
         {
-            UIGuild.SetActive(true);
+            uIGuild.SetActive(true);
         }
     }
 
@@ -44,7 +44,7 @@ public class Chest : MonoBehaviour
         if (!other.CompareTag("Player")) return;
         if (!Input.GetKey(KeyCode.F)) return;
         animator.SetBool(IsOpen, true);
-        UIGuild.SetActive(false);
+        uIGuild.SetActive(false);
         StartCoroutine(nameof(ActiveItem), 5f);
         scoreData.diamond += value;
         gameManager.SetDiamond(scoreData.diamond);
@@ -63,6 +63,6 @@ public class Chest : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
-        UIGuild.SetActive(false);
+        uIGuild.SetActive(false);
     }
 }

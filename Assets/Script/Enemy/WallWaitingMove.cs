@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Game.Player;
 
@@ -9,7 +8,6 @@ namespace Game.Enemy
         private const float Direction = -1f;
         private Transform player;
         private bool isMoving;
-        [SerializeField] private MovingInput movingInput;
         [SerializeField] private float movingSpeed = 2f;
         private bool isComeback;
         private Vector3 startTrans = Vector3.zero;
@@ -22,34 +20,15 @@ namespace Game.Enemy
 
         private void FixedUpdate()
         {
-            switch (movingInput)
+            if (isMoving)
             {
-                case MovingInput.Horizontal:
-                    if (isMoving)
-                    {
-                        transform.position += Vector3.right * (movingSpeed * Time.deltaTime);
-                    }
+                transform.position += Vector3.right * (movingSpeed * Time.deltaTime);
+            }
 
-                    if (isComeback)
-                    {
-                        transform.position = Vector3.MoveTowards(transform.position, startTrans, movingSpeed * Time.deltaTime);
-                    }
-
-                    break;
-                case MovingInput.Vertical:
-                    if (isMoving)
-                    {
-                        transform.position += Vector3.up * (movingSpeed * Time.deltaTime);
-                    }
-
-                    if (isComeback)
-                    {
-                        transform.position = Vector3.MoveTowards(transform.position, startTrans, movingSpeed * Time.deltaTime);
-                    }
-
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+            if (isComeback)
+            {
+                transform.position =
+                    Vector3.MoveTowards(transform.position, startTrans, movingSpeed * Time.deltaTime);
             }
         }
 
@@ -74,19 +53,15 @@ namespace Game.Enemy
             if (other.collider.CompareTag("Player"))
             {
                 player.transform.parent = null;
-                isMoving = false;
-                isComeback = true;
-
             }
-            else if (!other.collider.CompareTag("ground")) return;
-
-            movingSpeed *= Direction;
         }
-    }
 
-    public enum MovingInput
-    {
-        Horizontal,
-        Vertical
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.CompareTag("Player")) return;
+            if (!other.CompareTag("ground")) return;
+            isComeback = true;
+            isMoving = false;
+        }
     }
 }

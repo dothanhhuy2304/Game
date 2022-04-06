@@ -8,7 +8,6 @@ using Game.Player;
 //Bug
 public class FireProjectile : BaseObject
 {
-    [SerializeField] private Data[] datas;
     [SerializeField] private EnemyType enemyType;
     [SerializeField] private float bulletSpeed = 10f;
     [SerializeField] private GameObject bulletPrefab, explosionPrefab;
@@ -76,8 +75,7 @@ public class FireProjectile : BaseObject
                 }
                 else if (other.CompareTag("Player"))
                 {
-                    //playerHealth.GetDamage(20f);
-                    playerHealth.GetDamage(datas[2].damageAttack);
+                    playerHealth.GetDamage(20f);
                     Explosions();
                 }
 
@@ -95,8 +93,7 @@ public class FireProjectile : BaseObject
                 }
                 else if (other.CompareTag("Player"))
                 {
-                    //playerHealth.GetDamage(14f);
-                    playerHealth.GetDamage(datas[3].damageAttack);
+                    playerHealth.GetDamage(14f);
                     Explosions();
                 }
 

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Game.Player;
 
@@ -8,6 +9,7 @@ namespace Game.Enemy
         private const float Direction = -1f;
         public float speed = 3f;
         private Transform player;
+        [SerializeField] private MovingInput movingInput;
 
         private void Awake()
         {
@@ -16,31 +18,99 @@ namespace Game.Enemy
 
         private void FixedUpdate()
         {
-            transform.position += Vector3.left * (speed * Time.deltaTime);
+            switch (movingInput)
+            {
+                case MovingInput.Horizontal:
+                    transform.position += Vector3.left * (speed * Time.deltaTime);
+                    break;
+                case MovingInput.Vertical:
+                    transform.position += Vector3.up * (speed * Time.deltaTime);
+                    break;
+                case MovingInput.Saw:
+                    transform.position += Vector3.up * (speed * Time.deltaTime);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.gameObject.CompareTag("ground"))
+            switch (movingInput)
             {
-                speed *= Direction;
+                case MovingInput.Horizontal:
+                    if (collision.CompareTag("ground"))
+                    {
+                        speed *= Direction;
+                    }
+
+                    break;
+                case MovingInput.Vertical:
+                    break;
+                case MovingInput.Saw:
+                    if (collision.CompareTag("ground"))
+                    {
+                        speed *= Direction;
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (other.collider.gameObject.CompareTag("Player"))
+            switch (movingInput)
             {
-                player.transform.parent = transform;
+                case MovingInput.Horizontal:
+                {
+                    if (other.collider.gameObject.CompareTag("Player"))
+                    {
+                        player.transform.parent = transform;
+                    }
+
+                    break;
+                }
+                case MovingInput.Vertical:
+                    break;
+                case MovingInput.Saw:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
         private void OnCollisionExit2D(Collision2D other)
         {
-            if (other.collider.gameObject.CompareTag("Player"))
+            switch (movingInput)
             {
-                player.transform.parent = null;
+                case MovingInput.Horizontal:
+                    if (other.collider.gameObject.CompareTag("Player"))
+                    {
+                        player.transform.parent = null;
+                    }
+
+                    break;
+                case MovingInput.Vertical:
+                    if (other.collider.CompareTag("ground"))
+                    {
+                        speed *= Direction;
+                    }
+
+                    break;
+                case MovingInput.Saw:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
+    }
+
+    public enum MovingInput
+    {
+        Horizontal,
+        Vertical,
+        Saw
     }
 }

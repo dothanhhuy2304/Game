@@ -6,7 +6,10 @@ namespace Game.Enemy
 {
     public class EnemyHealth : MonoBehaviour, IHealthSystem
     {
-        [SerializeField] private Data enemyData;
+        [SerializeField] private float heathDefault;
+        [SerializeField] private float currentHealth;
+        [SerializeField] private float maxHealth;
+        [SerializeField] private float hpIc;
         [SerializeField] private EnemyHealthBar enemyHealthBar;
         [SerializeField] private float timeRespawn;
         [SerializeField] private Collider2D enemyCollider;
@@ -14,41 +17,40 @@ namespace Game.Enemy
 
         private void Awake()
         {
-            SetMaxHealth(enemyData.heathDefault, enemyData.hpIc);
+            SetMaxHealth(this.heathDefault, this.hpIc);
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
         public bool EnemyDeath()
         {
-            return enemyData.currentHealth <= 0f;
+            return currentHealth <= 0f;
         }
 
-        private void SetMaxHealth(float maxHealth, float hpIc)
+        private void SetMaxHealth(float maxHealths, float hpIcs)
         {
-            enemyData.maxHealth = maxHealth + hpIc;
-            enemyData.currentHealth = enemyData.maxHealth;
-            enemyHealthBar.SetHealth(enemyData.currentHealth, enemyData.maxHealth);
+            this.maxHealth = maxHealths + hpIcs;
+            this.currentHealth = this.maxHealth;
+            this.enemyHealthBar.SetHealth(this.currentHealth, this.maxHealth);
         }
 
         public void GetDamage(float damage)
         {
-            enemyData.currentHealth = Mathf.Clamp(enemyData.currentHealth - damage, 0f, enemyData.maxHealth);
-            if (enemyData.currentHealth <= 0) Die();
-            enemyHealthBar.SetHealth(enemyData.currentHealth, enemyData.maxHealth);
+            this.currentHealth = Mathf.Clamp(this.currentHealth - damage, 0f, maxHealth);
+            if (this.currentHealth <= 0) Die();
+            this.enemyHealthBar.SetHealth(this.currentHealth, this.maxHealth);
         }
 
         public void Heal(float value)
         {
-            enemyData.currentHealth =
-                Mathf.Clamp(enemyData.currentHealth + value, 0f, enemyData.maxHealth);
-            if (enemyData.currentHealth > enemyData.maxHealth)
-                enemyData.currentHealth = enemyData.maxHealth;
-            enemyHealthBar.SetHealth(enemyData.currentHealth, enemyData.maxHealth);
+            this.currentHealth = Mathf.Clamp(this.currentHealth + value, 0f, this.maxHealth);
+            if (this.currentHealth > this.maxHealth)
+                this.currentHealth = this.maxHealth;
+            this.enemyHealthBar.SetHealth(this.currentHealth, this.maxHealth);
         }
 
         public void Die()
         {
-            enemyData.currentHealth = 0f;
+            this.currentHealth = 0f;
             spriteRenderer.enabled = false;
             enemyCollider.enabled = false;
             StartCoroutine(nameof(Respawn), timeRespawn);
@@ -57,7 +59,7 @@ namespace Game.Enemy
         private IEnumerator Respawn(float timeDelay)
         {
             yield return new WaitForSeconds(timeDelay);
-            SetMaxHealth(enemyData.heathDefault, enemyData.hpIc);
+            SetMaxHealth(this.heathDefault, this.hpIc);
             spriteRenderer.enabled = true;
             enemyCollider.enabled = true;
             yield return null;

@@ -9,7 +9,7 @@ namespace Game.Enemy
     //Bug
     public class EnemyController : BaseObject
     {
-        [SerializeField] private Data enemyData;
+        [SerializeField] private float movingSpeed = 2f;
         [Header("Types")] [SerializeField] private EnemyType enemyType;
 
         [Space] [Header("Prefab")] [SerializeField]
@@ -102,7 +102,7 @@ namespace Game.Enemy
         {
             if (Vector3.Distance(transform.position, player.position) >= rangeAttack || playerHealth.PlayerIsDeath())
             {
-                body.velocity = body.transform.right * enemyData.movingSpeed;
+                body.velocity = body.transform.right * movingSpeed;
                 animator.SetBool(animationState.sNinjaIsRun, true);
             }
             else if (!playerHealth.PlayerIsDeath())
@@ -203,10 +203,10 @@ namespace Game.Enemy
         {
             //bulletHolder[FindBullet()].transform.position = transform.TransformPoint(offsetAttack);
             //bulletHolder[FindBullet()].transform.rotation = transform.rotation;
-            Transform transform1;
-            Transform transform2;
-            (transform1 = fireProjectile.transform).position = (transform2 = transform).TransformPoint(offsetAttack);
-            transform1.rotation = transform2.rotation;
+            var trans = fireProjectile.transform;
+            var currentsPos = transform;
+            trans.position = currentsPos.TransformPoint(offsetAttack);
+            trans.rotation = currentsPos.rotation;
             fireProjectile.SetActives();
             //Instantiate(prefab, transform.TransformPoint(offsetAttack), transform.rotation);
         }
@@ -215,12 +215,8 @@ namespace Game.Enemy
         {
             var directionVector = (player.position - transform.position).normalized;
             var lookRotation = Quaternion.LookRotation(Vector3.forward, directionVector);
-            Transform transform2;
-            fireProjectile.transform.position = (transform2 = transform).TransformPoint(offsetAttack);
-            var transform1 = transform2;
-            var rotation = transform1.rotation;
-            fireProjectile.transform.rotation =
-                Quaternion.Euler(rotation.x, rotation.y, lookRotation.eulerAngles.z + 90f);
+            fireProjectile.transform.position = transform.TransformPoint(offsetAttack);
+            fireProjectile.transform.rotation = Quaternion.Euler(0f, 0f, lookRotation.eulerAngles.z + 90f);
             fireProjectile.SetActives();
             //Instantiate(prefab, transform.TransformPoint(offsetAttack), Quaternion.Euler(transform.rotation.x, transform.rotation.y, lookRotation.eulerAngles.z + 90));
         }
