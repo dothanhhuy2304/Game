@@ -65,7 +65,7 @@ namespace Game.Enemy
             {
                 case MovingInput.Horizontal:
                 {
-                    if (other.collider.gameObject.CompareTag("Player"))
+                    if (other.collider.CompareTag("Player"))
                     {
                         player.transform.parent = transform;
                     }
@@ -86,7 +86,7 @@ namespace Game.Enemy
             switch (movingInput)
             {
                 case MovingInput.Horizontal:
-                    if (other.collider.gameObject.CompareTag("Player"))
+                    if (other.collider.CompareTag("Player"))
                     {
                         player.transform.parent = null;
                     }

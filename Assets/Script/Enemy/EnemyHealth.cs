@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Globalization;
 using UnityEngine;
 using Game.Core;
+using TMPro;
 
 namespace Game.Enemy
 {
@@ -14,11 +16,15 @@ namespace Game.Enemy
         [SerializeField] private float timeRespawn;
         [SerializeField] private Collider2D enemyCollider;
         private SpriteRenderer spriteRenderer;
+        [SerializeField] private GameObject uIDamageEnemy;
+        private TextMeshProUGUI txtDamage;
+        private GameObject uIDamageInstance;
 
         private void Awake()
         {
             SetMaxHealth(this.heathDefault, this.hpIc);
             spriteRenderer = GetComponent<SpriteRenderer>();
+            txtDamage = uIDamageEnemy.GetComponentInChildren<TextMeshProUGUI>();
         }
 
         public bool EnemyDeath()
@@ -37,7 +43,16 @@ namespace Game.Enemy
         {
             this.currentHealth = Mathf.Clamp(this.currentHealth - damage, 0f, maxHealth);
             if (this.currentHealth <= 0) Die();
+            this.txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
             this.enemyHealthBar.SetHealth(this.currentHealth, this.maxHealth);
+            uIDamageInstance = Instantiate(this.uIDamageEnemy, transform.position + Vector3.up, Quaternion.identity);
+            StartCoroutine(nameof(DestroyDamageFlying), 0.5f);
+        }
+
+        private IEnumerator DestroyDamageFlying(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            Destroy(uIDamageInstance);
         }
 
         public void Heal(float value)

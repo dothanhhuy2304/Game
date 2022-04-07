@@ -48,19 +48,16 @@ public class PetAI : BaseObject
                 currentTimeAttack = TimeAttack;
                 Attack();
                 animator.SetBool(animationState.petIsRun, false);
-                //animator.SetBool(IsDeath,false);
             }
             else
             {
                 Moving();
                 animator.SetBool(animationState.petIsRun, true);
-                //animator.SetBool(IsDeath,false);
             }
         }
         else
         {
             body.velocity = Vector2.zero;
-            //animator.SetBool(IsDeath, true);
         }
     }
 

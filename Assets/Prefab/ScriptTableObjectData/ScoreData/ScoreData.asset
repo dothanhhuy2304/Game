@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ScoreData
   m_EditorClassIdentifier: 
   currentScore: 0
-  highScore: 56
-  money: 91
-  diamond: 10
+  highScore: 0
+  money: 0
+  diamond: 0
