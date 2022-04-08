@@ -9,9 +9,7 @@ namespace Game.Player
         private Vector2 velocity = Vector2.zero;
         private float mHorizontal;
 
-        [Space] 
-        //[Header("Flip")] private bool mFacingRight = true;
-        private SpriteRenderer spriteRenderer;
+        [Space] [Header("Flip")] private bool mFacingRight = true;
         private bool isDashing;
         private bool mGrounded;
         private const float GroundedRadius = .2f;
@@ -29,7 +27,6 @@ namespace Game.Player
         {
             base.Awake();
             groundCheck = GameObject.Find("ground_check").transform;
-            spriteRenderer = GetComponent<SpriteRenderer>();
             animator = GetComponent<Animator>();
             playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
             playerHealth = GetComponent<PlayerHealth>();
@@ -81,15 +78,14 @@ namespace Game.Player
             body.velocity = Vector2.SmoothDamp(velocity1, new Vector2(move * 10f, velocity1.y), ref velocity,
                 MovementSmoothing);
             PlayerRun(!isOnCar ? Mathf.Abs(move) : 0f);
-            Flip();
-            // if (move > 0f && !mFacingRight)
-            // {
-            //     Flip();
-            // }
-            // else if (move < 0f && mFacingRight)
-            // {
-            //     Flip();
-            // }
+            if (move > 0f && !mFacingRight)
+            {
+                Flip();
+            }
+            else if (move < 0f && mFacingRight)
+            {
+                Flip();
+            }
         }
 
         private void Jumps()
@@ -127,16 +123,8 @@ namespace Game.Player
 
         private void Flip()
         {
-            if (mHorizontal > 0f)
-            {
-                spriteRenderer.flipX = false;
-            }
-            else if (mHorizontal < 0f)
-            {
-                spriteRenderer.flipX = true;
-            }
-            //mFacingRight = !mFacingRight;
-            //transform.Rotate(0f, 180f, 0f);
+            mFacingRight = !mFacingRight;
+            transform.Rotate(0f, 180f, 0f);
 
             // Vector3 theScale = transform.localScale;
             // theScale.x *= -1;
