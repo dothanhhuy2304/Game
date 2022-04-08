@@ -1,7 +1,5 @@
-using System;
 using UnityEngine;
 using Game.Core;
-using Game.Enemy;
 
 namespace Game.Player
 {
@@ -11,14 +9,14 @@ namespace Game.Player
         private Vector2 velocity = Vector2.zero;
         private float mHorizontal;
 
-        [Space] [Header("Flip")] private bool mFacingRight = true;
-
-        //public float dashSpeed = 100f;
+        [Space] 
+        //[Header("Flip")] private bool mFacingRight = true;
+        private SpriteRenderer spriteRenderer;
         private bool isDashing;
         private bool mGrounded;
         private const float GroundedRadius = .2f;
         private Transform groundCheck;
-        [Space] [SerializeField] public LayerMask whatIsGround;
+        [Space] [SerializeField] private LayerMask whatIsGround;
         private bool mDBJump;
         private Animator animator;
         [SerializeField] private float clampMinX, clampMaxX;
@@ -31,6 +29,7 @@ namespace Game.Player
         {
             base.Awake();
             groundCheck = GameObject.Find("ground_check").transform;
+            spriteRenderer = GetComponent<SpriteRenderer>();
             animator = GetComponent<Animator>();
             playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
             playerHealth = GetComponent<PlayerHealth>();
@@ -82,15 +81,15 @@ namespace Game.Player
             body.velocity = Vector2.SmoothDamp(velocity1, new Vector2(move * 10f, velocity1.y), ref velocity,
                 MovementSmoothing);
             PlayerRun(!isOnCar ? Mathf.Abs(move) : 0f);
-
-            if (move > 0f && !mFacingRight)
-            {
-                Flip();
-            }
-            else if (move < 0f && mFacingRight)
-            {
-                Flip();
-            }
+            Flip();
+            // if (move > 0f && !mFacingRight)
+            // {
+            //     Flip();
+            // }
+            // else if (move < 0f && mFacingRight)
+            // {
+            //     Flip();
+            // }
         }
 
         private void Jumps()
@@ -128,8 +127,17 @@ namespace Game.Player
 
         private void Flip()
         {
-            mFacingRight = !mFacingRight;
-            transform.Rotate(0f, 180f, 0f);
+            if (mHorizontal > 0f)
+            {
+                spriteRenderer.flipX = false;
+            }
+            else if (mHorizontal < 0f)
+            {
+                spriteRenderer.flipX = true;
+            }
+            //mFacingRight = !mFacingRight;
+            //transform.Rotate(0f, 180f, 0f);
+
             // Vector3 theScale = transform.localScale;
             // theScale.x *= -1;
             // transform.localScale = theScale;

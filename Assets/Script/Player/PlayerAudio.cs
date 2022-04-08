@@ -2,19 +2,23 @@ using UnityEngine;
 
 public class PlayerAudio : MonoBehaviour
 {
-    [SerializeField] private AudioSource jumpAudioSource;
-    [SerializeField] private AudioSource landAudioSource;
+    public AudioSource playerAudioSource;
+    public AudioSource bothAudioSource;
     [SerializeField] private AudioClip jumpClip;
-    [SerializeField] private AudioClip landClip;
 
     public void PlayerJump()
     {
-        jumpAudioSource.PlayOneShot(jumpClip);
+        playerAudioSource.PlayOneShot(jumpClip);
     }
 
-    public void PlayerLand()
+    public void PlayerLand(AudioClip clip)
     {
-        landAudioSource.PlayOneShot(landClip);
+        playerAudioSource.PlayOneShot(clip);
+    }
+
+    public void Play(AudioClip clip)
+    {
+        bothAudioSource.PlayOneShot(clip,1f);
     }
 
 }

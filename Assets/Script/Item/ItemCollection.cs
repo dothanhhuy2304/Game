@@ -15,11 +15,13 @@ namespace Game.Item
         [SerializeField] private Collider2D itemCollider;
         private PlayerHealth playerHealthBar;
         private GameManager gameManager;
+        private PlayerAudio playerAudio;
 
         private void Awake()
         {
             gameManager = FindObjectOfType<GameManager>().GetComponent<GameManager>();
             playerHealthBar = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
+            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
             scoreData.currentScore = 0f;
             gameManager.SetScore(scoreData.currentScore);
             gameManager.SetDiamond(scoreData.diamond);
@@ -70,7 +72,8 @@ namespace Game.Item
             itemObj.SetActive(false);
             effectCollectedObj.SetActive(true);
             playerHealthBar.GetDamage(value);
-            AudioSource.PlayClipAtPoint(itemData.soundHurtCollection, transform.position, Volume);
+            //AudioSource.PlayClipAtPoint(itemData.soundHurtCollection, transform.position, Volume);
+            playerAudio.Play(itemData.soundHurtCollection);
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);
         }
@@ -80,7 +83,8 @@ namespace Game.Item
             itemObj.SetActive(false);
             effectCollectedObj.SetActive(true);
             playerHealthBar.Heal(value);
-            AudioSource.PlayClipAtPoint(itemData.soundCollection, transform.position, Volume);
+            //AudioSource.PlayClipAtPoint(itemData.soundCollection, transform.position, Volume);
+            playerAudio.Play(itemData.soundCollection);
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);
         }
@@ -89,7 +93,8 @@ namespace Game.Item
         {
             itemObj.SetActive(false);
             effectCollectedObj.SetActive(true);
-            AudioSource.PlayClipAtPoint(itemData.soundCollection, transform.position, Volume);
+            //AudioSource.PlayClipAtPoint(itemData.soundCollection, transform.position, Volume);
+            playerAudio.Play(itemData.soundCollection);
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);
         }
@@ -97,7 +102,7 @@ namespace Game.Item
         private IEnumerator TemporarilyDeactivate(float delay)
         {
             yield return new WaitForSeconds(delay);
-            this.gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
 
         private void OnDisable()
@@ -109,7 +114,6 @@ namespace Game.Item
         }
     }
     
-
     public enum ItemType
     {
         Money,

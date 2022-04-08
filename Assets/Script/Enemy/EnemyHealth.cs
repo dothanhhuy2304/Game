@@ -18,7 +18,6 @@ namespace Game.Enemy
         private SpriteRenderer spriteRenderer;
         [SerializeField] private GameObject uIDamageEnemy;
         private TextMeshProUGUI txtDamage;
-        private GameObject uIDamageInstance;
 
         private void Awake()
         {
@@ -45,14 +44,9 @@ namespace Game.Enemy
             if (this.currentHealth <= 0) Die();
             this.txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
             this.enemyHealthBar.SetHealth(this.currentHealth, this.maxHealth);
-            uIDamageInstance = Instantiate(this.uIDamageEnemy, transform.position + Vector3.up, Quaternion.identity);
-            StartCoroutine(nameof(DestroyDamageFlying), 0.5f);
-        }
-
-        private IEnumerator DestroyDamageFlying(float delay)
-        {
-            yield return new WaitForSeconds(delay);
-            Destroy(uIDamageInstance);
+            var uIDamageInstance =
+                Instantiate(this.uIDamageEnemy, transform.position + Vector3.up, Quaternion.identity);
+            Destroy(uIDamageInstance, 0.5f);
         }
 
         public void Heal(float value)

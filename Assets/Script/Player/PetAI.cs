@@ -13,7 +13,6 @@ public class PetAI : BaseObject
     private bool enemyContact;
     private float currentTimeAttack;
     private const float TimeAttack = 3f;
-    private FireProjectile fireProjectile;
     private PlayerHealth playerHealth;
     private Animator animator;
     private readonly AnimationStates animationState = new AnimationStates();
@@ -26,7 +25,6 @@ public class PetAI : BaseObject
         closestEnemy = null;
         enemyContact = false;
         multipleEnemy = GameObject.FindGameObjectsWithTag("Enemy");
-        fireProjectile = bulletHolder[FindBullet()].GetComponent<FireProjectile>();
         playerHealth = playerPos.GetComponent<PlayerHealth>();
     }
 
@@ -85,7 +83,7 @@ public class PetAI : BaseObject
     {
         bulletHolder[FindBullet()].transform.position = transform.position;
         bulletHolder[FindBullet()].transform.rotation = transform.rotation;
-        fireProjectile.SetActives();
+        bulletHolder[FindBullet()].GetComponent<FireProjectile>().SetActives();
     }
 
     private int FindBullet()

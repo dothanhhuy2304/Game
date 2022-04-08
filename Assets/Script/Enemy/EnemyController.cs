@@ -32,19 +32,19 @@ namespace Game.Enemy
         private Animator animator;
         private EnemyHealth enemyHealth;
         private Vector3 posAwake;
-        private FireProjectile fireProjectile;
         private readonly AnimationStates animationState = new AnimationStates();
+        private PlayerAudio playerAudio;
 
         public override void Awake()
         {
             base.Awake();
             player = FindObjectOfType<CharacterController2D>().transform;
+            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
             Debug.Assert(player != null, nameof(player) + " != null");
             playerHealth = player.GetComponent<PlayerHealth>();
             currentTime = 0f;
             animator = GetComponent<Animator>();
-            enemyHealth = gameObject.GetComponent<EnemyHealth>();
-            fireProjectile = bulletHolder[FindBullet()].GetComponent<FireProjectile>();
+            enemyHealth = GetComponent<EnemyHealth>();
             posAwake = transform.position;
         }
 
@@ -116,44 +116,29 @@ namespace Game.Enemy
                 if (Vector3.Distance(transform.position, player.position) <= 3f)
                 {
                     Flip();
-                    if (Vector3.Distance(transform.position, player.position) <= 3f &&
-                        Vector3.Distance(transform.position, player.position) > 2f)
+                    var hits = Physics2D.OverlapCircle(transform.TransformPoint(checkGroundPosition), radiusAttack);
+                    if (!hits.CompareTag("Player") && Vector3.Distance(transform.position, player.position) >= 2f)
                     {
-                        var position = transform.position;
-                        var pos = new Vector3(player.position.x - position.x, position.y);
-                        body.velocity = pos;
+                        var pos = player.position - transform.position;
+                        body.velocity = pos * (35f * Time.fixedDeltaTime);
                         animator.SetBool(animationState.sNinjaIsRun, true);
                     }
-
-                    if (!(currentTime <= 0)) return;
-                    var hits = new Collider2D[10];
-                    if (Physics2D.OverlapCircleNonAlloc(transform.TransformPoint(checkGroundPosition), radiusAttack,
-                        hits, 1 << LayerMask.NameToLayer("Player")) <= 0) return;
-                    foreach (var hit in hits)
+                    else
                     {
-                        try
-                        {
-                            animator.SetBool(animationState.sNinjaIsRun, false);
-                            body.velocity = Vector2.zero;
-                            animator.SetBool(animationState.sNinjaIsRun, true);
-                            if (!hit.CompareTag("Player") &&
-                                !(Vector3.Distance(transform.position, player.position) <= 3f)) continue;
-                            animator.SetTrigger(animationState.sNinjaIsAttack1);
-                            currentTime = 1f;
-                            playerHealth.GetDamage(20f);
-                            AudioSource.PlayClipAtPoint(swordAudio, transform.position, 1f);
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.Assert(e != null, e.Message);
-                            return;
-                        }
+                        body.velocity = Vector2.zero;
+                        animator.SetBool(animationState.sNinjaIsRun, false);
+                        if (!(currentTime <= 0)) return;
+                        animator.SetTrigger(animationState.sNinjaIsAttack1);
+                        currentTime = 1f;
+                        playerHealth.GetDamage(20f);
+                        //AudioSource.PlayClipAtPoint(swordAudio, transform.position, 1f);
+                        playerAudio.Play(swordAudio);
                     }
                 }
                 else
                 {
-                    animator.SetBool(animationState.sNinjaIsRun, false);
                     Flip();
+                    animator.SetBool(animationState.sNinjaIsRun, false);
                     if (!(currentTime <= 0f)) return;
                     currentTime = maxTimeAttack;
                     Attack();
@@ -201,13 +186,9 @@ namespace Game.Enemy
 
         private void AttackCarnivorousPlant()
         {
-            //bulletHolder[FindBullet()].transform.position = transform.TransformPoint(offsetAttack);
-            //bulletHolder[FindBullet()].transform.rotation = transform.rotation;
-            var trans = fireProjectile.transform;
-            var currentsPos = transform;
-            trans.position = currentsPos.TransformPoint(offsetAttack);
-            trans.rotation = currentsPos.rotation;
-            fireProjectile.SetActives();
+            bulletHolder[FindBullet()].transform.position = transform.TransformPoint(offsetAttack);
+            bulletHolder[FindBullet()].transform.rotation = transform.rotation;
+            bulletHolder[FindBullet()].GetComponent<FireProjectile>().SetActives();
             //Instantiate(prefab, transform.TransformPoint(offsetAttack), transform.rotation);
         }
 
@@ -215,9 +196,9 @@ namespace Game.Enemy
         {
             var directionVector = (player.position - transform.position).normalized;
             var lookRotation = Quaternion.LookRotation(Vector3.forward, directionVector);
-            fireProjectile.transform.position = transform.TransformPoint(offsetAttack);
-            fireProjectile.transform.rotation = Quaternion.Euler(0f, 0f, lookRotation.eulerAngles.z + 90f);
-            fireProjectile.SetActives();
+            bulletHolder[FindBullet()].transform.position = transform.TransformPoint(offsetAttack);
+            bulletHolder[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f, lookRotation.eulerAngles.z + 90f);
+            bulletHolder[FindBullet()].GetComponent<FireProjectile>().SetActives();
             //Instantiate(prefab, transform.TransformPoint(offsetAttack), Quaternion.Euler(transform.rotation.x, transform.rotation.y, lookRotation.eulerAngles.z + 90));
         }
 

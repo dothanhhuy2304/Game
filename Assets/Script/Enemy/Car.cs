@@ -1,19 +1,31 @@
+using System.Collections;
 using UnityEngine;
 
 public class Car : MonoBehaviour
 {
-    private Vector2 trans;
     private PlayerHealth playerHealth;
+    [SerializeField] private GameObject[] carTrans;
+    [SerializeField] private Vector3[] currentPos;
 
-    private void Awake()
+    public void Awake()
     {
-        trans = transform.position;
-        playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
+        playerHealth = FindObjectOfType<PlayerHealth>();
+        currentPos[0] = carTrans[0].transform.position;
+        currentPos[1] = carTrans[1].transform.position;
+        currentPos[2] = carTrans[2].transform.position;
     }
 
     private void Update()
     {
         if (!playerHealth.PlayerIsDeath()) return;
-        transform.position = trans;
+        StartCoroutine(nameof(WaitingPlayerRespawn), 3f);
+    }
+
+    private IEnumerator WaitingPlayerRespawn(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        carTrans[0].transform.position = currentPos[0];
+        carTrans[1].transform.position = currentPos[1];
+        carTrans[2].transform.position = currentPos[2];
     }
 }

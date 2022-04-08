@@ -17,6 +17,7 @@ public class FireProjectile : BaseObject
     private Vector2 targetPetEnemy = Vector2.zero;
     private PlayerHealth playerHealth;
     private PetAI petAI;
+    private PlayerAudio playerAudio;
 
     public override void Awake()
     {
@@ -24,6 +25,7 @@ public class FireProjectile : BaseObject
         player = FindObjectOfType<CharacterController2D>().transform;
         playerHealth = player.GetComponent<PlayerHealth>();
         petAI = FindObjectOfType<PetAI>().GetComponent<PetAI>();
+        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
     }
 
     private void OnEnable()
@@ -150,7 +152,8 @@ public class FireProjectile : BaseObject
     {
         bulletPrefab.SetActive(false);
         explosionPrefab.SetActive(true);
-        AudioSource.PlayClipAtPoint(soundExplosion[0], transform.position, 1f);
+        //AudioSource.PlayClipAtPoint(soundExplosion[0], transform.position, 1f);
+        playerAudio.Play(soundExplosion[0]);
         body.bodyType = RigidbodyType2D.Static;
         StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
     }
