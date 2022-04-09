@@ -5,6 +5,7 @@ namespace Game.GamePlay
     public class UIManager : MonoBehaviour
     {
         [SerializeField] private GameObject settingUI;
+        //public GameObject loadingScene;
 
         private void Awake()
         {

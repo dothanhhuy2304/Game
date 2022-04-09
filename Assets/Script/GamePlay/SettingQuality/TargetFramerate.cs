@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using TMPro;
 
@@ -22,7 +21,7 @@ namespace Game.GamePlay
             frameCount++;
             if (!(time >= PollingTime)) return;
             var frameRate = Mathf.RoundToInt(frameCount / time);
-            txtFPS.text = frameRate.ToString() + " FPS";
+            txtFPS.text = frameRate + " FPS";
             time -= PollingTime;
             frameCount = 0f;
         }

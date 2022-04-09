@@ -9,10 +9,12 @@ namespace Game.Player
         [SerializeField] private AudioClip clip;
         [SerializeField] private Vector2 offset;
         private PlayerHealth playerHealth;
+        private PlayerAudio playerAudio;
 
         private void Awake()
         {
             playerHealth = GetComponent<PlayerHealth>();
+            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
         }
 
         private void LateUpdate()
@@ -23,7 +25,8 @@ namespace Game.Player
             bulletHolder[FindBullet()].transform.position = transform.TransformPoint(offset);
             bulletHolder[FindBullet()].transform.rotation = transform.rotation;
             bulletHolder[FindBullet()].GetComponent<FireProjectile>().SetActives();
-            AudioSource.PlayClipAtPoint(clip, transform.position, 1f);
+            //AudioSource.PlayClipAtPoint(clip, transform.position, 1f);
+            playerAudio.Play(clip);
         }
 
         private int FindBullet()

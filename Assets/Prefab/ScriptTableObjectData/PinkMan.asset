@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef25f2723930c5e4ca5988593aba4cad, type: 3}
+  m_Name: PinkMan
+  m_EditorClassIdentifier: 
+  movingSpeed: 40
+  jumpForce: 10
+  dashSpeed: 70
+  heathDefault: 100
+  currentHealth: 150
+  maxHealth: 150
+  hpIc: 50
+  damageAttack: 20
+  position: {x: -4.96, y: -4, z: 0}
+  currentScenes: 0
