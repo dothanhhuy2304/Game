@@ -9,7 +9,7 @@ public class FireTrap : MonoBehaviour
     private bool isOut;
     private readonly AnimationStates animationState = new AnimationStates();
 
-    private void Awake()
+    private void Start()
     {
         animator = GetComponent<Animator>();
         playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();

@@ -19,7 +19,7 @@ namespace Game.Enemy
         [SerializeField] private GameObject uIDamageEnemy;
         private TextMeshProUGUI txtDamage;
 
-        private void Awake()
+        private void Start()
         {
             SetMaxHealth(this.heathDefault, this.hpIc);
             spriteRenderer = GetComponent<SpriteRenderer>();

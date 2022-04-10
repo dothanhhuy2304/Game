@@ -11,7 +11,7 @@ namespace Game.Enemy
         private Transform player;
         [SerializeField] private MovingInput movingInput;
 
-        private void Awake()
+        private void Start()
         {
             player = FindObjectOfType<CharacterController2D>().transform;
         }

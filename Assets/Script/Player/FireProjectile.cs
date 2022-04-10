@@ -6,7 +6,7 @@ using Game.Enemy;
 using Game.Player;
 
 //Bug
-public class FireProjectile : BaseObject
+public class FireProjectile : MonoBehaviour
 {
     [SerializeField] private EnemyType enemyType;
     [SerializeField] private float bulletSpeed = 10f;
@@ -18,18 +18,19 @@ public class FireProjectile : BaseObject
     private PlayerHealth playerHealth;
     private PetAI petAI;
     private PlayerAudio playerAudio;
+    private Rigidbody2D body;
 
-    public override void Awake()
+    private void Awake()
     {
-        base.Awake();
-        player = FindObjectOfType<CharacterController2D>().transform;
-        playerHealth = player.GetComponent<PlayerHealth>();
-        petAI = FindObjectOfType<PetAI>().GetComponent<PetAI>();
-        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+        body = GetComponent<Rigidbody2D>();
     }
 
     private void OnEnable()
     {
+        player = FindObjectOfType<CharacterController2D>().transform;
+        playerHealth = player.GetComponent<PlayerHealth>();
+        petAI = FindObjectOfType<PetAI>().GetComponent<PetAI>();
+        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
         targetPetEnemy = (petAI.closestEnemy.position - transform.position).normalized;
         StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
         if (!body.isKinematic) return;

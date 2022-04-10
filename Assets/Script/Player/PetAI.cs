@@ -17,9 +17,9 @@ public class PetAI : BaseObject
     private Animator animator;
     private readonly AnimationStates animationState = new AnimationStates();
 
-    public override void Awake()
+    public override void Start()
     {
-        base.Awake();
+        base.Start();
         animator = GetComponent<Animator>();
         playerPos = FindObjectOfType<CharacterController2D>().transform;
         closestEnemy = null;

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Spike : MonoBehaviour
@@ -7,10 +8,10 @@ public class Spike : MonoBehaviour
     private PlayerHealth playerHealth;
     private bool isHurts;
 
-    private void Awake()
+    private void Start()
     {
-        playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
         maxTimeAttack = timeAttack;
+        playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
     }
 
     private void Update()

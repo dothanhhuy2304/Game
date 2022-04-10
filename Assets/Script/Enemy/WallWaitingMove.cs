@@ -12,7 +12,7 @@ namespace Game.Enemy
         private bool isComeback;
         private Vector3 startTrans = Vector3.zero;
 
-        private void Awake()
+        private void Start()
         {
             player = FindObjectOfType<CharacterController2D>().transform;
             startTrans = transform.position;

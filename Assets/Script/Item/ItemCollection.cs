@@ -17,7 +17,7 @@ namespace Game.Item
         private GameManager gameManager;
         private PlayerAudio playerAudio;
 
-        private void Awake()
+        private void Start()
         {
             gameManager = FindObjectOfType<GameManager>().GetComponent<GameManager>();
             playerHealthBar = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
@@ -113,7 +113,7 @@ namespace Game.Item
             }
         }
     }
-    
+
     public enum ItemType
     {
         Money,

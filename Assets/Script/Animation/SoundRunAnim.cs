@@ -10,10 +10,11 @@ public class SoundRunAnim : StateMachineBehaviour
 
     private void Awake()
     {
-        playerAudio = FindObjectOfType<PlayerAudio>();
+        playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
     }
 
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+
+    public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         var nt = stateInfo.normalizedTime;
         if (modulus > 0f) nt %= modulus;

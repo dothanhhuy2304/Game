@@ -35,9 +35,9 @@ namespace Game.Enemy
         private readonly AnimationStates animationState = new AnimationStates();
         private PlayerAudio playerAudio;
 
-        public override void Awake()
+        public override void Start()
         {
-            base.Awake();
+            base.Start();
             player = FindObjectOfType<CharacterController2D>().transform;
             playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
             Debug.Assert(player != null, nameof(player) + " != null");

@@ -11,7 +11,7 @@ namespace Game.Player
         private PlayerHealth playerHealth;
         private PlayerAudio playerAudio;
 
-        private void Awake()
+        private void Start()
         {
             playerHealth = GetComponent<PlayerHealth>();
             playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();

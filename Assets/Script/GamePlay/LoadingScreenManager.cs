@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class LoadingScreenManager : MonoBehaviour
 {
-    [SerializeField] private Data player;
+    [SerializeField] private PlayerData player;
     [SerializeField] private GameObject uILoading;
 
     private IEnumerator WaitingLoading(float delay)

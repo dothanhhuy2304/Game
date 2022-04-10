@@ -11,7 +11,7 @@ namespace Game.Player
         private Vector3 targetPos = Vector3.zero;
         private PlayerHealth playerHealth;
 
-        private void Awake()
+        private void Start()
         {
             playerPosition = FindObjectOfType<CharacterController2D>().transform;
             Debug.Assert(playerPosition != null, nameof(playerPosition) + " != null");

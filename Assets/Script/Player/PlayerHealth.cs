@@ -7,12 +7,13 @@ using TMPro;
 public class PlayerHealth : MonoBehaviour, IHealthSystem
 {
     [SerializeField] public Data playerData;
+    [SerializeField] public PlayerData playerDatas;
     private PlayerHealthBar playerHealthBar;
     private Transform petAI;
     [SerializeField] private GameObject uIDamagePlayer;
     private TextMeshProUGUI txtDamage;
 
-    private void Awake()
+    private void Start()
     {
         playerHealthBar = FindObjectOfType<PlayerHealthBar>()?.GetComponent<PlayerHealthBar>();
         petAI = FindObjectOfType<PetAI>().transform;
@@ -73,7 +74,7 @@ public class PlayerHealth : MonoBehaviour, IHealthSystem
         yield return new WaitForSeconds(delay);
         SetMaxHealth(playerData.heathDefault, playerData.hpIc);
         var transform1 = transform;
-        transform1.position = playerData.position;
+        transform1.position = playerDatas.position;
         petAI.transform.position = transform1.up;
         //transform.position = new Vector3(-4.95f, -4f, 0f);
     }

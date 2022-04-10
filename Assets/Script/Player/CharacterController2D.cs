@@ -23,9 +23,9 @@ namespace Game.Player
         private PlayerAudio playerAudio;
         private bool isOnCar;
 
-        public override void Awake()
+        public override void Start()
         {
-            base.Awake();
+            base.Start();
             groundCheck = GameObject.Find("ground_check").transform;
             animator = GetComponent<Animator>();
             playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();

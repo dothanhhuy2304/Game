@@ -7,9 +7,9 @@ public class Car : MonoBehaviour
     [SerializeField] private GameObject[] carTrans;
     [SerializeField] private Vector3[] currentPos;
 
-    public void Awake()
+    private void Start()
     {
-        playerHealth = FindObjectOfType<PlayerHealth>();
+        playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
         currentPos[0] = carTrans[0].transform.position;
         currentPos[1] = carTrans[1].transform.position;
         currentPos[2] = carTrans[2].transform.position;
