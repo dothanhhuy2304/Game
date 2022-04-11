@@ -6,7 +6,6 @@ namespace Game.Player
     public class Weapon : MonoBehaviour
     {
         [SerializeField] private GameObject[] bulletHolder;
-        [SerializeField] private AudioClip clip;
         [SerializeField] private Vector2 offset;
         private PlayerHealth playerHealth;
         private PlayerAudio playerAudio;
@@ -26,7 +25,7 @@ namespace Game.Player
             bulletHolder[FindBullet()].transform.rotation = transform.rotation;
             bulletHolder[FindBullet()].GetComponent<FireProjectile>().SetActives();
             //AudioSource.PlayClipAtPoint(clip, transform.position, 1f);
-            playerAudio.Play(clip);
+            playerAudio.Plays_20("Player_Bullet_Shoot");
         }
 
         private int FindBullet()

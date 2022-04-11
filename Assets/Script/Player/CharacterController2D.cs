@@ -97,7 +97,8 @@ namespace Game.Player
                 mDBJump = true;
                 PlayerJump();
                 isDashing = true;
-                playerAudio.PlayerJump();
+                playerAudio.Plays_13("Player_Jump");
+                //playerAudio.PlayerJump();
             }
             else if (mDBJump)
             {
@@ -105,7 +106,8 @@ namespace Game.Player
                 mDBJump = false;
                 PlayerJump();
                 isDashing = true;
-                playerAudio.PlayerJump();
+                playerAudio.Plays_13("Player_Jump");
+                //playerAudio.PlayerJump();
             }
         }
 

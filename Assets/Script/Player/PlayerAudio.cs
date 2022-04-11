@@ -1,24 +1,28 @@
+using System;
 using UnityEngine;
 
 public class PlayerAudio : MonoBehaviour
 {
-    public AudioSource playerAudioSource;
-    public AudioSource bothAudioSource;
-    [SerializeField] private AudioClip jumpClip;
+    [SerializeField] private AudioSource audioSource10;
+    [SerializeField] private AudioSource audioSource13;
+    [SerializeField] private AudioSource audioSource20;
+    [SerializeField] private Sound[] sounds;
 
-    public void PlayerJump()
+    public void Plays_10(string clip)
     {
-        playerAudioSource.PlayOneShot(jumpClip);
+        var s = Array.Find(sounds, sound => sound.name == clip);
+        audioSource10.PlayOneShot(s.audioClip);
     }
 
-    public void PlayerLand(AudioClip clip)
+    public void Plays_13(string clip)
     {
-        playerAudioSource.PlayOneShot(clip);
+        var s = Array.Find(sounds, sound => sound.name == clip);
+        audioSource13.PlayOneShot(s.audioClip);
     }
 
-    public void Play(AudioClip clip)
+    public void Plays_20(string clip)
     {
-        bothAudioSource.PlayOneShot(clip,1f);
+        var s = Array.Find(sounds, sound => sound.name == clip);
+        audioSource20.PlayOneShot(s.audioClip);
     }
-
 }

@@ -132,7 +132,7 @@ namespace Game.Enemy
                         currentTime = 1f;
                         playerHealth.GetDamage(20f);
                         //AudioSource.PlayClipAtPoint(swordAudio, transform.position, 1f);
-                        playerAudio.Play(swordAudio);
+                        playerAudio.Plays_20("Enemy_Attack_Sword");
                     }
                 }
                 else
@@ -189,6 +189,7 @@ namespace Game.Enemy
             bulletHolder[FindBullet()].transform.position = transform.TransformPoint(offsetAttack);
             bulletHolder[FindBullet()].transform.rotation = transform.rotation;
             bulletHolder[FindBullet()].GetComponent<FireProjectile>().SetActives();
+            playerAudio.Plays_20("Enemy_Attack_Shoot");
             //Instantiate(prefab, transform.TransformPoint(offsetAttack), transform.rotation);
         }
 
@@ -199,6 +200,7 @@ namespace Game.Enemy
             bulletHolder[FindBullet()].transform.position = transform.TransformPoint(offsetAttack);
             bulletHolder[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f, lookRotation.eulerAngles.z + 90f);
             bulletHolder[FindBullet()].GetComponent<FireProjectile>().SetActives();
+            playerAudio.Plays_20("Enemy_Attack_Shoot");
             //Instantiate(prefab, transform.TransformPoint(offsetAttack), Quaternion.Euler(transform.rotation.x, transform.rotation.y, lookRotation.eulerAngles.z + 90));
         }
 

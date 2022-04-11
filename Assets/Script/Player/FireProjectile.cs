@@ -8,6 +8,7 @@ using Game.Player;
 //Bug
 public class FireProjectile : MonoBehaviour
 {
+    private Rigidbody2D body;
     [SerializeField] private EnemyType enemyType;
     [SerializeField] private float bulletSpeed = 10f;
     [SerializeField] private GameObject bulletPrefab, explosionPrefab;
@@ -18,19 +19,18 @@ public class FireProjectile : MonoBehaviour
     private PlayerHealth playerHealth;
     private PetAI petAI;
     private PlayerAudio playerAudio;
-    private Rigidbody2D body;
 
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
-    }
-
-    private void OnEnable()
-    {
         player = FindObjectOfType<CharacterController2D>().transform;
         playerHealth = player.GetComponent<PlayerHealth>();
         petAI = FindObjectOfType<PetAI>().GetComponent<PetAI>();
         playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+    }
+
+    private void OnEnable()
+    {
         targetPetEnemy = (petAI.closestEnemy.position - transform.position).normalized;
         StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
         if (!body.isKinematic) return;
@@ -154,7 +154,8 @@ public class FireProjectile : MonoBehaviour
         bulletPrefab.SetActive(false);
         explosionPrefab.SetActive(true);
         //AudioSource.PlayClipAtPoint(soundExplosion[0], transform.position, 1f);
-        playerAudio.Play(soundExplosion[0]);
+        //playerAudio.Play(soundExplosion[0]);
+        playerAudio.Plays_20("Player_Bullet_Explosion_1");
         body.bodyType = RigidbodyType2D.Static;
         StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
     }

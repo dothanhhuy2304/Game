@@ -272,6 +272,7 @@ MonoBehaviour:
   t: 0
   modulus: 1
   clip: {fileID: 8300000, guid: b9f95e88528322d45ab468493fda9ea6, type: 3}
+  clipName: Player_Land_1
 --- !u!1102 &-4227143689211075349
 AnimatorState:
   serializedVersion: 6
@@ -411,6 +412,7 @@ MonoBehaviour:
   t: 0.6
   modulus: 1
   clip: {fileID: 8300000, guid: 8c2653fdb3b7ed14b81e093ec9edf966, type: 3}
+  clipName: Player_Land_3
 --- !u!91 &9100000
 AnimatorController:
   m_ObjectHideFlags: 0
@@ -665,6 +667,7 @@ MonoBehaviour:
   t: 0.3
   modulus: 1
   clip: {fileID: 8300000, guid: 354e3255e5315484d92e71b81aea53e4, type: 3}
+  clipName: Player_Land_2
 --- !u!1102 &6509538948307590295
 AnimatorState:
   serializedVersion: 6

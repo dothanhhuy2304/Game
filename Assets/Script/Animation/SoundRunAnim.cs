@@ -4,9 +4,9 @@ public class SoundRunAnim : StateMachineBehaviour
 {
     public float t = 0.5f;
     public float modulus = 0f;
-    public AudioClip clip;
     private float lastT = -1f;
     private PlayerAudio playerAudio;
+    [SerializeField] private string clipName;
 
     private void Awake()
     {
@@ -19,8 +19,7 @@ public class SoundRunAnim : StateMachineBehaviour
         var nt = stateInfo.normalizedTime;
         if (modulus > 0f) nt %= modulus;
         if (nt >= t && lastT < t)
-            //AudioSource.PlayClipAtPoint(clip, animator.transform.position, 1f);
-            playerAudio.PlayerLand(clip);
+            playerAudio.Plays_10(clipName);
         lastT = nt;
     }
 }
