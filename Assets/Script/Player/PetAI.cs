@@ -17,7 +17,7 @@ public class PetAI : BaseObject
     private Animator animator;
     private readonly AnimationStates animationState = new AnimationStates();
 
-    public override void Start()
+    protected override void Start()
     {
         base.Start();
         animator = GetComponent<Animator>();
@@ -28,7 +28,7 @@ public class PetAI : BaseObject
         playerHealth = playerPos.GetComponent<PlayerHealth>();
     }
 
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
         if (!playerHealth.PlayerIsDeath())
         {

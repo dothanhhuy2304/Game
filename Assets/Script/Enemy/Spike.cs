@@ -1,20 +1,22 @@
+using Game.Core;
 using UnityEngine;
 
-public class Spike : MonoBehaviour
+public class Spike : BaseObject
 {
     [SerializeField] private float timeAttack = 1f;
     private float maxTimeAttack;
     private PlayerHealth playerHealth;
     private bool isHurts;
 
-    private void Start()
+    protected override void Start()
     {
         maxTimeAttack = timeAttack;
         playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
     }
 
-    private void Update()
+    protected override void Update()
     {
+        if (base.CheckDistance(transform.position, playerHealth.transform.position) > 20) return;
         if (playerHealth.PlayerIsDeath()) return;
         if (timeAttack != 0f)
         {

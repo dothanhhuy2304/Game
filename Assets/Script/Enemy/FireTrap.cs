@@ -21,6 +21,7 @@ public class FireTrap : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (playerHealth.PlayerIsDeath()) return;
         if (!other.CompareTag("Player")) return;
         isOut = false;
         animator.SetBool(animationState.fireTrapHit, true);
@@ -29,6 +30,7 @@ public class FireTrap : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
+        if (playerHealth.PlayerIsDeath()) return;
         if (!other.CompareTag("Player")) return;
         isOut = true;
     }
@@ -36,6 +38,7 @@ public class FireTrap : MonoBehaviour
     private IEnumerator WaitingForFireOn(float delay)
     {
         yield return new WaitForSeconds(delay);
+        if (playerHealth.PlayerIsDeath()) yield break;
         if (!isOut)
         {
             animator.SetBool(animationState.fireTrapON, true);

@@ -1,9 +1,10 @@
+using Game.Core;
 using UnityEngine;
 using Game.Player;
 
 namespace Game.Enemy
 {
-    public class WallWaitingMove : MonoBehaviour
+    public class WallWaitingMove : BaseObject
     {
         private const float Direction = -1f;
         private Transform player;
@@ -12,23 +13,31 @@ namespace Game.Enemy
         private bool isComeback;
         private Vector3 startTrans = Vector3.zero;
 
-        private void Start()
+        protected override void Start()
         {
             player = FindObjectOfType<CharacterController2D>().transform;
             startTrans = transform.position;
         }
 
-        private void FixedUpdate()
+        protected override void FixedUpdate()
         {
-            if (isMoving)
+            if (base.CheckDistance(transform.position, player.position) > 30f && transform.position == startTrans)
             {
-                transform.position += Vector3.right * (movingSpeed * Time.deltaTime);
+                var transform1 = transform;
+                transform1.position = transform1.position;
             }
-
-            if (isComeback)
+            else
             {
-                transform.position =
-                    Vector3.MoveTowards(transform.position, startTrans, movingSpeed * Time.deltaTime);
+                if (isMoving)
+                {
+                    transform.position += Vector3.right * (movingSpeed * Time.deltaTime);
+                }
+
+                if (isComeback)
+                {
+                    transform.position =
+                        Vector3.MoveTowards(transform.position, startTrans, movingSpeed * Time.deltaTime);
+                }
             }
         }
 

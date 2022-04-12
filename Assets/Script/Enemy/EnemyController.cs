@@ -35,7 +35,7 @@ namespace Game.Enemy
         private readonly AnimationStates animationState = new AnimationStates();
         private PlayerAudio playerAudio;
 
-        public override void Start()
+        protected override void Start()
         {
             base.Start();
             player = FindObjectOfType<CharacterController2D>().transform;
@@ -48,52 +48,78 @@ namespace Game.Enemy
             posAwake = transform.position;
         }
 
-        private void FixedUpdate()
+        protected override void FixedUpdate()
         {
-            if (enemyHealth.EnemyDeath())
+            if (base.CheckDistance(transform.position, player.transform.position) > 20)
             {
-                transform.position = posAwake;
-            }
-            else
-            {
+                body.bodyType = RigidbodyType2D.Static;
                 switch (enemyType)
                 {
                     case EnemyType.SNINJA:
-                    {
-                        var hit = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.down,
-                            Distance, 1 << LayerMask.NameToLayer("ground"));
-                        var hitRight = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.right,
-                            0.5f, 1 << LayerMask.NameToLayer("ground"));
-                        if (!hit || hitRight)
-                        {
-                            transform.Rotate(new Vector3(0, -180f, 0));
-                        }
-
-                        Moving();
+                        animator.Play("Idle", 0, 1f);
+                        if (!animator.GetBool(animationState.sNinjaIsRun)) return;
+                        animator.SetBool(animationState.sNinjaIsRun, false);
                         break;
-                    }
-                    case EnemyType.CarnivorousPlant:
-                    {
-                        if (Vector3.Distance(transform.position, player.position) < rangeAttack)
-                        {
-                            Flip();
-                            currentTime -= Time.deltaTime;
-                            if (currentTime <= 0)
-                            {
-                                animator.SetTrigger(animationState.carnivorousPlantIsAttack);
-                                currentTime = maxTimeAttack;
-                                Attack();
-                            }
-                        }
 
-                        break;
-                    }
                     case EnemyType.Player:
+                        break;
+                    case EnemyType.CarnivorousPlant:
                         break;
                     case EnemyType.Pet:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
+                }
+            }
+            else
+            {
+                body.bodyType = RigidbodyType2D.Kinematic;
+                if (enemyHealth.EnemyDeath())
+                {
+                    transform.position = posAwake;
+                }
+                else
+                {
+                    switch (enemyType)
+                    {
+                        case EnemyType.SNINJA:
+                        {
+                            var hit = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.down,
+                                Distance, 1 << LayerMask.NameToLayer("ground"));
+                            var hitRight = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition),
+                                Vector2.right,
+                                0.5f, 1 << LayerMask.NameToLayer("ground"));
+                            if (!hit || hitRight)
+                            {
+                                transform.Rotate(new Vector3(0, -180f, 0));
+                            }
+
+                            Moving();
+                            break;
+                        }
+                        case EnemyType.CarnivorousPlant:
+                        {
+                            if (Vector3.Distance(transform.position, player.position) < rangeAttack)
+                            {
+                                Flip();
+                                currentTime -= Time.deltaTime;
+                                if (currentTime <= 0)
+                                {
+                                    animator.SetTrigger(animationState.carnivorousPlantIsAttack);
+                                    currentTime = maxTimeAttack;
+                                    Attack();
+                                }
+                            }
+
+                            break;
+                        }
+                        case EnemyType.Player:
+                            break;
+                        case EnemyType.Pet:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
             }
         }

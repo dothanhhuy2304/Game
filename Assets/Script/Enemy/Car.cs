@@ -1,13 +1,14 @@
 using System.Collections;
+using Game.Core;
 using UnityEngine;
 
-public class Car : MonoBehaviour
+public class Car : BaseObject
 {
     private PlayerHealth playerHealth;
     [SerializeField] private GameObject[] carTrans;
     [SerializeField] private Vector3[] currentPos;
 
-    private void Start()
+    protected override void Start()
     {
         playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
         currentPos[0] = carTrans[0].transform.position;
@@ -15,7 +16,7 @@ public class Car : MonoBehaviour
         currentPos[2] = carTrans[2].transform.position;
     }
 
-    private void Update()
+    protected override void Update()
     {
         if (!playerHealth.PlayerIsDeath()) return;
         StartCoroutine(nameof(WaitingPlayerRespawn), 3f);

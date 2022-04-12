@@ -25,7 +25,7 @@ namespace Game.Player
         private bool isOnCar;
         public bool isHurt;
 
-        public override void Start()
+        protected override void Start()
         {
             base.Start();
             if (!groundCheck)
@@ -40,7 +40,7 @@ namespace Game.Player
             }
         }
 
-        private void Update()
+        protected override void Update()
         {
             if (playerHealth.PlayerIsDeath()) return;
             if (isHurt) return;
@@ -60,7 +60,7 @@ namespace Game.Player
             }
         }
 
-        private void FixedUpdate()
+        protected override void FixedUpdate()
         {
             if (!playerHealth.PlayerIsDeath())
             {

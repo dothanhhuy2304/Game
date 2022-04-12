@@ -1,40 +1,52 @@
 using System;
+using Game.Core;
 using UnityEngine;
 using Game.Player;
 
 namespace Game.Enemy
 {
-    public class WallMovement : MonoBehaviour
+    public class WallMovement : BaseObject
     {
         private const float Direction = -1f;
         public float speed = 3f;
         private Transform player;
         [SerializeField] private MovingInput movingInput;
+        private Vector3 startPos = Vector3.zero;
 
-        private void Start()
+        protected override void Start()
         {
             player = FindObjectOfType<CharacterController2D>().transform;
+            startPos = transform.position;
         }
 
-        private void FixedUpdate()
+        protected override void FixedUpdate()
         {
-            switch (movingInput)
+            if (base.CheckDistance(transform.position, player.transform.position) > 30f &&
+                transform.position == startPos)
             {
-                case MovingInput.Horizontal:
-                    transform.position += Vector3.left * (speed * Time.deltaTime);
-                    break;
-                case MovingInput.Vertical:
-                    transform.position += Vector3.up * (speed * Time.deltaTime);
-                    break;
-                case MovingInput.Saw:
-                    transform.position += Vector3.up * (speed * Time.deltaTime);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                var transform1 = transform;
+                transform1.position = transform1.position;
+            }
+            else
+            {
+                switch (movingInput)
+                {
+                    case MovingInput.Horizontal:
+                        transform.position += Vector3.left * (speed * Time.deltaTime);
+                        break;
+                    case MovingInput.Vertical:
+                        transform.position += Vector3.up * (speed * Time.deltaTime);
+                        break;
+                    case MovingInput.Saw:
+                        transform.position += Vector3.up * (speed * Time.deltaTime);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
-        public void OnTriggerEnter2D(Collider2D collision)
+        private void OnTriggerEnter2D(Collider2D collision)
         {
             switch (movingInput)
             {

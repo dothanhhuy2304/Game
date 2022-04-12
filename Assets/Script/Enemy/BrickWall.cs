@@ -1,11 +1,12 @@
+using Game.Core;
 using UnityEngine;
 
-public class BrickWall : MonoBehaviour
+public class BrickWall : BaseObject
 {
 
     [SerializeField] private SpriteRenderer spriteRenderer;
 
-    private void Awake()
+    protected override void Awake()
     {
         if (spriteRenderer) return;
         spriteRenderer = GetComponent<SpriteRenderer>();
