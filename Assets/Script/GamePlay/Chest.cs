@@ -9,15 +9,20 @@ public class Chest : MonoBehaviour
     [SerializeField] private ScoreData scoreData;
     [SerializeField] private GameObject uIGuild, item;
     private bool isOpen;
-    private Animator animator;
+    [SerializeField]private Animator animator;
     private GameManager gameManager;
     [SerializeField] private TextMeshProUGUI txtValueItem;
     private readonly float value = 10f;
     private static readonly int IsOpen = Animator.StringToHash("isOpen");
     private PlayerAudio playerAudio;
+
     private void Awake()
     {
-        animator = GetComponent<Animator>();
+        if (!animator)
+        {
+            animator = GetComponent<Animator>();
+        }
+
         gameManager = FindObjectOfType<GameManager>();
         playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
     }

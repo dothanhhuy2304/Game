@@ -3,10 +3,11 @@ using UnityEngine;
 public class BrickWall : MonoBehaviour
 {
 
-    private SpriteRenderer spriteRenderer;
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
+        if (spriteRenderer) return;
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -14,7 +15,7 @@ public class BrickWall : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            spriteRenderer.material.color=Color.gray;
+            spriteRenderer.material.color = Color.gray;
         }
     }
 
@@ -22,7 +23,7 @@ public class BrickWall : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            spriteRenderer.material.color=Color.white;
+            spriteRenderer.material.color = Color.white;
         }
     }
 }

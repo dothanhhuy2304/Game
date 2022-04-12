@@ -15,14 +15,20 @@ namespace Game.Enemy
         [SerializeField] private EnemyHealthBar enemyHealthBar;
         [SerializeField] private float timeRespawn;
         [SerializeField] private Collider2D enemyCollider;
-        private SpriteRenderer spriteRenderer;
+        [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private GameObject uIDamageEnemy;
         private TextMeshProUGUI txtDamage;
+        private PlayerAudio playerAudio;
 
         private void Start()
         {
             SetMaxHealth(this.heathDefault, this.hpIc);
-            spriteRenderer = GetComponent<SpriteRenderer>();
+            if (!spriteRenderer)
+            {
+                spriteRenderer = GetComponent<SpriteRenderer>();
+            }
+
+            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
             txtDamage = uIDamageEnemy.GetComponentInChildren<TextMeshProUGUI>();
         }
 
@@ -59,6 +65,7 @@ namespace Game.Enemy
 
         public void Die()
         {
+            playerAudio.Plays_10("Enemy_Death");
             this.currentHealth = 0f;
             spriteRenderer.enabled = false;
             enemyCollider.enabled = false;

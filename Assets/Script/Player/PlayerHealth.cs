@@ -2,12 +2,14 @@ using System.Collections;
 using System.Globalization;
 using UnityEngine;
 using Game.Core;
+using Game.Player;
 using TMPro;
 
 public class PlayerHealth : MonoBehaviour, IHealthSystem
 {
     [SerializeField] public Data playerData;
     [SerializeField] public PlayerData playerDatas;
+    [SerializeField] private CharacterController2D player;
     private PlayerHealthBar playerHealthBar;
     private Transform petAI;
     [SerializeField] private GameObject uIDamagePlayer;
@@ -15,6 +17,7 @@ public class PlayerHealth : MonoBehaviour, IHealthSystem
 
     private void Start()
     {
+        player = FindObjectOfType<CharacterController2D>().GetComponent<CharacterController2D>();
         playerHealthBar = FindObjectOfType<PlayerHealthBar>()?.GetComponent<PlayerHealthBar>();
         petAI = FindObjectOfType<PetAI>().transform;
         txtDamage = uIDamagePlayer.GetComponentInChildren<TextMeshProUGUI>();
@@ -43,6 +46,7 @@ public class PlayerHealth : MonoBehaviour, IHealthSystem
     public void GetDamage(float damage)
     {
         playerData.currentHealth = Mathf.Clamp(playerData.currentHealth - damage, 0, playerData.maxHealth);
+        player.PlayerHurt();
         if (playerData.currentHealth <= 0) Die();
         this.txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
         playerHealthBar.SetHealth(this.playerData.currentHealth, this.playerData.maxHealth);

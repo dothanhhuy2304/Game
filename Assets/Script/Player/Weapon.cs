@@ -7,18 +7,29 @@ namespace Game.Player
     {
         [SerializeField] private GameObject[] bulletHolder;
         [SerializeField] private Vector2 offset;
-        private PlayerHealth playerHealth;
+        [SerializeField] private PlayerHealth playerHealth;
         private PlayerAudio playerAudio;
+        private CharacterController2D player;
 
         private void Start()
         {
-            playerHealth = GetComponent<PlayerHealth>();
+            if (!playerHealth)
+            {
+                playerHealth = GetComponent<PlayerHealth>();
+            }
+
+            if (!player)
+            {
+                player = FindObjectOfType<CharacterController2D>().GetComponent<CharacterController2D>();
+            }
+
             playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
         }
 
         private void LateUpdate()
         {
             if (EventSystem.current.IsPointerOverGameObject() || playerHealth.PlayerIsDeath()) return;
+            if (player.isHurt) return;
             if (!Input.GetMouseButtonDown(0) && !Input.GetKeyDown(KeyCode.KeypadEnter)) return;
             //Instantiate(fireObj, transform.TransformPoint(offset), transform.rotation);
             bulletHolder[FindBullet()].transform.position = transform.TransformPoint(offset);

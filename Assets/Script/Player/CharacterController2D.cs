@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using Game.Core;
 
@@ -13,28 +14,36 @@ namespace Game.Player
         private bool isDashing;
         private bool mGrounded;
         private const float GroundedRadius = .2f;
-        private Transform groundCheck;
+        [SerializeField] private Transform groundCheck;
         [Space] [SerializeField] private LayerMask whatIsGround;
         private bool mDBJump;
-        private Animator animator;
+        [SerializeField] private Animator animator;
         [SerializeField] private float clampMinX, clampMaxX;
-        private PlayerHealth playerHealth;
+        [SerializeField] private PlayerHealth playerHealth;
         private readonly AnimationStates animationState = new AnimationStates();
         private PlayerAudio playerAudio;
         private bool isOnCar;
+        public bool isHurt;
 
         public override void Start()
         {
             base.Start();
-            groundCheck = GameObject.Find("ground_check").transform;
-            animator = GetComponent<Animator>();
+            if (!groundCheck)
+            {
+                groundCheck = GameObject.Find("ground_check").transform;
+            }
+
             playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
-            playerHealth = GetComponent<PlayerHealth>();
+            if (!playerHealth)
+            {
+                playerHealth = GetComponent<PlayerHealth>();
+            }
         }
 
         private void Update()
         {
             if (playerHealth.PlayerIsDeath()) return;
+            if (isHurt) return;
             mHorizontal = Input.GetAxisRaw("Horizontal");
             if (!mGrounded || mDBJump == false)
             {
@@ -55,6 +64,7 @@ namespace Game.Player
         {
             if (!playerHealth.PlayerIsDeath())
             {
+                if (isHurt) return;
                 Move(mHorizontal * playerHealth.playerData.movingSpeed * Time.fixedDeltaTime);
                 var position = transform.position;
                 position = new Vector3(Mathf.Clamp(position.x, clampMinX, clampMaxX), position.y, position.z);
@@ -62,6 +72,7 @@ namespace Game.Player
             }
             else
             {
+                if (isHurt) return;
                 body.velocity = new Vector2(0f, body.velocity.y);
                 PlayerRun(0f);
             }
@@ -148,6 +159,23 @@ namespace Game.Player
             {
                 isOnCar = true;
             }
+        }
+
+        public void PlayerHurt()
+        {
+
+            playerAudio.Plays_10("Player_Hurt");
+            animator.SetTrigger(animationState.playerIsHurt);
+            body.bodyType = RigidbodyType2D.Static;
+            isHurt = true;
+            StartCoroutine(nameof(Hurting), 0.5f);
+        }
+
+        private IEnumerator Hurting(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            body.bodyType = RigidbodyType2D.Dynamic;
+            isHurt = false;
         }
 
         private void OnTriggerExit2D(Collider2D other)

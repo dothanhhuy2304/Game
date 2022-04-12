@@ -10,7 +10,6 @@ namespace Game.Item
         [SerializeField] private ScoreData scoreData;
         [SerializeField] private ItemType itemType;
         [SerializeField] private ItemData itemData;
-        private const float Volume = 1f;
         [SerializeField] private GameObject itemObj, effectCollectedObj;
         [SerializeField] private Collider2D itemCollider;
         private PlayerHealth playerHealthBar;

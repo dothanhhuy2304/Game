@@ -8,7 +8,7 @@ using Game.Player;
 //Bug
 public class FireProjectile : MonoBehaviour
 {
-    private Rigidbody2D body;
+    [SerializeField]private Rigidbody2D body;
     [SerializeField] private EnemyType enemyType;
     [SerializeField] private float bulletSpeed = 10f;
     [SerializeField] private GameObject bulletPrefab, explosionPrefab;
@@ -21,7 +21,11 @@ public class FireProjectile : MonoBehaviour
 
     private void Awake()
     {
-        body = GetComponent<Rigidbody2D>();
+        if (!body)
+        {
+            body = GetComponent<Rigidbody2D>();
+        }
+
         player = FindObjectOfType<CharacterController2D>().transform;
         playerHealth = player.GetComponent<PlayerHealth>();
         petAI = FindObjectOfType<PetAI>().GetComponent<PetAI>();
@@ -125,12 +129,12 @@ public class FireProjectile : MonoBehaviour
             }
             case EnemyType.Pet:
             {
-                if (other.gameObject.CompareTag("Enemy"))
+                if (other.CompareTag("Enemy"))
                 {
                     other.GetComponent<EnemyHealth>().GetDamage(petAI.petData.damageAttack);
                     PlayerExplosions();
                 }
-                else if (other.gameObject.CompareTag("Bullet"))
+                else if (other.CompareTag("Bullet"))
                 {
                     PlayerExplosions();
                 }

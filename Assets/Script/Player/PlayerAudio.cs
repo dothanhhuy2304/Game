@@ -6,6 +6,7 @@ public class PlayerAudio : MonoBehaviour
     [SerializeField] private AudioSource audioSource10;
     [SerializeField] private AudioSource audioSource13;
     [SerializeField] private AudioSource audioSource20;
+    [SerializeField] private AudioSource audioSource25;
     [SerializeField] private Sound[] sounds;
 
     public void Plays_10(string clip)
@@ -20,9 +21,14 @@ public class PlayerAudio : MonoBehaviour
         audioSource13.PlayOneShot(s.audioClip);
     }
 
-    public void Plays_20(string clip)
+    public void Plays_15(string clip)
     {
         var s = Array.Find(sounds, sound => sound.name == clip);
         audioSource20.PlayOneShot(s.audioClip);
+    }
+    public void Plays_20(string clip)
+    {
+        var s = Array.Find(sounds, sound => sound.name == clip);
+        audioSource25.PlayOneShot(s.audioClip);
     }
 }

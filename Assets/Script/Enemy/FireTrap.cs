@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class FireTrap : MonoBehaviour
 {
-    private Animator animator;
+    [SerializeField] private Animator animator;
     private PlayerHealth playerHealth;
     private bool isOut;
     private readonly AnimationStates animationState = new AnimationStates();
 
     private void Start()
     {
-        animator = GetComponent<Animator>();
+        if (!animator)
+        {
+            animator = GetComponent<Animator>();
+        }
+
         playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
     }
 
