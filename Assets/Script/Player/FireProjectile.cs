@@ -12,7 +12,6 @@ public class FireProjectile : MonoBehaviour
     [SerializeField] private EnemyType enemyType;
     [SerializeField] private float bulletSpeed = 10f;
     [SerializeField] private GameObject bulletPrefab, explosionPrefab;
-    [SerializeField] private AudioClip[] soundExplosion;
     private Transform player;
     private Vector2 target = Vector2.zero;
     private Vector2 targetPetEnemy = Vector2.zero;
@@ -70,16 +69,16 @@ public class FireProjectile : MonoBehaviour
             {
                 if (other.CompareTag("ground"))
                 {
-                    Explosions();
+                    EnemyExplosions();
                 }
                 else if (other.CompareTag("Bullet"))
                 {
-                    Explosions();
+                    EnemyExplosions();
                 }
                 else if (other.CompareTag("Player"))
                 {
                     playerHealth.GetDamage(20f);
-                    Explosions();
+                    EnemyExplosions();
                 }
 
                 break;
@@ -88,16 +87,16 @@ public class FireProjectile : MonoBehaviour
             {
                 if (other.CompareTag("ground"))
                 {
-                    Explosions();
+                    EnemyExplosions();
                 }
                 else if (other.CompareTag("Bullet"))
                 {
-                    Explosions();
+                    EnemyExplosions();
                 }
                 else if (other.CompareTag("Player"))
                 {
                     playerHealth.GetDamage(14f);
-                    Explosions();
+                    EnemyExplosions();
                 }
 
                 break;
@@ -106,16 +105,16 @@ public class FireProjectile : MonoBehaviour
             {
                 if (other.gameObject.CompareTag("ground"))
                 {
-                    Explosions();
+                    PlayerExplosions();
                 }
                 else if (other.CompareTag("Enemy"))
                 {
                     other.GetComponent<EnemyHealth>().GetDamage(playerHealth.playerData.damageAttack);
-                    Explosions();
+                    PlayerExplosions();
                 }
                 else if (other.CompareTag("Bullet"))
                 {
-                    Explosions();
+                    PlayerExplosions();
                 }
                 else if (other.CompareTag("Box"))
                 {
@@ -129,11 +128,11 @@ public class FireProjectile : MonoBehaviour
                 if (other.gameObject.CompareTag("Enemy"))
                 {
                     other.GetComponent<EnemyHealth>().GetDamage(petAI.petData.damageAttack);
-                    Explosions();
+                    PlayerExplosions();
                 }
                 else if (other.gameObject.CompareTag("Bullet"))
                 {
-                    Explosions();
+                    PlayerExplosions();
                 }
 
                 break;
@@ -149,13 +148,22 @@ public class FireProjectile : MonoBehaviour
         return target;
     }
 
-    private void Explosions()
+    private void PlayerExplosions()
     {
         bulletPrefab.SetActive(false);
         explosionPrefab.SetActive(true);
         //AudioSource.PlayClipAtPoint(soundExplosion[0], transform.position, 1f);
-        //playerAudio.Play(soundExplosion[0]);
         playerAudio.Plays_20("Player_Bullet_Explosion_1");
+        body.bodyType = RigidbodyType2D.Static;
+        StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
+    }
+
+    private void EnemyExplosions()
+    {
+        bulletPrefab.SetActive(false);
+        explosionPrefab.SetActive(true);
+        //AudioSource.PlayClipAtPoint(soundExplosion[0], transform.position, 1f);
+        playerAudio.Plays_20("Enemy_Bullet_Explosion_1");
         body.bodyType = RigidbodyType2D.Static;
         StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
     }

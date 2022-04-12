@@ -14,14 +14,12 @@ public class Chest : MonoBehaviour
     [SerializeField] private TextMeshProUGUI txtValueItem;
     private readonly float value = 10f;
     private static readonly int IsOpen = Animator.StringToHash("isOpen");
-    private AudioSource audioSource;
-    [SerializeField] private AudioClip audioClip;
-
+    private PlayerAudio playerAudio;
     private void Awake()
     {
         animator = GetComponent<Animator>();
         gameManager = FindObjectOfType<GameManager>();
-        audioSource = GetComponent<AudioSource>();
+        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
     }
 
     private void OnEnable()
@@ -45,10 +43,10 @@ public class Chest : MonoBehaviour
         if (!Input.GetKey(KeyCode.F)) return;
         animator.SetBool(IsOpen, true);
         uIGuild.SetActive(false);
-        StartCoroutine(nameof(ActiveItem), 5f);
+        StartCoroutine(nameof(ActiveItem), 3f);
         scoreData.diamond += value;
         gameManager.SetDiamond(scoreData.diamond);
-        audioSource.PlayOneShot(audioClip);
+        playerAudio.Plays_20("Chest");
         isOpen = true;
     }
 

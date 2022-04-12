@@ -98,7 +98,6 @@ namespace Game.Player
                 PlayerJump();
                 isDashing = true;
                 playerAudio.Plays_13("Player_Jump");
-                //playerAudio.PlayerJump();
             }
             else if (mDBJump)
             {
@@ -107,7 +106,6 @@ namespace Game.Player
                 PlayerJump();
                 isDashing = true;
                 playerAudio.Plays_13("Player_Jump");
-                //playerAudio.PlayerJump();
             }
         }
 

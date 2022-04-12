@@ -8,5 +8,4 @@ public class ItemData : ScriptableObject
     public float scoreReceive;
     public float moneyReceive;
     public float diamondReceive;
-    public AudioClip soundCollection, soundHurtCollection;
 }
