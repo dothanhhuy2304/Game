@@ -3,6 +3,7 @@ using Game.Core;
 using UnityEngine;
 using Game.Player;
 
+//Improver
 namespace Game.Enemy
 {
     public class WallMovement : BaseObject
