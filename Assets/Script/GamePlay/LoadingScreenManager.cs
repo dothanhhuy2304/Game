@@ -7,12 +7,28 @@ public class LoadingScreenManager : MonoBehaviour
     [SerializeField] private GameObject uILoading;
     private AsyncOperation loadOperation;
 
-    public void LoadingScreen()
+    public void LoadingScreen(int i)
     {
         //StartCoroutine(nameof(WaitingLoading), 3f);
-        player.currentScenes = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex + 1;
-        loadOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(player.currentScenes);
+        loadOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(i);
         StartCoroutine(nameof(LoadAsyncScene));
+    }
+
+    public int LoadCurrentScreen()
+    {
+        return player.currentScenes;
+    }
+
+    public int ResetScreen()
+    {
+        player.currentScenes = 0;
+        return player.currentScenes;
+    }
+
+    public int NextScreen(int i)
+    {
+        player.currentScenes = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex + i;
+        return player.currentScenes;
     }
 
     private IEnumerator LoadAsyncScene()

@@ -16,7 +16,7 @@ public class Spike : BaseObject
 
     protected override void Update()
     {
-        if (base.CheckDistance(transform.position, playerHealth.transform.position) > 20) return;
+        if (base.CheckDistance(transform.position, playerHealth.transform.position) > 10f) return;
         if (playerHealth.PlayerIsDeath()) return;
         if (timeAttack != 0f)
         {

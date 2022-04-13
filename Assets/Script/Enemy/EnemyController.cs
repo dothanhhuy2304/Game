@@ -31,7 +31,6 @@ namespace Game.Enemy
         private PlayerHealth playerHealth;
         private Animator animator;
         private EnemyHealth enemyHealth;
-        private Vector3 posAwake;
         private readonly AnimationStates animationState = new AnimationStates();
         private PlayerAudio playerAudio;
 
@@ -45,25 +44,53 @@ namespace Game.Enemy
             currentTime = 0f;
             animator = GetComponent<Animator>();
             enemyHealth = GetComponent<EnemyHealth>();
-            posAwake = transform.position;
         }
 
         protected override void FixedUpdate()
         {
-            if (base.CheckDistance(transform.position, player.transform.position) > 20)
+
+            if (enemyHealth.EnemyDeath())
             {
                 body.bodyType = RigidbodyType2D.Static;
+            }
+            else
+            {
+                body.bodyType = RigidbodyType2D.Kinematic;
                 switch (enemyType)
                 {
                     case EnemyType.SNINJA:
-                        animator.Play("Idle", 0, 1f);
-                        if (!animator.GetBool(animationState.sNinjaIsRun)) return;
-                        animator.SetBool(animationState.sNinjaIsRun, false);
-                        break;
+                    {
+                        var hit = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.down,
+                            Distance, 1 << LayerMask.NameToLayer("ground"));
+                        var hitRight = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition),
+                            Vector2.right,
+                            0.5f, 1 << LayerMask.NameToLayer("ground"));
+                        if (!hit || hitRight)
+                        {
+                            transform.Rotate(new Vector3(0, -180f, 0));
+                        }
 
-                    case EnemyType.Player:
+                        Moving();
+                        SNinjaAttack();
                         break;
+                    }
                     case EnemyType.CarnivorousPlant:
+                    {
+                        if (Vector3.Distance(transform.position, player.position) < rangeAttack)
+                        {
+                            Flip();
+                            currentTime -= Time.deltaTime;
+                            if (currentTime <= 0)
+                            {
+                                animator.SetTrigger(animationState.carnivorousPlantIsAttack);
+                                currentTime = maxTimeAttack;
+                                Attack();
+                            }
+                        }
+
+                        break;
+                    }
+                    case EnemyType.Player:
                         break;
                     case EnemyType.Pet:
                         break;
@@ -71,104 +98,57 @@ namespace Game.Enemy
                         throw new ArgumentOutOfRangeException();
                 }
             }
-            else
-            {
-                body.bodyType = RigidbodyType2D.Kinematic;
-                if (enemyHealth.EnemyDeath())
-                {
-                    transform.position = posAwake;
-                }
-                else
-                {
-                    switch (enemyType)
-                    {
-                        case EnemyType.SNINJA:
-                        {
-                            var hit = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.down,
-                                Distance, 1 << LayerMask.NameToLayer("ground"));
-                            var hitRight = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition),
-                                Vector2.right,
-                                0.5f, 1 << LayerMask.NameToLayer("ground"));
-                            if (!hit || hitRight)
-                            {
-                                transform.Rotate(new Vector3(0, -180f, 0));
-                            }
-
-                            Moving();
-                            break;
-                        }
-                        case EnemyType.CarnivorousPlant:
-                        {
-                            if (Vector3.Distance(transform.position, player.position) < rangeAttack)
-                            {
-                                Flip();
-                                currentTime -= Time.deltaTime;
-                                if (currentTime <= 0)
-                                {
-                                    animator.SetTrigger(animationState.carnivorousPlantIsAttack);
-                                    currentTime = maxTimeAttack;
-                                    Attack();
-                                }
-                            }
-
-                            break;
-                        }
-                        case EnemyType.Player:
-                            break;
-                        case EnemyType.Pet:
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }
-            }
         }
 
         private void Moving()
         {
-            if (Vector3.Distance(transform.position, player.position) >= rangeAttack || playerHealth.PlayerIsDeath())
-            {
-                body.velocity = body.transform.right * movingSpeed;
-                animator.SetBool(animationState.sNinjaIsRun, true);
-            }
-            else if (!playerHealth.PlayerIsDeath())
-            {
-                if (currentTime != 0f)
-                {
-                    currentTime -= Time.deltaTime;
-                }
+            body.velocity = body.transform.right * movingSpeed;
+            animator.SetBool(animationState.sNinjaIsRun, true);
+        }
 
-                if (!(Vector3.Distance(transform.position, player.position) <= rangeAttack)) return;
-                if (Vector3.Distance(transform.position, player.position) <= 3f)
+        private void SNinjaAttack()
+        {
+            if (base.CheckDistance(transform.position, player.transform.position) > 20f) return;
+            if (playerHealth.PlayerIsDeath()) return;
+            if (currentTime != 0f)
+            {
+                currentTime -= Time.deltaTime;
+            }
+
+            if (!(Vector3.Distance(transform.position, player.position) <= rangeAttack)) return;
+            if (Vector3.Distance(transform.position, player.position) <= 3f)
+            {
+                Flip();
+                if (Vector3.Distance(transform.position, player.position) >= 2f)
                 {
-                    Flip();
-                    var hits = Physics2D.OverlapCircle(transform.TransformPoint(checkGroundPosition), radiusAttack);
-                    if (!hits.CompareTag("Player") && Vector3.Distance(transform.position, player.position) >= 2f)
-                    {
-                        var pos = player.position - transform.position;
-                        body.velocity = pos * (35f * Time.fixedDeltaTime);
-                        animator.SetBool(animationState.sNinjaIsRun, true);
-                    }
-                    else
-                    {
-                        body.velocity = Vector2.zero;
-                        animator.SetBool(animationState.sNinjaIsRun, false);
-                        if (!(currentTime <= 0)) return;
-                        animator.SetTrigger(animationState.sNinjaIsAttack1);
-                        currentTime = 1f;
-                        playerHealth.GetDamage(20f);
-                        //AudioSource.PlayClipAtPoint(swordAudio, transform.position, 1f);
-                        playerAudio.Plays_20("Enemy_Attack_Sword");
-                    }
+                    var pos = player.position - transform.position;
+                    body.velocity = pos * (35f * Time.fixedDeltaTime);
+                    animator.SetBool(animationState.sNinjaIsRun, true);
                 }
                 else
                 {
-                    Flip();
+                    var hits = Physics2D.OverlapCircle(transform.TransformPoint(checkGroundPosition), radiusAttack);
+                    body.velocity = Vector2.zero;
                     animator.SetBool(animationState.sNinjaIsRun, false);
-                    if (!(currentTime <= 0f)) return;
-                    currentTime = maxTimeAttack;
-                    Attack();
+                    if (!(currentTime <= 0)) return;
+                    animator.SetTrigger(animationState.sNinjaIsAttack1);
+                    currentTime = 1f;
+                    if (hits.CompareTag("Player"))
+                    {
+                        playerHealth.GetDamage(20f);
+                    }
+
+                    //AudioSource.PlayClipAtPoint(swordAudio, transform.position, 1f);
+                    playerAudio.Plays_20("Enemy_Attack_Sword");
                 }
+            }
+            else
+            {
+                Flip();
+                animator.SetBool(animationState.sNinjaIsRun, false);
+                if (!(currentTime <= 0f)) return;
+                currentTime = maxTimeAttack;
+                Attack();
             }
         }
 
@@ -192,13 +172,13 @@ namespace Game.Enemy
                 case EnemyType.SNINJA:
                 {
                     yield return new WaitForSeconds(timeDelay);
-                    this.AttackNinja();
+                    AttackNinja();
                     break;
                 }
                 case EnemyType.CarnivorousPlant:
                 {
                     yield return new WaitForSeconds(timeDelay);
-                    this.AttackCarnivorousPlant();
+                    AttackCarnivorousPlant();
                     break;
                 }
                 case EnemyType.Player:
@@ -241,9 +221,10 @@ namespace Game.Enemy
             return 0;
         }
 
-        // void OnDrawGizmos()
-        // {
-        //     Gizmos.DrawSphere(transform.TransformPoint(checkGroundPosition), radiusAttack);
-        // }
+        //void OnDrawGizmos()
+        //{
+        //Gizmos.DrawSphere(transform.TransformPoint(checkGroundPosition), radiusAttack);
+        //Gizmos.DrawSphere(transform.position, 2f);
+        //}
     }
 }

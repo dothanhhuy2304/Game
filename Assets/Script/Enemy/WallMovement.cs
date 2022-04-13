@@ -20,16 +20,15 @@ namespace Game.Enemy
             startPos = transform.position;
         }
 
-        protected override void FixedUpdate()
+        protected override void Update()
         {
-            if (base.CheckDistance(transform.position, player.transform.position) > 30f &&
-                transform.position == startPos)
+            if (base.CheckDistance(transform.position, player.position) > 30f)
             {
-                var transform1 = transform;
-                transform1.position = transform1.position;
+                transform.position = Vector3.MoveTowards(transform.position, startPos, speed * Time.deltaTime);
             }
             else
             {
+
                 switch (movingInput)
                 {
                     case MovingInput.Horizontal:

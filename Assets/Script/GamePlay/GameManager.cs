@@ -6,6 +6,7 @@ namespace Game.GamePlay
 {
     public class GameManager : MonoBehaviour
     {
+        public static GameManager Instance { get; private set; }
         [SerializeField] private TextMeshProUGUI txtScore;
         [SerializeField] private TextMeshProUGUI txtDiamond;
         [SerializeField] private TextMeshProUGUI txtMoney;
@@ -13,6 +14,15 @@ namespace Game.GamePlay
         private void Awake()
         {
             DontDestroyOnLoad(this);
+
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
 
         public void SetScore(float score)

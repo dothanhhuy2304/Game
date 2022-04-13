@@ -1,3 +1,4 @@
+using Game.GamePlay;
 using UnityEngine;
 
 public class LoadCharacter : MonoBehaviour
@@ -8,5 +9,9 @@ public class LoadCharacter : MonoBehaviour
     private void Awake()
     {
         characters[playerData.characterSelection].SetActive(true);
+        //var uiManager = FindObjectOfType<UIManager>().GetComponent<UIManager>();
+        if (UIManager.Instance.healthUI.activeSelf || UIManager.Instance.scoreUI.activeSelf) return;
+        UIManager.Instance.healthUI.SetActive(true);
+        UIManager.Instance.scoreUI.SetActive(true);
     }
 }

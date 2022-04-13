@@ -21,10 +21,9 @@ namespace Game.Enemy
 
         protected override void FixedUpdate()
         {
-            if (base.CheckDistance(transform.position, player.position) > 30f && transform.position == startTrans)
+            if (base.CheckDistance(transform.position, player.position) > 30f)
             {
-                var transform1 = transform;
-                transform1.position = transform1.position;
+                isComeback = true;
             }
             else
             {

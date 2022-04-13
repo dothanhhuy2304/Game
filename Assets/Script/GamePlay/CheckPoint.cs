@@ -18,7 +18,7 @@ namespace Game.GamePlay
             if (!other.CompareTag("Player")) return;
             if (Input.GetKey(KeyCode.F))
             {
-                loadingScreenManager.LoadingScreen();
+                loadingScreenManager.LoadingScreen(loadingScreenManager.NextScreen(1));
             }
         }
 
