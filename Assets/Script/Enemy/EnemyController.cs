@@ -17,6 +17,7 @@ namespace Game.Enemy
 
         [Space] private Transform player;
         [SerializeField] private Vector2 checkGroundPosition;
+        [SerializeField] private Transform rangeAttackObj;
         private const float Distance = 1.5f;
         [Range(0f, 100f)] [SerializeField] private float rangeAttack = 7f;
         [SerializeField] private float offset;
@@ -119,6 +120,8 @@ namespace Game.Enemy
             if (Vector3.Distance(transform.position, player.position) <= 3f)
             {
                 Flip();
+                var hits = Physics2D.OverlapCircle(rangeAttackObj.position, radiusAttack,
+                    1 << LayerMask.NameToLayer("Player"));
                 if (Vector3.Distance(transform.position, player.position) >= 2f)
                 {
                     var pos = player.position - transform.position;
@@ -127,13 +130,12 @@ namespace Game.Enemy
                 }
                 else
                 {
-                    var hits = Physics2D.OverlapCircle(transform.TransformPoint(checkGroundPosition), radiusAttack);
                     body.velocity = Vector2.zero;
                     animator.SetBool(animationState.sNinjaIsRun, false);
                     if (!(currentTime <= 0)) return;
                     animator.SetTrigger(animationState.sNinjaIsAttack1);
                     currentTime = 1f;
-                    if (hits.CompareTag("Player"))
+                    if (hits)
                     {
                         playerHealth.GetDamage(20f);
                     }
@@ -221,10 +223,10 @@ namespace Game.Enemy
             return 0;
         }
 
-        //void OnDrawGizmos()
-        //{
-        //Gizmos.DrawSphere(transform.TransformPoint(checkGroundPosition), radiusAttack);
-        //Gizmos.DrawSphere(transform.position, 2f);
-        //}
+        void OnDrawGizmos()
+        {
+            Gizmos.DrawSphere(rangeAttackObj.position, radiusAttack);
+            //Gizmos.DrawSphere(transform.position, 2f);
+        }
     }
 }

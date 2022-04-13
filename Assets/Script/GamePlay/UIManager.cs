@@ -15,8 +15,10 @@ namespace Game.GamePlay
         [SerializeField] private Slider sliderEffect;
         [SerializeField] private GameObject btnSetting;
         private PlayerAudio playerAudio;
-        [SerializeField] public GameObject healthUI;
-        [SerializeField] public GameObject scoreUI;
+        public GameObject healthUI;
+        public GameObject scoreUI;
+        public GameObject btnBackToMenuUI;
+        public GameObject btnRestart; 
         [SerializeField] private PlayerData player;
 
         private void Awake()
@@ -35,6 +37,8 @@ namespace Game.GamePlay
             playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
             sliderMusic.value = audioMusic.volume;
             sliderEffect.value = audioEffect[1].volume;
+            btnBackToMenuUI.SetActive(false);
+            btnRestart.SetActive(false);
         }
 
         private void Update()
@@ -77,6 +81,8 @@ namespace Game.GamePlay
             settingUI.SetActive(false);
             healthUI.SetActive(false);
             scoreUI.SetActive(false);
+            btnBackToMenuUI.SetActive(false);
+            btnRestart.SetActive(false);
             SceneManager.LoadSceneAsync(0);
         }
 
@@ -86,6 +92,8 @@ namespace Game.GamePlay
             settingUI.SetActive(false);
             healthUI.SetActive(false);
             scoreUI.SetActive(false);
+            btnBackToMenuUI.SetActive(false);
+            btnRestart.SetActive(false);
             player.currentScenes = 0;
             SceneManager.LoadSceneAsync(0);
         }
