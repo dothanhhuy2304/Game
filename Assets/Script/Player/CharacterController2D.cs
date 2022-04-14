@@ -163,7 +163,6 @@ namespace Game.Player
 
         public void PlayerHurt()
         {
-
             playerAudio.Plays_10("Player_Hurt");
             animator.SetTrigger(animationState.playerIsHurt);
             body.bodyType = RigidbodyType2D.Static;

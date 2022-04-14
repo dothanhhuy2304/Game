@@ -1,5 +1,5 @@
+using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Game.GamePlay
@@ -18,8 +18,9 @@ namespace Game.GamePlay
         public GameObject healthUI;
         public GameObject scoreUI;
         public GameObject btnBackToMenuUI;
-        public GameObject btnRestart; 
-        [SerializeField] private PlayerData player;
+        public GameObject btnRestart;
+        [SerializeField] private PlayerData playerData;
+        private LoadingScreenManager loadingScreenManager;
 
         private void Awake()
         {
@@ -35,8 +36,22 @@ namespace Game.GamePlay
             }
 
             playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
-            sliderMusic.value = audioMusic.volume;
-            sliderEffect.value = audioEffect[1].volume;
+            loadingScreenManager = FindObjectOfType<LoadingScreenManager>().GetComponent<LoadingScreenManager>();
+            if (!playerData.saveAudio)
+            {
+                playerData.soundMusic = audioMusic.volume;
+                playerData.soundEffect = audioEffect[1].volume;
+                playerData.saveAudio = true;
+            }
+
+            sliderMusic.value = playerData.soundMusic;
+            sliderEffect.value = playerData.soundEffect;
+            audioMusic.volume = playerData.soundMusic;
+            foreach (var source in audioEffect)
+            {
+                source.volume = playerData.soundEffect;
+            }
+
             btnBackToMenuUI.SetActive(false);
             btnRestart.SetActive(false);
         }
@@ -64,7 +79,9 @@ namespace Game.GamePlay
 
         public void ChangeVolumeMusic()
         {
-            audioMusic.volume = sliderMusic.value;
+            var value = sliderMusic.value;
+            audioMusic.volume = value;
+            playerData.soundMusic = value;
         }
 
         public void ChangeVolumeEffect()
@@ -73,6 +90,8 @@ namespace Game.GamePlay
             {
                 source.volume = sliderEffect.value;
             }
+
+            playerData.soundEffect = sliderEffect.value;
         }
 
         public void BackToMenu()
@@ -83,7 +102,8 @@ namespace Game.GamePlay
             scoreUI.SetActive(false);
             btnBackToMenuUI.SetActive(false);
             btnRestart.SetActive(false);
-            SceneManager.LoadSceneAsync(0);
+            playerAudio.Plays_Music("Music_Menu");
+            loadingScreenManager.LoadingScreen(0);
         }
 
         public void RestartLevel()
@@ -94,8 +114,8 @@ namespace Game.GamePlay
             scoreUI.SetActive(false);
             btnBackToMenuUI.SetActive(false);
             btnRestart.SetActive(false);
-            player.currentScenes = 0;
-            SceneManager.LoadSceneAsync(0);
+            playerAudio.Plays_Music("Music_Menu");
+            loadingScreenManager.LoadingScreen(loadingScreenManager.RestartLevel());
         }
 
         public void ExitGame()

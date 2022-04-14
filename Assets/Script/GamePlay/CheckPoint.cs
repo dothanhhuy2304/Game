@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Game.GamePlay
@@ -6,6 +7,11 @@ namespace Game.GamePlay
     {
         [SerializeField] private GameObject uiGuide;
         [SerializeField] private LoadingScreenManager loadingScreenManager;
+
+        private void Awake()
+        {
+            loadingScreenManager = FindObjectOfType<LoadingScreenManager>().GetComponent<LoadingScreenManager>();
+        }
 
         private void OnTriggerEnter2D(Collider2D other)
         {

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Game.Core
@@ -27,9 +26,23 @@ namespace Game.Core
 
         }
 
-        protected virtual float CheckDistance(Vector3 trans, Vector3 target)
+        protected static float CheckDistance(Vector3 trans, Vector3 target)
         {
             return Vector3.Distance(trans, target);
+        }
+
+        protected static float SetTimeAttack(ref float currentTime)
+        {
+            if (currentTime > 0f)
+            {
+                currentTime -= Time.deltaTime;
+            }
+            else
+            {
+                currentTime = 0f;
+            }
+
+            return currentTime;
         }
     }
 }

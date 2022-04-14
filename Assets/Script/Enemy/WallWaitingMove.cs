@@ -21,7 +21,7 @@ namespace Game.Enemy
 
         protected override void FixedUpdate()
         {
-            if (base.CheckDistance(transform.position, player.position) > 30f)
+            if (CheckDistance(transform.position, player.position) > 30f)
             {
                 isComeback = true;
             }

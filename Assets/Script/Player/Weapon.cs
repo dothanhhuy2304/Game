@@ -1,17 +1,20 @@
+using Game.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Game.Player
 {
-    public class Weapon : MonoBehaviour
+    public class Weapon : BaseObject
     {
         [SerializeField] private GameObject[] bulletHolder;
         [SerializeField] private Vector2 offset;
         [SerializeField] private PlayerHealth playerHealth;
         private PlayerAudio playerAudio;
         private CharacterController2D player;
+        [SerializeField] private float timeAttack = 1f;
+        private float resetTimeAttack;
 
-        private void Start()
+        protected override void Start()
         {
             if (!playerHealth)
             {
@@ -24,13 +27,16 @@ namespace Game.Player
             }
 
             playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+            resetTimeAttack = timeAttack;
         }
 
         private void LateUpdate()
         {
             if (EventSystem.current.IsPointerOverGameObject() || playerHealth.PlayerIsDeath()) return;
             if (player.isHurt) return;
+            if (SetTimeAttack(ref timeAttack) != 0) return;
             if (!Input.GetMouseButtonDown(0) && !Input.GetKeyDown(KeyCode.KeypadEnter)) return;
+            timeAttack = resetTimeAttack;
             //Instantiate(fireObj, transform.TransformPoint(offset), transform.rotation);
             bulletHolder[FindBullet()].transform.position = transform.TransformPoint(offset);
             bulletHolder[FindBullet()].transform.rotation = transform.rotation;

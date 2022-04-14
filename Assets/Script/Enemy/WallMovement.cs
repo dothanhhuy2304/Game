@@ -22,13 +22,12 @@ namespace Game.Enemy
 
         protected override void Update()
         {
-            if (base.CheckDistance(transform.position, player.position) > 30f)
+            if (CheckDistance(transform.position, player.position) > 30f)
             {
                 transform.position = Vector3.MoveTowards(transform.position, startPos, speed * Time.deltaTime);
             }
             else
             {
-
                 switch (movingInput)
                 {
                     case MovingInput.Horizontal:

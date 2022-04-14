@@ -11,16 +11,15 @@ public class PetAI : BaseObject
     public GameObject[] multipleEnemy;
     [HideInInspector] public Transform closestEnemy;
     private bool enemyContact;
-    private float currentTimeAttack;
+    private float currentTimeAttack = 3f;
     private const float TimeAttack = 3f;
     private PlayerHealth playerHealth;
-    private Animator animator;
+    [SerializeField] private Animator animator;
     private readonly AnimationStates animationState = new AnimationStates();
 
     protected override void Start()
     {
         base.Start();
-        animator = GetComponent<Animator>();
         playerPos = FindObjectOfType<CharacterController2D>().transform;
         closestEnemy = null;
         enemyContact = false;
@@ -33,18 +32,13 @@ public class PetAI : BaseObject
         if (!playerHealth.PlayerIsDeath())
         {
             closestEnemy = FindClosestEnemy();
-            if (currentTimeAttack != 0)
-            {
-                currentTimeAttack -= Time.deltaTime;
-            }
-
             if (Vector3.Distance(transform.position, playerPos.transform.position) < 3f)
             {
                 body.velocity = Vector2.zero;
                 if (!enemyContact) return;
-                if (!(currentTimeAttack <= 0f)) return;
-                currentTimeAttack = TimeAttack;
+                if (SetTimeAttack(ref currentTimeAttack) != 0f) return;
                 Attack();
+                currentTimeAttack = TimeAttack;
                 animator.SetBool(animationState.petIsRun, false);
             }
             else
@@ -62,7 +56,7 @@ public class PetAI : BaseObject
     private void OnTriggerStay2D(Collider2D other)
     {
         if (!other.isTrigger || !other.CompareTag("Enemy")) return;
-        closestEnemy.GetComponent<SpriteRenderer>().material.color = new Color(1f, .7f, 0f, 1f);
+        closestEnemy.GetComponent<SpriteRenderer>().color = new Color(1f, .7f, 0f, 1f);
         enemyContact = true;
     }
 
@@ -70,7 +64,7 @@ public class PetAI : BaseObject
     {
         if (!other.CompareTag("Enemy")) return;
         enemyContact = false;
-        other.GetComponent<SpriteRenderer>().material.color = Color.white;
+        other.GetComponent<SpriteRenderer>().color = Color.white;
     }
 
     private void Moving()

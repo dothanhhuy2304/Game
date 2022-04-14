@@ -80,13 +80,10 @@ namespace Game.Enemy
                         if (Vector3.Distance(transform.position, player.position) < rangeAttack)
                         {
                             Flip();
-                            currentTime -= Time.deltaTime;
-                            if (currentTime <= 0)
-                            {
-                                animator.SetTrigger(animationState.carnivorousPlantIsAttack);
-                                currentTime = maxTimeAttack;
-                                Attack();
-                            }
+                            if (SetTimeAttack(ref currentTime) != 0f) return;
+                            animator.SetTrigger(animationState.carnivorousPlantIsAttack);
+                            currentTime = maxTimeAttack;
+                            Attack();
                         }
 
                         break;
@@ -109,13 +106,8 @@ namespace Game.Enemy
 
         private void SNinjaAttack()
         {
-            if (base.CheckDistance(transform.position, player.transform.position) > 20f) return;
+            if (CheckDistance(transform.position, player.transform.position) > 20f) return;
             if (playerHealth.PlayerIsDeath()) return;
-            if (currentTime != 0f)
-            {
-                currentTime -= Time.deltaTime;
-            }
-
             if (!(Vector3.Distance(transform.position, player.position) <= rangeAttack)) return;
             if (Vector3.Distance(transform.position, player.position) <= 3f)
             {
@@ -132,7 +124,7 @@ namespace Game.Enemy
                 {
                     body.velocity = Vector2.zero;
                     animator.SetBool(animationState.sNinjaIsRun, false);
-                    if (!(currentTime <= 0)) return;
+                    if (SetTimeAttack(ref currentTime) != 0f) return;
                     animator.SetTrigger(animationState.sNinjaIsAttack1);
                     currentTime = 1f;
                     if (hits)
@@ -148,7 +140,7 @@ namespace Game.Enemy
             {
                 Flip();
                 animator.SetBool(animationState.sNinjaIsRun, false);
-                if (!(currentTime <= 0f)) return;
+                if (SetTimeAttack(ref currentTime) != 0f) return;
                 currentTime = maxTimeAttack;
                 Attack();
             }
@@ -223,10 +215,10 @@ namespace Game.Enemy
             return 0;
         }
 
-        void OnDrawGizmos()
-        {
-            Gizmos.DrawSphere(rangeAttackObj.position, radiusAttack);
-            //Gizmos.DrawSphere(transform.position, 2f);
-        }
+        //void OnDrawGizmos()
+        //{
+        //  Gizmos.DrawSphere(rangeAttackObj.position, radiusAttack);
+        //Gizmos.DrawSphere(transform.position, 2f);
+        //}
     }
 }

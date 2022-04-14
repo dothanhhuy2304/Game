@@ -9,7 +9,7 @@ public class Chest : MonoBehaviour
     [SerializeField] private ScoreData scoreData;
     [SerializeField] private GameObject uIGuild, item;
     private bool isOpen;
-    [SerializeField]private Animator animator;
+    [SerializeField] private Animator animator;
     private GameManager gameManager;
     [SerializeField] private TextMeshProUGUI txtValueItem;
     private readonly float value = 10f;
@@ -18,11 +18,6 @@ public class Chest : MonoBehaviour
 
     private void Awake()
     {
-        if (!animator)
-        {
-            animator = GetComponent<Animator>();
-        }
-
         gameManager = FindObjectOfType<GameManager>();
         playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
     }

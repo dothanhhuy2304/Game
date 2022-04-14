@@ -9,7 +9,6 @@ public class LoadingScreenManager : MonoBehaviour
 
     public void LoadingScreen(int i)
     {
-        //StartCoroutine(nameof(WaitingLoading), 3f);
         loadOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(i);
         StartCoroutine(nameof(LoadAsyncScene));
     }
@@ -19,7 +18,7 @@ public class LoadingScreenManager : MonoBehaviour
         return player.currentScenes;
     }
 
-    public int ResetScreen()
+    public int RestartLevel()
     {
         player.currentScenes = 0;
         return player.currentScenes;

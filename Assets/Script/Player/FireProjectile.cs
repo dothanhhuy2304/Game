@@ -8,7 +8,7 @@ using Game.Player;
 //Bug
 public class FireProjectile : MonoBehaviour
 {
-    [SerializeField]private Rigidbody2D body;
+    [SerializeField] private Rigidbody2D body;
     [SerializeField] private EnemyType enemyType;
     [SerializeField] private float bulletSpeed = 10f;
     [SerializeField] private GameObject bulletPrefab, explosionPrefab;
@@ -21,11 +21,6 @@ public class FireProjectile : MonoBehaviour
 
     private void Awake()
     {
-        if (!body)
-        {
-            body = GetComponent<Rigidbody2D>();
-        }
-
         player = FindObjectOfType<CharacterController2D>().transform;
         playerHealth = player.GetComponent<PlayerHealth>();
         petAI = FindObjectOfType<PetAI>().GetComponent<PetAI>();
@@ -75,10 +70,6 @@ public class FireProjectile : MonoBehaviour
                 {
                     EnemyExplosions();
                 }
-                else if (other.CompareTag("Bullet"))
-                {
-                    EnemyExplosions();
-                }
                 else if (other.CompareTag("Player"))
                 {
                     playerHealth.GetDamage(20f);
@@ -90,10 +81,6 @@ public class FireProjectile : MonoBehaviour
             case EnemyType.CarnivorousPlant:
             {
                 if (other.CompareTag("ground"))
-                {
-                    EnemyExplosions();
-                }
-                else if (other.CompareTag("Bullet"))
                 {
                     EnemyExplosions();
                 }
@@ -114,10 +101,6 @@ public class FireProjectile : MonoBehaviour
                 else if (other.CompareTag("Enemy"))
                 {
                     other.GetComponent<EnemyHealth>().GetDamage(playerHealth.playerData.damageAttack);
-                    PlayerExplosions();
-                }
-                else if (other.CompareTag("Bullet"))
-                {
                     PlayerExplosions();
                 }
                 else if (other.CompareTag("Box"))
@@ -144,6 +127,11 @@ public class FireProjectile : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException();
         }
+
+        if (!other.CompareTag("Bullet")) return;
+        BulletExplosions();
+        playerAudio.Plays_20("Player_Bullet_Explosion_1");
+
     }
 
     private Vector2 SetAngleSNinja()
@@ -156,7 +144,6 @@ public class FireProjectile : MonoBehaviour
     {
         bulletPrefab.SetActive(false);
         explosionPrefab.SetActive(true);
-        //AudioSource.PlayClipAtPoint(soundExplosion[0], transform.position, 1f);
         playerAudio.Plays_20("Player_Bullet_Explosion_1");
         body.bodyType = RigidbodyType2D.Static;
         StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
@@ -166,8 +153,15 @@ public class FireProjectile : MonoBehaviour
     {
         bulletPrefab.SetActive(false);
         explosionPrefab.SetActive(true);
-        //AudioSource.PlayClipAtPoint(soundExplosion[0], transform.position, 1f);
         playerAudio.Plays_20("Enemy_Bullet_Explosion_1");
+        body.bodyType = RigidbodyType2D.Static;
+        StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
+    }
+
+    private void BulletExplosions()
+    {
+        bulletPrefab.SetActive(false);
+        explosionPrefab.SetActive(true);
         body.bodyType = RigidbodyType2D.Static;
         StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
     }
