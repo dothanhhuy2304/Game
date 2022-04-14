@@ -63,12 +63,12 @@ namespace Game.GamePlay
             settingUI.SetActive(true);
         }
 
-        public void DisableUISetting(bool isShow)
+        public void OpenAndDisableUISetting(bool isShow)
         {
             isShow = !isShow;
-            Time.timeScale = 1f;
             settingUI.SetActive(isShow);
             btnSetting.SetActive(!isShow);
+            Time.timeScale = isShow ? 0f : 1f;
         }
 
         public void ShowVolumeUI(bool isShow)

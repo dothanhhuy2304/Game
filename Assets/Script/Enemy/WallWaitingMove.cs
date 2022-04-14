@@ -21,22 +21,15 @@ namespace Game.Enemy
 
         protected override void FixedUpdate()
         {
-            if (CheckDistance(transform.position, player.position) > 30f)
+            if (isMoving)
             {
-                isComeback = true;
+                transform.position += Vector3.right * (movingSpeed * Time.deltaTime);
             }
-            else
-            {
-                if (isMoving)
-                {
-                    transform.position += Vector3.right * (movingSpeed * Time.deltaTime);
-                }
 
-                if (isComeback)
-                {
-                    transform.position =
-                        Vector3.MoveTowards(transform.position, startTrans, movingSpeed * Time.deltaTime);
-                }
+            if (isComeback)
+            {
+                transform.position =
+                    Vector3.MoveTowards(transform.position, startTrans, movingSpeed * Time.deltaTime);
             }
         }
 

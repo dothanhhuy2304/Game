@@ -11,8 +11,8 @@ namespace Game.Player
         [SerializeField] private PlayerHealth playerHealth;
         private PlayerAudio playerAudio;
         private CharacterController2D player;
-        [SerializeField] private float timeAttack = 1f;
-        private float resetTimeAttack;
+        [SerializeField] private float timeAttack = 0.5f;
+        private const float ResetTimeAttack = 0.5f;
 
         protected override void Start()
         {
@@ -27,7 +27,7 @@ namespace Game.Player
             }
 
             playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
-            resetTimeAttack = timeAttack;
+            timeAttack = 0f;
         }
 
         private void LateUpdate()
@@ -36,7 +36,7 @@ namespace Game.Player
             if (player.isHurt) return;
             if (SetTimeAttack(ref timeAttack) != 0) return;
             if (!Input.GetMouseButtonDown(0) && !Input.GetKeyDown(KeyCode.KeypadEnter)) return;
-            timeAttack = resetTimeAttack;
+            timeAttack = ResetTimeAttack;
             //Instantiate(fireObj, transform.TransformPoint(offset), transform.rotation);
             bulletHolder[FindBullet()].transform.position = transform.TransformPoint(offset);
             bulletHolder[FindBullet()].transform.rotation = transform.rotation;

@@ -1,21 +1,29 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LoadingScreenManager : MonoBehaviour
 {
     [SerializeField] private PlayerData player;
     [SerializeField] private GameObject uILoading;
     private AsyncOperation loadOperation;
+    [SerializeField] private Slider slider;
 
     public void LoadingScreen(int i)
     {
-        loadOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(i);
-        StartCoroutine(nameof(LoadAsyncScene));
+        StartCoroutine(nameof(LoadAsyncScene), i);
     }
 
     public int LoadCurrentScreen()
     {
         return player.currentScenes;
+    }
+
+    private void Update()
+    {
+        if (!slider.IsActive()) return;
+        slider.value = loadOperation.progress;
     }
 
     public int RestartLevel()
@@ -30,13 +38,13 @@ public class LoadingScreenManager : MonoBehaviour
         return player.currentScenes;
     }
 
-    private IEnumerator LoadAsyncScene()
+    private IEnumerator LoadAsyncScene(int index)
     {
+        loadOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(index);
         uILoading.SetActive(true);
         loadOperation.allowSceneActivation = false;
         while (!loadOperation.isDone)
         {
-            yield return new WaitForEndOfFrame();
             loadOperation.allowSceneActivation = true;
             yield return new WaitForSeconds(1f);
             uILoading.SetActive(false);

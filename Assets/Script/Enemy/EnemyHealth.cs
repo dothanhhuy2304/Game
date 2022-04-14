@@ -8,6 +8,7 @@ namespace Game.Enemy
 {
     public class EnemyHealth : MonoBehaviour, IHealthSystem
     {
+        [SerializeField] private bool canRespawn;
         [SerializeField] private float heathDefault;
         [SerializeField] private float currentHealth;
         [SerializeField] private float maxHealth;
@@ -67,17 +68,24 @@ namespace Game.Enemy
         {
             playerAudio.Plays_10("Enemy_Death");
             this.currentHealth = 0f;
-            spriteRenderer.enabled = false;
-            enemyCollider.enabled = false;
-            StartCoroutine(nameof(Respawn), timeRespawn);
+            if (canRespawn)
+            {
+                this.spriteRenderer.enabled = false;
+                this.enemyCollider.enabled = false;
+                StartCoroutine(nameof(Respawn), timeRespawn);
+            }
+            else
+            {
+                this.gameObject.SetActive(false);
+            }
         }
 
         private IEnumerator Respawn(float timeDelay)
         {
             yield return new WaitForSeconds(timeDelay);
             SetMaxHealth(this.heathDefault, this.hpIc);
-            spriteRenderer.enabled = true;
-            enemyCollider.enabled = true;
+            this.spriteRenderer.enabled = true;
+            this.enemyCollider.enabled = true;
             yield return null;
         }
     }

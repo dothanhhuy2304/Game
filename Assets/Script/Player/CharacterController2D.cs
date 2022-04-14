@@ -83,12 +83,29 @@ namespace Game.Player
             mGrounded = Physics2D.OverlapCircle(groundCheck.position, GroundedRadius, whatIsGround);
         }
 
+        private bool CheckHitWall()
+        {
+            var transform1 = transform;
+            return Physics2D.Raycast(transform1.position, transform1.right, 0.8f,
+                1 << LayerMask.NameToLayer("ground"));
+        }
+
         private void Move(float move)
         {
             var velocity1 = body.velocity;
             body.velocity = Vector2.SmoothDamp(velocity1, new Vector2(move * 10f, velocity1.y), ref velocity,
                 MovementSmoothing);
-            PlayerRun(!isOnCar ? Mathf.Abs(move) : 0f);
+
+            //PlayerRun(!isOnCar ? Mathf.Abs(move) : 0f);
+            if (isOnCar || CheckHitWall())
+            {
+                PlayerRun(0f);
+            }
+            else
+            {
+                PlayerRun(Mathf.Abs(move));
+            }
+
             if (move > 0f && !mFacingRight)
             {
                 Flip();
