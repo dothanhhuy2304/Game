@@ -1,45 +1,45 @@
 using System.Collections;
-using Game.Core;
 using UnityEngine;
+using Game.Core;
+using Game.Player;
 
-public class FireTrap : MonoBehaviour
+public class FireTrap : BaseObject
 {
-    [SerializeField] private Animator animator;
+    private Animator animator;
     private PlayerHealth playerHealth;
+    private CharacterController2D player;
     private bool isOut;
     private readonly AnimationStates animationState = new AnimationStates();
 
-    private void Start()
+    protected override void Start()
     {
-        if (!animator)
-        {
-            animator = GetComponent<Animator>();
-        }
-
-        playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
+        animator = GetComponent<Animator>();
+        player = FindObjectOfType<CharacterController2D>().GetComponent<CharacterController2D>();
+        playerHealth = player.GetComponent<PlayerHealth>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (playerHealth.PlayerIsDeath()) return;
         if (!other.CompareTag("Player")) return;
-        isOut = false;
+        isOut = true;
         animator.SetBool(animationState.fireTrapHit, true);
         StartCoroutine(nameof(WaitingForFireOn), 1f);
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (playerHealth.PlayerIsDeath()) return;
         if (!other.CompareTag("Player")) return;
-        isOut = true;
+        isOut = false;
     }
+
 
     private IEnumerator WaitingForFireOn(float delay)
     {
-        yield return new WaitForSeconds(delay);
+        if (player.isHurt) yield break;
         if (playerHealth.PlayerIsDeath()) yield break;
-        if (!isOut)
+        if (!isOut) yield break;
+        yield return new WaitForSeconds(delay);
+        if (isOut)
         {
             animator.SetBool(animationState.fireTrapON, true);
             playerHealth.GetDamage(1f);

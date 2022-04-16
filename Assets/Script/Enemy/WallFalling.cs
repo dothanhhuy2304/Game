@@ -5,7 +5,7 @@ using UnityEngine;
 public class WallFalling : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D body;
-    [SerializeField] private Collider2D colliders;
+    private Collider2D colliders;
     [Range(0f, 10f)] [SerializeField] private float timeFalling;
     private PlayerHealth playerHealth;
     private Vector2 startPos;
@@ -13,6 +13,7 @@ public class WallFalling : MonoBehaviour
     private void Awake()
     {
         startPos = transform.position;
+        colliders = GetComponent<Collider2D>();
     }
 
     private void Start()
@@ -28,6 +29,7 @@ public class WallFalling : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        if (!playerHealth.PlayerIsDeath()) return;
         if (other.collider.CompareTag("Player"))
         {
             StartCoroutine(nameof(WaitingFallingDown), timeFalling);

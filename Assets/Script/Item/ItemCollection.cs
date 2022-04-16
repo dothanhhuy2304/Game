@@ -72,7 +72,6 @@ namespace Game.Item
             itemObj.SetActive(false);
             effectCollectedObj.SetActive(true);
             playerHealthBar.GetDamage(value);
-            //AudioSource.PlayClipAtPoint(itemData.soundHurtCollection, transform.position, Volume);
             playerAudio.Plays_20("Item_Hurt");
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);
@@ -83,7 +82,6 @@ namespace Game.Item
             itemObj.SetActive(false);
             effectCollectedObj.SetActive(true);
             playerHealthBar.Heal(value);
-            //AudioSource.PlayClipAtPoint(itemData.soundCollection, transform.position, Volume);
             playerAudio.Plays_20("Item_Heal");
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);
@@ -93,7 +91,6 @@ namespace Game.Item
         {
             itemObj.SetActive(false);
             effectCollectedObj.SetActive(true);
-            //AudioSource.PlayClipAtPoint(itemData.soundCollection, transform.position, Volume);
             playerAudio.Plays_20("Item_Heal");
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);

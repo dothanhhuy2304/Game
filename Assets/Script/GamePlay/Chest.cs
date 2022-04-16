@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Globalization;
 using Game.GamePlay;
-using TMPro;
 using UnityEngine;
 
 public class Chest : MonoBehaviour
@@ -11,7 +10,7 @@ public class Chest : MonoBehaviour
     private bool isOpen;
     [SerializeField] private Animator animator;
     private GameManager gameManager;
-    [SerializeField] private TextMeshProUGUI txtValueItem;
+    [SerializeField] private TMPro.TextMeshProUGUI txtValueItem;
     private int value = 10;
     private static readonly int IsOpen = Animator.StringToHash("isOpen");
     private PlayerAudio playerAudio;
@@ -21,11 +20,6 @@ public class Chest : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>()?.GetComponent<GameManager>();
         playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
     }
-
-    // private void OnEnable()
-    // {
-    //     txtValueItem.text = "x" + value.ToString(CultureInfo.CurrentCulture);
-    // }
 
     private void OnTriggerEnter2D(Collider2D other)
     {

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Globalization;
 using UnityEngine;
 using Game.Core;
-using TMPro;
 
 namespace Game.Enemy
 {
@@ -18,7 +17,7 @@ namespace Game.Enemy
         [SerializeField] private Collider2D enemyCollider;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private GameObject uIDamageEnemy;
-        private TextMeshProUGUI txtDamage;
+        private TMPro.TextMeshProUGUI txtDamage;
         private PlayerAudio playerAudio;
 
         private void Start()
@@ -30,7 +29,7 @@ namespace Game.Enemy
             }
 
             playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
-            txtDamage = uIDamageEnemy.GetComponentInChildren<TextMeshProUGUI>();
+            txtDamage = uIDamageEnemy.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         }
 
         public bool EnemyDeath()

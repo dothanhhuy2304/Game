@@ -1,5 +1,5 @@
-using Game.Core;
 using UnityEngine;
+using Game.Core;
 
 public class SpikeHead : BaseObject
 {

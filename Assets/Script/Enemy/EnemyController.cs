@@ -131,7 +131,6 @@ namespace Game.Enemy
                         playerHealth.GetDamage(20f);
                     }
 
-                    //AudioSource.PlayClipAtPoint(swordAudio, transform.position, 1f);
                     playerAudio.Plays_20("Enemy_Attack_Sword");
                 }
             }
@@ -158,6 +157,7 @@ namespace Game.Enemy
         {
             StartCoroutine(nameof(EnumeratorAttack), .6f);
         }
+
 
         private IEnumerator EnumeratorAttack(float timeDelay)
         {

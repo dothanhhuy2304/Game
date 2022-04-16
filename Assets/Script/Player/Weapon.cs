@@ -1,3 +1,4 @@
+using System.Collections;
 using Game.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -36,12 +37,22 @@ namespace Game.Player
             if (player.isHurt) return;
             if (SetTimeAttack(ref timeAttack) != 0) return;
             if (!Input.GetMouseButtonDown(0) && !Input.GetKeyDown(KeyCode.KeypadEnter)) return;
+            StartCoroutine(nameof(Attacks));
             timeAttack = ResetTimeAttack;
+        }
+
+        private IEnumerator Attacks()
+        {
+            Attack();
+            yield return null;
+        }
+        
+        private void Attack()
+        {
             //Instantiate(fireObj, transform.TransformPoint(offset), transform.rotation);
             bulletHolder[FindBullet()].transform.position = transform.TransformPoint(offset);
             bulletHolder[FindBullet()].transform.rotation = transform.rotation;
             bulletHolder[FindBullet()].GetComponent<FireProjectile>().SetActives();
-            //AudioSource.PlayClipAtPoint(clip, transform.position, 1f);
             playerAudio.Plays_20("Player_Bullet_Shoot");
         }
 

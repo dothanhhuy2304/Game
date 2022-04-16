@@ -3,7 +3,6 @@ using System.Globalization;
 using UnityEngine;
 using Game.Core;
 using Game.Player;
-using TMPro;
 
 public class PlayerHealth : MonoBehaviour, IHealthSystem
 {
@@ -13,14 +12,14 @@ public class PlayerHealth : MonoBehaviour, IHealthSystem
     private PlayerHealthBar playerHealthBar;
     private Transform petAI;
     [SerializeField] private GameObject uIDamagePlayer;
-    private TextMeshProUGUI txtDamage;
+    private TMPro.TextMeshProUGUI txtDamage;
 
     private void Start()
     {
         player = FindObjectOfType<CharacterController2D>().GetComponent<CharacterController2D>();
         playerHealthBar = FindObjectOfType<PlayerHealthBar>()?.GetComponent<PlayerHealthBar>();
         petAI = FindObjectOfType<PetAI>()?.transform;
-        txtDamage = uIDamagePlayer.GetComponentInChildren<TextMeshProUGUI>();
+        txtDamage = uIDamagePlayer.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         if (playerData.currentHealth == 0)
         {
             SetMaxHealth(this.playerData.heathDefault, this.playerData.hpIc);

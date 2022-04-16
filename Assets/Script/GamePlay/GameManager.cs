@@ -1,15 +1,14 @@
 using System.Globalization;
 using UnityEngine;
-using TMPro;
 
 namespace Game.GamePlay
 {
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get; private set; }
-        [SerializeField] private TextMeshProUGUI txtScore;
-        [SerializeField] private TextMeshProUGUI txtDiamond;
-        [SerializeField] private TextMeshProUGUI txtMoney;
+        [SerializeField] private TMPro.TextMeshProUGUI txtScore;
+        [SerializeField] private TMPro.TextMeshProUGUI txtDiamond;
+        [SerializeField] private TMPro.TextMeshProUGUI txtMoney;
 
         private void Awake()
         {
