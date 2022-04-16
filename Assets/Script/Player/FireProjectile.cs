@@ -23,13 +23,17 @@ public class FireProjectile : MonoBehaviour
     {
         player = FindObjectOfType<CharacterController2D>().transform;
         playerHealth = player.GetComponent<PlayerHealth>();
-        petAI = FindObjectOfType<PetAI>().GetComponent<PetAI>();
-        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+        petAI = FindObjectOfType<PetAI>()?.GetComponent<PetAI>();
+        playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
     }
 
     private void OnEnable()
     {
-        targetPetEnemy = (petAI.closestEnemy.position - transform.position).normalized;
+        if (petAI)
+        {
+            targetPetEnemy = (petAI.closestEnemy.position - transform.position).normalized;
+        }
+
         StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
         if (!body.isKinematic) return;
         switch (enemyType)

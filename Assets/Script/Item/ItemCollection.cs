@@ -19,8 +19,9 @@ namespace Game.Item
         private void Start()
         {
             gameManager = FindObjectOfType<GameManager>().GetComponent<GameManager>();
+            Debug.Assert(gameManager != null, nameof(gameManager) + " != null");
             playerHealthBar = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
-            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+            playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
             scoreData.currentScore = 0f;
             gameManager.SetScore(scoreData.currentScore);
             gameManager.SetDiamond(scoreData.diamond);

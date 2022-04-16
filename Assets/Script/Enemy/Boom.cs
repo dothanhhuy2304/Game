@@ -9,7 +9,7 @@ public class Boom : MonoBehaviour
 
     private void Awake()
     {
-        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+        playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
     }
 
     private void OnCollisionEnter2D(Collision2D other)

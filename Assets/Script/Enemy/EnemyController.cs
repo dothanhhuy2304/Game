@@ -39,7 +39,7 @@ namespace Game.Enemy
         {
             base.Start();
             player = FindObjectOfType<CharacterController2D>().transform;
-            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+            playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
             Debug.Assert(player != null, nameof(player) + " != null");
             playerHealth = player.GetComponent<PlayerHealth>();
             currentTime = 0f;
@@ -49,7 +49,6 @@ namespace Game.Enemy
 
         protected override void FixedUpdate()
         {
-
             if (enemyHealth.EnemyDeath())
             {
                 body.bodyType = RigidbodyType2D.Static;
@@ -152,6 +151,7 @@ namespace Game.Enemy
             Vector2 target = (player.position - transform.position).normalized;
             var angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(new Vector3(0f, angle + offset, 0f));
+            //transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }
 
         private void Attack()

@@ -12,20 +12,20 @@ public class Chest : MonoBehaviour
     [SerializeField] private Animator animator;
     private GameManager gameManager;
     [SerializeField] private TextMeshProUGUI txtValueItem;
-    private readonly float value = 10f;
+    private int value = 10;
     private static readonly int IsOpen = Animator.StringToHash("isOpen");
     private PlayerAudio playerAudio;
 
     private void Awake()
     {
-        gameManager = FindObjectOfType<GameManager>();
-        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+        gameManager = FindObjectOfType<GameManager>()?.GetComponent<GameManager>();
+        playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
     }
 
-    private void OnEnable()
-    {
-        txtValueItem.text = "x" + value.ToString(CultureInfo.CurrentCulture);
-    }
+    // private void OnEnable()
+    // {
+    //     txtValueItem.text = "x" + value.ToString(CultureInfo.CurrentCulture);
+    // }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -43,6 +43,9 @@ public class Chest : MonoBehaviour
         if (!Input.GetKey(KeyCode.F)) return;
         animator.SetBool(IsOpen, true);
         uIGuild.SetActive(false);
+        //
+        value = Random.Range(0, 10);
+        txtValueItem.text = "x" + value.ToString(CultureInfo.CurrentCulture);
         StartCoroutine(nameof(ActiveItem), 3f);
         scoreData.diamond += value;
         gameManager.SetDiamond(scoreData.diamond);

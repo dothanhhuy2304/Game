@@ -29,7 +29,7 @@ namespace Game.Enemy
                 spriteRenderer = GetComponent<SpriteRenderer>();
             }
 
-            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+            playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
             txtDamage = uIDamageEnemy.GetComponentInChildren<TextMeshProUGUI>();
         }
 

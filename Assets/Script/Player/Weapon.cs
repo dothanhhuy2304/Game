@@ -26,7 +26,7 @@ namespace Game.Player
                 player = FindObjectOfType<CharacterController2D>().GetComponent<CharacterController2D>();
             }
 
-            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+            playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
             timeAttack = 0f;
         }
 

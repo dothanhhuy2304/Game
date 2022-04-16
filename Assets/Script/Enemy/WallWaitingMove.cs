@@ -33,20 +33,18 @@ namespace Game.Enemy
             }
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
+        private void OnCollisionEnter2D(Collision2D other)
         {
-            if (other.CompareTag("ground"))
+            if (other.collider.CompareTag("ground"))
             {
                 movingSpeed *= Direction;
             }
-        }
-
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            if (!other.collider.CompareTag("Player")) return;
-            player.transform.parent = transform;
-            isMoving = true;
-            isComeback = false;
+            else if (other.collider.CompareTag("Player"))
+            {
+                player.transform.parent = transform;
+                isMoving = true;
+                isComeback = false;
+            }
         }
 
         private void OnCollisionExit2D(Collision2D other)

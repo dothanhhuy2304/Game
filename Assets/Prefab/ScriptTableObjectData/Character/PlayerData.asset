@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6704ec0325aa8fb42bec17f5a09d14ec, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  characterSelection: 1
+  characterSelection: 0
   position: {x: -4.96, y: -4, z: 0}
-  currentScenes: 0
+  currentScenes: 2
   saveAudio: 1
-  soundMusic: 0.5
-  soundEffect: 1
+  soundMusic: 0.09174683
+  soundEffect: 0.6495827
