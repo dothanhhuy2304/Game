@@ -9,14 +9,15 @@ namespace Game.Enemy
     //Bug
     public class EnemyController : BaseObject
     {
+        [SerializeField] private bool canMoving;
         [SerializeField] private float movingSpeed = 2f;
         [Header("Types")] [SerializeField] private EnemyType enemyType;
 
         [Space] [Header("Prefab")] [SerializeField]
         private GameObject[] bulletHolder;
 
-        [Space] private Transform player;
-        [SerializeField] private Vector2 checkGroundPosition;
+        private Transform player;
+        [Space] [SerializeField] private Vector2 checkGroundPosition;
         [SerializeField] private Transform rangeAttackObj;
         private const float Distance = 1.5f;
         [Range(0f, 100f)] [SerializeField] private float rangeAttack = 7f;
@@ -47,8 +48,15 @@ namespace Game.Enemy
             enemyHealth = GetComponent<EnemyHealth>();
         }
 
-        protected override void FixedUpdate()
+
+        // protected override void Update()
+        // {
+        //     base.Update();
+        // }
+
+        private void FixedUpdate()
         {
+            base.CheckDistance(player.position, transform.position);
             if (enemyHealth.EnemyDeath())
             {
                 body.bodyType = RigidbodyType2D.Static;
@@ -60,22 +68,31 @@ namespace Game.Enemy
                 {
                     case EnemyType.SNINJA:
                     {
-                        var hit = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.down,
-                            Distance, 1 << LayerMask.NameToLayer("ground"));
-                        var hitRight = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition),
-                            Vector2.right,
-                            0.5f, 1 << LayerMask.NameToLayer("ground"));
-                        if (!hit || hitRight)
+                        if (canMoving)
                         {
-                            transform.Rotate(new Vector3(0, -180f, 0));
+                            var hit = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.down,
+                                Distance, 1 << LayerMask.NameToLayer("ground"));
+                            var hitRight = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition),
+                                Vector2.right,
+                                0.5f, 1 << LayerMask.NameToLayer("ground"));
+                            if (!hit || hitRight)
+                            {
+                                transform.Rotate(new Vector3(0, -180f, 0));
+                            }
+
+                            Moving();
                         }
 
-                        Moving();
-                        SNinjaAttack();
+                        if (hasInteracted)
+                        {
+                            SNinjaAttack();
+                        }
+
                         break;
                     }
                     case EnemyType.CarnivorousPlant:
                     {
+                        if (enemyHealth.EnemyDeath()) return;
                         if (Vector3.Distance(transform.position, player.position) < rangeAttack)
                         {
                             Flip();
@@ -105,7 +122,7 @@ namespace Game.Enemy
 
         private void SNinjaAttack()
         {
-            if (CheckDistance(transform.position, player.transform.position) > 20f) return;
+            if (enemyHealth.EnemyDeath()) return;
             if (playerHealth.PlayerIsDeath()) return;
             if (!(Vector3.Distance(transform.position, player.position) <= rangeAttack)) return;
             if (Vector3.Distance(transform.position, player.position) <= 3f)
@@ -155,7 +172,14 @@ namespace Game.Enemy
 
         private void Attack()
         {
-            StartCoroutine(nameof(EnumeratorAttack), .6f);
+            if (!playerHealth.PlayerIsDeath())
+            {
+                StartCoroutine(nameof(EnumeratorAttack), .6f);
+            }
+            else
+            {
+                StopCoroutine(nameof(EnumeratorAttack));
+            }
         }
 
 

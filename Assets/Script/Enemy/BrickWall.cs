@@ -6,9 +6,8 @@ public class BrickWall : BaseObject
 
     [SerializeField] private SpriteRenderer spriteRenderer;
 
-    protected override void Awake()
+    private void Awake()
     {
-        if (spriteRenderer) return;
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -16,7 +15,7 @@ public class BrickWall : BaseObject
     {
         if (other.CompareTag("Player"))
         {
-            spriteRenderer.material.color = Color.gray;
+            spriteRenderer.color = Color.gray;
         }
     }
 
@@ -24,7 +23,7 @@ public class BrickWall : BaseObject
     {
         if (other.CompareTag("Player"))
         {
-            spriteRenderer.material.color = Color.white;
+            spriteRenderer.color = Color.white;
         }
     }
 }

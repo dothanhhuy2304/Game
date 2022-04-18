@@ -27,7 +27,7 @@ public class PetAI : BaseObject
         playerHealth = playerPos.GetComponent<PlayerHealth>();
     }
 
-    protected override void FixedUpdate()
+    private void FixedUpdate()
     {
         if (!playerHealth.PlayerIsDeath())
         {
@@ -37,7 +37,8 @@ public class PetAI : BaseObject
                 body.velocity = Vector2.zero;
                 if (!enemyContact) return;
                 if (SetTimeAttack(ref currentTimeAttack) != 0f) return;
-                Attack();
+                //Attack();
+                StartCoroutine(nameof(Attacks));
                 currentTimeAttack = TimeAttack;
                 animator.SetBool(animationState.petIsRun, false);
             }
@@ -72,6 +73,14 @@ public class PetAI : BaseObject
         var angle = (playerPos.transform.position - transform.position).normalized;
         body.velocity = Vector2.SmoothDamp(body.velocity, angle * petData.movingSpeed, ref velocity, .05f);
     }
+
+    private System.Collections.IEnumerator Attacks()
+    {
+        yield return new WaitForSeconds(0f);
+        Attack();
+        yield return null;
+    }
+    
 
     private void Attack()
     {

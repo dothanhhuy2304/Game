@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using Game.Core;
 using Game.Player;
@@ -10,10 +9,9 @@ namespace Game.Enemy
     {
         public float speed = 3f;
         private Transform player;
-        private Vector3 startPos = Vector3.zero;
+        private Vector2 startPos = Vector2.zero;
         [SerializeField] private Vector2 endPos = Vector2.zero;
         [SerializeField] private float timeSleep;
-        [SerializeField] private bool checkSleep;
 
         protected override void Start()
         {
@@ -21,22 +19,11 @@ namespace Game.Enemy
             startPos = transform.position;
         }
 
-        protected override void Update()
+        private void Update()
         {
-            if (CheckDistance(transform.position, player.position) < 30f || checkSleep)
-            {
-                transform.position = Vector3.Lerp(startPos, endPos, Mathf.PingPong(Time.time * speed, timeSleep));
-            }
-            else
-            {
-                StartCoroutine(nameof(ResetPos), 3f);
-            }
-        }
-
-        private IEnumerator ResetPos(float reset)
-        {
-            yield return new WaitForSeconds(reset);
-            transform.position = startPos;
+            base.CheckDistance(player.position, transform.position);
+            if (!hasInteracted) return;
+            transform.position = Vector2.Lerp(startPos, endPos, Mathf.PingPong(Time.time * speed, timeSleep));
         }
 
         private void OnCollisionEnter2D(Collision2D other)

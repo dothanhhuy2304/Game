@@ -9,6 +9,7 @@ TagManager:
   - Bullet
   - Car
   - Box
+  - Grass
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - ground
   - Enemy
   - Item
-  - grass
+  - 
   - 
   - 
   - 

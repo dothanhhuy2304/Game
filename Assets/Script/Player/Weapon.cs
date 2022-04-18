@@ -11,22 +11,14 @@ namespace Game.Player
         [SerializeField] private Vector2 offset;
         [SerializeField] private PlayerHealth playerHealth;
         private PlayerAudio playerAudio;
-        private CharacterController2D player;
+        private CharacterController2D players;
         [SerializeField] private float timeAttack = 0.5f;
         private const float ResetTimeAttack = 0.5f;
 
         protected override void Start()
         {
-            if (!playerHealth)
-            {
-                playerHealth = GetComponent<PlayerHealth>();
-            }
-
-            if (!player)
-            {
-                player = FindObjectOfType<CharacterController2D>().GetComponent<CharacterController2D>();
-            }
-
+            playerHealth = GetComponent<PlayerHealth>();
+            players = GetComponent<CharacterController2D>();
             playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
             timeAttack = 0f;
         }
@@ -34,7 +26,7 @@ namespace Game.Player
         private void LateUpdate()
         {
             if (EventSystem.current.IsPointerOverGameObject() || playerHealth.PlayerIsDeath()) return;
-            if (player.isHurt) return;
+            if (players.isHurt) return;
             if (SetTimeAttack(ref timeAttack) != 0) return;
             if (!Input.GetMouseButtonDown(0) && !Input.GetKeyDown(KeyCode.KeypadEnter)) return;
             StartCoroutine(nameof(Attacks));

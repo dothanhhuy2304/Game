@@ -29,7 +29,6 @@ public class WallFalling : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (!playerHealth.PlayerIsDeath()) return;
         if (other.collider.CompareTag("Player"))
         {
             StartCoroutine(nameof(WaitingFallingDown), timeFalling);

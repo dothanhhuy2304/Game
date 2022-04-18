@@ -23,11 +23,7 @@ namespace Game.Enemy
         private void Start()
         {
             SetMaxHealth(this.heathDefault, this.hpIc);
-            if (!spriteRenderer)
-            {
-                spriteRenderer = GetComponent<SpriteRenderer>();
-            }
-
+            spriteRenderer = GetComponent<SpriteRenderer>();
             playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
             txtDamage = uIDamageEnemy.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         }

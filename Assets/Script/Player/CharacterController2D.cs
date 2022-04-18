@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Game.Core;
@@ -43,18 +44,9 @@ namespace Game.Player
             startSpeed = playerHealth.playerData.movingSpeed;
         }
 
-        protected override void Update()
+        private void Update()
         {
             if (playerHealth.PlayerIsDeath()) return;
-            if (CheckGrass())
-            {
-                playerHealth.playerData.movingSpeed /= 2;
-            }
-            else
-            {
-                playerHealth.playerData.movingSpeed = startSpeed;
-            }
-
             if (isHurt) return;
             mHorizontal = Input.GetAxisRaw("Horizontal");
             if (!mGrounded || mDBJump == false)
@@ -72,7 +64,7 @@ namespace Game.Player
             }
         }
 
-        protected override void FixedUpdate()
+        private void FixedUpdate()
         {
             if (!playerHealth.PlayerIsDeath())
             {
@@ -100,11 +92,6 @@ namespace Game.Player
             var transform1 = transform;
             return Physics2D.Raycast(transform1.position, transform1.right, 0.8f,
                 1 << LayerMask.NameToLayer("ground"));
-        }
-
-        private bool CheckGrass()
-        {
-            return Physics2D.OverlapCircle(groundCheck.position, GroundedRadius, 1 << LayerMask.NameToLayer("grass"));
         }
 
         private void Move(float move)
@@ -194,11 +181,33 @@ namespace Game.Player
             // }
         }
 
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.CompareTag("Grass"))
+            {
+                playerHealth.playerData.movingSpeed /= 2;
+            }
+        }
+
+
         private void OnTriggerStay2D(Collider2D other)
         {
             if (other.CompareTag("Car"))
             {
                 isOnCar = true;
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.CompareTag("Car"))
+            {
+                isOnCar = false;
+            }
+
+            if (other.CompareTag("Grass"))
+            {
+                playerHealth.playerData.movingSpeed = startSpeed;
             }
         }
 
@@ -218,13 +227,6 @@ namespace Game.Player
             isHurt = false;
         }
 
-        private void OnTriggerExit2D(Collider2D other)
-        {
-            if (other.CompareTag("Car"))
-            {
-                isOnCar = false;
-            }
-        }
     }
 
     // public enum JumpState

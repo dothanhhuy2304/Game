@@ -95,6 +95,7 @@ namespace Game.GamePlay
 
         public void BackToMenu()
         {
+            Time.timeScale = 1f;
             btnSetting.SetActive(true);
             settingUI.SetActive(false);
             healthUI.SetActive(false);
@@ -107,6 +108,7 @@ namespace Game.GamePlay
 
         public void RestartLevel()
         {
+            Time.timeScale = 1f;
             btnSetting.SetActive(true);
             settingUI.SetActive(false);
             healthUI.SetActive(false);
@@ -119,6 +121,7 @@ namespace Game.GamePlay
 
         public void ExitGame()
         {
+            Time.timeScale = 1f;
             Application.Quit();
         }
 

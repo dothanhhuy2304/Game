@@ -16,7 +16,7 @@ public class Car : BaseObject
         currentPos[2] = carTrans[2].transform.position;
     }
 
-    protected override void Update()
+    private void Update()
     {
         if (!playerHealth.PlayerIsDeath()) return;
         StartCoroutine(nameof(WaitingPlayerRespawn), 3f);

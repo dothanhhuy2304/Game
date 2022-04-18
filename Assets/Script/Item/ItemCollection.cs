@@ -12,7 +12,7 @@ namespace Game.Item
         [SerializeField] private ItemData itemData;
         [SerializeField] private GameObject itemObj, effectCollectedObj;
         [SerializeField] private Collider2D itemCollider;
-        private PlayerHealth playerHealthBar;
+        private PlayerHealth playerHealth;
         private GameManager gameManager;
         private PlayerAudio playerAudio;
 
@@ -20,7 +20,7 @@ namespace Game.Item
         {
             gameManager = FindObjectOfType<GameManager>().GetComponent<GameManager>();
             Debug.Assert(gameManager != null, nameof(gameManager) + " != null");
-            playerHealthBar = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
+            playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
             playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
             scoreData.currentScore = 0f;
             gameManager.SetScore(scoreData.currentScore);
@@ -30,6 +30,7 @@ namespace Game.Item
 
         private void OnTriggerEnter2D(Collider2D other)
         {
+            if (playerHealth.PlayerIsDeath()) return;
             if (!other.gameObject.CompareTag("Player")) return;
             switch (itemType)
             {
@@ -71,7 +72,7 @@ namespace Game.Item
         {
             itemObj.SetActive(false);
             effectCollectedObj.SetActive(true);
-            playerHealthBar.GetDamage(value);
+            playerHealth.GetDamage(value);
             playerAudio.Plays_20("Item_Hurt");
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);
@@ -81,7 +82,7 @@ namespace Game.Item
         {
             itemObj.SetActive(false);
             effectCollectedObj.SetActive(true);
-            playerHealthBar.Heal(value);
+            playerHealth.Heal(value);
             playerAudio.Plays_20("Item_Heal");
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);

@@ -2,33 +2,21 @@ using UnityEngine;
 
 namespace Game.Core
 {
-    public class BaseObject : MonoBehaviour
+    public abstract class BaseObject : MonoBehaviour
     {
         protected Rigidbody2D body;
-
-        protected virtual void Awake()
-        {
-
-        }
+        protected bool hasInteracted = false;
+        public float radius = 30f;
 
         protected virtual void Start()
         {
             body = GetComponent<Rigidbody2D>();
         }
 
-        protected virtual void Update()
+        protected virtual void CheckDistance(Vector2 player, Vector2 trans)
         {
-
-        }
-
-        protected virtual void FixedUpdate()
-        {
-
-        }
-
-        protected static float CheckDistance(Vector3 trans, Vector3 target)
-        {
-            return Vector3.Distance(trans, target);
+            var distance = Vector2.Distance(player, trans);
+            hasInteracted = distance <= radius;
         }
 
         protected static float SetTimeAttack(ref float currentTime)
