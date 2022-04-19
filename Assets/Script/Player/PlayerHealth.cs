@@ -16,7 +16,7 @@ public class PlayerHealth : MonoBehaviour, IHealthSystem
 
     private void Start()
     {
-        player = FindObjectOfType<CharacterController2D>().GetComponent<CharacterController2D>();
+        player = GetComponent<CharacterController2D>();
         playerHealthBar = FindObjectOfType<PlayerHealthBar>()?.GetComponent<PlayerHealthBar>();
         petAI = FindObjectOfType<PetAI>()?.transform;
         txtDamage = uIDamagePlayer.GetComponentInChildren<TMPro.TextMeshProUGUI>();

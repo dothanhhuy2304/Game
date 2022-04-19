@@ -24,7 +24,15 @@ namespace Game.Enemy
         private void Update()
         {
             base.CheckDistance(player.position, transform.position);
-            if (!hasInteracted) return;
+            if (hasInteracted)
+            {
+                if (isComeback)
+                {
+                    transform.position = Vector2.MoveTowards(transform.position, startTrans, 2f * Time.deltaTime);
+                }
+            }
+
+            //
             if (!hasInteracted)
             {
                 isComeback = true;

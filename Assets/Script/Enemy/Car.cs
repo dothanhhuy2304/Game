@@ -1,14 +1,13 @@
 using System.Collections;
 using UnityEngine;
-using Game.Core;
 
-public class Car : BaseObject
+public class Car : MonoBehaviour
 {
     private PlayerHealth playerHealth;
     [SerializeField] private GameObject[] carTrans;
     [SerializeField] private Vector3[] currentPos;
 
-    protected override void Start()
+    private void Start()
     {
         playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
         currentPos[0] = carTrans[0].transform.position;

@@ -5,8 +5,8 @@ namespace Game.Core
     public abstract class BaseObject : MonoBehaviour
     {
         protected Rigidbody2D body;
-        protected bool hasInteracted = false;
-        public float radius = 30f;
+        protected bool hasInteracted;
+        private const float Radius = 35f;
 
         protected virtual void Start()
         {
@@ -16,7 +16,7 @@ namespace Game.Core
         protected virtual void CheckDistance(Vector2 player, Vector2 trans)
         {
             var distance = Vector2.Distance(player, trans);
-            hasInteracted = distance <= radius;
+            hasInteracted = distance <= Radius;
         }
 
         protected static float SetTimeAttack(ref float currentTime)

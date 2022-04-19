@@ -19,11 +19,12 @@ public class Spike : BaseObject
 
     private void Update()
     {
-        base.CheckDistance(player.position,transform.position);
+        base.CheckDistance(player.position, transform.position);
+        SetTimeAttack(ref timeAttack);
         if (!hasInteracted) return;
         if (playerHealth.PlayerIsDeath()) return;
         if (!isHurts) return;
-        if (SetTimeAttack(ref timeAttack) != 0f) return;
+        if (timeAttack != 0f) return;
         playerHealth.GetDamage(20f);
         timeAttack = maxTimeAttack;
     }

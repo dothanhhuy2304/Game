@@ -22,6 +22,12 @@ namespace Game.Core
         public readonly int sNinjaIsRun = Animator.StringToHash("isRun");
 
         public readonly int sNinjaIsAttack1 = Animator.StringToHash("isAttack1");
+        
+        //Bee
+        public readonly int beeIsAttack = Animator.StringToHash("isAttack");
+        
+        //Chicken
+        public readonly int chickenIsAttack = Animator.StringToHash("is_Run");
 
         //fireTrap
         public readonly int fireTrapHit = Animator.StringToHash("hit");

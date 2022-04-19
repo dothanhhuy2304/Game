@@ -1,7 +1,6 @@
-using Game.Core;
 using UnityEngine;
 
-public class BrickWall : BaseObject
+public class BrickWall : MonoBehaviour
 {
 
     [SerializeField] private SpriteRenderer spriteRenderer;

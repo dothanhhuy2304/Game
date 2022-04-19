@@ -59,6 +59,9 @@ public class FireProjectile : MonoBehaviour
                 body.velocity = targetPetEnemy * bulletSpeed;
                 break;
             }
+            case EnemyType.Bee:
+                body.velocity = SetAngleSNinja() * bulletSpeed;
+                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -69,7 +72,6 @@ public class FireProjectile : MonoBehaviour
         switch (enemyType)
         {
             case EnemyType.SNINJA:
-            {
                 if (other.CompareTag("ground"))
                 {
                     EnemyExplosions();
@@ -81,9 +83,7 @@ public class FireProjectile : MonoBehaviour
                 }
 
                 break;
-            }
             case EnemyType.CarnivorousPlant:
-            {
                 if (other.CompareTag("ground"))
                 {
                     EnemyExplosions();
@@ -95,9 +95,19 @@ public class FireProjectile : MonoBehaviour
                 }
 
                 break;
-            }
+            case EnemyType.Bee:
+                if (other.CompareTag("ground"))
+                {
+                    EnemyExplosions();
+                }
+                else if (other.CompareTag("Player"))
+                {
+                    playerHealth.GetDamage(18f);
+                    EnemyExplosions();
+                }
+
+                break;
             case EnemyType.Player:
-            {
                 if (other.gameObject.CompareTag("ground"))
                 {
                     PlayerExplosions();
@@ -113,9 +123,7 @@ public class FireProjectile : MonoBehaviour
                 }
 
                 break;
-            }
             case EnemyType.Pet:
-            {
                 if (other.CompareTag("Enemy"))
                 {
                     other.GetComponent<EnemyHealth>().GetDamage(petAI.petData.damageAttack);
@@ -127,7 +135,6 @@ public class FireProjectile : MonoBehaviour
                 }
 
                 break;
-            }
             default:
                 throw new ArgumentOutOfRangeException();
         }

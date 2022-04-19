@@ -31,13 +31,13 @@ public class PetAI : BaseObject
     {
         if (!playerHealth.PlayerIsDeath())
         {
+            SetTimeAttack(ref currentTimeAttack);
             closestEnemy = FindClosestEnemy();
             if (Vector3.Distance(transform.position, playerPos.transform.position) < 3f)
             {
                 body.velocity = Vector2.zero;
                 if (!enemyContact) return;
-                if (SetTimeAttack(ref currentTimeAttack) != 0f) return;
-                //Attack();
+                if (currentTimeAttack != 0f) return;
                 StartCoroutine(nameof(Attacks));
                 currentTimeAttack = TimeAttack;
                 animator.SetBool(animationState.petIsRun, false);

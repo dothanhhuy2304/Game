@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1778465739
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1778465740}
+  m_Layer: 8
+  m_Name: attackPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1778465740
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1778465739}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1, y: 0.34, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5142780678492179414}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5142780678492179413
 GameObject:
   m_ObjectHideFlags: 0
@@ -13,9 +43,9 @@ GameObject:
   - component: {fileID: 5142780678492179412}
   - component: {fileID: 5142780678492179408}
   - component: {fileID: 8661296372118158094}
-  - component: {fileID: 798109851}
   - component: {fileID: 7130098565743549990}
   - component: {fileID: 31679828}
+  - component: {fileID: 2077946374}
   m_Layer: 8
   m_Name: CarnivorousPlant
   m_TagString: Enemy
@@ -32,8 +62,9 @@ Transform:
   m_GameObject: {fileID: 5142780678492179413}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.116, y: -4.234, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_Children:
+  - {fileID: 1778465740}
   - {fileID: 5787595420859994915}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -57,7 +88,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -145,33 +176,6 @@ Rigidbody2D:
   m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &798109851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5142780678492179413}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28cdeedfac838dd4186a3415ba768c93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyType: 2
-  bulletHolder:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  checkGroundPosition: {x: 0, y: 0}
-  rangeAttack: 7
-  offset: 1215
-  radiusAttack: 0
-  currentTime: 0
-  maxTimeAttack: 3
-  offsetAttack: {x: -1.5, y: 0.2}
-  swordAudio: {fileID: 8300000, guid: 0826ecc5e9093214fb82e8580759353c, type: 3}
 --- !u!114 &7130098565743549990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,10 +188,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78a9207b57b6c2344a0460272dc8e8b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyData: {fileID: 11400000, guid: 3393a4d065e929a4cbcfb705de10f7b1, type: 2}
+  canRespawn: 0
+  heathDefault: 100
+  currentHealth: 0
+  maxHealth: 434
+  hpIc: 334
   enemyHealthBar: {fileID: 31679828}
   timeRespawn: 10
   enemyCollider: {fileID: 5142780678492179408}
+  spriteRenderer: {fileID: 5142780678492179415}
+  uIDamageEnemy: {fileID: 898911466340090346, guid: 60b1aed8d968ce9499c3afcb26e22f95, type: 3}
 --- !u!114 &31679828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,6 +214,31 @@ MonoBehaviour:
   colorA: {fileID: 2100000, guid: 8947b76312f07e34aabce6d59ef03a5d, type: 2}
   colorB: {fileID: 2100000, guid: f3f2211f65cf0ed429221801562ff53e, type: 2}
   canvas: {fileID: 5787595420859994914}
+--- !u!114 &2077946374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5142780678492179413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 614e2ef1a19e1a2418d6366d550451c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyType: 2
+  canMoving: 0
+  movingSpeed: 2
+  bulletHolder:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  rangeAttack: 7
+  offsetFlip: 1215
+  maxTimeAttack: 4
+  offsetAttack: {x: -1.5, y: 0.2}
 --- !u!1001 &5142780679409045956
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -273,7 +308,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1661679385207538407, guid: 36889752821b70443ad174dc6f1ba8be, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1661679385207538407, guid: 36889752821b70443ad174dc6f1ba8be, type: 3}
       propertyPath: m_AnchorMax.x
