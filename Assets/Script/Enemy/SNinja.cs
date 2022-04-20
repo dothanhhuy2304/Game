@@ -4,41 +4,44 @@ namespace Game.Enemy
 {
     public class SNinja : EnemyController
     {
-
         [SerializeField] private Transform rangeAttackObj;
         [SerializeField] private float radiusAttack;
         [Space] [SerializeField] private Vector2 checkGroundPosition;
 
         private void FixedUpdate()
         {
-            CheckUpdate();
-            if (enemyHealth.EnemyDeath())
+            if (!isVisible)
             {
-                body.bodyType = RigidbodyType2D.Static;
+                body.velocity = Vector2.zero;
             }
             else
             {
-                body.bodyType = RigidbodyType2D.Kinematic;
-
-
-                if (canMoving)
+                TimeAttack();
+                if (enemyHealth.EnemyDeath())
                 {
-                    var hit = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.down,
-                        Distance, 1 << LayerMask.NameToLayer("ground"));
-                    var hitRight = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition),
-                        Vector2.right,
-                        0.5f, 1 << LayerMask.NameToLayer("ground"));
-                    if (!hit || hitRight)
+                    body.bodyType = RigidbodyType2D.Static;
+                }
+                else
+                {
+                    body.bodyType = RigidbodyType2D.Kinematic;
+
+
+                    if (canMoving)
                     {
-                        transform.Rotate(new Vector3(0, -180f, 0));
+                        var hit = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.down,
+                            Distance, 1 << LayerMask.NameToLayer("ground"));
+                        var hitRight = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition),
+                            Vector2.right,
+                            0.5f, 1 << LayerMask.NameToLayer("ground"));
+                        if (!hit || hitRight)
+                        {
+                            transform.Rotate(new Vector3(0, -180f, 0));
+                        }
+
+                        Moving(animationState.sNinjaIsRun);
                     }
 
-                    Moving(animationState.sNinjaIsRun);
-                }
-
-                if (playerHealth.PlayerIsDeath()) return;
-                if (hasInteracted)
-                {
+                    if (playerHealth.PlayerIsDeath()) return;
                     SNinjaAttack();
                 }
             }

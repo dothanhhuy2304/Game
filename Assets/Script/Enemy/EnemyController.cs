@@ -105,10 +105,9 @@ namespace Game.Enemy
             // }
         //}
 
-        protected void CheckUpdate()
+        protected void TimeAttack()
         {
             SetTimeAttack(ref currentTime);
-            base.CheckDistance(player.position, transform.position);
         }
 
         protected void Moving(int states)
@@ -120,7 +119,15 @@ namespace Game.Enemy
         protected void MovingToTarget(int states,bool value)
         {
             var target = new Vector3(player.position.x - transform.position.x, 0f, 0f).normalized;
-            body.MovePosition(body.transform.position + target * (movingSpeed * Time.fixedDeltaTime));
+            if (Vector2.Distance(player.transform.position,transform.position) > 1f)
+            {
+                body.MovePosition(body.transform.position + target * (movingSpeed * Time.fixedDeltaTime));
+            }
+            else
+            {
+                body.velocity=Vector2.zero;
+            }
+
             animator.SetBool(states, value);
         }
 
@@ -204,6 +211,9 @@ namespace Game.Enemy
 
             return 0;
         }
+        
+        
+        
 
         //void OnDrawGizmos()
         //{

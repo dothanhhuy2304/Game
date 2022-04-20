@@ -7,7 +7,8 @@ namespace Game.Enemy
 
         private void Update()
         {
-            CheckUpdate();
+            if(!isVisible) return;
+            TimeAttack();
             if (Vector3.Distance(transform.position, player.position) > rangeAttack) return;
             Flip();
             if (currentTime != 0) return;

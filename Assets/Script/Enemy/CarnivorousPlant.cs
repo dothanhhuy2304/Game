@@ -6,7 +6,8 @@ namespace Game.Enemy
     {
         private void Update()
         {
-            CheckUpdate();
+            if (!isVisible) return;
+            TimeAttack();
             if (playerHealth.PlayerIsDeath()) return;
             if (enemyHealth.EnemyDeath()) return;
             if (Vector3.Distance(transform.position, player.position) > rangeAttack) return;

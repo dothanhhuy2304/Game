@@ -1,6 +1,5 @@
 using UnityEngine;
 using Game.Core;
-using Game.Player;
 
 public class SpikeHead : BaseObject
 {
@@ -10,7 +9,6 @@ public class SpikeHead : BaseObject
     [SerializeField] private float timeSleep;
     [SerializeField] private float timeAttack;
     [SerializeField] private float resetTimeAttack = 2f;
-    private Transform player;
 
     private void Awake()
     {
@@ -18,15 +16,9 @@ public class SpikeHead : BaseObject
         timeAttack = 0f;
     }
 
-    protected override void Start()
-    {
-        player = FindObjectOfType<CharacterController2D>().transform;
-    }
-
     private void Update()
     {
-        base.CheckDistance(player.position,transform.position);
-        if (!hasInteracted) return;
+        if (!isVisible) return;
         transform.position = Vector2.Lerp(startPos, endPos, Mathf.PingPong(Time.time * speed, timeSleep));
         SetTimeAttack(ref timeAttack);
     }

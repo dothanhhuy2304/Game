@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class Car : MonoBehaviour
@@ -21,7 +20,7 @@ public class Car : MonoBehaviour
         StartCoroutine(nameof(WaitingPlayerRespawn), 3f);
     }
 
-    private IEnumerator WaitingPlayerRespawn(float delay)
+    private System.Collections.IEnumerator WaitingPlayerRespawn(float delay)
     {
         yield return new WaitForSeconds(delay);
         carTrans[0].transform.position = currentPos[0];

@@ -21,8 +21,7 @@ namespace Game.Enemy
 
         private void Update()
         {
-            base.CheckDistance(player.position, transform.position);
-            if (!hasInteracted) return;
+            if (!isVisible) return;
             transform.position = Vector2.Lerp(startPos, endPos, Mathf.PingPong(Time.time * speed, timeSleep));
         }
 

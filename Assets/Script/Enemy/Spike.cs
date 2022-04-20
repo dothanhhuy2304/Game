@@ -1,6 +1,5 @@
 using UnityEngine;
 using Game.Core;
-using Game.Player;
 
 public class Spike : BaseObject
 {
@@ -8,20 +7,17 @@ public class Spike : BaseObject
     [SerializeField] private float maxTimeAttack = 1f;
     private PlayerHealth playerHealth;
     private bool isHurts;
-    private Transform player;
 
     protected override void Start()
     {
-        player = FindObjectOfType<CharacterController2D>().transform;
-        timeAttack = 0f;
         playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
+        timeAttack = 0f;
     }
 
     private void Update()
     {
-        base.CheckDistance(player.position, transform.position);
+        if (!isVisible) return;
         SetTimeAttack(ref timeAttack);
-        if (!hasInteracted) return;
         if (playerHealth.PlayerIsDeath()) return;
         if (!isHurts) return;
         if (timeAttack != 0f) return;

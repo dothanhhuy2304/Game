@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Game.Core;
 using Game.Player;
@@ -23,8 +22,8 @@ namespace Game.Enemy
 
         private void Update()
         {
-            base.CheckDistance(player.position, transform.position);
-            if (hasInteracted)
+            if (!isVisible) return;
+            if (isVisible)
             {
                 if (isComeback)
                 {
@@ -33,7 +32,7 @@ namespace Game.Enemy
             }
 
             //
-            if (!hasInteracted)
+            if (!isVisible)
             {
                 isComeback = true;
             }
