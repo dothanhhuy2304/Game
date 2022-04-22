@@ -1,4 +1,3 @@
-using System.Globalization;
 using UnityEngine;
 
 namespace Game.GamePlay
@@ -6,13 +5,13 @@ namespace Game.GamePlay
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get; private set; }
+        [SerializeField] private ScoreData scoreData;
         [SerializeField] private TMPro.TextMeshProUGUI txtScore;
         [SerializeField] private TMPro.TextMeshProUGUI txtDiamond;
         [SerializeField] private TMPro.TextMeshProUGUI txtMoney;
 
         private void Awake()
         {
-            DontDestroyOnLoad(this);
             if (Instance == null)
             {
                 Instance = this;
@@ -21,21 +20,30 @@ namespace Game.GamePlay
             {
                 Destroy(gameObject);
             }
+
+            DontDestroyOnLoad(this);
+            scoreData.currentScore = 0f;
+            SetScore(0f);
+            SetMoney(0f);
+            SetDiamond(0f);
         }
 
         public void SetScore(float score)
         {
-            txtScore.text = score.ToString(CultureInfo.CurrentCulture);
+            scoreData.currentScore += score;
+            txtScore.text = scoreData.currentScore.ToString(System.Globalization.CultureInfo.CurrentCulture);
         }
 
         public void SetDiamond(float diamond)
         {
-            txtDiamond.text = diamond.ToString(CultureInfo.CurrentCulture);
+            scoreData.diamond += diamond;
+            txtDiamond.text = scoreData.diamond.ToString(System.Globalization.CultureInfo.CurrentCulture);
         }
 
         public void SetMoney(float money)
         {
-            txtMoney.text = money.ToString(CultureInfo.CurrentCulture) + " $";
+            scoreData.money += money;
+            txtMoney.text = scoreData.money + " $";
         }
 
     }

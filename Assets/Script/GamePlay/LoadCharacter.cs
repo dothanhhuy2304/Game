@@ -1,6 +1,5 @@
 using Game.GamePlay;
 using UnityEngine;
-using Debug = System.Diagnostics.Debug;
 
 public class LoadCharacter : MonoBehaviour
 {
@@ -11,7 +10,7 @@ public class LoadCharacter : MonoBehaviour
     {
         characters[playerData.characterSelection].SetActive(true);
         var playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
-        Debug.Assert(playerAudio != null, nameof(playerAudio) + " != null");
+        System.Diagnostics.Debug.Assert(playerAudio != null, nameof(playerAudio) + " != null");
         playerAudio.Plays_Music("Music_Game");
         if (UIManager.Instance.healthUI.activeSelf || UIManager.Instance.scoreUI.activeSelf) return;
         UIManager.Instance.healthUI.SetActive(true);

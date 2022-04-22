@@ -7,6 +7,7 @@ using Game.Player;
 public class PlayerHealth : MonoBehaviour, IHealthSystem
 {
     [SerializeField] public Data playerData;
+    [SerializeField] public ScoreData scoreData;
     [SerializeField] public PlayerData playerDatas;
     [SerializeField] private CharacterController2D player;
     private PlayerHealthBar playerHealthBar;
@@ -63,6 +64,12 @@ public class PlayerHealth : MonoBehaviour, IHealthSystem
 
     public void Die()
     {
+        //save score
+        if (scoreData.currentScore > scoreData.highScore)
+        {
+            scoreData.highScore = scoreData.currentScore;
+        }
+
         this.playerData.currentHealth = 0f;
         StartCoroutine(nameof(TimeDelayDeath), 3f);
     }

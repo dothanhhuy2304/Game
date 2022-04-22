@@ -42,67 +42,67 @@ namespace Game.Enemy
 
         //protected virtual void FixedUpdate()
         //{
-            //SetTimeAttack(ref currentTime);
-            //base.CheckDistance(player.position, transform.position);
-            // switch (enemyType)
-            // {
-            //     case EnemyType.SNINJA:
-            //     {
-            // if (enemyHealth.EnemyDeath())
-            // {
-            //     body.bodyType = RigidbodyType2D.Static;
-            // }
-            // else
-            // {
-            //     body.bodyType = RigidbodyType2D.Kinematic;
-            //
-            //
-            //     if (canMoving)
-            //     {
-            //         var hit = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.down,
-            //             Distance, 1 << LayerMask.NameToLayer("ground"));
-            //         var hitRight = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition),
-            //             Vector2.right,
-            //             0.5f, 1 << LayerMask.NameToLayer("ground"));
-            //         if (!hit || hitRight)
-            //         {
-            //             transform.Rotate(new Vector3(0, -180f, 0));
-            //         }
-            //
-            //         Moving();
-            //     }
-            //
-            //     if (playerHealth.PlayerIsDeath()) return;
-            //     if (hasInteracted)
-            //     {
-            //         SNinjaAttack();
-            //     }
-            // }
+        //SetTimeAttack(ref currentTime);
+        //base.CheckDistance(player.position, transform.position);
+        // switch (enemyType)
+        // {
+        //     case EnemyType.SNINJA:
+        //     {
+        // if (enemyHealth.EnemyDeath())
+        // {
+        //     body.bodyType = RigidbodyType2D.Static;
+        // }
+        // else
+        // {
+        //     body.bodyType = RigidbodyType2D.Kinematic;
+        //
+        //
+        //     if (canMoving)
+        //     {
+        //         var hit = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.down,
+        //             Distance, 1 << LayerMask.NameToLayer("ground"));
+        //         var hitRight = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition),
+        //             Vector2.right,
+        //             0.5f, 1 << LayerMask.NameToLayer("ground"));
+        //         if (!hit || hitRight)
+        //         {
+        //             transform.Rotate(new Vector3(0, -180f, 0));
+        //         }
+        //
+        //         Moving();
+        //     }
+        //
+        //     if (playerHealth.PlayerIsDeath()) return;
+        //     if (hasInteracted)
+        //     {
+        //         SNinjaAttack();
+        //     }
+        // }
 
-            //     break;
-            // }
-            // case EnemyType.CarnivorousPlant:
-            // {
-            // if(playerHealth.PlayerIsDeath()) return;
-            // if (enemyHealth.EnemyDeath()) return;
-            // if (Vector3.Distance(transform.position, player.position) < rangeAttack)
-            // {
-            //     Flip();
-            //     if (currentTime != 0f) return;
-            //     animator.SetTrigger(animationState.carnivorousPlantIsAttack);
-            //     currentTime = maxTimeAttack;
-            //     Attack();
-            // }
+        //     break;
+        // }
+        // case EnemyType.CarnivorousPlant:
+        // {
+        // if(playerHealth.PlayerIsDeath()) return;
+        // if (enemyHealth.EnemyDeath()) return;
+        // if (Vector3.Distance(transform.position, player.position) < rangeAttack)
+        // {
+        //     Flip();
+        //     if (currentTime != 0f) return;
+        //     animator.SetTrigger(animationState.carnivorousPlantIsAttack);
+        //     currentTime = maxTimeAttack;
+        //     Attack();
+        // }
 
-            //         break;
-            //     }
-            //     case EnemyType.Player:
-            //         break;
-            //     case EnemyType.Pet:
-            //         break;
-            //     default:
-            //         throw new ArgumentOutOfRangeException();
-            // }
+        //         break;
+        //     }
+        //     case EnemyType.Player:
+        //         break;
+        //     case EnemyType.Pet:
+        //         break;
+        //     default:
+        //         throw new ArgumentOutOfRangeException();
+        // }
         //}
 
         protected void TimeAttack()
@@ -116,16 +116,16 @@ namespace Game.Enemy
             animator.SetBool(states, true);
         }
 
-        protected void MovingToTarget(int states,bool value)
+        protected void MovingToTarget(int states, bool value)
         {
             var target = new Vector3(player.position.x - transform.position.x, 0f, 0f).normalized;
-            if (Vector2.Distance(player.transform.position,transform.position) > 1f)
+            if (Vector2.Distance(player.transform.position, transform.position) > 1f)
             {
                 body.MovePosition(body.transform.position + target * (movingSpeed * Time.fixedDeltaTime));
             }
             else
             {
-                body.velocity=Vector2.zero;
+                body.velocity = Vector2.zero;
             }
 
             animator.SetBool(states, value);
@@ -211,9 +211,6 @@ namespace Game.Enemy
 
             return 0;
         }
-        
-        
-        
 
         //void OnDrawGizmos()
         //{

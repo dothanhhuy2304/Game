@@ -22,12 +22,11 @@ namespace Game.Enemy
 
         private void Update()
         {
-            if (!isVisible) return;
             if (isVisible)
             {
                 if (isComeback)
                 {
-                    transform.position = Vector2.MoveTowards(transform.position, startTrans, 2f * Time.deltaTime);
+                    transform.position = Vector3.Lerp(transform.position, startTrans, movingSpeed * Time.deltaTime);
                 }
             }
 
@@ -44,7 +43,7 @@ namespace Game.Enemy
 
             if (isComeback)
             {
-                transform.position = Vector2.MoveTowards(transform.position, startTrans, 2f * Time.deltaTime);
+                transform.position = Vector3.Lerp(transform.position, startTrans, movingSpeed * Time.deltaTime);
             }
         }
 

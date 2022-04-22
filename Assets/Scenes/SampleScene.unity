@@ -3914,6 +3914,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56d91f5a4d467cc47b978cf8ae6590d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scoreData: {fileID: 11400000, guid: f8222b860886af9448e9b80d49666f6b, type: 2}
   txtScore: {fileID: 1311499198}
   txtDiamond: {fileID: 41982821}
   txtMoney: {fileID: 1401767659}

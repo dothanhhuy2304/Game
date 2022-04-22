@@ -7,7 +7,6 @@ namespace Game.Item
 {
     public class ItemCollection : MonoBehaviour
     {
-        [SerializeField] private ScoreData scoreData;
         [SerializeField] private ItemType itemType;
         [SerializeField] private ItemData itemData;
         [SerializeField] private GameObject itemObj, effectCollectedObj;
@@ -19,35 +18,27 @@ namespace Game.Item
         private void Start()
         {
             gameManager = FindObjectOfType<GameManager>().GetComponent<GameManager>();
-            Debug.Assert(gameManager != null, nameof(gameManager) + " != null");
             playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
             playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
-            scoreData.currentScore = 0f;
-            gameManager.SetScore(scoreData.currentScore);
-            gameManager.SetDiamond(scoreData.diamond);
-            gameManager.SetMoney(scoreData.money);
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (playerHealth.PlayerIsDeath()) return;
-            if (!other.gameObject.CompareTag("Player")) return;
+            if (!other.CompareTag("Player")) return;
             switch (itemType)
             {
                 case ItemType.Money:
                 {
-                    scoreData.money += itemData.moneyReceive;
-                    scoreData.currentScore += itemData.scoreReceive;
-                    gameManager.SetScore(scoreData.currentScore);
-                    gameManager.SetMoney(scoreData.money);
+                    gameManager.SetScore(itemData.scoreReceive);
+                    gameManager.SetMoney(itemData.moneyReceive);
                     ScoreAndDiamondItems();
                     break;
                 }
                 case ItemType.Diamond:
                 {
-                    scoreData.currentScore += itemData.scoreReceive;
-                    scoreData.diamond += itemData.diamondReceive;
-                    gameManager.SetDiamond(scoreData.diamond);
+                    gameManager.SetScore(itemData.scoreReceive);
+                    gameManager.SetDiamond(itemData.diamondReceive);
                     ScoreAndDiamondItems();
                     break;
                 }
@@ -103,13 +94,13 @@ namespace Game.Item
             gameObject.SetActive(false);
         }
 
-        private void OnDisable()
-        {
-            if (scoreData.currentScore > scoreData.highScore)
-            {
-                scoreData.highScore = scoreData.currentScore;
-            }
-        }
+        // private void OnDisable()
+        // {
+        //     if (scoreData.currentScore > scoreData.highScore)
+        //     {
+        //         scoreData.highScore = scoreData.currentScore;
+        //     }
+        // }
     }
 
     public enum ItemType

@@ -15,7 +15,7 @@ namespace Game.Enemy
         [SerializeField] private EnemyHealthBar enemyHealthBar;
         [SerializeField] private float timeRespawn;
         [SerializeField] private Collider2D enemyCollider;
-        [SerializeField] private SpriteRenderer spriteRenderer;
+        private SpriteRenderer spriteRenderer;
         [SerializeField] private GameObject uIDamageEnemy;
         private TMPro.TextMeshProUGUI txtDamage;
         private PlayerAudio playerAudio;
@@ -63,16 +63,18 @@ namespace Game.Enemy
         {
             playerAudio.Plays_10("Enemy_Death");
             this.currentHealth = 0f;
+            this.spriteRenderer.enabled = false;
+            this.enemyCollider.enabled = false;
             if (canRespawn)
             {
-                this.spriteRenderer.enabled = false;
-                this.enemyCollider.enabled = false;
                 StartCoroutine(nameof(Respawn), timeRespawn);
             }
-            else
-            {
-                this.gameObject.SetActive(false);
-            }
+        }
+
+        public void EnemyRespawn()
+        {
+            if (canRespawn) return;
+            StartCoroutine(nameof(Respawn), timeRespawn);
         }
 
         private IEnumerator Respawn(float timeDelay)

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using Game.Core;
@@ -156,11 +155,11 @@ namespace Game.Player
         private void Flip()
         {
             mFacingRight = !mFacingRight;
-            transform.Rotate(0f, 180f, 0f);
-
-            // Vector3 theScale = transform.localScale;
+            // var position = transform;
+            // var theScale = position.localScale;
             // theScale.x *= -1;
-            // transform.localScale = theScale;
+            // position.localScale = theScale;
+            transform.Rotate(0f, 180f, 0f);
         }
 
         //Animator

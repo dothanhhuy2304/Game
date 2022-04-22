@@ -6,7 +6,6 @@ namespace Game.GamePlay
 
     public class Chest : MonoBehaviour
     {
-        [SerializeField] private ScoreData scoreData;
         [SerializeField] private GameObject uIGuild, itemScore, itemHurt;
         private bool isOpen;
         [SerializeField] private Animator animator;
@@ -44,8 +43,7 @@ namespace Game.GamePlay
             if (value != 0)
             {
                 txtValueItem.text = "x" + value.ToString(System.Globalization.CultureInfo.CurrentCulture);
-                scoreData.diamond += value;
-                gameManager.SetDiamond(scoreData.diamond);
+                gameManager.SetDiamond(value);
                 playerAudio.Plays_20("Chest");
             }
             else

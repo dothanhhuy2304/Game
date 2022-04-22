@@ -6,6 +6,11 @@ namespace Game.Enemy
     {
         private void Update()
         {
+            if (playerHealth.PlayerIsDeath() && enemyHealth.EnemyDeath())
+            {
+                enemyHealth.EnemyRespawn();
+            }
+
             if (!isVisible) return;
             TimeAttack();
             if (playerHealth.PlayerIsDeath()) return;

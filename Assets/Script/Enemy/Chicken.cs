@@ -13,6 +13,7 @@ namespace Game.Enemy
         private bool isRespawn;
         private Vector2 startPos = Vector2.zero;
         private float timeRespawn;
+        [SerializeField] private Vector2 groundCheck = Vector2.zero;
 
         private void Awake()
         {
@@ -38,7 +39,7 @@ namespace Game.Enemy
                 if (!spriteRenderer.enabled)
                 {
                     timeRespawn += Time.deltaTime;
-                    if (timeRespawn > 3.5f)
+                    if (timeRespawn > 4f)
                     {
                         body.bodyType = RigidbodyType2D.Kinematic;
                         destroy = false;
@@ -63,13 +64,26 @@ namespace Game.Enemy
             }
             else
             {
+                var hit = Physics2D.Raycast(transform.TransformPoint(groundCheck), Vector3.down, 2f,
+                    1 << LayerMask.NameToLayer("ground"));
+                var hitRight = Physics.Raycast(transform.TransformPoint(groundCheck), Vector3.zero, 0f,
+                    1 << LayerMask.NameToLayer("ground"));
                 SetTimeAttack(ref currentTime);
                 if (Vector3.Distance(transform.position, player.position) > 0.5f)
                 {
                     Flip();
                 }
 
-                MovingToTarget(animationState.chickenIsAttack, true);
+                if (!hit || hitRight)
+                {
+                    body.velocity = Vector3.zero;
+                    animator.SetBool(animationState.chickenIsAttack, false);
+                }
+                else
+                {
+                    MovingToTarget(animationState.chickenIsAttack, true);
+                }
+
                 if (currentTime != 0f) return;
                 body.bodyType = RigidbodyType2D.Static;
                 destroy = true;
@@ -81,5 +95,11 @@ namespace Game.Enemy
                 explosionObj.SetActive(true);
             }
         }
+
+        //private void OnDrawGizmos()
+        //{
+            //Gizmos.DrawRay(transform.TransformPoint(groundCheck), Vector3.down * 2f);
+            //Gizmos.DrawSphere(transform.position, rangeAttack);
+        //}
     }
 }

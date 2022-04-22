@@ -7,7 +7,12 @@ namespace Game.Enemy
 
         private void Update()
         {
-            if(!isVisible) return;
+            if (playerHealth.PlayerIsDeath() && enemyHealth.EnemyDeath())
+            {
+                enemyHealth.EnemyRespawn();
+            }
+
+            if (!isVisible) return;
             TimeAttack();
             if (Vector3.Distance(transform.position, player.position) > rangeAttack) return;
             Flip();
