@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterSelection: 0
   position: {x: -4.96, y: -4, z: 0}
-  currentScenes: 0
+  currentScenes: 1
   saveAudio: 1
   soundMusic: 0.09174683
   soundEffect: 0.6495827

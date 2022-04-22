@@ -71,6 +71,11 @@ namespace Game.Enemy
             }
         }
 
+        public void ResetHeathDefault()
+        {
+            SetMaxHealth(heathDefault, hpIc);
+        }
+
         public void EnemyRespawn()
         {
             if (canRespawn) return;

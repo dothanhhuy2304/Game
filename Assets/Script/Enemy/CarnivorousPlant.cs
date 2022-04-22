@@ -6,9 +6,13 @@ namespace Game.Enemy
     {
         private void Update()
         {
-            if (playerHealth.PlayerIsDeath() && enemyHealth.EnemyDeath())
+            if (playerHealth.PlayerIsDeath())
             {
-                enemyHealth.EnemyRespawn();
+                enemyHealth.ResetHeathDefault();
+                if (enemyHealth.EnemyDeath())
+                {
+                    enemyHealth.EnemyRespawn();
+                }
             }
 
             if (!isVisible) return;

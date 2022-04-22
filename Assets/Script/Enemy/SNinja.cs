@@ -10,6 +10,11 @@ namespace Game.Enemy
 
         private void FixedUpdate()
         {
+            if (playerHealth.PlayerIsDeath())
+            {
+                enemyHealth.ResetHeathDefault();
+            }
+
             if (!isVisible)
             {
                 body.velocity = Vector2.zero;
