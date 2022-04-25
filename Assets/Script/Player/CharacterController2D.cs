@@ -25,26 +25,55 @@ namespace Game.Player
         private bool isOnCar;
         public bool isHurt;
         private float startSpeed;
+        //private DeviceManager deviceManager;
+        //private UnityEngine.EventSystems.EventTrigger btnLeft, btnRight, btnJump, btnAttack;
+        //private Weapon weapon;
 
         protected override void Start()
         {
             base.Start();
-            if (!groundCheck)
-            {
-                groundCheck = GameObject.Find("ground_check").transform;
-            }
-
             playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
-            if (!playerHealth)
-            {
-                playerHealth = GetComponent<PlayerHealth>();
-            }
-
             startSpeed = playerHealth.playerData.movingSpeed;
+            //deviceManager = FindObjectOfType<DeviceManager>().GetComponent<DeviceManager>();
+            //weapon = GetComponent<Weapon>();
+            //OnControl();
         }
+
+        // private void OnControl()
+        // {
+        //     btnLeft = deviceManager.btnLeft.GetComponent<EventTrigger>();
+        //     btnRight = deviceManager.btnRight.GetComponent<EventTrigger>();
+        //     btnJump = deviceManager.btnJump.GetComponent<EventTrigger>();
+        //     btnAttack = deviceManager.btnAttack.GetComponent<EventTrigger>();
+        //     var eventBtnLeft = new EventTrigger.Entry();
+        //     var eventBtnLeftUp = new EventTrigger.Entry();
+        //     var eventBtnRight = new EventTrigger.Entry();
+        //     var eventBtnRightUp = new EventTrigger.Entry();
+        //     var eventBtnJump = new EventTrigger.Entry();
+        //     var eventBtnAttack = new EventTrigger.Entry();
+        //     eventBtnLeft.eventID = EventTriggerType.PointerDown;
+        //     eventBtnLeftUp.eventID = EventTriggerType.PointerUp;
+        //     eventBtnRight.eventID = EventTriggerType.PointerDown;
+        //     eventBtnRightUp.eventID = EventTriggerType.PointerUp;
+        //     eventBtnJump.eventID = EventTriggerType.PointerDown;
+        //     eventBtnAttack.eventID = EventTriggerType.PointerDown;
+        //     eventBtnLeft.callback.AddListener(t => { MobileMove(-1); });
+        //     eventBtnLeftUp.callback.AddListener(t => { MobileMove(0); });
+        //     eventBtnRight.callback.AddListener(t => { MobileMove(1); });
+        //     eventBtnRightUp.callback.AddListener(t => { MobileMove(0); });
+        //     eventBtnJump.callback.AddListener(t => { Jumps(); });
+        //     eventBtnAttack.callback.AddListener(t => { weapon.Attacks(); });
+        //     btnLeft.triggers.Add(eventBtnLeft);
+        //     btnLeft.triggers.Add(eventBtnLeftUp);
+        //     btnRight.triggers.Add(eventBtnRight);
+        //     btnRight.triggers.Add(eventBtnRightUp);
+        //     btnJump.triggers.Add(eventBtnJump);
+        //     btnAttack.triggers.Add(eventBtnAttack);
+        // }
 
         private void Update()
         {
+            //if (SystemInfo.deviceType != DeviceType.Desktop) return;
             if (playerHealth.PlayerIsDeath()) return;
             if (isHurt) return;
             mHorizontal = Input.GetAxisRaw("Horizontal");
@@ -95,8 +124,8 @@ namespace Game.Player
 
         private void Move(float move)
         {
-            var velocity1 = body.velocity;
-            body.velocity = Vector2.SmoothDamp(velocity1, new Vector2(move * 10f, velocity1.y), ref velocity,
+            var position = body.velocity;
+            body.velocity = Vector2.SmoothDamp(position, new Vector2(move * 10f, position.y), ref velocity,
                 MovementSmoothing);
 
             //PlayerRun(!isOnCar ? Mathf.Abs(move) : 0f);
@@ -117,6 +146,11 @@ namespace Game.Player
             {
                 Flip();
             }
+        }
+
+        private void MobileMove(float move)
+        {
+            mHorizontal = move;
         }
 
         private void Jumps()
@@ -225,6 +259,20 @@ namespace Game.Player
             body.bodyType = RigidbodyType2D.Dynamic;
             isHurt = false;
         }
+
+        // public IEnumerator KnockBack(float knockDuration, float knockPower, Vector3 knockDir)
+        // {
+        //     var timer = 0f;
+        //     while (knockDuration > timer)
+        //     {
+        //         timer *= Time.deltaTime;
+        //         var position = transform.position;
+        //         var t = (position - knockDir).normalized;
+        //         body.AddForce(new Vector3(t.x * knockPower, position.y, position.z));
+        //     }
+        //
+        //     yield return null;
+        // }
 
     }
 

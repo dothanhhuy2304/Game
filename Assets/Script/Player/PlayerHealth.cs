@@ -64,13 +64,13 @@ public class PlayerHealth : MonoBehaviour, IHealthSystem
 
     public void Die()
     {
+        this.playerData.currentHealth = 0f;
         //save score
         if (scoreData.currentScore > scoreData.highScore)
         {
             scoreData.highScore = scoreData.currentScore;
         }
 
-        this.playerData.currentHealth = 0f;
         StartCoroutine(nameof(TimeDelayDeath), 3f);
     }
 
@@ -87,6 +87,7 @@ public class PlayerHealth : MonoBehaviour, IHealthSystem
         transform1.position = playerDatas.position;
         petAI.transform.position = transform1.up;
         //transform.position = new Vector3(-4.95f, -4f, 0f);
+        yield return null;
     }
 
     private void OnApplicationQuit()

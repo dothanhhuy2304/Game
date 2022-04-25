@@ -10,16 +10,17 @@ namespace Game.Enemy
         private SpriteRenderer spriteRenderer;
         private bool isMoving;
         private bool destroy;
-        private bool isRespawn;
         private Vector2 startPos = Vector2.zero;
         private float timeRespawn;
         [SerializeField] private Vector2 groundCheck = Vector2.zero;
+        private bool isRespawn;
 
         private void Awake()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
             currentTime = maxTimeAttack;
             startPos = transform.position;
+            timeRespawn = 4f;
         }
 
         private void OnEnable()
@@ -38,20 +39,20 @@ namespace Game.Enemy
             {
                 if (!spriteRenderer.enabled)
                 {
-                    timeRespawn += Time.deltaTime;
-                    if (timeRespawn > 4f)
-                    {
-                        body.bodyType = RigidbodyType2D.Kinematic;
-                        destroy = false;
-                        spriteRenderer.enabled = true;
-                        chickenCol.enabled = true;
-                        animator.enabled = true;
-                        transform.position = startPos;
-                        MovingToTarget(animationState.chickenIsAttack, false);
-                        currentTime = maxTimeAttack;
-                        timeRespawn = 0f;
-                        isRespawn = false;
-                    }
+                    SetTimeAttack(ref timeRespawn);
+                    if (timeRespawn != 0) return;
+                    body.bodyType = RigidbodyType2D.Kinematic;
+                    destroy = false;
+                    spriteRenderer.enabled = true;
+                    chickenCol.enabled = true;
+                    animator.enabled = true;
+                    transform.position = startPos;
+                    MovingToTarget(animationState.chickenIsAttack, false);
+                    timeRespawn = 4f;
+                }
+                else
+                {
+                    isRespawn = false;
                 }
             }
 
@@ -93,13 +94,14 @@ namespace Game.Enemy
                 animator.enabled = false;
                 explosionObj.transform.position = transform.position;
                 explosionObj.SetActive(true);
+                currentTime = maxTimeAttack;
             }
         }
-
-        //private void OnDrawGizmos()
-        //{
-            //Gizmos.DrawRay(transform.TransformPoint(groundCheck), Vector3.down * 2f);
-            //Gizmos.DrawSphere(transform.position, rangeAttack);
-        //}
     }
+
+    //private void OnDrawGizmos()
+    //{
+    //Gizmos.DrawRay(transform.TransformPoint(groundCheck), Vector3.down * 2f);
+    //Gizmos.DrawSphere(transform.position, rangeAttack);
+    //}
 }

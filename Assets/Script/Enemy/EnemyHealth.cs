@@ -73,7 +73,8 @@ namespace Game.Enemy
 
         public void ResetHeathDefault()
         {
-            SetMaxHealth(heathDefault, hpIc);
+            currentHealth = maxHealth;
+            this.enemyHealthBar.SetHealth(this.currentHealth, this.maxHealth);
         }
 
         public void EnemyRespawn()

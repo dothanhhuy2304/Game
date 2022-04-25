@@ -1,5 +1,6 @@
 using UnityEngine;
 using Game.Core;
+using Game.Enemy;
 using Game.Player;
 
 public class PetAI : BaseObject
@@ -57,15 +58,15 @@ public class PetAI : BaseObject
     private void OnTriggerStay2D(Collider2D other)
     {
         if (!other.isTrigger || !other.CompareTag("Enemy")) return;
-        closestEnemy.GetComponent<SpriteRenderer>().color = new Color(1f, .7f, 0f, 1f);
+        closestEnemy.GetComponentInChildren<SpriteRenderer>().color = new Color(1f, .7f, 0f, 1f);
         enemyContact = true;
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Enemy")) return;
+        other.GetComponentInChildren<SpriteRenderer>().color = Color.white;
         enemyContact = false;
-        other.GetComponent<SpriteRenderer>().color = Color.white;
     }
 
     private void Moving()
@@ -80,7 +81,7 @@ public class PetAI : BaseObject
         Attack();
         yield return null;
     }
-    
+
 
     private void Attack()
     {

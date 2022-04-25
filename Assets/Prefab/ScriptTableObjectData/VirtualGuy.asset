@@ -16,9 +16,7 @@ MonoBehaviour:
   jumpForce: 10
   dashSpeed: 70
   heathDefault: 100
-  currentHealth: 118
+  currentHealth: 0
   maxHealth: 118
   hpIc: 18
   damageAttack: 20
-  position: {x: -4.96, y: -4, z: 0}
-  currentScenes: 0

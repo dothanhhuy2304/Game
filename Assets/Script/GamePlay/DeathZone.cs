@@ -6,9 +6,9 @@ namespace Game.GamePlay
     {
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.CompareTag("Player"))
+            if (other.CompareTag("Player"))
             {
-                other.gameObject.GetComponent<PlayerHealth>().Die();
+                other.GetComponent<PlayerHealth>().Die();
             }
         }
     }

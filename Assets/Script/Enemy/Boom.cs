@@ -1,26 +1,37 @@
 using System.Collections;
+using Game.Core;
 using UnityEngine;
 
-public class Boom : MonoBehaviour
+public class Boom : BaseObject
 {
+    private Collider2D col;
     [SerializeField] private GameObject boomObj, explosionObj;
     [SerializeField] private Collider2D colObj;
     private PlayerHealth playerHealth;
     private PlayerAudio playerAudio;
     [SerializeField] private float timeRespawn;
 
-    private void Start()
+    protected override void Start()
     {
         playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
         colObj = GetComponent<Collider2D>();
         playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
+        col = GetComponent<Collider2D>();
     }
 
     private void Update()
     {
-        if (!playerHealth.PlayerIsDeath()) return;
-        if (boomObj.activeSelf) return;
-        StartCoroutine(nameof(RespawnObject), timeRespawn);
+        if (!isVisible)
+        {
+            col.enabled = false;
+        }
+        else
+        {
+            col.enabled = true;
+            if (!playerHealth.PlayerIsDeath()) return;
+            if (boomObj.activeSelf) return;
+            StartCoroutine(nameof(RespawnObject), timeRespawn);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)

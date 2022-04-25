@@ -17,8 +17,8 @@ public class Explosion : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        StartCoroutine(nameof(WaitingHide), 0.7f);
         playerAudio.Plays_20("Boom_Explosion");
+        StartCoroutine(nameof(WaitingHide), 0.7f);
         if (!isAttack) return;
         if (!other.CompareTag("Player")) return;
         isAttack = false;

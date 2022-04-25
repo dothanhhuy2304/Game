@@ -6,6 +6,7 @@ namespace Game.Core
         SNINJA,
         CarnivorousPlant,
         Pet,
-        Bee
+        Bee,
+        Chicken
     }
 }

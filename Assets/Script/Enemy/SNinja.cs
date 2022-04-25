@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Game.Enemy
@@ -7,6 +8,12 @@ namespace Game.Enemy
         [SerializeField] private Transform rangeAttackObj;
         [SerializeField] private float radiusAttack;
         [Space] [SerializeField] private Vector2 checkGroundPosition;
+        private Collider2D col;
+
+        private void Awake()
+        {
+            col = GetComponent<Collider2D>();
+        }
 
         private void FixedUpdate()
         {
@@ -18,9 +25,13 @@ namespace Game.Enemy
             if (!isVisible)
             {
                 body.velocity = Vector2.zero;
+                animator.enabled = false;
+                col.enabled = false;
             }
             else
             {
+                animator.enabled = true;
+                col.enabled = true;
                 TimeAttack();
                 if (enemyHealth.EnemyDeath())
                 {

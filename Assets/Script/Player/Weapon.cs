@@ -14,7 +14,6 @@ namespace Game.Player
         private CharacterController2D players;
         [SerializeField] private float timeAttack = 0.5f;
         private const float ResetTimeAttack = 0.5f;
-
         protected override void Start()
         {
             playerHealth = GetComponent<PlayerHealth>();
@@ -25,21 +24,27 @@ namespace Game.Player
 
         private void LateUpdate()
         {
+            if (SetTimeAttack(ref timeAttack) != 0) return;
             if (EventSystem.current.IsPointerOverGameObject() || playerHealth.PlayerIsDeath()) return;
             if (players.isHurt) return;
-            if (SetTimeAttack(ref timeAttack) != 0) return;
             if (!Input.GetMouseButtonDown(0) && !Input.GetKeyDown(KeyCode.KeypadEnter)) return;
-            StartCoroutine(nameof(Attacks));
+            Attacks();
+        }
+
+        public void Attacks()
+        {
+            if (timeAttack != 0) return;
+            StartCoroutine(nameof(Attack));
             timeAttack = ResetTimeAttack;
         }
 
-        private IEnumerator Attacks()
+        private IEnumerator Attack()
         {
-            Attack();
+            Bullet();
             yield return null;
         }
         
-        private void Attack()
+        private void Bullet()
         {
             //Instantiate(fireObj, transform.TransformPoint(offset), transform.rotation);
             bulletHolder[FindBullet()].transform.position = transform.TransformPoint(offset);
