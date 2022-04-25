@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Game.Core;
@@ -16,6 +17,7 @@ namespace Game.Player
         private const float GroundedRadius = .3f;
         [SerializeField] private Transform groundCheck;
         [Space] [SerializeField] private LayerMask whatIsGround;
+        private bool isJump;
         private bool mDBJump;
         [SerializeField] private Animator animator;
         [SerializeField] private float clampMinX, clampMaxX;
@@ -24,6 +26,7 @@ namespace Game.Player
         private PlayerAudio playerAudio;
         private bool isOnCar;
         public bool isHurt;
+
         private float startSpeed;
         //private DeviceManager deviceManager;
         //private UnityEngine.EventSystems.EventTrigger btnLeft, btnRight, btnJump, btnAttack;
@@ -74,6 +77,7 @@ namespace Game.Player
         private void Update()
         {
             //if (SystemInfo.deviceType != DeviceType.Desktop) return;
+            OnCollision();
             if (playerHealth.PlayerIsDeath()) return;
             if (isHurt) return;
             mHorizontal = Input.GetAxisRaw("Horizontal");
@@ -85,10 +89,10 @@ namespace Game.Player
                 }
             }
 
-            OnCollision();
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow))
             {
-                Jumps();
+                isJump = true;
+                //Jumps();
             }
         }
 
@@ -98,6 +102,13 @@ namespace Game.Player
             {
                 if (isHurt) return;
                 Move(mHorizontal * playerHealth.playerData.movingSpeed * Time.fixedDeltaTime);
+
+                if (isJump)
+                {
+                    Jumps();
+                    isJump = false;
+                }
+
                 var position = transform.position;
                 position = new Vector3(Mathf.Clamp(position.x, clampMinX, clampMaxX), position.y, position.z);
                 body.transform.position = position;
@@ -158,7 +169,6 @@ namespace Game.Player
             if (mGrounded)
             {
                 Jump();
-                mGrounded = false;
                 mDBJump = true;
                 isDashing = true;
                 playerAudio.Plays_13("Player_Jump");
@@ -170,7 +180,6 @@ namespace Game.Player
                 isDashing = true;
                 playerAudio.Plays_13("Player_Jump");
             }
-
         }
 
         private void Jump()
@@ -274,6 +283,10 @@ namespace Game.Player
         //     yield return null;
         // }
 
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawSphere(groundCheck.position, GroundedRadius);
+        }
     }
 
     // public enum JumpState
