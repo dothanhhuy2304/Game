@@ -10,7 +10,11 @@ namespace Game.Core
 
         public readonly int playerIsDBJump = Animator.StringToHash("is_DB_Jump");
 
+        public readonly int playerIsDash = Animator.StringToHash("is_Dash");
+
         public readonly int playerIsHurt = Animator.StringToHash("is_Hurt");
+
+        public readonly int playerIsDeath = Animator.StringToHash("is_Death");
 
         //Pet
         public readonly int petIsRun = Animator.StringToHash("isRun");

@@ -32,10 +32,14 @@ namespace Game.Player
         //private UnityEngine.EventSystems.EventTrigger btnLeft, btnRight, btnJump, btnAttack;
         //private Weapon weapon;
 
+        private void Awake()
+        {
+            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+        }
+
         protected override void Start()
         {
             base.Start();
-            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
             startSpeed = playerHealth.playerData.movingSpeed;
             //deviceManager = FindObjectOfType<DeviceManager>().GetComponent<DeviceManager>();
             //weapon = GetComponent<Weapon>();
@@ -222,6 +226,13 @@ namespace Game.Player
             //     animator.SetBool("Is_Falling",true);
             // }
         }
+
+        public void PlayerDeath()
+        {
+            animator.SetTrigger(animationState.playerIsDeath);
+            playerAudio.Plays_13("Enemy_Death");
+        }
+
 
         private void OnTriggerEnter2D(Collider2D other)
         {
