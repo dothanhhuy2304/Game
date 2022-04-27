@@ -12,13 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef25f2723930c5e4ca5988593aba4cad, type: 3}
   m_Name: MaskDude
   m_EditorClassIdentifier: 
-  movingSpeed: 40
+  movingSpeed: 30
   jumpForce: 10
-  dashSpeed: 70
+  dashSpeed: 60
   heathDefault: 100
-  currentHealth: 130
+  currentHealth: 0
   maxHealth: 130
   hpIc: 30
-  damageAttack: 20
-  position: {x: -4.96, y: -4, z: 0}
-  currentScenes: 0
+  damageAttack: 30

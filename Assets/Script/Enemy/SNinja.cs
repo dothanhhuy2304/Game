@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Game.Enemy
@@ -21,45 +20,33 @@ namespace Game.Enemy
             {
                 enemyHealth.ResetHeathDefault();
             }
-
-            if (!isVisible)
+            TimeAttack();
+            if (enemyHealth.EnemyDeath() || !isVisible)
             {
-                body.velocity = Vector2.zero;
-                animator.enabled = false;
-                col.enabled = false;
+                body.bodyType = RigidbodyType2D.Static;
             }
             else
             {
-                animator.enabled = true;
-                col.enabled = true;
-                TimeAttack();
-                if (enemyHealth.EnemyDeath())
-                {
-                    body.bodyType = RigidbodyType2D.Static;
-                }
-                else
-                {
-                    body.bodyType = RigidbodyType2D.Kinematic;
+                body.bodyType = RigidbodyType2D.Kinematic;
 
 
-                    if (canMoving)
+                if (canMoving)
+                {
+                    var hit = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.down,
+                        Distance, 1 << LayerMask.NameToLayer("ground"));
+                    var hitRight = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition),
+                        Vector2.right,
+                        0.5f, 1 << LayerMask.NameToLayer("ground"));
+                    if (!hit || hitRight)
                     {
-                        var hit = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.down,
-                            Distance, 1 << LayerMask.NameToLayer("ground"));
-                        var hitRight = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition),
-                            Vector2.right,
-                            0.5f, 1 << LayerMask.NameToLayer("ground"));
-                        if (!hit || hitRight)
-                        {
-                            transform.Rotate(new Vector3(0, -180f, 0));
-                        }
-
-                        Moving(animationState.sNinjaIsRun);
+                        transform.Rotate(new Vector3(0, -180f, 0));
                     }
 
-                    if (playerHealth.PlayerIsDeath()) return;
-                    SNinjaAttack();
+                    Moving(animationState.sNinjaIsRun);
                 }
+
+                if (playerHealth.PlayerIsDeath()) return;
+                SNinjaAttack();
             }
         }
 

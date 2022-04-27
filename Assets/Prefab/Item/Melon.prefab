@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4417949421235629830}
   - component: {fileID: 4417949421235629831}
-  - component: {fileID: 4417949421235629832}
+  - component: {fileID: 7634576781835877160}
   m_Layer: 9
   m_Name: Melon
   m_TagString: Untagged
@@ -46,16 +46,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 466fac77caade1c4583f02ddc6bd1717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreData: {fileID: 11400000, guid: f8222b860886af9448e9b80d49666f6b, type: 2}
-  states: 2
   itemType: 0
   itemData: {fileID: 11400000, guid: 63f4535355509e84ab52ab150e191f4a, type: 2}
-  volume: 1
   itemObj: {fileID: 7545538385439454088}
   effectCollectedObj: {fileID: 5653084202757324576}
-  itemCollider: {fileID: 4417949421235629832}
---- !u!58 &4417949421235629832
-CircleCollider2D:
+  itemCollider: {fileID: 7634576781835877160}
+--- !u!70 &7634576781835877160
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -67,9 +64,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5625
+  m_Offset: {x: -0.014412504, y: 0.0021479547}
+  m_Size: {x: 1.08648, y: 0.7441414}
+  m_Direction: 1
 --- !u!1 &5653084202757324576
 GameObject:
   m_ObjectHideFlags: 0
@@ -183,7 +180,6 @@ GameObject:
   - component: {fileID: 7545538385439454101}
   - component: {fileID: 7545538385439454090}
   - component: {fileID: 7545538385439454091}
-  - component: {fileID: 7545538385439454103}
   m_Layer: 9
   m_Name: Melon
   m_TagString: Untagged
@@ -275,19 +271,3 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!58 &7545538385439454103
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7545538385439454088}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5625

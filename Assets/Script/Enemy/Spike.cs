@@ -1,9 +1,9 @@
 using UnityEngine;
 using Game.Core;
+using Game.Player;
 
 public class Spike : BaseObject
 {
-    private Collider2D col;
     [SerializeField] private float timeAttack = 1f;
     [SerializeField] private float maxTimeAttack = 1f;
     private PlayerHealth playerHealth;
@@ -11,27 +11,19 @@ public class Spike : BaseObject
 
     protected override void Start()
     {
-        col = GetComponent<Collider2D>();
         playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
         timeAttack = 0f;
     }
 
     private void Update()
     {
-        if (!isVisible)
-        {
-            col.enabled = false;
-        }
-        else
-        {
-            col.enabled = true;
-            SetTimeAttack(ref timeAttack);
-            if (playerHealth.PlayerIsDeath()) return;
-            if (!isHurts) return;
-            if (timeAttack != 0f) return;
-            playerHealth.GetDamage(20f);
-            timeAttack = maxTimeAttack;
-        }
+        if (!isVisible) return;
+        SetTimeAttack(ref timeAttack);
+        if (playerHealth.PlayerIsDeath()) return;
+        if (!isHurts) return;
+        if (timeAttack != 0f) return;
+        playerHealth.GetDamage(20f);
+        timeAttack = maxTimeAttack;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

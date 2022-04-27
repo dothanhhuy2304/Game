@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Game.Core;
@@ -35,8 +36,8 @@ public class FireTrap : BaseObject
 
     private IEnumerator WaitingForFireOn(float delay)
     {
-        if (player.isHurt) yield break;
         if (playerHealth.PlayerIsDeath()) yield break;
+        if (player.isHurt) yield break;
         if (!isOut) yield break;
         yield return new WaitForSeconds(delay);
         if (isOut)
@@ -49,6 +50,7 @@ public class FireTrap : BaseObject
         {
             animator.SetBool(animationState.fireTrapHit, false);
             animator.SetBool(animationState.fireTrapON, false);
+            StopCoroutine(nameof(WaitingForFireOn));
             yield return null;
         }
     }

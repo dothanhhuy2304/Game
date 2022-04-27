@@ -1,17 +1,9 @@
-using System;
 using UnityEngine;
 
 namespace Game.Enemy
 {
     public class CarnivorousPlant : EnemyController
     {
-        private Collider2D col;
-
-        private void Awake()
-        {
-            col = GetComponent<Collider2D>();
-        }
-
         private void Update()
         {
             if (playerHealth.PlayerIsDeath() && enemyHealth.EnemyDeath())
@@ -27,26 +19,17 @@ namespace Game.Enemy
                 }
             }
 
-            if (!isVisible)
-            {
-                animator.enabled = false;
-                col.enabled = false;
-            }
-            else
-            {
-                animator.enabled = true;
-                col.enabled = true;
-                if (enemyHealth.EnemyDeath()) return;
-                TimeAttack();
-                if (playerHealth.PlayerIsDeath()) return;
-                if (enemyHealth.EnemyDeath()) return;
-                if (Vector3.Distance(transform.position, player.position) > rangeAttack) return;
-                Flip();
-                if (currentTime != 0f) return;
-                animator.SetTrigger(animationState.carnivorousPlantIsAttack);
-                currentTime = maxTimeAttack;
-                Attack();
-            }
+            if (!isVisible) return;
+            if (enemyHealth.EnemyDeath()) return;
+            TimeAttack();
+            if (playerHealth.PlayerIsDeath()) return;
+            if (enemyHealth.EnemyDeath()) return;
+            if (Vector3.Distance(transform.position, player.position) > rangeAttack) return;
+            Flip();
+            if (currentTime != 0f) return;
+            animator.SetTrigger(animationState.carnivorousPlantIsAttack);
+            currentTime = maxTimeAttack;
+            Attack();
         }
 
         // private void OnDrawGizmos()

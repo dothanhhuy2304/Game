@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Game.Player;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class WallFalling : MonoBehaviour

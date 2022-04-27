@@ -1,4 +1,5 @@
 using UnityEngine;
+using Game.Player;
 
 public class Car : MonoBehaviour
 {

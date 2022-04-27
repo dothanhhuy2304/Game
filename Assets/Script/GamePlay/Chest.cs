@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Game.Player;
 
 namespace Game.GamePlay
 {
@@ -49,7 +50,7 @@ namespace Game.GamePlay
             else
             {
                 playerAudio.Plays_20("Item_Hurt");
-                other.gameObject.GetComponent<PlayerHealth>().GetDamage(20f);
+                other.GetComponent<PlayerHealth>().GetDamage(20f);
             }
 
             isOpen = true;

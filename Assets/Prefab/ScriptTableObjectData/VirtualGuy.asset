@@ -19,4 +19,4 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 118
   hpIc: 18
-  damageAttack: 20
+  damageAttack: 22

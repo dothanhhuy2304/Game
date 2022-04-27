@@ -238,7 +238,7 @@ namespace Game.Player
         {
             if (other.CompareTag("Grass"))
             {
-                playerHealth.playerData.movingSpeed /= 2;
+                playerHealth.playerData.movingSpeed -= 10;
             }
         }
 

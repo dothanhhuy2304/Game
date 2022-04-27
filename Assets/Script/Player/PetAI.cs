@@ -1,121 +1,124 @@
 using UnityEngine;
 using Game.Core;
-using Game.Enemy;
-using Game.Player;
 
-public class PetAI : BaseObject
+namespace Game.Player
 {
-    public Data petData;
-    private Transform playerPos;
-    private Vector2 velocity = Vector2.zero;
-    [SerializeField] private GameObject[] bulletHolder;
-    public GameObject[] multipleEnemy;
-    [HideInInspector] public Transform closestEnemy;
-    private bool enemyContact;
-    private float currentTimeAttack = 3f;
-    private const float TimeAttack = 3f;
-    private PlayerHealth playerHealth;
-    [SerializeField] private Animator animator;
-    private readonly AnimationStates animationState = new AnimationStates();
 
-    protected override void Start()
+    public class PetAI : BaseObject
     {
-        base.Start();
-        playerPos = FindObjectOfType<CharacterController2D>().transform;
-        closestEnemy = null;
-        enemyContact = false;
-        multipleEnemy = GameObject.FindGameObjectsWithTag("Enemy");
-        playerHealth = playerPos.GetComponent<PlayerHealth>();
-    }
+        public Data petData;
+        private Transform playerPos;
+        private Vector2 velocity = Vector2.zero;
+        [SerializeField] private GameObject[] bulletHolder;
+        [HideInInspector] public GameObject[] multipleEnemy;
+        [HideInInspector] public Transform closestEnemy;
+        private bool enemyContact;
+        [SerializeField] private float rangeAttack;
+        private float currentTimeAttack = 3f;
+        private const float TimeAttack = 3f;
+        private PlayerHealth playerHealth;
+        [SerializeField] private Animator animator;
+        private readonly AnimationStates animationState = new AnimationStates();
 
-    private void FixedUpdate()
-    {
-        if (!playerHealth.PlayerIsDeath())
+        protected override void Start()
         {
-            SetTimeAttack(ref currentTimeAttack);
-            closestEnemy = FindClosestEnemy();
-            if (Vector3.Distance(transform.position, playerPos.transform.position) < 3f)
+            base.Start();
+            playerPos = FindObjectOfType<CharacterController2D>().transform;
+            closestEnemy = null;
+            enemyContact = false;
+            multipleEnemy = GameObject.FindGameObjectsWithTag("Enemy");
+            playerHealth = playerPos.GetComponent<PlayerHealth>();
+        }
+
+        private void FixedUpdate()
+        {
+            if (!playerHealth.PlayerIsDeath())
             {
-                body.velocity = Vector2.zero;
-                if (!enemyContact) return;
-                if (currentTimeAttack != 0f) return;
-                StartCoroutine(nameof(Attacks));
-                currentTimeAttack = TimeAttack;
-                animator.SetBool(animationState.petIsRun, false);
+                SetTimeAttack(ref currentTimeAttack);
+                closestEnemy = FindClosestEnemy();
+                if (Vector3.Distance(transform.position, playerPos.transform.position) < rangeAttack)
+                {
+                    body.velocity = Vector2.zero;
+                    if (!enemyContact) return;
+                    if (currentTimeAttack != 0f) return;
+                    StartCoroutine(nameof(Attacks));
+                    currentTimeAttack = TimeAttack;
+                    animator.SetBool(animationState.petIsRun, false);
+                }
+                else
+                {
+                    Moving();
+                    animator.SetBool(animationState.petIsRun, true);
+                }
             }
             else
             {
-                Moving();
-                animator.SetBool(animationState.petIsRun, true);
+                body.velocity = Vector2.zero;
             }
         }
-        else
+
+        private void OnTriggerStay2D(Collider2D other)
         {
-            body.velocity = Vector2.zero;
+            if (!other.isTrigger || !other.CompareTag("Enemy")) return;
+            closestEnemy.GetComponentInChildren<SpriteRenderer>().color = new Color(1f, 0.6f, 0.5f);
+            enemyContact = true;
         }
-    }
 
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (!other.isTrigger || !other.CompareTag("Enemy")) return;
-        closestEnemy.GetComponentInChildren<SpriteRenderer>().color = new Color(1f, .7f, 0f, 1f);
-        enemyContact = true;
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (!other.CompareTag("Enemy")) return;
-        other.GetComponentInChildren<SpriteRenderer>().color = Color.white;
-        enemyContact = false;
-    }
-
-    private void Moving()
-    {
-        var angle = (playerPos.transform.position - transform.position).normalized;
-        body.velocity = Vector2.SmoothDamp(body.velocity, angle * petData.movingSpeed, ref velocity, .05f);
-    }
-
-    private System.Collections.IEnumerator Attacks()
-    {
-        yield return new WaitForSeconds(0f);
-        Attack();
-        yield return null;
-    }
-
-
-    private void Attack()
-    {
-        bulletHolder[FindBullet()].transform.position = transform.position;
-        bulletHolder[FindBullet()].transform.rotation = transform.rotation;
-        bulletHolder[FindBullet()].GetComponent<FireProjectile>().SetActives();
-    }
-
-    private int FindBullet()
-    {
-        for (var i = 0; i < bulletHolder.Length; i++)
+        private void OnTriggerExit2D(Collider2D other)
         {
-            if (!bulletHolder[i].activeInHierarchy)
+            if (!other.CompareTag("Enemy")) return;
+            other.GetComponentInChildren<SpriteRenderer>().color = Color.white;
+            enemyContact = false;
+        }
+
+        private void Moving()
+        {
+            var angle = (playerPos.transform.position - transform.position).normalized;
+            body.velocity = Vector2.SmoothDamp(body.velocity, angle * petData.movingSpeed, ref velocity, .05f);
+        }
+
+        private System.Collections.IEnumerator Attacks()
+        {
+            yield return new WaitForSeconds(0f);
+            Attack();
+            yield return null;
+        }
+
+
+        private void Attack()
+        {
+            bulletHolder[FindBullet()].transform.position = transform.position;
+            bulletHolder[FindBullet()].transform.rotation = transform.rotation;
+            bulletHolder[FindBullet()].GetComponent<FireProjectile>().SetActives();
+        }
+
+        private int FindBullet()
+        {
+            for (var i = 0; i < bulletHolder.Length; i++)
             {
-                return i;
+                if (!bulletHolder[i].activeInHierarchy)
+                {
+                    return i;
+                }
             }
+
+            return 0;
         }
 
-        return 0;
-    }
-
-    private Transform FindClosestEnemy()
-    {
-        var closestDistance = Mathf.Infinity;
-        Transform trans = null;
-        foreach (var go in multipleEnemy)
+        private Transform FindClosestEnemy()
         {
-            if (!go) continue;
-            var currentDistance = Vector3.Distance(transform.position, go.transform.position);
-            if (!(currentDistance < closestDistance)) continue;
-            closestDistance = currentDistance;
-            trans = go.transform;
-        }
+            var closestDistance = Mathf.Infinity;
+            Transform trans = null;
+            foreach (var go in multipleEnemy)
+            {
+                if (!go) continue;
+                var currentDistance = Vector3.Distance(transform.position, go.transform.position);
+                if (!(currentDistance < closestDistance)) continue;
+                closestDistance = currentDistance;
+                trans = go.transform;
+            }
 
-        return trans;
+            return trans;
+        }
     }
 }

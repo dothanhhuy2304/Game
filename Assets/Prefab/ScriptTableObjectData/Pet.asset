@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movingSpeed: 10
   jumpForce: 0
+  dashSpeed: 0
   heathDefault: 0
   currentHealth: 0
   maxHealth: 0
   hpIc: 0
-  damageAttack: 4
-  position: {x: 0, y: 0, z: 0}
+  damageAttack: 10

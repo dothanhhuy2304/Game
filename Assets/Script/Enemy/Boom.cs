@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Game.Player;
 
 public class Boom : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class Boom : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.collider.GetComponent<PlayerHealth>().PlayerIsDeath()) return;
+        if (playerHealth.PlayerIsDeath()) return;
         if (!other.collider.CompareTag("Player")) return;
         other.collider.GetComponent<PlayerHealth>().GetDamage(30f);
         StartCoroutine(nameof(Explosion), 1f);
