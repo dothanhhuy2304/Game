@@ -7,6 +7,6 @@ namespace Game.Core
         CarnivorousPlant,
         Pet,
         Bee,
-        Chicken
+        Trunk,
     }
 }

@@ -166,7 +166,6 @@ MonoBehaviour:
   enemyHealthBar: {fileID: 3443694513160801483}
   timeRespawn: 5
   enemyCollider: {fileID: 3443694513160801485}
-  spriteRenderer: {fileID: 3443694513160801487}
   uIDamageEnemy: {fileID: 898911466340090346, guid: 60b1aed8d968ce9499c3afcb26e22f95, type: 3}
 --- !u!114 &3443694513160801483
 MonoBehaviour:
@@ -196,18 +195,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72c9c041cb412be4c81d8710ae0c17ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 30
+  enemyType: 1
   canMoving: 1
   movingSpeed: 2
-  enemyType: 1
   bulletHolder: []
-  rangeAttackObj: {fileID: 3443694514636338317}
   rangeAttack: 10
-  offset: -45
-  radiusAttack: 1
-  currentTime: 0
+  offsetFlip: 0
   maxTimeAttack: 3
-  offsetAttack: {x: 0.4, y: 0}
+  offsetAttack: {fileID: 3443694514636338317}
+  rangeAttackObj: {fileID: 3443694514636338317}
+  radiusAttack: 1
   checkGroundPosition: {x: 0.55, y: 0}
 --- !u!1 &3443694514636338306
 GameObject:
@@ -233,7 +230,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3443694514636338306}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0, z: 0}
+  m_LocalPosition: {x: 0.45, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3443694513160801486}

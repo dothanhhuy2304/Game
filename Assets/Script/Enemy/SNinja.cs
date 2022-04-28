@@ -62,8 +62,9 @@ namespace Game.Enemy
                 Flip();
                 animator.SetBool(animationState.sNinjaIsRun, false);
                 if (currentTime != 0f) return;
-                currentTime = maxTimeAttack;
+                if (playerHealth.PlayerIsDeath()) return;
                 Attack();
+                currentTime = maxTimeAttack;
             }
         }
 

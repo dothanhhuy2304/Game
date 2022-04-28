@@ -35,6 +35,9 @@ namespace Game.Core
         //Chicken
         public readonly int chickenIsAttack = Animator.StringToHash("is_Run");
 
+        //Trunk
+        public readonly int trunkIsAttack = Animator.StringToHash("isAttack");
+        
         //fireTrap
         public readonly int fireTrapHit = Animator.StringToHash("hit");
         public readonly int fireTrapON = Animator.StringToHash("on");

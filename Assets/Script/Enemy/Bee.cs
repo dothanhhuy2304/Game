@@ -19,10 +19,11 @@ namespace Game.Enemy
                 }
             }
 
-            if (!isVisible) return;
+            if (playerHealth.PlayerIsDeath()) return;
             if (enemyHealth.EnemyDeath()) return;
+            if (!isVisible) return;
             TimeAttack();
-            if (Vector3.Distance(transform.position, player.position) > rangeAttack) return;
+            if (Vector2.Distance(transform.position, player.position) > rangeAttack) return;
             Flip();
             if (currentTime != 0) return;
             animator.SetTrigger(animationState.beeIsAttack);

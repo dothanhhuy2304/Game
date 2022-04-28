@@ -42,7 +42,6 @@ GameObject:
   - component: {fileID: 5142780678492179415}
   - component: {fileID: 5142780678492179412}
   - component: {fileID: 5142780678492179408}
-  - component: {fileID: 8661296372118158094}
   - component: {fileID: 7130098565743549990}
   - component: {fileID: 31679828}
   - component: {fileID: 2077946374}
@@ -155,27 +154,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0.25386718, y: -0.24822527}
   m_Size: {x: 1.2042398, y: 2.2535522}
   m_Direction: 0
---- !u!50 &8661296372118158094
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5142780678492179413}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 1
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 0
-  m_CollisionDetection: 1
-  m_Constraints: 0
 --- !u!114 &7130098565743549990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,7 +174,6 @@ MonoBehaviour:
   enemyHealthBar: {fileID: 31679828}
   timeRespawn: 10
   enemyCollider: {fileID: 5142780678492179408}
-  spriteRenderer: {fileID: 5142780678492179415}
   uIDamageEnemy: {fileID: 898911466340090346, guid: 60b1aed8d968ce9499c3afcb26e22f95, type: 3}
 --- !u!114 &31679828
 MonoBehaviour:
@@ -238,7 +215,7 @@ MonoBehaviour:
   rangeAttack: 7
   offsetFlip: 1215
   maxTimeAttack: 4
-  offsetAttack: {x: -1.5, y: 0.2}
+  offsetAttack: {fileID: 1778465740}
 --- !u!1001 &5142780679409045956
 PrefabInstance:
   m_ObjectHideFlags: 0
