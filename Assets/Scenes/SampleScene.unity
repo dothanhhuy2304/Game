@@ -4625,11 +4625,11 @@ MonoBehaviour:
   - name: Player_Bullet_Explosion_1
     audioClip: {fileID: 8300000, guid: 1fd31868d68903d4f9e2c4a3b7ef98f3, type: 3}
     audioFX: {fileID: 0}
-    audioMixerGroup: {fileID: -7052232441672528835, guid: a3e49311117e629449a05e57f806934d, type: 2}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
   - name: Player_Bullet_Explosion_2
     audioClip: {fileID: 8300000, guid: 986d6b30567e30e428f3f21373fe45ca, type: 3}
     audioFX: {fileID: 0}
-    audioMixerGroup: {fileID: -7052232441672528835, guid: a3e49311117e629449a05e57f806934d, type: 2}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
   - name: Player_Hurt
     audioClip: {fileID: 8300000, guid: 11196f3af1fc4094bbe46bd402a1d074, type: 3}
     audioFX: {fileID: 0}
@@ -4637,27 +4637,27 @@ MonoBehaviour:
   - name: Enemy_Bullet_Explosion_1
     audioClip: {fileID: 8300000, guid: 2e071f5b8b8467d45a5e6e24c23c6ad4, type: 3}
     audioFX: {fileID: 0}
-    audioMixerGroup: {fileID: -7052232441672528835, guid: a3e49311117e629449a05e57f806934d, type: 2}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
   - name: Enemy_Bullet_Explosion_2
     audioClip: {fileID: 8300000, guid: 958408b32ccf3714ea02821877b0870c, type: 3}
     audioFX: {fileID: 0}
-    audioMixerGroup: {fileID: -7052232441672528835, guid: a3e49311117e629449a05e57f806934d, type: 2}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
   - name: Enemy_Attack_Shoot
     audioClip: {fileID: 8300000, guid: 5ff823f546b52574a931e1d9b44290a6, type: 3}
     audioFX: {fileID: 0}
-    audioMixerGroup: {fileID: -7052232441672528835, guid: a3e49311117e629449a05e57f806934d, type: 2}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
   - name: Enemy_Attack_Sword
     audioClip: {fileID: 8300000, guid: 0826ecc5e9093214fb82e8580759353c, type: 3}
     audioFX: {fileID: 0}
-    audioMixerGroup: {fileID: -7052232441672528835, guid: a3e49311117e629449a05e57f806934d, type: 2}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
   - name: Enemy_Death
     audioClip: {fileID: 8300000, guid: d5160c7fd13b56c4080fb54ad2b161e3, type: 3}
     audioFX: {fileID: 0}
-    audioMixerGroup: {fileID: 0}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
   - name: Item_Hurt
     audioClip: {fileID: 8300000, guid: 6dd7024f00606b44eb5884197a66a893, type: 3}
     audioFX: {fileID: 0}
-    audioMixerGroup: {fileID: -7052232441672528835, guid: a3e49311117e629449a05e57f806934d, type: 2}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
   - name: Item_Heal
     audioClip: {fileID: 8300000, guid: 3f711525e7aa548438f26675e2910de2, type: 3}
     audioFX: {fileID: 0}

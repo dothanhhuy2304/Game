@@ -10,10 +10,8 @@ namespace Game.GamePlay
         [SerializeField] private GameObject volumeUI;
         [SerializeField] private AudioSource audioMusic;
         [SerializeField] private Slider sliderMusic;
-        //[SerializeField] private AudioSource[] audioEffect;
         [SerializeField] private Slider sliderEffect;
         [SerializeField] private GameObject btnSetting;
-        private PlayerAudio playerAudio;
         public GameObject healthUI;
         public GameObject scoreUI;
         public GameObject btnBackToMenuUI;
@@ -34,19 +32,18 @@ namespace Game.GamePlay
                 Destroy(gameObject);
             }
 
-            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
             loadingScreenManager = FindObjectOfType<LoadingScreenManager>().GetComponent<LoadingScreenManager>();
             if (!playerData.saveAudio)
             {
                 playerData.soundMusic = audioMusic.volume;
-                playerData.soundEffect = playerAudio.sounds[0].audioFX.volume;
+                playerData.soundEffect = PlayerAudio.Instance.sounds[0].audioFX.volume;
                 playerData.saveAudio = true;
             }
 
             sliderMusic.value = playerData.soundMusic;
             sliderEffect.value = playerData.soundEffect;
             audioMusic.volume = playerData.soundMusic;
-            foreach (var source in playerAudio.sounds)
+            foreach (var source in PlayerAudio.Instance.sounds)
             {
                 source.audioFX.volume = playerData.soundEffect;
             }
@@ -85,7 +82,7 @@ namespace Game.GamePlay
 
         public void ChangeVolumeEffect()
         {
-            foreach (var source in playerAudio.sounds)
+            foreach (var source in PlayerAudio.Instance.sounds)
             {
                 source.audioFX.volume = sliderEffect.value;
             }
@@ -102,7 +99,7 @@ namespace Game.GamePlay
             scoreUI.SetActive(false);
             btnBackToMenuUI.SetActive(false);
             btnRestart.SetActive(false);
-            playerAudio.Plays_Music("Music_Menu");
+            PlayerAudio.Instance.Plays_Music("Music_Menu");
             loadingScreenManager.LoadingScreen(0);
         }
 
@@ -115,7 +112,7 @@ namespace Game.GamePlay
             scoreUI.SetActive(false);
             btnBackToMenuUI.SetActive(false);
             btnRestart.SetActive(false);
-            playerAudio.Plays_Music("Music_Menu");
+            PlayerAudio.Instance.Plays_Music("Music_Menu");
             loadingScreenManager.LoadingScreen(loadingScreenManager.RestartLevel());
         }
 
@@ -127,7 +124,7 @@ namespace Game.GamePlay
 
         public void ButtonHover()
         {
-            playerAudio.Play("Hover_Effect");
+            PlayerAudio.Instance.Play("Hover_Effect");
             //playerAudio.Plays_15("Hover_Effect");
         }
     }

@@ -6,8 +6,8 @@ namespace Game.GamePlay
 
     public class PlayerAudio : MonoBehaviour
     {
-        public static PlayerAudio Instance;
-        
+        public static PlayerAudio Instance { get; private set; }
+
         [Space] [Header("Sound Music")] [SerializeField]
         private AudioSource audioMusic;
 

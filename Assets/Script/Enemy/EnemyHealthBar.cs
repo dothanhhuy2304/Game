@@ -19,7 +19,7 @@ namespace Game.Enemy
         private void LateUpdate()
         {
             if (!canvas) return;
-            canvas.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
+            canvas.transform.rotation = Quaternion.Euler(Vector3.zero);
         }
     }
 }

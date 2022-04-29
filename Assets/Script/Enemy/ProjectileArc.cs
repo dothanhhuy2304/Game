@@ -15,7 +15,6 @@ public class ProjectileArc : BaseObject
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private GameObject explosionPrefab;
     private Vector3 targetPos = Vector3.zero;
-    private bool isTringer;
 
     private void Awake()
     {
@@ -26,35 +25,36 @@ public class ProjectileArc : BaseObject
     private void OnEnable()
     {
         targetPos = playerPos.position;
-        isTringer = false;
     }
 
     private void Update()
     {
-        if (!isTringer)
-        {
-            var x0 = startPos.x;
-            var x1 = targetPos.x;
-            var dist = x1 - x0;
-            var nextX = Mathf.MoveTowards(transform.position.x, x1, speed * Time.deltaTime);
-            var baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - x0) / dist);
-            var arc = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
-            nextPos = new Vector3(nextX, baseY + arc, transform.position.z);
-            // Rotate to face the next position, and then move there
-            transform.rotation = LookAt2D(nextPos - transform.position);
-            transform.position = nextPos;
-        }
-
-        if (nextPos == targetPos || isTringer)
+        var x0 = startPos.x;
+        var x1 = targetPos.x;
+        var dist = x1 - x0;
+        var nextX = Mathf.MoveTowards(transform.position.x, x1, speed * Time.deltaTime);
+        var baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - x0) / dist);
+        var arc = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
+        nextPos = new Vector3(nextX, baseY + arc, transform.position.z);
+        // Rotate to face the next position, and then move there
+        transform.rotation = LookAt2D(nextPos - transform.position);
+        transform.position = nextPos;
+        if (nextPos == targetPos)
         {
             Arrived();
         }
     }
 
-    private void Arrived()
+    private void Explosion()
     {
         bulletPrefab.SetActive(false);
         explosionPrefab.SetActive(true);
+        StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
+    }
+
+    private void Arrived()
+    {
+        bulletPrefab.SetActive(false);
         StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
     }
 
@@ -63,10 +63,8 @@ public class ProjectileArc : BaseObject
         if (other.CompareTag("Player"))
         {
             other.GetComponent<PlayerHealth>().GetDamage(20f);
-            isTringer = true;
             PlayerAudio.Instance.Play("Enemy_Bullet_Explosion_1");
-            //playerAudio.Plays_20("Enemy_Bullet_Explosion_1");
-            Arrived();
+            Explosion();
         }
         else if (other.CompareTag("ground"))
         {

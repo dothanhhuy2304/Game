@@ -1,9 +1,15 @@
-using UnityEngine;
 
 namespace Game.Enemy
 {
     public class CarnivorousPlant : EnemyController
     {
+        private CheckEnemyAttack checkEnemyAttack;
+
+        private void Awake()
+        {
+            checkEnemyAttack = GetComponentInChildren<CheckEnemyAttack>();
+        }
+
         private void Update()
         {
             if (playerHealth.PlayerIsDeath() && enemyHealth.EnemyDeath())
@@ -24,7 +30,8 @@ namespace Game.Enemy
             TimeAttack();
             if (playerHealth.PlayerIsDeath()) return;
             if (enemyHealth.EnemyDeath()) return;
-            if (Vector3.Distance(transform.position, player.position) > rangeAttack) return;
+            //if (Vector3.Distance(transform.position, player.position) > rangeAttack) return;
+            if (!checkEnemyAttack.canAttack) return;
             Flip();
             if (currentTime != 0f) return;
             animator.SetTrigger(animationState.carnivorousPlantIsAttack);

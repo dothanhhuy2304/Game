@@ -1,6 +1,4 @@
-using System;
 using Game.Enemy;
-using UnityEngine;
 
 public class Trunk : EnemyController
 {

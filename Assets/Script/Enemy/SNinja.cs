@@ -8,6 +8,12 @@ namespace Game.Enemy
         [SerializeField] private Transform rangeAttackObj;
         [SerializeField] private float radiusAttack;
         [Space] [SerializeField] private Vector2 checkGroundPosition;
+        private CheckEnemyAttack checkEnemyAttack;
+
+        private void Awake()
+        {
+            checkEnemyAttack = GetComponentInChildren<CheckEnemyAttack>();
+        }
 
         private void FixedUpdate()
         {
@@ -48,7 +54,8 @@ namespace Game.Enemy
 
         private void SNinjaAttack()
         {
-            if (!(Vector3.Distance(transform.position, player.position) <= rangeAttack)) return;
+            //if (!(Vector3.Distance(transform.position, player.position) <= rangeAttack)) return;
+            if (!checkEnemyAttack.canAttack) return;
             if (Vector3.Distance(transform.position, player.position) <= 3f)
             {
                 SNinjaAttackSword();
