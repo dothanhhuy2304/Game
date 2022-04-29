@@ -65,7 +65,8 @@ namespace Game.Item
             itemObj.SetActive(false);
             effectCollectedObj.SetActive(true);
             playerHealth.GetDamage(value);
-            playerAudio.Plays_20("Item_Hurt");
+            playerAudio.Play("Item_Hurt");
+            //playerAudio.Plays_20("Item_Hurt");
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);
         }
@@ -75,7 +76,8 @@ namespace Game.Item
             itemObj.SetActive(false);
             effectCollectedObj.SetActive(true);
             playerHealth.Heal(value);
-            playerAudio.Plays_20("Item_Heal");
+            playerAudio.Play("Item_Heal");
+            //playerAudio.Plays_20("Item_Heal");
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);
         }
@@ -84,7 +86,8 @@ namespace Game.Item
         {
             itemObj.SetActive(false);
             effectCollectedObj.SetActive(true);
-            playerAudio.Plays_20("Item_Heal");
+            playerAudio.Play("Item_Heal");
+            //playerAudio.Plays_20("Item_Heal");
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);
         }

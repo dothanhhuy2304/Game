@@ -1,3 +1,4 @@
+using Game.GamePlay;
 using UnityEngine;
 
 namespace Game.Enemy
@@ -7,12 +8,6 @@ namespace Game.Enemy
         [SerializeField] private Transform rangeAttackObj;
         [SerializeField] private float radiusAttack;
         [Space] [SerializeField] private Vector2 checkGroundPosition;
-        private Collider2D col;
-
-        private void Awake()
-        {
-            col = GetComponent<Collider2D>();
-        }
 
         private void FixedUpdate()
         {
@@ -20,6 +15,7 @@ namespace Game.Enemy
             {
                 enemyHealth.ResetHeathDefault();
             }
+
             TimeAttack();
             if (enemyHealth.EnemyDeath() || !isVisible)
             {
@@ -91,7 +87,8 @@ namespace Game.Enemy
                     playerHealth.GetDamage(20f);
                 }
 
-                playerAudio.Plays_20("Enemy_Attack_Sword");
+                PlayerAudio.Instance.Play("Enemy_Attack_Sword");
+                //playerAudio.Plays_20("Enemy_Attack_Sword");
             }
         }
     }

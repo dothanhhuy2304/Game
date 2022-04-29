@@ -1,5 +1,6 @@
 using System.Collections;
 using Game.Core;
+using Game.GamePlay;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,7 +11,6 @@ namespace Game.Player
         [SerializeField] private GameObject[] bulletHolder;
         [SerializeField] private Vector2 offset;
         [SerializeField] private PlayerHealth playerHealth;
-        private PlayerAudio playerAudio;
         private CharacterController2D players;
         [SerializeField] private float timeAttack = 0.5f;
         private const float ResetTimeAttack = 0.5f;
@@ -18,7 +18,6 @@ namespace Game.Player
         {
             playerHealth = GetComponent<PlayerHealth>();
             players = GetComponent<CharacterController2D>();
-            playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
             timeAttack = 0f;
         }
 
@@ -50,7 +49,8 @@ namespace Game.Player
             bulletHolder[FindBullet()].transform.position = transform.TransformPoint(offset);
             bulletHolder[FindBullet()].transform.rotation = transform.rotation;
             bulletHolder[FindBullet()].GetComponent<FireProjectile>().SetActives();
-            playerAudio.Plays_20("Player_Bullet_Shoot");
+            PlayerAudio.Instance.Play("Player_Bullet_Shoot");
+            //playerAudio.Plays_20("Player_Bullet_Shoot");
         }
 
         private int FindBullet()

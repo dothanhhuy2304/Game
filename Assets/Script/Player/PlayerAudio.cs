@@ -1,50 +1,50 @@
 using System;
 using UnityEngine;
 
-public class PlayerAudio : MonoBehaviour
+namespace Game.GamePlay
 {
-    [Header("Sound Effect")] [SerializeField]
-    private AudioSource audioSource10;
 
-    [SerializeField] private AudioSource audioSource13;
-    [SerializeField] private AudioSource audioSource20;
-    [SerializeField] private AudioSource audioSource25;
-
-    [Space] [Header("Sound Music")] [SerializeField]
-    private AudioSource audioMusic;
-
-    [Space] [Header("Clip")] [SerializeField]
-    private Sound[] sounds;
-
-
-    public void Plays_Music(string clip)
+    public class PlayerAudio : MonoBehaviour
     {
-        var s = Array.Find(sounds, sound => sound.name == clip);
-        audioMusic.clip = s.audioClip;
-        audioMusic.Play();
-    }
+        public static PlayerAudio Instance;
+        
+        [Space] [Header("Sound Music")] [SerializeField]
+        private AudioSource audioMusic;
 
-    public void Plays_10(string clip)
-    {
-        var s = Array.Find(sounds, sound => sound.name == clip);
-        audioSource10.PlayOneShot(s.audioClip);
-    }
+        [Space] [Header("Clip")] [SerializeField]
+        public Sound[] sounds;
 
-    public void Plays_13(string clip)
-    {
-        var s = Array.Find(sounds, sound => sound.name == clip);
-        audioSource13.PlayOneShot(s.audioClip);
-    }
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
 
-    public void Plays_15(string clip)
-    {
-        var s = Array.Find(sounds, sound => sound.name == clip);
-        audioSource20.PlayOneShot(s.audioClip);
-    }
+            foreach (var s in sounds)
+            {
+                s.audioFX = gameObject.AddComponent<AudioSource>();
+                s.audioFX.clip = s.audioClip;
+                s.audioFX.outputAudioMixerGroup = s.audioMixerGroup;
+                s.audioFX.playOnAwake = false;
+            }
+        }
 
-    public void Plays_20(string clip)
-    {
-        var s = Array.Find(sounds, sound => sound.name == clip);
-        audioSource25.PlayOneShot(s.audioClip);
+        public void Plays_Music(string clip)
+        {
+            var s = Array.Find(sounds, sound => sound.name == clip);
+            audioMusic.clip = s.audioClip;
+            audioMusic.Play();
+        }
+
+        public void Play(string clip)
+        {
+            var s = Array.Find(sounds, sound => sound.name == clip);
+            s.audioFX.PlayOneShot(s.audioClip);
+        }
     }
 }

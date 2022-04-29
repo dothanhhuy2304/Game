@@ -1,4 +1,5 @@
 using System.Collections;
+using Game.GamePlay;
 using UnityEngine;
 using Game.Player;
 
@@ -7,12 +8,10 @@ public class Boom : MonoBehaviour
     [SerializeField] private GameObject boomObj, explosionObj;
     [SerializeField] private Collider2D colObj;
     private PlayerHealth playerHealth;
-    private PlayerAudio playerAudio;
     [SerializeField] private float timeRespawn;
 
     private void Start()
     {
-        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
         colObj = GetComponent<Collider2D>();
         playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
     }
@@ -41,13 +40,13 @@ public class Boom : MonoBehaviour
         yield return null;
     }
 
-
     private IEnumerator Explosion(float delay)
     {
         boomObj.SetActive(false);
         explosionObj.SetActive(true);
         colObj.enabled = false;
-        playerAudio.Plays_20("Boom_Explosion");
+        PlayerAudio.Instance.Play("Boom_Explosion");
+        //playerAudio.Plays_20("Boom_Explosion");
         yield return new WaitForSeconds(delay);
         explosionObj.SetActive(false);
         yield return null;

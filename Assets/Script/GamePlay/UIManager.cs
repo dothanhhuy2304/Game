@@ -10,7 +10,7 @@ namespace Game.GamePlay
         [SerializeField] private GameObject volumeUI;
         [SerializeField] private AudioSource audioMusic;
         [SerializeField] private Slider sliderMusic;
-        [SerializeField] private AudioSource[] audioEffect;
+        //[SerializeField] private AudioSource[] audioEffect;
         [SerializeField] private Slider sliderEffect;
         [SerializeField] private GameObject btnSetting;
         private PlayerAudio playerAudio;
@@ -21,7 +21,7 @@ namespace Game.GamePlay
         [SerializeField] private PlayerData playerData;
         private LoadingScreenManager loadingScreenManager;
 
-        private void Awake()
+        private void Start()
         {
             DontDestroyOnLoad(this);
 
@@ -39,16 +39,16 @@ namespace Game.GamePlay
             if (!playerData.saveAudio)
             {
                 playerData.soundMusic = audioMusic.volume;
-                playerData.soundEffect = audioEffect[1].volume;
+                playerData.soundEffect = playerAudio.sounds[0].audioFX.volume;
                 playerData.saveAudio = true;
             }
 
             sliderMusic.value = playerData.soundMusic;
             sliderEffect.value = playerData.soundEffect;
             audioMusic.volume = playerData.soundMusic;
-            foreach (var source in audioEffect)
+            foreach (var source in playerAudio.sounds)
             {
-                source.volume = playerData.soundEffect;
+                source.audioFX.volume = playerData.soundEffect;
             }
 
             btnBackToMenuUI.SetActive(false);
@@ -85,9 +85,9 @@ namespace Game.GamePlay
 
         public void ChangeVolumeEffect()
         {
-            foreach (var source in audioEffect)
+            foreach (var source in playerAudio.sounds)
             {
-                source.volume = sliderEffect.value;
+                source.audioFX.volume = sliderEffect.value;
             }
 
             playerData.soundEffect = sliderEffect.value;
@@ -127,7 +127,8 @@ namespace Game.GamePlay
 
         public void ButtonHover()
         {
-            playerAudio.Plays_15("Hover_Effect");
+            playerAudio.Play("Hover_Effect");
+            //playerAudio.Plays_15("Hover_Effect");
         }
     }
 }

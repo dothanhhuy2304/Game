@@ -45,11 +45,13 @@ namespace Game.GamePlay
             {
                 txtValueItem.text = "x" + value.ToString(System.Globalization.CultureInfo.CurrentCulture);
                 gameManager.SetDiamond(value);
-                playerAudio.Plays_20("Chest");
+                playerAudio.Play("Chest");
+                //playerAudio.Plays_20("Chest");
             }
             else
             {
-                playerAudio.Plays_20("Item_Hurt");
+                playerAudio.Play("Item_Hurt");
+                //playerAudio.Plays_20("Item_Hurt");
                 other.GetComponent<PlayerHealth>().GetDamage(20f);
             }
 

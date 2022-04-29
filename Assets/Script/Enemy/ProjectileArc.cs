@@ -1,5 +1,6 @@
 using System;
 using Game.Core;
+using Game.GamePlay;
 using Game.Player;
 using UnityEngine;
 
@@ -13,13 +14,11 @@ public class ProjectileArc : BaseObject
     private Vector3 nextPos = Vector3.zero;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private GameObject explosionPrefab;
-    private PlayerAudio playerAudio;
     private Vector3 targetPos = Vector3.zero;
     private bool isTringer;
 
     private void Awake()
     {
-        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
         playerPos = FindObjectOfType<CharacterController2D>().transform;
         startPos = transform.position;
     }
@@ -61,11 +60,19 @@ public class ProjectileArc : BaseObject
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag("Player")) return;
-        other.GetComponent<PlayerHealth>().GetDamage(20f);
-        isTringer = true;
-        playerAudio.Plays_20("Enemy_Bullet_Explosion_1");
-        Arrived();
+        if (other.CompareTag("Player"))
+        {
+            other.GetComponent<PlayerHealth>().GetDamage(20f);
+            isTringer = true;
+            PlayerAudio.Instance.Play("Enemy_Bullet_Explosion_1");
+            //playerAudio.Plays_20("Enemy_Bullet_Explosion_1");
+            Arrived();
+        }
+        else if (other.CompareTag("ground"))
+        {
+            Arrived();
+            PlayerAudio.Instance.Play("Enemy_Bullet_Explosion_1");
+        }
     }
 
 
