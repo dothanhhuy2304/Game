@@ -104,10 +104,10 @@ namespace Game.Enemy
         // }
         //}
 
-        protected void TimeAttack()
-        {
-            SetTimeAttack(ref currentTime);
-        }
+        // protected void TimeAttack()
+        // {
+        //     SetTimeAttack(ref currentTime);
+        // }
 
         protected void Moving(int states)
         {

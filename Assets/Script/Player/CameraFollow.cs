@@ -14,13 +14,12 @@ namespace Game.Player
         private void Start()
         {
             playerPosition = FindObjectOfType<CharacterController2D>().transform;
-            Debug.Assert(playerPosition != null, nameof(playerPosition) + " != null");
             playerHealth = playerPosition.GetComponent<PlayerHealth>();
         }
 
         private void LateUpdate()
         {
-            if (!playerPosition || playerHealth.PlayerIsDeath()) return;
+            if (playerHealth.PlayerIsDeath()) return;
             var position = playerPosition.position;
             targetPos = new Vector3(position.x + posX, position.y + posY, -10f);
             transform.position = Vector3.Lerp(transform.position, targetPos, smoothValue * Time.deltaTime);

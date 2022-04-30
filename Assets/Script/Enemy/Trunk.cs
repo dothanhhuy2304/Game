@@ -3,12 +3,7 @@ using Game.Enemy;
 public class Trunk : EnemyController
 {
 
-    private CheckEnemyAttack checkEnemyAttack;
-    
-    private void Awake()
-    {
-        checkEnemyAttack = GetComponentInChildren<CheckEnemyAttack>();
-    }
+    [UnityEngine.SerializeField] private CheckEnemyAttack checkEnemyAttack;
 
     private void Update()
     {
@@ -26,9 +21,9 @@ public class Trunk : EnemyController
         }
 
         if (playerHealth.PlayerIsDeath()) return;
+        SetTimeAttack(ref currentTime);
         if (enemyHealth.EnemyDeath()) return;
         if (!isVisible) return;
-        TimeAttack();
         if (!checkEnemyAttack.canAttack) return;
         Flip();
         if (currentTime != 0) return;

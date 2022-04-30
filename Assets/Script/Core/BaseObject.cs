@@ -12,7 +12,7 @@ namespace Game.Core
             body = GetComponent<Rigidbody2D>();
         }
 
-        protected static float SetTimeAttack(ref float currentTime)
+        protected static void SetTimeAttack(ref float currentTime)
         {
             if (currentTime > 0f)
             {
@@ -22,8 +22,6 @@ namespace Game.Core
             {
                 currentTime = 0f;
             }
-
-            return currentTime;
         }
 
         private void OnBecameVisible()
@@ -31,12 +29,10 @@ namespace Game.Core
             isVisible = true;
         }
 
-
         private void OnBecameInvisible()
         {
             isVisible = false;
         }
-
 
     }
 }

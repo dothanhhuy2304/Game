@@ -277,6 +277,7 @@ MonoBehaviour:
   offsetFlip: -45
   maxTimeAttack: 4
   offsetAttack: {fileID: 924745674295885041}
+  checkEnemyAttack: {fileID: 4391716679282186497}
 --- !u!114 &7350970975510589207
 MonoBehaviour:
   m_ObjectHideFlags: 0

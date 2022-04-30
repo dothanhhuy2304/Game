@@ -3,12 +3,7 @@ namespace Game.Enemy
 {
     public class CarnivorousPlant : EnemyController
     {
-        private CheckEnemyAttack checkEnemyAttack;
-
-        private void Awake()
-        {
-            checkEnemyAttack = GetComponentInChildren<CheckEnemyAttack>();
-        }
+        [UnityEngine.SerializeField] private CheckEnemyAttack checkEnemyAttack;
 
         private void Update()
         {
@@ -25,11 +20,10 @@ namespace Game.Enemy
                 }
             }
 
-            if (!isVisible) return;
-            if (enemyHealth.EnemyDeath()) return;
-            TimeAttack();
             if (playerHealth.PlayerIsDeath()) return;
+            SetTimeAttack(ref currentTime);
             if (enemyHealth.EnemyDeath()) return;
+            if (!isVisible) return;
             //if (Vector3.Distance(transform.position, player.position) > rangeAttack) return;
             if (!checkEnemyAttack.canAttack) return;
             Flip();
@@ -38,10 +32,5 @@ namespace Game.Enemy
             currentTime = maxTimeAttack;
             Attack();
         }
-
-        // private void OnDrawGizmos()
-        // {
-        //     Gizmos.DrawSphere(transform.position, rangeAttack);
-        // }
     }
 }

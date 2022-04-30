@@ -2,7 +2,6 @@ using System.Collections;
 using Game.Core;
 using Game.GamePlay;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Game.Player
 {
@@ -14,6 +13,7 @@ namespace Game.Player
         private CharacterController2D players;
         [SerializeField] private float timeAttack = 0.5f;
         private const float ResetTimeAttack = 0.5f;
+
         protected override void Start()
         {
             playerHealth = GetComponent<PlayerHealth>();
@@ -23,8 +23,10 @@ namespace Game.Player
 
         private void LateUpdate()
         {
-            if (SetTimeAttack(ref timeAttack) != 0) return;
-            if (EventSystem.current.IsPointerOverGameObject() || playerHealth.PlayerIsDeath()) return;
+            SetTimeAttack(ref timeAttack);
+            if (timeAttack != 0) return;
+            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() ||
+                playerHealth.PlayerIsDeath()) return;
             if (players.isHurt) return;
             if (!Input.GetMouseButtonDown(0) && !Input.GetKeyDown(KeyCode.KeypadEnter)) return;
             Attacks();
@@ -42,7 +44,7 @@ namespace Game.Player
             Bullet();
             yield return null;
         }
-        
+
         private void Bullet()
         {
             //Instantiate(fireObj, transform.TransformPoint(offset), transform.rotation);
@@ -50,7 +52,6 @@ namespace Game.Player
             bulletHolder[FindBullet()].transform.rotation = transform.rotation;
             bulletHolder[FindBullet()].GetComponent<FireProjectile>().SetActives();
             PlayerAudio.Instance.Play("Player_Bullet_Shoot");
-            //playerAudio.Plays_20("Player_Bullet_Shoot");
         }
 
         private int FindBullet()

@@ -8,12 +8,8 @@ namespace Game.Enemy
         [SerializeField] private Transform rangeAttackObj;
         [SerializeField] private float radiusAttack;
         [Space] [SerializeField] private Vector2 checkGroundPosition;
-        private CheckEnemyAttack checkEnemyAttack;
+        [SerializeField] private CheckEnemyAttack checkEnemyAttack;
 
-        private void Awake()
-        {
-            checkEnemyAttack = GetComponentInChildren<CheckEnemyAttack>();
-        }
 
         private void FixedUpdate()
         {
@@ -22,7 +18,6 @@ namespace Game.Enemy
                 enemyHealth.ResetHeathDefault();
             }
 
-            TimeAttack();
             if (enemyHealth.EnemyDeath() || !isVisible)
             {
                 body.bodyType = RigidbodyType2D.Static;
@@ -48,6 +43,7 @@ namespace Game.Enemy
                 }
 
                 if (playerHealth.PlayerIsDeath()) return;
+                SetTimeAttack(ref currentTime);
                 SNinjaAttack();
             }
         }
@@ -64,8 +60,8 @@ namespace Game.Enemy
             {
                 Flip();
                 animator.SetBool(animationState.sNinjaIsRun, false);
-                if (currentTime != 0f) return;
                 if (playerHealth.PlayerIsDeath()) return;
+                if (currentTime != 0f) return;
                 Attack();
                 currentTime = maxTimeAttack;
             }
@@ -88,14 +84,13 @@ namespace Game.Enemy
                 animator.SetBool(animationState.sNinjaIsRun, false);
                 if (currentTime != 0f) return;
                 animator.SetTrigger(animationState.sNinjaIsAttack1);
-                currentTime = 1f;
+                currentTime = 1.5f;
                 if (hits)
                 {
-                    playerHealth.GetDamage(20f);
+                    playerHealth.GetDamage(21f);
                 }
 
                 PlayerAudio.Instance.Play("Enemy_Attack_Sword");
-                //playerAudio.Plays_20("Enemy_Attack_Sword");
             }
         }
     }

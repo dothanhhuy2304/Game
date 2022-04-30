@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: Heart
   m_EditorClassIdentifier: 
   itemName: Heart
-  valueReceive: 10
+  valueReceive: 15
   scoreReceive: 0
   moneyReceive: 0
   diamondReceive: 0
-  soundCollection: {fileID: 8300000, guid: 3f711525e7aa548438f26675e2910de2, type: 3}
-  soundHurtCollection: {fileID: 8300000, guid: 6dd7024f00606b44eb5884197a66a893, type: 3}
