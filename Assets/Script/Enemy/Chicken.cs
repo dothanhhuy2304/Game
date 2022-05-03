@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Game.Enemy
@@ -13,6 +14,7 @@ namespace Game.Enemy
         private Vector2 startPos = Vector2.zero;
         private float timeRespawn;
         [SerializeField] private Vector2 groundCheck = Vector2.zero;
+        [Range(0f, 100f)] [SerializeField] protected float rangeAttack = 3f;
         private bool isRespawn;
 
         private void Awake()
@@ -97,11 +99,16 @@ namespace Game.Enemy
                 currentTime = maxTimeAttack;
             }
         }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawSphere(transform.position,rangeAttack);
+        }
     }
 
-    //private void OnDrawGizmos()
-    //{
-    //Gizmos.DrawRay(transform.TransformPoint(groundCheck), Vector3.down * 2f);
-    //Gizmos.DrawSphere(transform.position, rangeAttack);
-    //}
+    // private void OnDrawGizmos()
+    // {
+    // Gizmos.DrawRay(transform.TransformPoint(groundCheck), Vector3.down * 2f);
+    // Gizmos.DrawSphere(transform.position, rangeAttack);
+    // }
 }

@@ -8,7 +8,8 @@ namespace Game.Enemy
         [SerializeField] private Transform rangeAttackObj;
         [SerializeField] private float radiusAttack;
         [Space] [SerializeField] private Vector2 checkGroundPosition;
-        [SerializeField] private CheckEnemyAttack checkEnemyAttack;
+        [SerializeField] private Vector2 posAttack = Vector2.zero;
+        [SerializeField] private Vector2 rangerAttack = Vector2.zero;
 
 
         private void FixedUpdate()
@@ -51,7 +52,7 @@ namespace Game.Enemy
         private void SNinjaAttack()
         {
             //if (!(Vector3.Distance(transform.position, player.position) <= rangeAttack)) return;
-            if (!checkEnemyAttack.canAttack) return;
+            if (!CheckAttack(transform.position + (Vector3) posAttack, rangerAttack)) return;
             if (Vector3.Distance(transform.position, player.position) <= 3f)
             {
                 SNinjaAttackSword();
@@ -93,5 +94,9 @@ namespace Game.Enemy
                 PlayerAudio.Instance.Play("Enemy_Attack_Sword");
             }
         }
+        // private void OnDrawGizmos()
+        // {
+        //     Gizmos.DrawCube(transform.position + (Vector3) posAttack, rangerAttack);
+        // }
     }
 }

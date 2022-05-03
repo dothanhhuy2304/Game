@@ -1,9 +1,12 @@
+using UnityEngine;
 
 namespace Game.Enemy
 {
     public class Bee : EnemyController
     {
-        [UnityEngine.SerializeField] private CheckEnemyAttack checkEnemyAttack;
+
+        [SerializeField] private Vector2 posAttack = Vector2.zero;
+        [SerializeField] private Vector2 rangerAttack = Vector2.zero;
 
         private void Update()
         {
@@ -24,12 +27,17 @@ namespace Game.Enemy
             SetTimeAttack(ref currentTime);
             if (enemyHealth.EnemyDeath()) return;
             if (!isVisible) return;
-            if (!checkEnemyAttack.canAttack) return;
+            if (!CheckAttack(transform.position + (Vector3) posAttack, rangerAttack)) return;
             Flip();
             if (currentTime != 0) return;
             animator.SetTrigger(animationState.beeIsAttack);
             Attack();
             currentTime = maxTimeAttack;
         }
+
+        // private void OnDrawGizmos()
+        // {
+        //     Gizmos.DrawCube(transform.position + (Vector3) posAttack, rangerAttack);
+        // }
     }
 }

@@ -1,9 +1,12 @@
+using UnityEngine;
 
 namespace Game.Enemy
 {
     public class CarnivorousPlant : EnemyController
     {
-        [UnityEngine.SerializeField] private CheckEnemyAttack checkEnemyAttack;
+        [SerializeField] private Vector2 posAttack = Vector2.zero;
+        [SerializeField] private Vector2 rangerAttack = Vector2.zero;
+        [SerializeField] private bool canFlip;
 
         private void Update()
         {
@@ -25,12 +28,21 @@ namespace Game.Enemy
             if (enemyHealth.EnemyDeath()) return;
             if (!isVisible) return;
             //if (Vector3.Distance(transform.position, player.position) > rangeAttack) return;
-            if (!checkEnemyAttack.canAttack) return;
-            Flip();
+            if (!CheckAttack(transform.position + (Vector3) posAttack, rangerAttack)) return;
+            if (canFlip)
+            {
+                Flip();
+            }
+
             if (currentTime != 0f) return;
             animator.SetTrigger(animationState.carnivorousPlantIsAttack);
             currentTime = maxTimeAttack;
             Attack();
         }
+
+        // private void OnDrawGizmos()
+        // {
+        //     Gizmos.DrawCube(transform.position + (Vector3) posAttack, rangerAttack);
+        // }
     }
 }

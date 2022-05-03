@@ -19,7 +19,6 @@ namespace Game.Enemy
 
         protected Transform player;
         protected const float Distance = 1.5f;
-        [Range(0f, 100f)] [SerializeField] protected float rangeAttack = 7f;
         [SerializeField] private float offsetFlip;
         protected float currentTime;
 
@@ -141,6 +140,11 @@ namespace Game.Enemy
             var angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(new Vector3(0f, angle + offsetFlip, 0f));
             //transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        }
+
+        protected static bool CheckAttack(Vector2 point, Vector3 size)
+        {
+            return Physics2D.OverlapBox(point , size, 0f, 1 << LayerMask.NameToLayer("Player"));
         }
 
         protected void Attack()
