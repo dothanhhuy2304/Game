@@ -212,10 +212,10 @@ namespace Game.Enemy
 
         private void AttackBulletArc()
         {
+            bulletHolder[FindBullet()].transform.rotation = Quaternion.identity;
             bulletHolder[FindBullet()].transform.position = offsetAttack.position;
             bulletHolder[FindBullet()].GetComponent<ProjectileArc>().SetActives();
             PlayerAudio.Instance.Play("Enemy_Attack_Shoot");
-            //playerAudio.Plays_20("Enemy_Attack_Shoot");
         }
 
         private int FindBullet()

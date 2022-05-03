@@ -1,4 +1,3 @@
-using System;
 using Game.Core;
 using Game.GamePlay;
 using Game.Player;
@@ -10,8 +9,7 @@ public class ProjectileArc : BaseObject
     [SerializeField] private float speed = 10;
     [SerializeField] private float arcHeight = 1;
     private Vector3 startPos = Vector3.zero;
-
-    private Vector3 nextPos = Vector3.zero;
+    
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private GameObject explosionPrefab;
     private Vector3 targetPos = Vector3.zero;
@@ -19,11 +17,11 @@ public class ProjectileArc : BaseObject
     private void Awake()
     {
         playerPos = FindObjectOfType<CharacterController2D>().transform;
-        startPos = transform.position;
     }
 
     private void OnEnable()
     {
+        startPos = transform.position;
         targetPos = playerPos.position;
     }
 
@@ -35,7 +33,7 @@ public class ProjectileArc : BaseObject
         var nextX = Mathf.MoveTowards(transform.position.x, x1, speed * Time.deltaTime);
         var baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - x0) / dist);
         var arc = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
-        nextPos = new Vector3(nextX, baseY + arc, transform.position.z);
+        var nextPos = new Vector3(nextX, baseY + arc, transform.position.z);
         // Rotate to face the next position, and then move there
         transform.rotation = LookAt2D(nextPos - transform.position);
         transform.position = nextPos;

@@ -15,6 +15,6 @@ MonoBehaviour:
   characterSelection: 0
   position: {x: -4.96, y: -4, z: 0}
   currentScenes: 0
-  saveAudio: 1
+  saveAudio: 0
   soundMusic: 0
   soundEffect: 0
