@@ -100,10 +100,10 @@ namespace Game.Enemy
             }
         }
 
-        private void OnDrawGizmos()
-        {
-            Gizmos.DrawSphere(transform.position,rangeAttack);
-        }
+        // private void OnDrawGizmos()
+        // {
+        //     Gizmos.DrawSphere(transform.position,rangeAttack);
+        // }
     }
 
     // private void OnDrawGizmos()

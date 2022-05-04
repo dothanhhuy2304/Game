@@ -9,7 +9,7 @@ namespace Game.Player
         public Data petData;
         private Transform playerPos;
         private Vector2 velocity = Vector2.zero;
-        [SerializeField] private GameObject[] bulletHolder;
+        [SerializeField] private FireProjectile[] projectiles;
         [HideInInspector] public GameObject[] multipleEnemy;
         [HideInInspector] public Transform closestEnemy;
         private bool enemyContact;
@@ -41,7 +41,7 @@ namespace Game.Player
                     body.velocity = Vector2.zero;
                     if (!enemyContact) return;
                     if (currentTimeAttack != 0f) return;
-                    StartCoroutine(nameof(Attacks));
+                    Attacks();
                     currentTimeAttack = TimeAttack;
                     animator.SetBool(animationState.petIsRun, false);
                 }
@@ -77,32 +77,11 @@ namespace Game.Player
             body.velocity = Vector2.SmoothDamp(body.velocity, angle * petData.movingSpeed, ref velocity, .05f);
         }
 
-        private System.Collections.IEnumerator Attacks()
+        private void Attacks()
         {
-            yield return new WaitForSeconds(0f);
-            Attack();
-            yield return null;
-        }
-
-
-        private void Attack()
-        {
-            bulletHolder[FindBullet()].transform.position = transform.position;
-            bulletHolder[FindBullet()].transform.rotation = transform.rotation;
-            bulletHolder[FindBullet()].GetComponent<FireProjectile>().SetActives();
-        }
-
-        private int FindBullet()
-        {
-            for (var i = 0; i < bulletHolder.Length; i++)
-            {
-                if (!bulletHolder[i].activeInHierarchy)
-                {
-                    return i;
-                }
-            }
-
-            return 0;
+            projectiles[FindBullet()].transform.position = transform.position;
+            projectiles[FindBullet()].transform.rotation = transform.rotation;
+            projectiles[FindBullet()].SetActives();
         }
 
         private Transform FindClosestEnemy()
@@ -119,6 +98,19 @@ namespace Game.Player
             }
 
             return trans;
+        }
+
+        private int FindBullet()
+        {
+            for (var i = 0; i < projectiles.Length; i++)
+            {
+                if (!projectiles[i].gameObject.activeInHierarchy)
+                {
+                    return i;
+                }
+            }
+
+            return 0;
         }
     }
 }

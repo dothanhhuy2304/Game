@@ -207,6 +207,7 @@ MonoBehaviour:
   checkGroundPosition: {x: 0.55, y: 0}
   posAttack: {x: 0, y: 0}
   rangerAttack: {x: 0, y: 0}
+  enemyHealth: {fileID: 3443694513160801480}
 --- !u!1 &3443694514636338306
 GameObject:
   m_ObjectHideFlags: 0

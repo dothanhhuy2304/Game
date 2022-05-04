@@ -197,6 +197,7 @@ MonoBehaviour:
   offsetAttack: {fileID: 5996468345212445128}
   posAttack: {x: 0, y: 0}
   rangerAttack: {x: 0, y: 0}
+  enemyHealth: {fileID: 967367811024892466}
 --- !u!1 &6009209378266578496
 GameObject:
   m_ObjectHideFlags: 0

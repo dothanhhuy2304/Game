@@ -27,7 +27,6 @@ namespace Game.Enemy
             SetTimeAttack(ref currentTime);
             if (enemyHealth.EnemyDeath()) return;
             if (!isVisible) return;
-            //if (Vector3.Distance(transform.position, player.position) > rangeAttack) return;
             if (!CheckAttack(transform.position + (Vector3) posAttack, rangerAttack)) return;
             if (canFlip)
             {

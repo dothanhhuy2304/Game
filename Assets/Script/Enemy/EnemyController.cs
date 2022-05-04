@@ -1,5 +1,6 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Game.Player;
 using Game.Core;
@@ -15,7 +16,9 @@ namespace Game.Enemy
         [SerializeField] private float movingSpeed = 2f;
 
         [Space] [Header("Prefab")] [SerializeField]
-        private GameObject[] bulletHolder;
+        private FireProjectile[] projectiles;
+
+        [SerializeField] private ProjectileArc[] projectileArcs;
 
         protected Transform player;
         protected const float Distance = 1.5f;
@@ -27,7 +30,9 @@ namespace Game.Enemy
         protected PlayerHealth playerHealth;
         protected Animator animator;
         protected EnemyHealth enemyHealth;
+
         protected readonly AnimationStates animationState = new AnimationStates();
+        //
 
         protected override void Start()
         {
@@ -144,43 +149,33 @@ namespace Game.Enemy
 
         protected static bool CheckAttack(Vector2 point, Vector3 size)
         {
-            return Physics2D.OverlapBox(point , size, 0f, 1 << LayerMask.NameToLayer("Player"));
+            return Physics2D.OverlapBox(point, size, 0f, 1 << LayerMask.NameToLayer("Player"));
         }
 
         protected void Attack()
         {
-            if (!playerHealth.PlayerIsDeath())
-            {
-                StartCoroutine(nameof(EnumeratorAttack), .6f);
-            }
-            else
-            {
-                StopCoroutine(nameof(EnumeratorAttack));
-            }
+            if (playerHealth.PlayerIsDeath() || enemyHealth.EnemyDeath()) return;
+            Attacks();
         }
 
-        private IEnumerator EnumeratorAttack(float timeDelay)
+        private void Attacks()
         {
             switch (enemyType)
             {
                 case EnemyType.SNINJA:
                 {
-                    yield return new WaitForSeconds(timeDelay);
                     AttackBulletDirection();
                     break;
                 }
                 case EnemyType.CarnivorousPlant:
                 {
-                    yield return new WaitForSeconds(timeDelay);
                     AttackBullet();
                     break;
                 }
                 case EnemyType.Bee:
-                    yield return new WaitForSeconds(timeDelay);
                     AttackBulletDirection();
                     break;
                 case EnemyType.Trunk:
-                    yield return new WaitForSeconds(timeDelay);
                     AttackBulletArc();
                     break;
                 case EnemyType.Player:
@@ -194,11 +189,10 @@ namespace Game.Enemy
 
         private void AttackBullet()
         {
-            bulletHolder[FindBullet()].transform.position = offsetAttack.position;
-            bulletHolder[FindBullet()].transform.rotation = transform.rotation;
-            bulletHolder[FindBullet()].GetComponent<FireProjectile>().SetActives();
+            projectiles[FindBullet()].transform.position = offsetAttack.position;
+            projectiles[FindBullet()].transform.rotation = transform.rotation;
+            projectiles[FindBullet()].SetActives();
             PlayerAudio.Instance.Play("Enemy_Attack_Shoot");
-            //playerAudio.Plays_20("Enemy_Attack_Shoot");
             //Instantiate(prefab, transform.TransformPoint(offsetAttack), transform.rotation);
         }
 
@@ -206,27 +200,37 @@ namespace Game.Enemy
         {
             var directionVector = (player.position - transform.position).normalized;
             var lookRotation = Quaternion.LookRotation(Vector3.forward, directionVector);
-            bulletHolder[FindBullet()].transform.position = offsetAttack.position;
-            bulletHolder[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f, lookRotation.eulerAngles.z + 90f);
-            bulletHolder[FindBullet()].GetComponent<FireProjectile>().SetActives();
+            projectiles[FindBullet()].transform.position = offsetAttack.position;
+            projectiles[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f, lookRotation.eulerAngles.z + 90f);
+            projectiles[FindBullet()].SetActives();
             PlayerAudio.Instance.Play("Enemy_Attack_Shoot");
-            //playerAudio.Plays_20("Enemy_Attack_Shoot");
             //Instantiate(prefab, transform.TransformPoint(offsetAttack), Quaternion.Euler(transform.rotation.x, transform.rotation.y, lookRotation.eulerAngles.z + 90));
         }
 
         private void AttackBulletArc()
         {
-            bulletHolder[FindBullet()].transform.rotation = Quaternion.identity;
-            bulletHolder[FindBullet()].transform.position = offsetAttack.position;
-            bulletHolder[FindBullet()].GetComponent<ProjectileArc>().SetActives();
+            projectileArcs[FindBulletArc()].transform.rotation = Quaternion.identity;
+            projectileArcs[FindBulletArc()].transform.position = offsetAttack.position;
+            projectileArcs[FindBulletArc()].SetActives();
             PlayerAudio.Instance.Play("Enemy_Attack_Shoot");
         }
 
         private int FindBullet()
         {
-            for (var i = 0; i < bulletHolder.Length; i++)
+            for (var i = 0; i < projectiles.Length; i++)
             {
-                if (!bulletHolder[i].activeInHierarchy)
+                if (!projectiles[i].gameObject.activeInHierarchy)
+                    return i;
+            }
+
+            return 0;
+        }
+
+        private int FindBulletArc()
+        {
+            for (var i = 0; i < projectileArcs.Length; i++)
+            {
+                if (!projectileArcs[i].gameObject.activeInHierarchy)
                     return i;
             }
 
@@ -235,9 +239,9 @@ namespace Game.Enemy
 
         //void OnDrawGizmos()
         //{
-          //Gizmos.DrawSphere(rangeAttackObj.position, radiusAttack);
-          //Gizmos.DrawSphere(transform.position, 2f);
-          //Gizmos.DrawSphere(offsetAttack,0.3f);
+        //Gizmos.DrawSphere(rangeAttackObj.position, radiusAttack);
+        //Gizmos.DrawSphere(transform.position, 2f);
+        //Gizmos.DrawSphere(offsetAttack,0.3f);
         //}
     }
 }

@@ -11,7 +11,6 @@ namespace Game.Enemy
         [SerializeField] private Vector2 posAttack = Vector2.zero;
         [SerializeField] private Vector2 rangerAttack = Vector2.zero;
 
-
         private void FixedUpdate()
         {
             if (playerHealth.PlayerIsDeath())
@@ -51,7 +50,6 @@ namespace Game.Enemy
 
         private void SNinjaAttack()
         {
-            //if (!(Vector3.Distance(transform.position, player.position) <= rangeAttack)) return;
             if (!CheckAttack(transform.position + (Vector3) posAttack, rangerAttack)) return;
             if (Vector3.Distance(transform.position, player.position) <= 3f)
             {
@@ -94,6 +92,7 @@ namespace Game.Enemy
                 PlayerAudio.Instance.Play("Enemy_Attack_Sword");
             }
         }
+
         // private void OnDrawGizmos()
         // {
         //     Gizmos.DrawCube(transform.position + (Vector3) posAttack, rangerAttack);

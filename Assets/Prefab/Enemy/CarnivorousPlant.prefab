@@ -218,6 +218,7 @@ MonoBehaviour:
   posAttack: {x: 0, y: 0}
   rangerAttack: {x: 0, y: 0}
   canFlip: 0
+  enemyHealth: {fileID: 7130098565743549990}
 --- !u!1001 &5142780679409045956
 PrefabInstance:
   m_ObjectHideFlags: 0

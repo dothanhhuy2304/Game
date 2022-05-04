@@ -1,4 +1,3 @@
-using System.Collections;
 using Game.Core;
 using Game.GamePlay;
 using UnityEngine;
@@ -7,7 +6,7 @@ namespace Game.Player
 {
     public class Weapon : BaseObject
     {
-        [SerializeField] private GameObject[] bulletHolder;
+        [SerializeField] private FireProjectile[] projectiles;
         [SerializeField] private Vector2 offset;
         [SerializeField] private PlayerHealth playerHealth;
         private CharacterController2D players;
@@ -35,30 +34,24 @@ namespace Game.Player
         public void Attacks()
         {
             if (timeAttack != 0) return;
-            StartCoroutine(nameof(Attack));
-            timeAttack = ResetTimeAttack;
-        }
-
-        private IEnumerator Attack()
-        {
             Bullet();
-            yield return null;
+            timeAttack = ResetTimeAttack;
         }
 
         private void Bullet()
         {
             //Instantiate(fireObj, transform.TransformPoint(offset), transform.rotation);
-            bulletHolder[FindBullet()].transform.position = transform.TransformPoint(offset);
-            bulletHolder[FindBullet()].transform.rotation = transform.rotation;
-            bulletHolder[FindBullet()].GetComponent<FireProjectile>().SetActives();
+            projectiles[FindBullet()].transform.position = transform.TransformPoint(offset);
+            projectiles[FindBullet()].transform.rotation = transform.rotation;
+            projectiles[FindBullet()].SetActives();
             PlayerAudio.Instance.Play("Player_Bullet_Shoot");
         }
 
         private int FindBullet()
         {
-            for (var i = 0; i < bulletHolder.Length; i++)
+            for (var i = 0; i < projectiles.Length; i++)
             {
-                if (!bulletHolder[i].activeInHierarchy)
+                if (!projectiles[i].gameObject.activeInHierarchy)
                 {
                     return i;
                 }
