@@ -6,6 +6,7 @@ namespace Game.Enemy
     public class SNinja : EnemyController
     {
         [SerializeField] private Transform rangeAttackObj;
+        private const float Distance = 1.5f;
         [SerializeField] private float radiusAttack;
         [Space] [SerializeField] private Vector2 checkGroundPosition;
         [SerializeField] private Vector2 posAttack = Vector2.zero;

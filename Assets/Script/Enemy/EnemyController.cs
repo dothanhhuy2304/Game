@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Game.Player;
 using Game.Core;
@@ -13,26 +11,21 @@ namespace Game.Enemy
     {
         [Header("Types")] [SerializeField] protected EnemyType enemyType;
         [SerializeField] protected bool canMoving;
-        [SerializeField] private float movingSpeed = 2f;
+        [SerializeField] private float movingSpeed;
 
         [Space] [Header("Prefab")] [SerializeField]
         private FireProjectile[] projectiles;
 
         [SerializeField] private ProjectileArc[] projectileArcs;
-
         protected Transform player;
-        protected const float Distance = 1.5f;
         [SerializeField] private float offsetFlip;
-        protected float currentTime;
-
+        [Space] [Header("Time")] protected float currentTime;
         [SerializeField] protected float maxTimeAttack;
         [SerializeField] private Transform offsetAttack;
         protected PlayerHealth playerHealth;
         protected Animator animator;
         protected EnemyHealth enemyHealth;
-
         protected readonly AnimationStates animationState = new AnimationStates();
-        //
 
         protected override void Start()
         {
@@ -147,7 +140,7 @@ namespace Game.Enemy
             //transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }
 
-        protected static bool CheckAttack(Vector2 point, Vector3 size)
+        protected static bool CheckAttack(Vector2 point, Vector2 size)
         {
             return Physics2D.OverlapBox(point, size, 0f, 1 << LayerMask.NameToLayer("Player"));
         }
@@ -155,8 +148,15 @@ namespace Game.Enemy
         protected void Attack()
         {
             if (playerHealth.PlayerIsDeath() || enemyHealth.EnemyDeath()) return;
+            StartCoroutine(DurationAttack(0.5f));
+        }
+
+        private System.Collections.IEnumerator DurationAttack(float duration)
+        {
+            yield return new WaitForSeconds(duration);
             Attacks();
         }
+
 
         private void Attacks()
         {
@@ -198,10 +198,12 @@ namespace Game.Enemy
 
         private void AttackBulletDirection()
         {
-            var directionVector = (player.position - transform.position).normalized;
-            var lookRotation = Quaternion.LookRotation(Vector3.forward, directionVector);
+            var directionToPlayer = (player.position - transform.position).normalized;
+            //var lookRotation = Quaternion.LookRotation(Vector3.forward, directionVector);
+            //projectiles[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f, lookRotation.eulerAngles.z + 90f);
             projectiles[FindBullet()].transform.position = offsetAttack.position;
-            projectiles[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f, lookRotation.eulerAngles.z + 90f);
+            projectiles[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f,
+                Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg);
             projectiles[FindBullet()].SetActives();
             PlayerAudio.Instance.Play("Enemy_Attack_Shoot");
             //Instantiate(prefab, transform.TransformPoint(offsetAttack), Quaternion.Euler(transform.rotation.x, transform.rotation.y, lookRotation.eulerAngles.z + 90));
