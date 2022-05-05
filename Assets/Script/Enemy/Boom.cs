@@ -9,11 +9,12 @@ public class Boom : MonoBehaviour
     [SerializeField] private Collider2D colObj;
     private PlayerHealth playerHealth;
     [SerializeField] private float timeRespawn;
+    private PlayerAudio playerAudio;
 
     private void Start()
     {
-        colObj = GetComponent<Collider2D>();
         playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
+        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
     }
 
     private void Update()
@@ -45,7 +46,7 @@ public class Boom : MonoBehaviour
         boomObj.SetActive(false);
         explosionObj.SetActive(true);
         colObj.enabled = false;
-        PlayerAudio.Instance.Play("Boom_Explosion");
+        playerAudio.Play("Boom_Explosion");
         //playerAudio.Plays_20("Boom_Explosion");
         yield return new WaitForSeconds(delay);
         explosionObj.SetActive(false);

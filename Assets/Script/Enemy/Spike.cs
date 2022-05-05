@@ -4,7 +4,7 @@ using Game.Player;
 
 public class Spike : BaseObject
 {
-    [SerializeField] private float timeAttack = 1f;
+    private float timeAttack;
     [SerializeField] private float maxTimeAttack = 1f;
     private PlayerHealth playerHealth;
     private bool isHurts;
@@ -12,7 +12,6 @@ public class Spike : BaseObject
     protected override void Start()
     {
         playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
-        timeAttack = 0f;
     }
 
     private void Update()

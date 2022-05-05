@@ -9,13 +9,13 @@ public class LoadCharacter : MonoBehaviour
     private void Awake()
     {
         characters[playerData.characterSelection].SetActive(true);
-        var playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
-        System.Diagnostics.Debug.Assert(playerAudio != null, nameof(playerAudio) + " != null");
+        var playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+        var uiManager = FindObjectOfType<UIManager>().GetComponent<UIManager>();
         playerAudio.Plays_Music("Music_Game");
-        if (UIManager.Instance.healthUI.activeSelf || UIManager.Instance.scoreUI.activeSelf) return;
-        UIManager.Instance.healthUI.SetActive(true);
-        UIManager.Instance.scoreUI.SetActive(true);
-        UIManager.Instance.btnBackToMenuUI.SetActive(true);
-        UIManager.Instance.btnRestart.SetActive(true);
+        if (uiManager.healthUI.activeSelf || uiManager.scoreUI.activeSelf) return;
+        uiManager.healthUI.SetActive(true);
+        uiManager.scoreUI.SetActive(true);
+        uiManager.btnBackToMenuUI.SetActive(true);
+        uiManager.btnRestart.SetActive(true);
     }
 }

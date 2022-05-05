@@ -10,13 +10,15 @@ namespace Game.Player
         [SerializeField] private Vector2 offset;
         [SerializeField] private PlayerHealth playerHealth;
         private CharacterController2D players;
-        [SerializeField] private float timeAttack = 0.5f;
-        private const float ResetTimeAttack = 0.5f;
+        private float timeAttack;
+        [SerializeField] private float resetTimeAttack = 0.5f;
+        private PlayerAudio playerAudio;
 
         protected override void Start()
         {
             playerHealth = GetComponent<PlayerHealth>();
             players = GetComponent<CharacterController2D>();
+            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
             timeAttack = 0f;
         }
 
@@ -35,7 +37,7 @@ namespace Game.Player
         {
             if (timeAttack != 0) return;
             Bullet();
-            timeAttack = ResetTimeAttack;
+            timeAttack = resetTimeAttack;
         }
 
         private void Bullet()
@@ -44,7 +46,7 @@ namespace Game.Player
             projectiles[FindBullet()].transform.position = transform.TransformPoint(offset);
             projectiles[FindBullet()].transform.rotation = transform.rotation;
             projectiles[FindBullet()].SetActives();
-            PlayerAudio.Instance.Play("Player_Bullet_Shoot");
+            playerAudio.Play("Player_Bullet_Shoot");
         }
 
         private int FindBullet()

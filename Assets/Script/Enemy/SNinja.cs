@@ -1,3 +1,4 @@
+using System;
 using Game.GamePlay;
 using UnityEngine;
 
@@ -11,6 +12,12 @@ namespace Game.Enemy
         [Space] [SerializeField] private Vector2 checkGroundPosition;
         [SerializeField] private Vector2 posAttack = Vector2.zero;
         [SerializeField] private Vector2 rangerAttack = Vector2.zero;
+        private PlayerAudio playerAudio;
+
+        private void Awake()
+        {
+            playerAudio = FindObjectOfType<PlayerAudio>();
+        }
 
         private void FixedUpdate()
         {
@@ -90,7 +97,7 @@ namespace Game.Enemy
                     playerHealth.GetDamage(21f);
                 }
 
-                PlayerAudio.Instance.Play("Enemy_Attack_Sword");
+                playerAudio.Play("Enemy_Attack_Sword");
             }
         }
 

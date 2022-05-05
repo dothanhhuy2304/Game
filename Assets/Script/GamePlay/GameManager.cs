@@ -4,7 +4,7 @@ namespace Game.GamePlay
 {
     public class GameManager : MonoBehaviour
     {
-        public static GameManager Instance { get; private set; }
+        private static GameManager _instance;
         [SerializeField] private ScoreData scoreData;
         [SerializeField] private TMPro.TextMeshProUGUI txtScore;
         [SerializeField] private TMPro.TextMeshProUGUI txtDiamond;
@@ -12,9 +12,9 @@ namespace Game.GamePlay
 
         private void Awake()
         {
-            if (Instance == null)
+            if (_instance == null)
             {
-                Instance = this;
+                _instance = this;
             }
             else
             {

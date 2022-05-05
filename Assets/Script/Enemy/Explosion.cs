@@ -1,3 +1,4 @@
+using System;
 using Game.GamePlay;
 using UnityEngine;
 using Game.Player;
@@ -5,6 +6,12 @@ using Game.Player;
 public class Explosion : MonoBehaviour
 {
     private bool isAttack = true;
+    private PlayerAudio playerAudio;
+
+    private void Awake()
+    {
+        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+    }
 
     private void OnEnable()
     {
@@ -13,7 +20,7 @@ public class Explosion : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        PlayerAudio.Instance.Play("Boom_Explosion");
+        playerAudio.Play("Boom_Explosion");
         //playerAudio.Plays_20("Boom_Explosion");
         StartCoroutine(nameof(WaitingHide), 0.7f);
         if (!isAttack) return;

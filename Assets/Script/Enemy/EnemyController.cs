@@ -23,8 +23,9 @@ namespace Game.Enemy
         [SerializeField] protected float maxTimeAttack;
         [SerializeField] private Transform offsetAttack;
         protected PlayerHealth playerHealth;
-        protected Animator animator;
-        protected EnemyHealth enemyHealth;
+        [SerializeField] protected Animator animator;
+        [SerializeField] protected EnemyHealth enemyHealth;
+        private PlayerAudio playerAudio;
         protected readonly AnimationStates animationState = new AnimationStates();
 
         protected override void Start()
@@ -32,8 +33,7 @@ namespace Game.Enemy
             base.Start();
             player = FindObjectOfType<CharacterController2D>().transform;
             playerHealth = player.GetComponent<PlayerHealth>();
-            animator = GetComponent<Animator>();
-            enemyHealth = GetComponent<EnemyHealth>();
+            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
         }
 
         //protected virtual void FixedUpdate()
@@ -135,8 +135,8 @@ namespace Game.Enemy
             }
 
             var target = (player.position - transform.position).normalized;
-            var angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(new Vector3(0f, angle + offsetFlip, 0f));
+            transform.rotation =
+                Quaternion.Euler(new Vector3(0f, Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg + offsetFlip, 0f));
             //transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }
 
@@ -192,7 +192,7 @@ namespace Game.Enemy
             projectiles[FindBullet()].transform.position = offsetAttack.position;
             projectiles[FindBullet()].transform.rotation = transform.rotation;
             projectiles[FindBullet()].SetActives();
-            PlayerAudio.Instance.Play("Enemy_Attack_Shoot");
+            playerAudio.Play("Enemy_Attack_Shoot");
             //Instantiate(prefab, transform.TransformPoint(offsetAttack), transform.rotation);
         }
 
@@ -205,7 +205,7 @@ namespace Game.Enemy
             projectiles[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f,
                 Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg);
             projectiles[FindBullet()].SetActives();
-            PlayerAudio.Instance.Play("Enemy_Attack_Shoot");
+            playerAudio.Play("Enemy_Attack_Shoot");
             //Instantiate(prefab, transform.TransformPoint(offsetAttack), Quaternion.Euler(transform.rotation.x, transform.rotation.y, lookRotation.eulerAngles.z + 90));
         }
 
@@ -214,7 +214,7 @@ namespace Game.Enemy
             projectileArcs[FindBulletArc()].transform.rotation = Quaternion.identity;
             projectileArcs[FindBulletArc()].transform.position = offsetAttack.position;
             projectileArcs[FindBulletArc()].SetActives();
-            PlayerAudio.Instance.Play("Enemy_Attack_Shoot");
+            playerAudio.Play("Enemy_Attack_Shoot");
         }
 
         private int FindBullet()

@@ -6,7 +6,7 @@ using Game.Player;
 public class WallFalling : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D body;
-    private Collider2D colliders;
+    [SerializeField] private Collider2D colliders;
     [Range(0f, 10f)] [SerializeField] private float timeFalling;
     private PlayerHealth playerHealth;
     private Vector2 startPos;
@@ -14,7 +14,6 @@ public class WallFalling : MonoBehaviour
     private void Awake()
     {
         startPos = transform.position;
-        colliders = GetComponent<Collider2D>();
     }
 
     private void Start()

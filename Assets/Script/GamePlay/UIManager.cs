@@ -1,49 +1,48 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game.GamePlay
 {
     public class UIManager : MonoBehaviour
     {
-        public static UIManager Instance { get; private set; }
+        private static UIManager _instance;
         [SerializeField] private GameObject settingUI;
         [SerializeField] private GameObject volumeUI;
         [SerializeField] private AudioSource audioMusic;
-        [SerializeField] private Slider sliderMusic;
-        [SerializeField] private Slider sliderEffect;
+        [SerializeField] private UnityEngine.UI.Slider sliderMusic;
+        [SerializeField] private UnityEngine.UI.Slider sliderEffect;
         [SerializeField] private GameObject btnSetting;
         public GameObject healthUI;
         public GameObject scoreUI;
         public GameObject btnBackToMenuUI;
         public GameObject btnRestart;
         [SerializeField] private PlayerData playerData;
-        private LoadingScreenManager loadingScreenManager;
+        [SerializeField] private LoadingScreenManager loadingScreenManager;
+        [SerializeField] private PlayerAudio playerAudio;
 
         private void Start()
         {
             DontDestroyOnLoad(this);
 
-            if (Instance == null)
+            if (_instance == null)
             {
-                Instance = this;
+                _instance = this;
             }
             else
             {
                 Destroy(gameObject);
             }
 
-            loadingScreenManager = FindObjectOfType<LoadingScreenManager>().GetComponent<LoadingScreenManager>();
             if (!playerData.saveAudio)
             {
                 playerData.soundMusic = audioMusic.volume;
-                playerData.soundEffect = PlayerAudio.Instance.sounds[0].audioFX.volume;
+                playerData.soundEffect = playerAudio.sounds[0].audioFX.volume;
                 playerData.saveAudio = true;
             }
 
             sliderMusic.value = playerData.soundMusic;
             sliderEffect.value = playerData.soundEffect;
             audioMusic.volume = playerData.soundMusic;
-            foreach (var source in PlayerAudio.Instance.sounds)
+            foreach (var source in playerAudio.sounds)
             {
                 source.audioFX.volume = playerData.soundEffect;
             }
@@ -82,7 +81,7 @@ namespace Game.GamePlay
 
         public void ChangeVolumeEffect()
         {
-            foreach (var source in PlayerAudio.Instance.sounds)
+            foreach (var source in playerAudio.sounds)
             {
                 source.audioFX.volume = sliderEffect.value;
             }
@@ -99,7 +98,7 @@ namespace Game.GamePlay
             scoreUI.SetActive(false);
             btnBackToMenuUI.SetActive(false);
             btnRestart.SetActive(false);
-            PlayerAudio.Instance.Plays_Music("Music_Menu");
+            playerAudio.Plays_Music("Music_Menu");
             loadingScreenManager.LoadingScreen(0);
         }
 
@@ -112,7 +111,7 @@ namespace Game.GamePlay
             scoreUI.SetActive(false);
             btnBackToMenuUI.SetActive(false);
             btnRestart.SetActive(false);
-            PlayerAudio.Instance.Plays_Music("Music_Menu");
+            playerAudio.Plays_Music("Music_Menu");
             loadingScreenManager.LoadingScreen(loadingScreenManager.RestartLevel());
         }
 
@@ -124,7 +123,7 @@ namespace Game.GamePlay
 
         public void ButtonHover()
         {
-            PlayerAudio.Instance.Play("Hover_Effect");
+            playerAudio.Play("Hover_Effect");
             //playerAudio.Plays_15("Hover_Effect");
         }
     }

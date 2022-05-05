@@ -6,7 +6,7 @@ namespace Game.GamePlay
 
     public class PlayerAudio : MonoBehaviour
     {
-        public static PlayerAudio Instance { get; private set; }
+        private static PlayerAudio _instance;
 
         [Space] [Header("Sound Music")] [SerializeField]
         private AudioSource audioMusic;
@@ -16,9 +16,9 @@ namespace Game.GamePlay
 
         private void Awake()
         {
-            if (Instance == null)
+            if (_instance == null)
             {
-                Instance = this;
+                _instance = this;
             }
             else
             {

@@ -8,13 +8,12 @@ public class SpikeHead : BaseObject
     [SerializeField] private Vector2 endPos = Vector2.zero;
     [SerializeField] private float speed = 2f;
     [SerializeField] private float timeSleep;
-    [SerializeField] private float timeAttack;
+    private float timeAttack;
     [SerializeField] private float resetTimeAttack = 2f;
 
     private void Awake()
     {
         startPos = transform.position;
-        timeAttack = 0f;
     }
 
     private void Update()

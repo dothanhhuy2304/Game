@@ -15,7 +15,7 @@ namespace Game.Enemy
 
         protected override void Start()
         {
-            player = FindObjectOfType<CharacterController2D>()?.transform;
+            player = FindObjectOfType<CharacterController2D>().transform;
             startPos = transform.position;
         }
 

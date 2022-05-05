@@ -528,14 +528,17 @@ MonoBehaviour:
   enemyType: 5
   canMoving: 1
   movingSpeed: 5
-  bulletHolder: []
-  rangeAttack: 3
+  projectiles: []
+  projectileArcs: []
   offsetFlip: 1215
   maxTimeAttack: 2
-  offsetAttack: {x: 0, y: 0}
+  offsetAttack: {fileID: 0}
+  animator: {fileID: 4549498311706445916}
+  enemyHealth: {fileID: 0}
   chickenCol: {fileID: 3460286694531780528}
   explosionObj: {fileID: 4549498311450808679}
   groundCheck: {x: -1, y: 0}
+  rangeAttack: 3
 --- !u!1 &4549498311985406195
 GameObject:
   m_ObjectHideFlags: 0

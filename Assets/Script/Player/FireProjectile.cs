@@ -18,12 +18,14 @@ public class FireProjectile : MonoBehaviour
     private Vector2 targetPetEnemy = Vector2.zero;
     private PlayerHealth playerHealth;
     private PetAI petAI;
+    private PlayerAudio playerAudio;
 
     private void Awake()
     {
         player = FindObjectOfType<CharacterController2D>().transform;
         playerHealth = player.GetComponent<PlayerHealth>();
         petAI = FindObjectOfType<PetAI>()?.GetComponent<PetAI>();
+        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
     }
 
     private void OnEnable()
@@ -140,7 +142,7 @@ public class FireProjectile : MonoBehaviour
 
         if (!other.CompareTag("Bullet")) return;
         BulletExplosions();
-        PlayerAudio.Instance.Play("Player_Bullet_Explosion_1");
+        playerAudio.Play("Player_Bullet_Explosion_1");
         //playerAudio.Plays_20("Player_Bullet_Explosion_1");
 
     }
@@ -155,7 +157,7 @@ public class FireProjectile : MonoBehaviour
     {
         bulletPrefab.SetActive(false);
         explosionPrefab.SetActive(true);
-        PlayerAudio.Instance.Play("Player_Bullet_Explosion_1");
+        playerAudio.Play("Player_Bullet_Explosion_1");
         //playerAudio.Plays_20("Player_Bullet_Explosion_1");
         body.bodyType = RigidbodyType2D.Static;
         StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
@@ -165,7 +167,7 @@ public class FireProjectile : MonoBehaviour
     {
         bulletPrefab.SetActive(false);
         explosionPrefab.SetActive(true);
-        PlayerAudio.Instance.Play("Player_Bullet_Explosion_1");
+        playerAudio.Play("Player_Bullet_Explosion_1");
         //playerAudio.Plays_20("Enemy_Bullet_Explosion_1");
         body.bodyType = RigidbodyType2D.Static;
         StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);

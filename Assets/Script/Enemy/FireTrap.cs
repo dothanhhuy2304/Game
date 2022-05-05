@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using Game.Core;
@@ -6,7 +5,7 @@ using Game.Player;
 
 public class FireTrap : BaseObject
 {
-    private Animator animator;
+    [SerializeField] private Animator animator;
     private PlayerHealth playerHealth;
     private CharacterController2D player;
     private bool isOut;
@@ -14,7 +13,6 @@ public class FireTrap : BaseObject
 
     protected override void Start()
     {
-        animator = GetComponent<Animator>();
         player = FindObjectOfType<CharacterController2D>().GetComponent<CharacterController2D>();
         playerHealth = player.GetComponent<PlayerHealth>();
     }

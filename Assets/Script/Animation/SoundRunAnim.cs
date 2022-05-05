@@ -7,6 +7,12 @@ public class SoundRunAnim : StateMachineBehaviour
     public float modulus = 0f;
     private float lastT = -1f;
     [SerializeField] private string clipName;
+    private PlayerAudio playerAudio;
+
+    private void Awake()
+    {
+        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+    }
 
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -14,7 +20,7 @@ public class SoundRunAnim : StateMachineBehaviour
         var nt = stateInfo.normalizedTime;
         if (modulus > 0f) nt %= modulus;
         if (nt >= t && lastT < t)
-            PlayerAudio.Instance.Play(clipName);
+            playerAudio.Play(clipName);
         lastT = nt;
     }
 }

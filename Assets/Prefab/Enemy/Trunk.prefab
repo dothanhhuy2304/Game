@@ -154,6 +154,7 @@ MonoBehaviour:
   enemyHealthBar: {fileID: 967367811024892467}
   timeRespawn: 10
   enemyCollider: {fileID: 967367811024892465}
+  spriteRenderer: {fileID: 967367811024892479}
   uIDamageEnemy: {fileID: 898911466340090346, guid: 60b1aed8d968ce9499c3afcb26e22f95, type: 3}
 --- !u!114 &967367811024892467
 MonoBehaviour:
@@ -186,18 +187,15 @@ MonoBehaviour:
   enemyType: 5
   canMoving: 0
   movingSpeed: 2
-  bulletHolder:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  projectiles: []
+  projectileArcs: []
   offsetFlip: 1215
   maxTimeAttack: 5
   offsetAttack: {fileID: 5996468345212445128}
+  animator: {fileID: 967367811024892476}
+  enemyHealth: {fileID: 967367811024892466}
   posAttack: {x: 0, y: 0}
   rangerAttack: {x: 0, y: 0}
-  enemyHealth: {fileID: 967367811024892466}
 --- !u!1 &6009209378266578496
 GameObject:
   m_ObjectHideFlags: 0

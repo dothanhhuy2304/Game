@@ -5,7 +5,7 @@ namespace Game.GamePlay
     public class CheckPoint : MonoBehaviour
     {
         [SerializeField] private GameObject uiGuide;
-        [SerializeField] private LoadingScreenManager loadingScreenManager;
+        private LoadingScreenManager loadingScreenManager;
 
         private void Awake()
         {

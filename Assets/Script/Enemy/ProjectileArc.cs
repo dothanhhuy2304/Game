@@ -13,10 +13,12 @@ public class ProjectileArc : BaseObject
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private GameObject explosionPrefab;
     private Vector3 targetPos = Vector3.zero;
+    private PlayerAudio playerAudio;
 
     private void Awake()
     {
         playerPos = FindObjectOfType<CharacterController2D>().transform;
+        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
     }
 
     private void OnEnable()
@@ -61,17 +63,16 @@ public class ProjectileArc : BaseObject
         if (other.CompareTag("Player"))
         {
             other.GetComponent<PlayerHealth>().GetDamage(20f);
-            PlayerAudio.Instance.Play("Enemy_Bullet_Explosion_1");
+            playerAudio.Play("Enemy_Bullet_Explosion_1");
             Explosion();
         }
         else if (other.CompareTag("ground"))
         {
             Arrived();
-            PlayerAudio.Instance.Play("Enemy_Bullet_Explosion_1");
+            playerAudio.Play("Enemy_Bullet_Explosion_1");
         }
     }
-
-
+    
     private System.Collections.IEnumerator TemporarilyDeactivate(float delay)
     {
         yield return new WaitForSeconds(delay);

@@ -2062,6 +2062,8 @@ MonoBehaviour:
   btnBackToMenuUI: {fileID: 291916465}
   btnRestart: {fileID: 482252628}
   playerData: {fileID: 11400000, guid: 08e5aa38e1d66b141b421f095e45bea2, type: 2}
+  loadingScreenManager: {fileID: 1140816396}
+  playerAudio: {fileID: 1331375834}
 --- !u!210 &492912731
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -5556,6 +5558,7 @@ MonoBehaviour:
   - {fileID: 1729964578}
   btnNext: {fileID: 1064292033}
   btnPreview: {fileID: 150991190}
+  loadingScreenManager: {fileID: 1140816396}
 --- !u!1 &1565509269
 GameObject:
   m_ObjectHideFlags: 0

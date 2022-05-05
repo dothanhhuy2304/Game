@@ -277,4 +277,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   body: {fileID: 4891730146046084733}
+  colliders: {fileID: 4891730146046084732}
   timeFalling: 1

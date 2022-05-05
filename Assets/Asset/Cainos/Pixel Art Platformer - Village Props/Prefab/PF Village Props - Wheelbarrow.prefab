@@ -250,13 +250,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   carTrans:
-  - {fileID: 3199234433168532602}
-  - {fileID: 2225699740878207581}
-  - {fileID: 3199234433696566346}
-  currentPos:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
+  - {fileID: 3199234433168532604}
+  - {fileID: 7644707083951969194}
+  - {fileID: 3199234433696566348}
 --- !u!1 &3199234433696566346
 GameObject:
   m_ObjectHideFlags: 0

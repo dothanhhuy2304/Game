@@ -55,7 +55,7 @@ namespace Game.Item
                 }
                 default:
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new Exception();
                 }
             }
         }
@@ -66,7 +66,6 @@ namespace Game.Item
             effectCollectedObj.SetActive(true);
             playerHealth.GetDamage(value);
             playerAudio.Play("Item_Hurt");
-            //playerAudio.Plays_20("Item_Hurt");
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);
         }
@@ -77,7 +76,6 @@ namespace Game.Item
             effectCollectedObj.SetActive(true);
             playerHealth.Heal(value);
             playerAudio.Play("Item_Heal");
-            //playerAudio.Plays_20("Item_Heal");
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);
         }
@@ -87,7 +85,6 @@ namespace Game.Item
             itemObj.SetActive(false);
             effectCollectedObj.SetActive(true);
             playerAudio.Play("Item_Heal");
-            //playerAudio.Plays_20("Item_Heal");
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), .8f);
         }
@@ -97,14 +94,6 @@ namespace Game.Item
             yield return new WaitForSeconds(delay);
             gameObject.SetActive(false);
         }
-
-        // private void OnDisable()
-        // {
-        //     if (scoreData.currentScore > scoreData.highScore)
-        //     {
-        //         scoreData.highScore = scoreData.currentScore;
-        //     }
-        // }
     }
 
     public enum ItemType

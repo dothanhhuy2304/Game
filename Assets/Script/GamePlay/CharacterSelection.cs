@@ -1,48 +1,50 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharacterSelection : MonoBehaviour
+namespace Game.GamePlay
 {
-    [SerializeField] private PlayerData playerData;
-    [SerializeField] private GameObject[] characters;
-    private int currentCharacter;
-    [SerializeField] private Button btnNext, btnPreview;
-    private LoadingScreenManager loadingScreenManager;
-
-    private void Awake()
+    public class CharacterSelection : MonoBehaviour
     {
-        loadingScreenManager = FindObjectOfType<LoadingScreenManager>().GetComponent<LoadingScreenManager>();
-        for (var i = 0; i < characters.Length; i++)
+        [SerializeField] private PlayerData playerData;
+        [SerializeField] private GameObject[] characters;
+        private int currentCharacter;
+        [SerializeField] private Button btnNext, btnPreview;
+        [SerializeField] private LoadingScreenManager loadingScreenManager;
+
+        private void Awake()
         {
-            characters[i].SetActive(i == 0);
+            for (var i = 0; i < characters.Length; i++)
+            {
+                characters[i].SetActive(i == 0);
+            }
+
+            UpdateButton();
         }
 
-        UpdateButton();
-    }
-
-    public void ChangeCharacter(int index)
-    {
-        currentCharacter += index;
-        foreach (var t in characters)
+        public void ChangeCharacter(int index)
         {
-            t.SetActive(false);
+            currentCharacter += index;
+            foreach (var t in characters)
+            {
+                t.SetActive(false);
+            }
+
+            characters[currentCharacter].SetActive(true);
+            UpdateButton();
         }
 
-        characters[currentCharacter].SetActive(true);
-        UpdateButton();
-    }
+        private void UpdateButton()
+        {
+            btnNext.interactable = currentCharacter != characters.Length - 1;
+            btnPreview.interactable = currentCharacter != 0;
+        }
 
-    private void UpdateButton()
-    {
-        btnNext.interactable = currentCharacter != characters.Length - 1;
-        btnPreview.interactable = currentCharacter != 0;
-    }
-
-    public void LoadCharacter()
-    {
-        playerData.characterSelection = currentCharacter;
-        loadingScreenManager.LoadingScreen(playerData.currentScenes == 0
-            ? loadingScreenManager.NextScreen(1)
-            : loadingScreenManager.LoadCurrentScreen());
+        public void LoadCharacter()
+        {
+            playerData.characterSelection = currentCharacter;
+            loadingScreenManager.LoadingScreen(playerData.currentScenes == 0
+                ? loadingScreenManager.NextScreen(1)
+                : loadingScreenManager.LoadCurrentScreen());
+        }
     }
 }

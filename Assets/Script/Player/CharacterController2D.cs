@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Game.Core;
 using Game.GamePlay;
@@ -25,8 +26,9 @@ namespace Game.Player
         private readonly AnimationStates animationState = new AnimationStates();
         private bool isOnCar;
         public bool isHurt;
-
         private float startSpeed;
+
+        private PlayerAudio playerAudio;
         //private DeviceManager deviceManager;
         //private UnityEngine.EventSystems.EventTrigger btnLeft, btnRight, btnJump, btnAttack;
         //private Weapon weapon;
@@ -35,6 +37,7 @@ namespace Game.Player
         {
             base.Start();
             startSpeed = playerHealth.playerData.movingSpeed;
+            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
             //deviceManager = FindObjectOfType<DeviceManager>().GetComponent<DeviceManager>();
             //weapon = GetComponent<Weapon>();
             //OnControl();
@@ -169,7 +172,7 @@ namespace Game.Player
                 Jump();
                 mDBJump = true;
                 isDashing = true;
-                PlayerAudio.Instance.Play("Player_Jump");
+                playerAudio.Play("Player_Jump");
                 //playerAudio.Plays_13("Player_Jump");
             }
             else if (mDBJump)
@@ -177,7 +180,7 @@ namespace Game.Player
                 Jump();
                 mDBJump = false;
                 isDashing = true;
-                PlayerAudio.Instance.Play("Player_Jump");
+                playerAudio.Play("Player_Jump");
                 //playerAudio.Plays_13("Player_Jump");
             }
         }
@@ -226,7 +229,7 @@ namespace Game.Player
         public void PlayerDeath()
         {
             animator.SetTrigger(animationState.playerIsDeath);
-            PlayerAudio.Instance.Play("Enemy_Death");
+            playerAudio.Play("Enemy_Death");
             //playerAudio.Plays_13("Enemy_Death");
         }
 
@@ -263,7 +266,7 @@ namespace Game.Player
 
         public void PlayerHurt()
         {
-            PlayerAudio.Instance.Play("Player_Hurt");
+            playerAudio.Play("Player_Hurt");
             //playerAudio.Plays_10("Player_Hurt");
             animator.SetTrigger(animationState.playerIsHurt);
             body.bodyType = RigidbodyType2D.Static;

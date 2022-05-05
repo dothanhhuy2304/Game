@@ -16,15 +16,15 @@ namespace Game.Enemy
         [SerializeField] private EnemyHealthBar enemyHealthBar;
         [SerializeField] private float timeRespawn;
         [SerializeField] private Collider2D enemyCollider;
-        private SpriteRenderer spriteRenderer;
+        [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private GameObject uIDamageEnemy;
         private TMPro.TextMeshProUGUI txtDamage;
-
+        private PlayerAudio playerAudio;
         private void Awake()
         {
             SetMaxHealth(heathDefault, hpIc);
-            spriteRenderer = GetComponent<SpriteRenderer>();
             txtDamage = uIDamageEnemy.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
         }
 
         private void SetMaxHealth(float maxHealths, float hpIcs)
@@ -62,7 +62,7 @@ namespace Game.Enemy
             currentHealth = 0f;
             spriteRenderer.enabled = false;
             enemyCollider.enabled = false;
-            PlayerAudio.Instance.Play("Enemy_Death");
+            playerAudio.Play("Enemy_Death");
             if (canRespawn)
             {
                 StartCoroutine(nameof(Respawn), timeRespawn);

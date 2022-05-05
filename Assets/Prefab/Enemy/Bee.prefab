@@ -169,18 +169,15 @@ MonoBehaviour:
   enemyType: 4
   canMoving: 0
   movingSpeed: 2
-  bulletHolder:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  projectiles: []
+  projectileArcs: []
   offsetFlip: -45
   maxTimeAttack: 4
   offsetAttack: {fileID: 924745674295885041}
+  animator: {fileID: 7350970975510589208}
+  enemyHealth: {fileID: 7350970975510589207}
   posAttack: {x: 0, y: 0}
   rangerAttack: {x: 0, y: 0}
-  enemyHealth: {fileID: 7350970975510589207}
 --- !u!114 &7350970975510589207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,6 +198,7 @@ MonoBehaviour:
   enemyHealthBar: {fileID: 7350970975510589206}
   timeRespawn: 10
   enemyCollider: {fileID: 3036394475328420026}
+  spriteRenderer: {fileID: 7350970975510589209}
   uIDamageEnemy: {fileID: 898911466340090346, guid: 60b1aed8d968ce9499c3afcb26e22f95, type: 3}
 --- !u!114 &7350970975510589206
 MonoBehaviour:
