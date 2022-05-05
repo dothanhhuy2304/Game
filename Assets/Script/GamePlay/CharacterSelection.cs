@@ -9,10 +9,11 @@ namespace Game.GamePlay
         [SerializeField] private GameObject[] characters;
         private int currentCharacter;
         [SerializeField] private Button btnNext, btnPreview;
-        [SerializeField] private LoadingScreenManager loadingScreenManager;
+        private LoadingScreenManager loadingScreenManager;
 
         private void Awake()
         {
+            loadingScreenManager = FindObjectOfType<LoadingScreenManager>().GetComponent<LoadingScreenManager>();
             for (var i = 0; i < characters.Length; i++)
             {
                 characters[i].SetActive(i == 0);

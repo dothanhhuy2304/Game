@@ -13,6 +13,7 @@ namespace Game.Player
         [HideInInspector] public GameObject[] multipleEnemy;
         [HideInInspector] public Transform closestEnemy;
         private bool enemyContact;
+        [SerializeField] private float distancePlayer;
         [SerializeField] private float rangeAttack;
         private float currentTimeAttack = 3f;
         private const float TimeAttack = 3f;
@@ -36,19 +37,20 @@ namespace Game.Player
             {
                 SetTimeAttack(ref currentTimeAttack);
                 closestEnemy = FindClosestEnemy();
-                if (Vector3.Distance(transform.position, playerPos.transform.position) < rangeAttack)
-                {
-                    body.velocity = Vector2.zero;
-                    if (!enemyContact) return;
-                    if (currentTimeAttack != 0f) return;
-                    Attacks();
-                    currentTimeAttack = TimeAttack;
-                    animator.SetBool(animationState.petIsRun, false);
-                }
-                else
+                if (Vector3.Distance(transform.position, playerPos.position) > distancePlayer)
                 {
                     Moving();
                     animator.SetBool(animationState.petIsRun, true);
+                }
+                else
+                {
+                    body.velocity = Vector2.zero;
+                    if (Vector2.Distance(transform.position, closestEnemy.position) < rangeAttack) return;
+                    if (!enemyContact) return;
+                    if (currentTimeAttack != 0f) return;
+                    Attacks();
+                    animator.SetBool(animationState.petIsRun, false);
+                    currentTimeAttack = TimeAttack;
                 }
             }
             else
@@ -60,14 +62,14 @@ namespace Game.Player
         private void OnTriggerStay2D(Collider2D other)
         {
             if (!other.isTrigger || !other.CompareTag("Enemy")) return;
-            closestEnemy.GetComponentInChildren<SpriteRenderer>().color = new Color(1f, 0.6f, 0.5f);
+            closestEnemy.GetComponent<SpriteRenderer>().color = new Color(1f, 0.6f, 0.5f);
             enemyContact = true;
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
             if (!other.CompareTag("Enemy")) return;
-            other.GetComponentInChildren<SpriteRenderer>().color = Color.white;
+            other.GetComponent<SpriteRenderer>().color = Color.white;
             enemyContact = false;
         }
 
@@ -92,7 +94,7 @@ namespace Game.Player
             {
                 if (!go) continue;
                 var currentDistance = Vector3.Distance(transform.position, go.transform.position);
-                if (!(currentDistance < closestDistance)) continue;
+                if (currentDistance > closestDistance) continue;
                 closestDistance = currentDistance;
                 trans = go.transform;
             }

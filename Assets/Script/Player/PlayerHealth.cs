@@ -16,6 +16,8 @@ namespace Game.Player
         [SerializeField] private GameObject uIDamagePlayer;
         private TMPro.TextMeshProUGUI txtDamage;
         private SpriteRenderer spriteRenderer;
+        [SerializeField] private Rigidbody2D body;
+        [SerializeField] private Collider2D col;
 
         private void Start()
         {
@@ -26,7 +28,7 @@ namespace Game.Player
             txtDamage = uIDamagePlayer.GetComponentInChildren<TMPro.TextMeshProUGUI>();
             if (playerData.currentHealth == 0)
             {
-                SetMaxHealth(this.playerData.heathDefault, this.playerData.hpIc);
+                SetMaxHealth(playerData.heathDefault, playerData.hpIc);
             }
             else
             {
@@ -72,6 +74,8 @@ namespace Game.Player
         public void Die()
         {
             playerData.currentHealth = 0f;
+            body.bodyType = RigidbodyType2D.Static;
+            col.enabled = false;
             if (playerData.currentHealth == 0)
             {
                 player.PlayerDeath();
@@ -102,7 +106,9 @@ namespace Game.Player
             var position = transform;
             position.position = playerDatas.position;
             petAI.position = position.up;
-            StopCoroutine(nameof(TimeDelayDeath));
+            yield return new WaitForSeconds(0.3f);
+            col.enabled = true;
+            body.bodyType = RigidbodyType2D.Dynamic;
             yield return null;
         }
 

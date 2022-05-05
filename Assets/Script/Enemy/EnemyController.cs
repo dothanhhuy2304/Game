@@ -25,7 +25,7 @@ namespace Game.Enemy
         protected PlayerHealth playerHealth;
         [SerializeField] protected Animator animator;
         [SerializeField] protected EnemyHealth enemyHealth;
-        private PlayerAudio playerAudio;
+        protected PlayerAudio playerAudio;
         protected readonly AnimationStates animationState = new AnimationStates();
 
         protected override void Start()

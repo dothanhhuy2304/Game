@@ -78,8 +78,8 @@ namespace Game.Player
         private void Update()
         {
             //if (SystemInfo.deviceType != DeviceType.Desktop) return;
+            if (playerHealth.PlayerIsDeath() || body.bodyType == RigidbodyType2D.Static) return;
             OnCollision();
-            if (playerHealth.PlayerIsDeath()) return;
             if (isHurt) return;
             mHorizontal = Input.GetAxisRaw("Horizontal");
             if (!mGrounded || mDBJump == false)
@@ -99,27 +99,19 @@ namespace Game.Player
 
         private void FixedUpdate()
         {
-            if (!playerHealth.PlayerIsDeath())
-            {
-                if (isHurt) return;
-                Move(mHorizontal * playerHealth.playerData.movingSpeed * Time.fixedDeltaTime);
+            if (playerHealth.PlayerIsDeath() || body.bodyType == RigidbodyType2D.Static) return;
+            if (isHurt) return;
+            Move(mHorizontal * playerHealth.playerData.movingSpeed * Time.fixedDeltaTime);
 
-                if (isJump)
-                {
-                    Jumps();
-                    isJump = false;
-                }
-
-                var position = transform.position;
-                position = new Vector3(Mathf.Clamp(position.x, clampMinX, clampMaxX), position.y, position.z);
-                body.transform.position = position;
-            }
-            else
+            if (isJump)
             {
-                if (isHurt) return;
-                body.velocity = new Vector2(0f, body.velocity.y);
-                PlayerRun(0f);
+                Jumps();
+                isJump = false;
             }
+
+            var position = transform.position;
+            position = new Vector3(Mathf.Clamp(position.x, clampMinX, clampMaxX), position.y, position.z);
+            body.transform.position = position;
         }
 
         private void OnCollision()

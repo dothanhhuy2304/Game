@@ -1,5 +1,3 @@
-using System;
-using Game.GamePlay;
 using UnityEngine;
 
 namespace Game.Enemy
@@ -12,12 +10,6 @@ namespace Game.Enemy
         [Space] [SerializeField] private Vector2 checkGroundPosition;
         [SerializeField] private Vector2 posAttack = Vector2.zero;
         [SerializeField] private Vector2 rangerAttack = Vector2.zero;
-        private PlayerAudio playerAudio;
-
-        private void Awake()
-        {
-            playerAudio = FindObjectOfType<PlayerAudio>();
-        }
 
         private void FixedUpdate()
         {
