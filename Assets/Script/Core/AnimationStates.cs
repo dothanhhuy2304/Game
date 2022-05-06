@@ -8,7 +8,9 @@ namespace Game.Core
 
         public readonly int playerIsJump = Animator.StringToHash("is_Jump");
 
-        public readonly int playerIsDBJump = Animator.StringToHash("is_DB_Jump");
+        public readonly int playerIsDBJump = Animator.StringToHash("is_DBJump");
+        
+        public readonly int playerJumpVelocity = Animator.StringToHash("y_velocity");
 
         public readonly int playerIsDash = Animator.StringToHash("is_Dash");
 

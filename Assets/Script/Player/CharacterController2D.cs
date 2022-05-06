@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Game.Core;
 using Game.GamePlay;
@@ -14,7 +13,7 @@ namespace Game.Player
 
         [Space] [Header("Flip")] private bool mFacingRight = true;
         private bool isDashing;
-        private bool mGrounded;
+        [SerializeField] private bool mGrounded;
         private const float GroundedRadius = .3f;
         [SerializeField] private Transform groundCheck;
         [Space] [SerializeField] private LayerMask whatIsGround;
@@ -27,8 +26,10 @@ namespace Game.Player
         private bool isOnCar;
         public bool isHurt;
         private float startSpeed;
+        private int jumpCount;
 
         private PlayerAudio playerAudio;
+
         //private DeviceManager deviceManager;
         //private UnityEngine.EventSystems.EventTrigger btnLeft, btnRight, btnJump, btnAttack;
         //private Weapon weapon;
@@ -106,7 +107,14 @@ namespace Game.Player
             if (isJump)
             {
                 Jumps();
-                isJump = false;
+            }
+
+            animator.SetFloat(animationState.playerJumpVelocity, body.velocity.y);
+
+            if (body.velocity.y < -.1f && mGrounded)
+            {
+                jumpCount = 0;
+                PlayerJump();
             }
 
             var position = transform.position;
@@ -159,29 +167,53 @@ namespace Game.Player
 
         private void Jumps()
         {
+            // isJump = false;
+            // if (mGrounded)
+            // {
+            //     jumpCount = 0;
+            //     Jump();
+            //     mDBJump = true;
+            //     isDashing = true;
+            //     playerAudio.Play("Player_Jump");
+            //     //playerAudio.Plays_13("Player_Jump");
+            //     jumpCount++;
+            // }
+            // else if (mDBJump)
+            // {
+            //     Jump();
+            //     mDBJump = false;
+            //     isDashing = true;
+            //     playerAudio.Play("Player_Jump");
+            //     //playerAudio.Plays_13("Player_Jump");
+            //     jumpCount++;
+            // }
+
+            isJump = false;
             if (mGrounded)
             {
+                jumpCount = 0;
                 Jump();
                 mDBJump = true;
                 isDashing = true;
-                playerAudio.Play("Player_Jump");
-                //playerAudio.Plays_13("Player_Jump");
+                jumpCount++;
             }
             else if (mDBJump)
             {
                 Jump();
                 mDBJump = false;
                 isDashing = true;
-                playerAudio.Play("Player_Jump");
-                //playerAudio.Plays_13("Player_Jump");
+                jumpCount++;
             }
+
+            PlayerJump();
         }
 
         private void Jump()
         {
-            PlayerJump();
+            //PlayerJump();
             body.velocity = new Vector2(body.velocity.x, 0f);
             body.AddForce(Vector2.up * playerHealth.playerData.jumpForce, ForceMode2D.Impulse);
+            playerAudio.Play("Player_Jump");
         }
 
         private void Dash(float horizontal)
@@ -208,21 +240,26 @@ namespace Game.Player
 
         private void PlayerJump()
         {
-            animator.SetTrigger(animationState.playerIsJump);
-            // if (body.velocity.y > .1f)
-            // {
-            //     animator.SetBool("Is_Jump",true);
-            // }else if (body.velocity.y < -.1f)
-            // {
-            //     animator.SetBool("Is_Falling",true);
-            // }
+            switch (jumpCount)
+            {
+                case 0:
+                    animator.SetBool(animationState.playerIsJump, false);
+                    animator.SetBool(animationState.playerIsDBJump, false);
+                    break;
+                case 1:
+                    animator.SetBool(animationState.playerIsJump, true);
+                    break;
+                case 2:
+                    animator.SetBool(animationState.playerIsJump, false);
+                    animator.SetBool(animationState.playerIsDBJump, true);
+                    break;
+            }
         }
 
         public void PlayerDeath()
         {
             animator.SetTrigger(animationState.playerIsDeath);
             playerAudio.Play("Enemy_Death");
-            //playerAudio.Plays_13("Enemy_Death");
         }
 
 
@@ -258,11 +295,10 @@ namespace Game.Player
 
         public void PlayerHurt()
         {
-            playerAudio.Play("Player_Hurt");
-            //playerAudio.Plays_10("Player_Hurt");
             animator.SetTrigger(animationState.playerIsHurt);
             body.bodyType = RigidbodyType2D.Static;
             isHurt = true;
+            playerAudio.Play("Player_Hurt");
             StartCoroutine(nameof(Hurting), 0.5f);
         }
 
@@ -287,16 +323,9 @@ namespace Game.Player
         //     yield return null;
         // }
 
-        private void OnDrawGizmos()
-        {
-            Gizmos.DrawSphere(groundCheck.position, GroundedRadius);
-        }
+        // private void OnDrawGizmos()
+        // {
+        //     Gizmos.DrawSphere(groundCheck.position, GroundedRadius);
+        // }
     }
-
-    // public enum JumpState
-    // {
-    //     Normal,
-    //     DoubleJump,
-    //     None
-    // }
 }

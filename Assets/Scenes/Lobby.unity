@@ -4651,11 +4651,11 @@ MonoBehaviour:
   - name: Enemy_Death
     audioClip: {fileID: 8300000, guid: d5160c7fd13b56c4080fb54ad2b161e3, type: 3}
     audioFX: {fileID: 0}
-    audioMixerGroup: {fileID: -7052232441672528835, guid: a3e49311117e629449a05e57f806934d, type: 2}
+    audioMixerGroup: {fileID: 2638039841184198782, guid: a3e49311117e629449a05e57f806934d, type: 2}
   - name: Item_Hurt
     audioClip: {fileID: 8300000, guid: 6dd7024f00606b44eb5884197a66a893, type: 3}
     audioFX: {fileID: 0}
-    audioMixerGroup: {fileID: -7052232441672528835, guid: a3e49311117e629449a05e57f806934d, type: 2}
+    audioMixerGroup: {fileID: 2638039841184198782, guid: a3e49311117e629449a05e57f806934d, type: 2}
   - name: Item_Heal
     audioClip: {fileID: 8300000, guid: 3f711525e7aa548438f26675e2910de2, type: 3}
     audioFX: {fileID: 0}
