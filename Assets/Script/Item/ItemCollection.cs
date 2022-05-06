@@ -10,8 +10,8 @@ namespace Game.Item
     {
         [SerializeField] private ItemType itemType;
         [SerializeField] private ItemData itemData;
-        [SerializeField] private GameObject itemObj, effectCollectedObj;
         [SerializeField] private Collider2D itemCollider;
+        [SerializeField] private Animator animator;
         private PlayerHealth playerHealth;
         private GameManager gameManager;
         private PlayerAudio playerAudio;
@@ -62,36 +62,34 @@ namespace Game.Item
 
         private void HurtItems(float value)
         {
-            itemObj.SetActive(false);
-            effectCollectedObj.SetActive(true);
+            animator.SetLayerWeight(1, 1);
             playerHealth.GetDamage(value);
             playerAudio.Play("Item_Hurt");
             itemCollider.enabled = false;
-            StartCoroutine(nameof(TemporarilyDeactivate), .8f);
+            StartCoroutine(nameof(TemporarilyDeactivate), 0.8f);
         }
 
         private void HealItems(float value)
         {
-            itemObj.SetActive(false);
-            effectCollectedObj.SetActive(true);
+            animator.SetLayerWeight(1, 1);
             playerHealth.Heal(value);
             playerAudio.Play("Item_Heal");
             itemCollider.enabled = false;
-            StartCoroutine(nameof(TemporarilyDeactivate), .8f);
+            StartCoroutine(nameof(TemporarilyDeactivate), 0.8f);
         }
 
         private void ScoreAndDiamondItems()
         {
-            itemObj.SetActive(false);
-            effectCollectedObj.SetActive(true);
+            animator.SetLayerWeight(1, 1);
             playerAudio.Play("Item_Heal");
             itemCollider.enabled = false;
-            StartCoroutine(nameof(TemporarilyDeactivate), .8f);
+            StartCoroutine(nameof(TemporarilyDeactivate), 0.8f);
         }
 
         private IEnumerator TemporarilyDeactivate(float delay)
         {
             yield return new WaitForSeconds(delay);
+            animator.SetLayerWeight(0, 1);
             gameObject.SetActive(false);
         }
     }
