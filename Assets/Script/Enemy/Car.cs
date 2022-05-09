@@ -19,7 +19,7 @@ public class Car : MonoBehaviour
     {
         if (!playerHealth.PlayerIsDeath()) return;
 
-        StartCoroutine(nameof(WaitingPlayerRespawn), 3f);
+        StartCoroutine(nameof(WaitingPlayerRespawn), 4f);
     }
 
     private System.Collections.IEnumerator WaitingPlayerRespawn(float delay)

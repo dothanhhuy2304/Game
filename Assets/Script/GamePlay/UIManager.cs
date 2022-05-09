@@ -32,19 +32,19 @@ namespace Game.GamePlay
                 Destroy(gameObject);
             }
 
-            if (!playerData.saveAudio)
+            if (!playerData.playerDataObj.saveAudio)
             {
-                playerData.soundMusic = audioMusic.volume;
-                playerData.soundEffect = playerAudio.sounds[0].audioFX.volume;
-                playerData.saveAudio = true;
+                playerData.playerDataObj.soundMusic = audioMusic.volume;
+                playerData.playerDataObj.soundEffect = playerAudio.sounds[0].audioFX.volume;
+                playerData.playerDataObj.saveAudio = true;
             }
 
-            sliderMusic.value = playerData.soundMusic;
-            sliderEffect.value = playerData.soundEffect;
-            audioMusic.volume = playerData.soundMusic;
+            sliderMusic.value = playerData.playerDataObj.soundMusic;
+            sliderEffect.value = playerData.playerDataObj.soundEffect;
+            audioMusic.volume = playerData.playerDataObj.soundMusic;
             foreach (var source in playerAudio.sounds)
             {
-                source.audioFX.volume = playerData.soundEffect;
+                source.audioFX.volume = playerData.playerDataObj.soundEffect;
             }
 
             btnBackToMenuUI.SetActive(false);
@@ -76,7 +76,7 @@ namespace Game.GamePlay
         {
             var value = sliderMusic.value;
             audioMusic.volume = value;
-            playerData.soundMusic = value;
+            playerData.playerDataObj.soundMusic = value;
         }
 
         public void ChangeVolumeEffect()
@@ -86,7 +86,7 @@ namespace Game.GamePlay
                 source.audioFX.volume = sliderEffect.value;
             }
 
-            playerData.soundEffect = sliderEffect.value;
+            playerData.playerDataObj.soundEffect = sliderEffect.value;
         }
 
         public void BackToMenu()

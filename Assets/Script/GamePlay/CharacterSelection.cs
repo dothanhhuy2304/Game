@@ -42,8 +42,8 @@ namespace Game.GamePlay
 
         public void LoadCharacter()
         {
-            playerData.characterSelection = currentCharacter;
-            loadingScreenManager.LoadingScreen(playerData.currentScenes == 0
+            playerData.playerDataObj.characterSelection = currentCharacter;
+            loadingScreenManager.LoadingScreen(playerData.playerDataObj.currentScenes == 0
                 ? loadingScreenManager.NextScreen(1)
                 : loadingScreenManager.LoadCurrentScreen());
         }

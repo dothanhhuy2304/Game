@@ -8,7 +8,7 @@ public class LoadCharacter : MonoBehaviour
 
     private void Awake()
     {
-        characters[playerData.characterSelection].SetActive(true);
+        characters[playerData.playerDataObj.characterSelection].SetActive(true);
         var playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
         var uiManager = FindObjectOfType<UIManager>().GetComponent<UIManager>();
         playerAudio.Plays_Music("Music_Game");

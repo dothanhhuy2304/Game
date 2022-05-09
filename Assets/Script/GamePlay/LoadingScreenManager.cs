@@ -16,7 +16,7 @@ public class LoadingScreenManager : MonoBehaviour
 
     public int LoadCurrentScreen()
     {
-        return player.currentScenes;
+        return player.playerDataObj.currentScenes;
     }
 
     private void Update()
@@ -27,14 +27,14 @@ public class LoadingScreenManager : MonoBehaviour
 
     public int RestartLevel()
     {
-        player.currentScenes = 0;
-        return player.currentScenes;
+        player.playerDataObj.currentScenes = 0;
+        return player.playerDataObj.currentScenes;
     }
 
     public int NextScreen(int i)
     {
-        player.currentScenes = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex + i;
-        return player.currentScenes;
+        player.playerDataObj.currentScenes = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex + i;
+        return player.playerDataObj.currentScenes;
     }
 
     private IEnumerator LoadAsyncScene(int index)

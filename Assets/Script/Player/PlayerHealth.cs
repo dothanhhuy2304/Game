@@ -80,9 +80,9 @@ namespace Game.Player
             }
 
             //save score
-            if (scoreData.currentScore > scoreData.highScore)
+            if (scoreData.scoreDataObj.currentScore > scoreData.scoreDataObj.highScore)
             {
-                scoreData.highScore = scoreData.currentScore;
+                scoreData.scoreDataObj.highScore = scoreData.scoreDataObj.currentScore;
             }
 
             StartCoroutine(nameof(TimeDelayDeath), 3f);
@@ -102,7 +102,8 @@ namespace Game.Player
             spriteRenderer.enabled = true;
             SetMaxHealth(playerData.heathDefault, playerData.hpIc);
             var position = transform;
-            position.position = playerDatas.position;
+            position.position = new Vector3(playerDatas.playerDataObj.position[0],
+                playerDatas.playerDataObj.position[1], playerDatas.playerDataObj.position[2]);
             petAI.position = position.up;
             yield return new WaitForSeconds(0.1f);
             col.enabled = true;
