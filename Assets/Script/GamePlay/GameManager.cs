@@ -109,7 +109,7 @@ namespace Game.GamePlay
             }
             else
             {
-                throw new Exception("Path not found");
+                return data;
             }
 
             return data;
