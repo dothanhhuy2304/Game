@@ -35,8 +35,6 @@ namespace Game.Player
         {
             if (!playerHealth.PlayerIsDeath())
             {
-                SetTimeAttack(ref currentTimeAttack);
-                closestEnemy = FindClosestEnemy();
                 if (Vector3.Distance(transform.position, playerPos.position) > distancePlayer)
                 {
                     Moving();
@@ -45,13 +43,16 @@ namespace Game.Player
                 else
                 {
                     body.velocity = Vector2.zero;
-                    if (Vector2.Distance(transform.position, closestEnemy.position) < rangeAttack) return;
-                    if (!enemyContact) return;
-                    if (currentTimeAttack != 0f) return;
-                    Attacks();
-                    animator.SetBool(animationState.petIsRun, false);
-                    currentTimeAttack = TimeAttack;
                 }
+
+                SetTimeAttack(ref currentTimeAttack);
+                closestEnemy = FindClosestEnemy();
+                if (!enemyContact) return;
+                if (Vector2.Distance(transform.position, closestEnemy.position) > rangeAttack) return;
+                if (currentTimeAttack != 0f) return;
+                Attacks();
+                animator.SetBool(animationState.petIsRun, false);
+                currentTimeAttack = TimeAttack;
             }
             else
             {
@@ -61,7 +62,7 @@ namespace Game.Player
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (!other.isTrigger || !other.CompareTag("Enemy")) return;
+            if (!other.CompareTag("Enemy")) return;
             closestEnemy.GetComponent<SpriteRenderer>().color = new Color(1f, 0.6f, 0.5f);
             enemyContact = true;
         }
@@ -94,9 +95,11 @@ namespace Game.Player
             {
                 if (!go) continue;
                 var currentDistance = Vector3.Distance(transform.position, go.transform.position);
-                if (currentDistance > closestDistance) continue;
-                closestDistance = currentDistance;
-                trans = go.transform;
+                if (currentDistance < closestDistance)
+                {
+                    closestDistance = currentDistance;
+                    trans = go.transform;
+                }
             }
 
             return trans;

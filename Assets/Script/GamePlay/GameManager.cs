@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
@@ -30,7 +29,7 @@ namespace Game.GamePlay
             DontDestroyOnLoad(this);
             if (LoadData<PlayerDataObj>(PlayerData) == null)
             {
-                playerData.playerDataObj.position = null;
+                playerData.playerDataObj.position = new[] {-4.95f, -4f, 0};
                 playerData.playerDataObj.characterSelection = 0;
                 playerData.playerDataObj.currentScenes = 0;
                 playerData.playerDataObj.saveAudio = false;
@@ -39,7 +38,15 @@ namespace Game.GamePlay
             }
             else
             {
-                playerData.playerDataObj.position = LoadData<PlayerDataObj>(PlayerData).position;
+                if (LoadData<PlayerDataObj>(PlayerData).position == null)
+                {
+                    playerData.playerDataObj.position = new[] {-4.95f, -4f, 0};
+                }
+                else
+                {
+                    playerData.playerDataObj.position = LoadData<PlayerDataObj>(PlayerData).position;
+                }
+
                 playerData.playerDataObj.characterSelection = LoadData<PlayerDataObj>(PlayerData).characterSelection;
                 playerData.playerDataObj.currentScenes = LoadData<PlayerDataObj>(PlayerData).currentScenes;
                 playerData.playerDataObj.saveAudio = LoadData<PlayerDataObj>(PlayerData).saveAudio;

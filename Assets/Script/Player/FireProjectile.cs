@@ -23,7 +23,7 @@ public class FireProjectile : MonoBehaviour
     {
         player = FindObjectOfType<CharacterController2D>().transform;
         playerHealth = player.GetComponent<PlayerHealth>();
-        petAI = FindObjectOfType<PetAI>()?.GetComponent<PetAI>();
+        petAI = FindObjectOfType<PetAI>().GetComponent<PetAI>();
         playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
     }
 
