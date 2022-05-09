@@ -22,8 +22,8 @@ TagManager:
   - Enemy
   - Item
   - background
-  - Bullet
-  - 
+  - BulletPlayer
+  - BulletEnemy
   - 
   - 
   - 

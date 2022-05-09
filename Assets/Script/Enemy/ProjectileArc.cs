@@ -71,8 +71,14 @@ public class ProjectileArc : BaseObject
             Arrived();
             playerAudio.Play("Enemy_Bullet_Explosion_1");
         }
+        else if (other.CompareTag("Bullet"))
+        {
+            if (body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy"))) return;
+            Arrived();
+            playerAudio.Play("Enemy_Bullet_Explosion_1");
+        }
     }
-    
+
     private System.Collections.IEnumerator TemporarilyDeactivate(float delay)
     {
         yield return new WaitForSeconds(delay);

@@ -21,7 +21,7 @@ namespace Game.Player
         private void Start()
         {
             player = GetComponent<CharacterController2D>();
-            playerHealthBar = FindObjectOfType<PlayerHealthBar>()?.GetComponent<PlayerHealthBar>();
+            playerHealthBar = FindObjectOfType<PlayerHealthBar>().GetComponent<PlayerHealthBar>();
             petAI = FindObjectOfType<PetAI>().transform;
             txtDamage = uIDamagePlayer.GetComponentInChildren<TMPro.TextMeshProUGUI>();
             if (playerData.currentHealth == 0)
@@ -73,6 +73,7 @@ namespace Game.Player
         {
             playerData.currentHealth = 0f;
             col.enabled = false;
+            player.PlayerRigidbody(false);
             if (playerData.currentHealth == 0)
             {
                 player.PlayerDeath();
@@ -97,15 +98,16 @@ namespace Game.Player
             yield return new WaitForSeconds(.6f);
             spriteRenderer.enabled = false;
             yield return new WaitForSeconds(delay);
-            col.enabled = true;
-            yield return new WaitForSeconds(0.1f);
             // ReSharper disable once Unity.InefficientPropertyAccess
             spriteRenderer.enabled = true;
             SetMaxHealth(playerData.heathDefault, playerData.hpIc);
             var position = transform;
             position.position = playerDatas.position;
             petAI.position = position.up;
-            yield return null;
+            yield return new WaitForSeconds(0.1f);
+            col.enabled = true;
+            player.PlayerRigidbody(true);
+            StopCoroutine(nameof(TimeDelayDeath));
         }
 
         private void OnApplicationQuit()

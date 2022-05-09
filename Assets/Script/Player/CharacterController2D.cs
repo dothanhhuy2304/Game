@@ -1,4 +1,3 @@
-using System.Collections;
 using Game.Core;
 using Game.GamePlay;
 using UnityEngine;
@@ -27,7 +26,6 @@ namespace Game.Player
         public bool isHurt;
         private float startSpeed;
         private int jumpCount;
-
         private PlayerAudio playerAudio;
 
         //private DeviceManager deviceManager;
@@ -80,7 +78,7 @@ namespace Game.Player
         {
             //if (SystemInfo.deviceType != DeviceType.Desktop) return;
             if (playerHealth.PlayerIsDeath() || body.bodyType == RigidbodyType2D.Static) return;
-            OnCollision();
+            OnGroundCheck();
             if (isHurt) return;
             mHorizontal = Input.GetAxisRaw("Horizontal");
             if (!mGrounded || mDBJump == false)
@@ -110,7 +108,6 @@ namespace Game.Player
             }
 
             animator.SetFloat(animationState.playerJumpVelocity, body.velocity.y);
-
             if (body.velocity.y < -.1f && mGrounded)
             {
                 jumpCount = 0;
@@ -122,15 +119,15 @@ namespace Game.Player
             body.transform.position = position;
         }
 
-        private void OnCollision()
+        private void OnGroundCheck()
         {
             mGrounded = Physics2D.OverlapCircle(groundCheck.position, GroundedRadius, whatIsGround);
         }
 
         private bool CheckHitWall()
         {
-            var transform1 = transform;
-            return Physics2D.Raycast(transform1.position, transform1.right, 0.8f,
+            var position = transform;
+            return Physics2D.Raycast(position.position, position.right, 0.8f,
                 1 << LayerMask.NameToLayer("ground"));
         }
 
@@ -262,6 +259,10 @@ namespace Game.Player
             playerAudio.Play("Enemy_Death");
         }
 
+        public void PlayerRigidbody(bool isDynamic)
+        {
+            body.bodyType = isDynamic ? RigidbodyType2D.Dynamic : RigidbodyType2D.Static;
+        }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
@@ -270,7 +271,6 @@ namespace Game.Player
                 playerHealth.playerData.movingSpeed -= 10;
             }
         }
-
 
         private void OnTriggerStay2D(Collider2D other)
         {
@@ -302,7 +302,7 @@ namespace Game.Player
             StartCoroutine(nameof(Hurting), 0.5f);
         }
 
-        private IEnumerator Hurting(float delay)
+        private System.Collections.IEnumerator Hurting(float delay)
         {
             yield return new WaitForSeconds(delay);
             body.bodyType = RigidbodyType2D.Dynamic;

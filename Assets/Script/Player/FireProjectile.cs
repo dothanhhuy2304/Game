@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using Game.Core;
 using Game.Enemy;
@@ -19,7 +18,7 @@ public class FireProjectile : MonoBehaviour
     private PlayerHealth playerHealth;
     private PetAI petAI;
     private PlayerAudio playerAudio;
-
+    
     private void Awake()
     {
         player = FindObjectOfType<CharacterController2D>().transform;
@@ -82,6 +81,12 @@ public class FireProjectile : MonoBehaviour
                     playerHealth.GetDamage(20f);
                     EnemyExplosions();
                 }
+                else if (other.CompareTag("Bullet"))
+                {
+                    if (body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy"))) return;
+                    BulletExplosions();
+                    playerAudio.Play("Player_Bullet_Explosion_1");
+                }
 
                 break;
             case EnemyType.CarnivorousPlant:
@@ -94,6 +99,12 @@ public class FireProjectile : MonoBehaviour
                     playerHealth.GetDamage(14f);
                     EnemyExplosions();
                 }
+                else if (other.CompareTag("Bullet"))
+                {
+                    if (body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy"))) return;
+                    BulletExplosions();
+                    playerAudio.Play("Player_Bullet_Explosion_1");
+                }
 
                 break;
             case EnemyType.Bee:
@@ -105,6 +116,12 @@ public class FireProjectile : MonoBehaviour
                 {
                     playerHealth.GetDamage(18f);
                     EnemyExplosions();
+                }
+                else if (other.CompareTag("Bullet"))
+                {
+                    if (body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy"))) return;
+                    BulletExplosions();
+                    playerAudio.Play("Player_Bullet_Explosion_1");
                 }
 
                 break;
@@ -122,6 +139,12 @@ public class FireProjectile : MonoBehaviour
                 {
                     Destroy(other.gameObject);
                 }
+                else if (other.CompareTag("Bullet"))
+                {
+                    if (body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletPlayer"))) return;
+                    BulletExplosions();
+                    playerAudio.Play("Player_Bullet_Explosion_1");
+                }
 
                 break;
             case EnemyType.Pet:
@@ -134,17 +157,17 @@ public class FireProjectile : MonoBehaviour
                 {
                     PlayerExplosions();
                 }
+                else if (other.CompareTag("Bullet"))
+                {
+                    if (body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletPlayer"))) return;
+                    BulletExplosions();
+                    playerAudio.Play("Player_Bullet_Explosion_1");
+                }
 
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
-
-        if (!other.CompareTag("Bullet")) return;
-        BulletExplosions();
-        playerAudio.Play("Player_Bullet_Explosion_1");
-        //playerAudio.Plays_20("Player_Bullet_Explosion_1");
-
     }
 
     private Vector2 SetAngleSNinja()
@@ -181,7 +204,7 @@ public class FireProjectile : MonoBehaviour
         StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
     }
 
-    private IEnumerator TemporarilyDeactivate(float delay)
+    private System.Collections.IEnumerator TemporarilyDeactivate(float delay)
     {
         yield return new WaitForSeconds(delay);
         gameObject.SetActive(false);
