@@ -2,17 +2,10 @@ using UnityEngine;
 
 namespace Game.Core
 {
-    public abstract class BaseObject : MonoBehaviour
+    public static class BaseObject
     {
-        protected Rigidbody2D body;
-        protected bool isVisible;
 
-        protected virtual void Start()
-        {
-            body = GetComponent<Rigidbody2D>();
-        }
-
-        protected static void SetTimeAttack(ref float currentTime)
+        public static void SetTimeAttack(ref float currentTime)
         {
             if (currentTime > 0f)
             {
@@ -22,16 +15,6 @@ namespace Game.Core
             {
                 currentTime = 0f;
             }
-        }
-
-        private void OnBecameVisible()
-        {
-            isVisible = true;
-        }
-
-        private void OnBecameInvisible()
-        {
-            isVisible = false;
         }
 
     }

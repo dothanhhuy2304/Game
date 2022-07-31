@@ -13,33 +13,29 @@ namespace Game.Item
         [SerializeField] private Collider2D itemCollider;
         [SerializeField] private Animator animator;
         private PlayerHealth playerHealth;
-        private GameManager gameManager;
-        private PlayerAudio playerAudio;
 
         private void Start()
         {
-            gameManager = FindObjectOfType<GameManager>().GetComponent<GameManager>();
-            playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
-            playerAudio = FindObjectOfType<PlayerAudio>()?.GetComponent<PlayerAudio>();
+            playerHealth = PlayerHealth.instance;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (playerHealth.PlayerIsDeath()) return;
+            if (HuyManager.PlayerIsDeath()) return;
             if (!other.CompareTag("Player")) return;
             switch (itemType)
             {
                 case ItemType.Money:
                 {
-                    gameManager.SetScore(itemData.scoreReceive);
-                    gameManager.SetMoney(itemData.moneyReceive);
+                    GameManager.instance.SetScore(itemData.scoreReceive);
+                    GameManager.instance.SetMoney(itemData.moneyReceive);
                     ScoreAndDiamondItems();
                     break;
                 }
                 case ItemType.Diamond:
                 {
-                    gameManager.SetScore(itemData.scoreReceive);
-                    gameManager.SetDiamond(itemData.diamondReceive);
+                    GameManager.instance.SetScore(itemData.scoreReceive);
+                    GameManager.instance.SetDiamond(itemData.diamondReceive);
                     ScoreAndDiamondItems();
                     break;
                 }
@@ -64,7 +60,7 @@ namespace Game.Item
         {
             animator.SetLayerWeight(1, 1);
             playerHealth.GetDamage(value);
-            playerAudio.Play("Item_Hurt");
+            AudioManager.instance.Play("Item_Hurt");
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), 0.8f);
         }
@@ -73,7 +69,7 @@ namespace Game.Item
         {
             animator.SetLayerWeight(1, 1);
             playerHealth.Heal(value);
-            playerAudio.Play("Item_Heal");
+            AudioManager.instance.Play("Item_Heal");
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), 0.8f);
         }
@@ -81,7 +77,7 @@ namespace Game.Item
         private void ScoreAndDiamondItems()
         {
             animator.SetLayerWeight(1, 1);
-            playerAudio.Play("Item_Heal");
+            AudioManager.instance.Play("Item_Heal");
             itemCollider.enabled = false;
             StartCoroutine(nameof(TemporarilyDeactivate), 0.8f);
         }

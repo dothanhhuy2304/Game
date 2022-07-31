@@ -19,12 +19,11 @@ namespace Game.Enemy
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private GameObject uIDamageEnemy;
         private TMPro.TextMeshProUGUI txtDamage;
-        private PlayerAudio playerAudio;
-        private void Awake()
+
+        private void Start()
         {
             SetMaxHealth(heathDefault, hpIc);
             txtDamage = uIDamageEnemy.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
         }
 
         private void SetMaxHealth(float maxHealths, float hpIcs)
@@ -62,10 +61,10 @@ namespace Game.Enemy
             currentHealth = 0f;
             spriteRenderer.enabled = false;
             enemyCollider.enabled = false;
-            playerAudio.Play("Enemy_Death");
+            AudioManager.instance.Play("Enemy_Death");
             if (canRespawn)
             {
-                StartCoroutine(nameof(Respawn), timeRespawn);
+                StartCoroutine(Respawn(timeRespawn));
             }
         }
 
@@ -78,7 +77,7 @@ namespace Game.Enemy
         public void EnemyRespawn()
         {
             if (canRespawn) return;
-            StartCoroutine(nameof(Respawn), timeRespawn);
+            StartCoroutine(Respawn(timeRespawn));
         }
 
         private IEnumerator Respawn(float timeDelay)

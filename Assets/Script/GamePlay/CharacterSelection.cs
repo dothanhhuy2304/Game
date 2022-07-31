@@ -11,9 +11,9 @@ namespace Game.GamePlay
         [SerializeField] private Button btnNext, btnPreview;
         private LoadingScreenManager loadingScreenManager;
 
-        private void Awake()
+        private void Start()
         {
-            loadingScreenManager = FindObjectOfType<LoadingScreenManager>().GetComponent<LoadingScreenManager>();
+            loadingScreenManager = LoadingScreenManager.instance;
             for (var i = 0; i < characters.Length; i++)
             {
                 characters[i].SetActive(i == 0);
@@ -43,9 +43,9 @@ namespace Game.GamePlay
         public void LoadCharacter()
         {
             playerData.playerDataObj.characterSelection = currentCharacter;
-            loadingScreenManager.LoadingScreen(playerData.playerDataObj.currentScenes == 0
+            loadingScreenManager.FadeLoadingScene(playerData.playerDataObj.currentScenes == 0
                 ? loadingScreenManager.NextScreen(1)
-                : loadingScreenManager.LoadCurrentScreen());
+                : LoadingScreenManager.LoadCurrentScreen());
         }
     }
 }

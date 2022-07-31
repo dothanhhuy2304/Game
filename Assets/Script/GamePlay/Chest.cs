@@ -13,14 +13,6 @@ namespace Game.GamePlay
         [SerializeField] private TMPro.TextMeshProUGUI txtValueItem;
         private int value;
         private static readonly int IsOpen = Animator.StringToHash("isOpen");
-        private GameManager gameManager;
-        private PlayerAudio playerAudio;
-
-        private void Awake()
-        {
-            gameManager = FindObjectOfType<GameManager>().GetComponent<GameManager>();
-            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
-        }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
@@ -44,12 +36,10 @@ namespace Game.GamePlay
             if (value != 0)
             {
                 txtValueItem.text = "x" + value.ToString(System.Globalization.CultureInfo.CurrentCulture);
-                gameManager.SetDiamond(value);
-                playerAudio.Play("Chest");
+                GameManager.instance.SetDiamond(value);
             }
             else
             {
-                playerAudio.Play("Item_Hurt");
                 other.GetComponent<PlayerHealth>().GetDamage(20f);
             }
 

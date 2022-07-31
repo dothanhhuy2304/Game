@@ -1,3 +1,4 @@
+using Game.Core;
 using UnityEngine;
 
 namespace Game.Enemy
@@ -31,7 +32,7 @@ namespace Game.Enemy
 
         private void FixedUpdate()
         {
-            if (playerHealth.PlayerIsDeath())
+            if (HuyManager.PlayerIsDeath())
             {
                 isRespawn = true;
             }
@@ -40,7 +41,7 @@ namespace Game.Enemy
             {
                 if (!spriteRenderer.enabled)
                 {
-                    SetTimeAttack(ref timeRespawn);
+                    BaseObject.SetTimeAttack(ref timeRespawn);
                     if (timeRespawn != 0) return;
                     body.bodyType = RigidbodyType2D.Kinematic;
                     destroy = false;
@@ -48,7 +49,7 @@ namespace Game.Enemy
                     chickenCol.enabled = true;
                     animator.enabled = true;
                     transform.position = startPos;
-                    MovingToTarget(animationState.chickenIsAttack, false);
+                    MovingToTarget("is_Run", false);
                     timeRespawn = 4f;
                 }
                 else
@@ -57,11 +58,10 @@ namespace Game.Enemy
                 }
             }
 
-            if (!isVisible) return;
             if (destroy) return;
             if (!isMoving)
             {
-                if (Vector3.Distance(transform.position, player.position) > rangeAttack) return;
+                if (Vector3.Distance(transform.position, playerCharacter.transform.position) > rangeAttack) return;
                 isMoving = true;
             }
             else
@@ -70,8 +70,8 @@ namespace Game.Enemy
                     1 << LayerMask.NameToLayer("ground"));
                 var hitRight = Physics.Raycast(transform.TransformPoint(groundCheck), Vector3.zero, 0f,
                     1 << LayerMask.NameToLayer("ground"));
-                SetTimeAttack(ref currentTime);
-                if (Vector3.Distance(transform.position, player.position) > 0.5f)
+                BaseObject.SetTimeAttack(ref currentTime);
+                if (Vector3.Distance(transform.position, playerCharacter.transform.position) > 0.5f)
                 {
                     Flip();
                 }
@@ -79,11 +79,11 @@ namespace Game.Enemy
                 if (!hit || hitRight)
                 {
                     body.velocity = Vector3.zero;
-                    animator.SetBool(animationState.chickenIsAttack, false);
+                    animator.SetBool("is_Run", false);
                 }
                 else
                 {
-                    MovingToTarget(animationState.chickenIsAttack, true);
+                    MovingToTarget("is_Run", true);
                 }
 
                 if (currentTime != 0f) return;

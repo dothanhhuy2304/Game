@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4561303245840038315}
   - component: {fileID: 4561303245840038312}
-  - component: {fileID: 4561303245840038313}
+  - component: {fileID: 5713104760908294124}
   m_Layer: 9
   m_Name: Kiwi
   m_TagString: Untagged
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &4561303245840038313
+--- !u!95 &5713104760908294124
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
@@ -150,7 +150,7 @@ MonoBehaviour:
   itemType: 3
   itemData: {fileID: 11400000, guid: a7dd95a2afeced8488f69640957f0a40, type: 2}
   itemCollider: {fileID: 4911807256140850816}
-  animator: {fileID: 4561303245840038313}
+  animator: {fileID: 5713104760908294124}
 --- !u!58 &4911807256140850816
 CircleCollider2D:
   m_ObjectHideFlags: 0

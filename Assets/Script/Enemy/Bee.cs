@@ -1,3 +1,5 @@
+using Game.Core;
+using Game.Player;
 using UnityEngine;
 
 namespace Game.Enemy
@@ -7,15 +9,15 @@ namespace Game.Enemy
 
         [SerializeField] private Vector2 posAttack = Vector2.zero;
         [SerializeField] private Vector2 rangerAttack = Vector2.zero;
-
+        
         private void Update()
         {
-            if (playerHealth.PlayerIsDeath() && enemyHealth.EnemyDeath())
+            if (HuyManager.PlayerIsDeath() && enemyHealth.EnemyDeath())
             {
                 enemyHealth.EnemyRespawn();
             }
 
-            if (playerHealth.PlayerIsDeath())
+            if (HuyManager.PlayerIsDeath())
             {
                 if (!enemyHealth.EnemyDeath())
                 {
@@ -23,21 +25,15 @@ namespace Game.Enemy
                 }
             }
 
-            if (playerHealth.PlayerIsDeath()) return;
-            SetTimeAttack(ref currentTime);
+            if (HuyManager.PlayerIsDeath()) return;
+            BaseObject.SetTimeAttack(ref currentTime);
             if (enemyHealth.EnemyDeath()) return;
-            if (!isVisible) return;
             if (!CheckAttack(transform.position + (Vector3) posAttack, rangerAttack)) return;
             Flip();
             if (currentTime != 0) return;
-            animator.SetTrigger(animationState.beeIsAttack);
+            animator.SetTrigger("isAttack");
             Attack();
             currentTime = maxTimeAttack;
         }
-
-        // private void OnDrawGizmos()
-        // {
-        //     Gizmos.DrawCube(transform.position + (Vector3) posAttack, rangerAttack);
-        // }
     }
 }

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6495266329769952015}
   - component: {fileID: 6495266329769952014}
-  - component: {fileID: 6495266329769952001}
+  - component: {fileID: 4584460138717991549}
   m_Layer: 9
   m_Name: Cherries
   m_TagString: Untagged
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &6495266329769952001
+--- !u!95 &4584460138717991549
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
@@ -150,7 +150,7 @@ MonoBehaviour:
   itemType: 0
   itemData: {fileID: 11400000, guid: 6bf677047a85df14baeb70b44838bc4a, type: 2}
   itemCollider: {fileID: 8455840115342479914}
-  animator: {fileID: 6495266329769952001}
+  animator: {fileID: 4584460138717991549}
 --- !u!58 &8455840115342479914
 CircleCollider2D:
   m_ObjectHideFlags: 0

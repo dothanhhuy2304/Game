@@ -2,81 +2,78 @@ using System.Collections;
 using System.Globalization;
 using UnityEngine;
 using Game.Core;
+using Game.GamePlay;
 
 namespace Game.Player
 {
-    public class PlayerHealth : MonoBehaviour, IHealthSystem
+    public class PlayerHealth : FastSingleton<PlayerHealth>, IHealthSystem
     {
-        [SerializeField] public Data playerData;
-        [SerializeField] public ScoreData scoreData;
-        [SerializeField] public PlayerData playerDatas;
-        [SerializeField] private CharacterController2D player;
+        [SerializeField] private ScoreData scoreData;
+        [SerializeField] private PlayerData playerDatas;
+        [SerializeField] private CharacterController2D playerCharacter;
         private PlayerHealthBar playerHealthBar;
-        private Transform petAI;
+        private PetAI petAI;
         [SerializeField] private GameObject uIDamagePlayer;
         private TMPro.TextMeshProUGUI txtDamage;
-        [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private Collider2D col;
 
         private void Start()
         {
-            player = GetComponent<CharacterController2D>();
-            playerHealthBar = FindObjectOfType<PlayerHealthBar>().GetComponent<PlayerHealthBar>();
-            petAI = FindObjectOfType<PetAI>().transform;
+            playerCharacter = CharacterController2D.instance;
+            playerHealthBar = PlayerHealthBar.instance;
+            petAI = PetAI.instance;
             txtDamage = uIDamagePlayer.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-            if (playerData.currentHealth == 0)
+            if (playerCharacter.playerData.currentHealth == 0)
             {
-                SetMaxHealth(playerData.heathDefault, playerData.hpIc);
+                SetMaxHealth(playerCharacter.playerData.heathDefault, playerCharacter.playerData.hpIc);
             }
             else
             {
                 GetCurrentHealth();
             }
+            HuyManager.SetPlayerIsDeath(0);
         }
 
         private void SetMaxHealth(float maxHealth, float hpIc)
         {
-            playerData.maxHealth = maxHealth + hpIc;
-            playerData.currentHealth = playerData.maxHealth;
-            playerHealthBar.SetHealth(playerData.currentHealth, playerData.maxHealth);
+            playerCharacter.playerData.maxHealth = maxHealth + hpIc;
+            playerCharacter.playerData.currentHealth = playerCharacter.playerData.maxHealth;
+            playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
         }
 
         private void GetCurrentHealth()
         {
-            playerHealthBar.SetHealth(playerData.currentHealth, playerData.maxHealth);
+            playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
         }
 
         public void GetDamage(float damage)
         {
-            playerData.currentHealth = Mathf.Clamp(playerData.currentHealth - damage, 0, playerData.maxHealth);
-            if (playerData.currentHealth > 0)
-            {
-                player.PlayerHurt();
+            playerCharacter.playerData.currentHealth = Mathf.Clamp(playerCharacter.playerData.currentHealth - damage, 0, playerCharacter.playerData.maxHealth);
+            if (playerCharacter.playerData.currentHealth > 0)
+            { 
+                PlayerHurt();
             }
 
-            if (playerData.currentHealth <= 0) Die();
+            if (playerCharacter.playerData.currentHealth <= 0) Die();
             txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
-            playerHealthBar.SetHealth(playerData.currentHealth, playerData.maxHealth);
+            playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
             var uIDamageInstance = Instantiate(uIDamagePlayer, transform.position + Vector3.up, Quaternion.identity);
             Destroy(uIDamageInstance, 0.5f);
         }
 
         public void Heal(float value)
         {
-            playerData.currentHealth = Mathf.Clamp(playerData.currentHealth + value, 0f, playerData.maxHealth);
-            if (playerData.currentHealth > playerData.maxHealth)
-                playerData.currentHealth = playerData.maxHealth;
-            playerHealthBar.SetHealth(playerData.currentHealth, playerData.maxHealth);
+            playerCharacter.playerData.currentHealth = Mathf.Clamp(playerCharacter.playerData.currentHealth + value, 0f, playerCharacter.playerData.maxHealth);
+            if (playerCharacter.playerData.currentHealth > playerCharacter.playerData.maxHealth)
+                playerCharacter.playerData.currentHealth = playerCharacter.playerData.maxHealth;
+            playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
         }
 
         public void Die()
         {
-            playerData.currentHealth = 0f;
-            col.enabled = false;
-            player.PlayerRigidbody(false);
-            if (playerData.currentHealth == 0)
+            playerCharacter.playerData.currentHealth = 0f;
+            if (playerCharacter.playerData.currentHealth == 0)
             {
-                player.PlayerDeath();
+                PlayAnimPlayerDeath();
             }
 
             //save score
@@ -85,35 +82,77 @@ namespace Game.Player
                 scoreData.scoreDataObj.highScore = scoreData.scoreDataObj.currentScore;
             }
 
-            StartCoroutine(nameof(TimeDelayDeath), 3f);
+            StartCoroutine(EventDeath(playerCharacter.body, playerCharacter.col, playerCharacter.animator, 3f));
+        }
+        
+        private void PlayAnimPlayerDeath()
+        {
+            playerCharacter.animator.SetTrigger("is_Death");
+            AudioManager.instance.Play("Enemy_Death");
+        }
+        
+
+        public void DieByFalling()
+        {
+            playerCharacter.playerData.currentHealth = 0f;
+            AudioManager.instance.Play("Enemy_Death");
+            HuyManager.SetPlayerIsDeath(1);
+            if (scoreData.scoreDataObj.currentScore > scoreData.scoreDataObj.highScore)
+            {
+                scoreData.scoreDataObj.highScore = scoreData.scoreDataObj.currentScore;
+            }
+
+            StartCoroutine(nameof(TimeDelayDeathFalling), 3f);
         }
 
-        public bool PlayerIsDeath()
+        private IEnumerator TimeDelayDeathFalling(float delay)
         {
-            return playerData.currentHealth <= 0f;
-        }
-
-        private IEnumerator TimeDelayDeath(float delay)
-        {
-            yield return new WaitForSeconds(.6f);
-            spriteRenderer.enabled = false;
             yield return new WaitForSeconds(delay);
-            // ReSharper disable once Unity.InefficientPropertyAccess
-            spriteRenderer.enabled = true;
-            SetMaxHealth(playerData.heathDefault, playerData.hpIc);
+            SetMaxHealth(playerCharacter.playerData.heathDefault, playerCharacter.playerData.hpIc);
+            var position = transform; position.position = new Vector3(playerDatas.playerDataObj.position[0], playerDatas.playerDataObj.position[1], playerDatas.playerDataObj.position[2]);
+            petAI.transform.position = position.up;
+            HuyManager.SetPlayerIsDeath(0);
+        }
+        
+        private IEnumerator EventDeath(Rigidbody2D body, Collider2D col, Animator animator, float durationRespawn)
+        {
+            HuyManager.SetPlayerIsDeath(1);
+            body.bodyType = RigidbodyType2D.Static;
+            col.enabled = false;
+            animator.SetLayerWeight(1, 1f);
+            AudioManager.instance.Play("Enemy_Death");
+            yield return new WaitForSeconds(0.6f);
+            yield return new WaitForSeconds(durationRespawn);
+            SetMaxHealth(playerCharacter.playerData.heathDefault, playerCharacter.playerData.hpIc);
             var position = transform;
-            position.position = new Vector3(playerDatas.playerDataObj.position[0],
-                playerDatas.playerDataObj.position[1], playerDatas.playerDataObj.position[2]);
-            petAI.position = position.up;
+            position.position = new Vector3(playerDatas.playerDataObj.position[0], playerDatas.playerDataObj.position[1], playerDatas.playerDataObj.position[2]);
+            petAI.transform.position = position.up;
+            animator.SetLayerWeight(1, 0);
+            body.bodyType = RigidbodyType2D.Dynamic;
             yield return new WaitForSeconds(0.1f);
+            HuyManager.SetPlayerIsDeath(0);
             col.enabled = true;
-            player.PlayerRigidbody(true);
-            StopCoroutine(nameof(TimeDelayDeath));
         }
 
+        public void PlayerHurt()
+        {
+            playerCharacter.animator.SetTrigger("is_Hurt");
+            playerCharacter.body.bodyType = RigidbodyType2D.Static;
+            playerCharacter.isHurt = true;
+            AudioManager.instance.Play("Player_Hurt");
+            StartCoroutine(nameof(Hurting), 0.5f);
+        }
+
+        private IEnumerator Hurting(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            playerCharacter.body.bodyType = RigidbodyType2D.Dynamic;
+            playerCharacter.isHurt = false;
+        }
+        
         private void OnApplicationQuit()
         {
-            playerData.currentHealth = 0f;
+            playerCharacter.playerData.currentHealth = 0f;
         }
     }
 }

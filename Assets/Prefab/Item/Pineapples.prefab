@@ -48,7 +48,7 @@ MonoBehaviour:
   itemType: 0
   itemData: {fileID: 11400000, guid: 8091c9539fa5f2c48af6f3fa54b87fb6, type: 2}
   itemCollider: {fileID: 2148009686765973140}
-  animator: {fileID: 5023570812618213449}
+  animator: {fileID: 556513693769161665}
 --- !u!70 &2148009686765973140
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -75,7 +75,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5023570812618213451}
   - component: {fileID: 5023570812618213448}
-  - component: {fileID: 5023570812618213449}
+  - component: {fileID: 556513693769161665}
   m_Layer: 9
   m_Name: Pineapple
   m_TagString: Untagged
@@ -148,7 +148,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &5023570812618213449
+--- !u!95 &556513693769161665
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0

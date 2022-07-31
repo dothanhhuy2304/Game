@@ -1,3 +1,5 @@
+using Game.Core;
+using Game.GamePlay;
 using UnityEngine;
 
 namespace Game.Enemy
@@ -13,12 +15,12 @@ namespace Game.Enemy
 
         private void FixedUpdate()
         {
-            if (playerHealth.PlayerIsDeath())
+            if (HuyManager.PlayerIsDeath())
             {
                 enemyHealth.ResetHeathDefault();
             }
 
-            if (enemyHealth.EnemyDeath() || !isVisible)
+            if (enemyHealth.EnemyDeath())
             {
                 body.bodyType = RigidbodyType2D.Static;
             }
@@ -39,11 +41,11 @@ namespace Game.Enemy
                         transform.Rotate(new Vector3(0, -180f, 0));
                     }
 
-                    Moving(animationState.sNinjaIsRun);
+                    Moving("isRun");
                 }
 
-                if (playerHealth.PlayerIsDeath()) return;
-                SetTimeAttack(ref currentTime);
+                if (HuyManager.PlayerIsDeath()) return;
+                BaseObject.SetTimeAttack(ref currentTime);
                 SNinjaAttack();
             }
         }
@@ -51,15 +53,15 @@ namespace Game.Enemy
         private void SNinjaAttack()
         {
             if (!CheckAttack(transform.position + (Vector3) posAttack, rangerAttack)) return;
-            if (Vector3.Distance(transform.position, player.position) <= 3f)
+            if (Vector3.Distance(transform.position, playerCharacter.transform.position) <= 3f)
             {
                 SNinjaAttackSword();
             }
             else
             {
                 Flip();
-                animator.SetBool(animationState.sNinjaIsRun, false);
-                if (playerHealth.PlayerIsDeath()) return;
+                animator.SetBool("isRun", false);
+                if (HuyManager.PlayerIsDeath()) return;
                 if (currentTime != 0f) return;
                 Attack();
                 currentTime = maxTimeAttack;
@@ -71,31 +73,26 @@ namespace Game.Enemy
             Flip();
             var hits = Physics2D.OverlapCircle(rangeAttackObj.position, radiusAttack,
                 1 << LayerMask.NameToLayer("Player"));
-            if (Vector3.Distance(transform.position, player.position) >= 2f)
+            if (Vector3.Distance(transform.position, playerCharacter.transform.position) >= 2f)
             {
-                var pos = player.position - transform.position;
+                var pos = playerCharacter.transform.position - transform.position;
                 body.velocity = pos * (35f * Time.fixedDeltaTime);
-                animator.SetBool(animationState.sNinjaIsRun, true);
+                animator.SetBool("isRun", true);
             }
             else
             {
                 body.velocity = Vector2.zero;
-                animator.SetBool(animationState.sNinjaIsRun, false);
+                animator.SetBool("isRun", false);
                 if (currentTime != 0f) return;
-                animator.SetTrigger(animationState.sNinjaIsAttack1);
+                animator.SetTrigger("isAttack1");
                 currentTime = 1.5f;
                 if (hits)
                 {
-                    playerHealth.GetDamage(21f);
+                    playerCharacter.playerHealth.GetDamage(21f);
                 }
 
-                playerAudio.Play("Enemy_Attack_Sword");
+                AudioManager.instance.Play("Enemy_Attack_Sword");
             }
         }
-
-        // private void OnDrawGizmos()
-        // {
-        //     Gizmos.DrawCube(transform.position + (Vector3) posAttack, rangerAttack);
-        // }
     }
 }

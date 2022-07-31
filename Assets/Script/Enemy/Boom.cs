@@ -7,26 +7,18 @@ public class Boom : MonoBehaviour
 {
     [SerializeField] private GameObject boomObj, explosionObj;
     [SerializeField] private Collider2D colObj;
-    private PlayerHealth playerHealth;
     [SerializeField] private float timeRespawn;
-    private PlayerAudio playerAudio;
-
-    private void Start()
-    {
-        playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
-        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
-    }
-
+    
     private void Update()
     {
-        if (!playerHealth.PlayerIsDeath()) return;
+        if (!HuyManager.PlayerIsDeath()) return;
         if (boomObj.activeSelf) return;
         StartCoroutine(nameof(RespawnObject), timeRespawn);
     }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (playerHealth.PlayerIsDeath()) return;
+        if (HuyManager.PlayerIsDeath()) return;
         if (!other.collider.CompareTag("Player")) return;
         other.collider.GetComponent<PlayerHealth>().GetDamage(30f);
         StartCoroutine(nameof(Explosion), 1f);
@@ -46,7 +38,7 @@ public class Boom : MonoBehaviour
         boomObj.SetActive(false);
         explosionObj.SetActive(true);
         colObj.enabled = false;
-        playerAudio.Play("Boom_Explosion");
+        AudioManager.instance.Play("Boom_Explosion");
         //playerAudio.Plays_20("Boom_Explosion");
         yield return new WaitForSeconds(delay);
         explosionObj.SetActive(false);

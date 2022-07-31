@@ -5,26 +5,23 @@ using Game.Enemy;
 using Game.Player;
 using Game.GamePlay;
 
-//Bug
 public class FireProjectile : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D body;
     [SerializeField] private EnemyType enemyType;
     [SerializeField] private float bulletSpeed = 10f;
     [SerializeField] private GameObject bulletPrefab, explosionPrefab;
-    private Transform player;
+    private CharacterController2D playerCharacter;
     private Vector2 target = Vector2.zero;
     private Vector2 targetPetEnemy = Vector2.zero;
     private PlayerHealth playerHealth;
     private PetAI petAI;
-    private PlayerAudio playerAudio;
-    
+
     private void Awake()
     {
-        player = FindObjectOfType<CharacterController2D>().transform;
-        playerHealth = player.GetComponent<PlayerHealth>();
-        petAI = FindObjectOfType<PetAI>().GetComponent<PetAI>();
-        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+        playerCharacter = CharacterController2D.instance;
+        playerHealth = PlayerHealth.instance;
+        petAI = PetAI.instance;
     }
 
     private void OnEnable()
@@ -85,7 +82,7 @@ public class FireProjectile : MonoBehaviour
                 {
                     if (body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy"))) return;
                     BulletExplosions();
-                    playerAudio.Play("Player_Bullet_Explosion_1");
+                    AudioManager.instance.Play("Player_Bullet_Explosion_1");
                 }
 
                 break;
@@ -103,7 +100,7 @@ public class FireProjectile : MonoBehaviour
                 {
                     if (body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy"))) return;
                     BulletExplosions();
-                    playerAudio.Play("Player_Bullet_Explosion_1");
+                    AudioManager.instance.Play("Player_Bullet_Explosion_1");
                 }
 
                 break;
@@ -121,7 +118,7 @@ public class FireProjectile : MonoBehaviour
                 {
                     if (body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy"))) return;
                     BulletExplosions();
-                    playerAudio.Play("Player_Bullet_Explosion_1");
+                    AudioManager.instance.Play("Player_Bullet_Explosion_1");
                 }
 
                 break;
@@ -132,7 +129,7 @@ public class FireProjectile : MonoBehaviour
                 }
                 else if (other.CompareTag("Enemy"))
                 {
-                    other.GetComponent<EnemyHealth>().GetDamage(playerHealth.playerData.damageAttack);
+                    other.GetComponent<EnemyHealth>().GetDamage(playerCharacter.playerData.damageAttack);
                     PlayerExplosions();
                 }
                 else if (other.CompareTag("Box"))
@@ -143,7 +140,7 @@ public class FireProjectile : MonoBehaviour
                 {
                     if (body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletPlayer"))) return;
                     BulletExplosions();
-                    playerAudio.Play("Player_Bullet_Explosion_1");
+                    AudioManager.instance.Play("Player_Bullet_Explosion_1");
                 }
 
                 break;
@@ -161,18 +158,15 @@ public class FireProjectile : MonoBehaviour
                 {
                     if (body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletPlayer"))) return;
                     BulletExplosions();
-                    playerAudio.Play("Player_Bullet_Explosion_1");
+                    AudioManager.instance.Play("Player_Bullet_Explosion_1");
                 }
-
                 break;
-            default:
-                throw new ArgumentOutOfRangeException();
         }
     }
 
     private Vector2 SetAngleSNinja()
     {
-        target = (player.position - transform.position).normalized;
+        target = (playerCharacter.transform.position - transform.position).normalized;
         return target;
     }
 
@@ -180,8 +174,7 @@ public class FireProjectile : MonoBehaviour
     {
         bulletPrefab.SetActive(false);
         explosionPrefab.SetActive(true);
-        playerAudio.Play("Player_Bullet_Explosion_1");
-        //playerAudio.Plays_20("Player_Bullet_Explosion_1");
+        AudioManager.instance.Play("Player_Bullet_Explosion_1");
         body.bodyType = RigidbodyType2D.Static;
         StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
     }
@@ -190,8 +183,7 @@ public class FireProjectile : MonoBehaviour
     {
         bulletPrefab.SetActive(false);
         explosionPrefab.SetActive(true);
-        playerAudio.Play("Player_Bullet_Explosion_1");
-        //playerAudio.Plays_20("Enemy_Bullet_Explosion_1");
+        AudioManager.instance.Play("Player_Bullet_Explosion_1");
         body.bodyType = RigidbodyType2D.Static;
         StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
     }

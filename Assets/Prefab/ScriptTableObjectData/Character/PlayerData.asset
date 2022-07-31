@@ -14,8 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerDataObj:
     characterSelection: 0
-    position: []
-    currentScenes: 0
-    saveAudio: 0
-    soundMusic: 0
-    soundEffect: 0
+    position:
+    - -4.95
+    - -4
+    - 0
+    currentScenes: 1
+    saveAudio: 1
+    soundMusic: 0.5
+    soundEffect: 1

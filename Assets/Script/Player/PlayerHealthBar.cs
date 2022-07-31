@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Player
 {
-    public class PlayerHealthBar : MonoBehaviour
+    public class PlayerHealthBar : FastSingleton<PlayerHealthBar>
     {
         [SerializeField] private UnityEngine.UI.Image fill;
         [SerializeField] private TMPro.TextMeshProUGUI txtCurrentHealth;

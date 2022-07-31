@@ -1,27 +1,25 @@
 using UnityEngine;
-using Game.Core;
 using Game.Player;
 
 //Improver
 namespace Game.Enemy
 {
-    public class WallMovement : BaseObject
+    public class WallMovement : MonoBehaviour
     {
         public float speed = 3f;
-        private Transform player;
+        private CharacterController2D character;
         private Vector2 startPos = Vector2.zero;
         [SerializeField] private Vector2 endPos = Vector2.zero;
         [SerializeField] private float timeSleep;
 
-        protected override void Start()
+        private void Start()
         {
-            player = FindObjectOfType<CharacterController2D>().transform;
+            character = CharacterController2D.instance;
             startPos = transform.position;
         }
 
         private void Update()
         {
-            if (!isVisible) return;
             transform.position = Vector2.Lerp(startPos, endPos, Mathf.PingPong(Time.time * speed, timeSleep));
         }
 
@@ -29,7 +27,7 @@ namespace Game.Enemy
         {
             if (other.collider.CompareTag("Player"))
             {
-                player.transform.parent = transform;
+                character.transform.parent = transform;
             }
         }
 
@@ -37,7 +35,7 @@ namespace Game.Enemy
         {
             if (other.collider.CompareTag("Player"))
             {
-                player.transform.parent = null;
+                character.transform.parent = null;
             }
         }
     }

@@ -2,23 +2,22 @@ using UnityEngine;
 using Game.Core;
 using Game.Player;
 
-public class Spike : BaseObject
+public class Spike : MonoBehaviour
 {
     private float timeAttack;
     [SerializeField] private float maxTimeAttack = 1f;
     private PlayerHealth playerHealth;
     private bool isHurts;
 
-    protected override void Start()
+    private void Start()
     {
-        playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
+        playerHealth = PlayerHealth.instance;
     }
 
     private void Update()
     {
-        if (!isVisible) return;
-        SetTimeAttack(ref timeAttack);
-        if (playerHealth.PlayerIsDeath()) return;
+        BaseObject.SetTimeAttack(ref timeAttack);
+        if (HuyManager.PlayerIsDeath()) return;
         if (!isHurts) return;
         if (timeAttack != 0f) return;
         playerHealth.GetDamage(20f);

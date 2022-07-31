@@ -4,28 +4,18 @@ using UnityEngine;
 
 namespace Game.GamePlay
 {
-    public class GameManager : MonoBehaviour
+    public class GameManager : FastSingleton<GameManager>
     {
         private const string ScoreData = "scoreData";
         private const string PlayerData = "playerData";
-        private static GameManager _instance;
         [SerializeField] private ScoreData scoreData;
-        [SerializeField] private PlayerData playerData;
+        public PlayerData playerData;
         [SerializeField] private TMPro.TextMeshProUGUI txtScore;
         [SerializeField] private TMPro.TextMeshProUGUI txtDiamond;
         [SerializeField] private TMPro.TextMeshProUGUI txtMoney;
 
-        private void Awake()
+        private void Start()
         {
-            if (_instance == null)
-            {
-                _instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-
             DontDestroyOnLoad(this);
             if (LoadData<PlayerDataObj>(PlayerData) == null)
             {
@@ -73,6 +63,7 @@ namespace Game.GamePlay
                 SetDiamond(LoadData<ScoreDataObj>(ScoreData).diamond);
             }
         }
+
 
         public void SetScore(float score)
         {

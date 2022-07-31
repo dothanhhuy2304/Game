@@ -9,7 +9,7 @@ namespace Game.GamePlay
         {
             if (other.CompareTag("Player"))
             {
-                other.GetComponent<PlayerHealth>().Die();
+                PlayerHealth.instance.DieByFalling();
             }
         }
     }

@@ -4,10 +4,11 @@ using Game.Core;
 namespace Game.Player
 {
 
-    public class PetAI : BaseObject
+    public class PetAI : FastSingleton<PetAI>
     {
         public Data petData;
-        private Transform playerPos;
+        private Rigidbody2D body;
+        private CharacterController2D playerPos;
         private Vector2 velocity = Vector2.zero;
         [SerializeField] private FireProjectile[] projectiles;
         [HideInInspector] public GameObject[] multipleEnemy;
@@ -19,39 +20,38 @@ namespace Game.Player
         private const float TimeAttack = 3f;
         private PlayerHealth playerHealth;
         [SerializeField] private Animator animator;
-        private readonly AnimationStates animationState = new AnimationStates();
 
-        protected override void Start()
+        private void Start()
         {
-            base.Start();
-            playerPos = FindObjectOfType<CharacterController2D>().transform;
+            body = GetComponent<Rigidbody2D>();
+            playerPos = CharacterController2D.instance;
             closestEnemy = null;
             enemyContact = false;
             multipleEnemy = GameObject.FindGameObjectsWithTag("Enemy");
-            playerHealth = playerPos.GetComponent<PlayerHealth>();
+            playerHealth = PlayerHealth.instance;
         }
 
         private void FixedUpdate()
         {
-            if (!playerHealth.PlayerIsDeath())
+            if (!HuyManager.PlayerIsDeath())
             {
-                if (Vector3.Distance(transform.position, playerPos.position) > distancePlayer)
+                if (Vector3.Distance(transform.position, playerPos.transform.position) > distancePlayer)
                 {
                     Moving();
-                    animator.SetBool(animationState.petIsRun, true);
+                    animator.SetBool("isRun", true);
                 }
                 else
                 {
                     body.velocity = Vector2.zero;
                 }
 
-                SetTimeAttack(ref currentTimeAttack);
+                BaseObject.SetTimeAttack(ref currentTimeAttack);
                 closestEnemy = FindClosestEnemy();
                 if (!enemyContact) return;
                 if (Vector2.Distance(transform.position, closestEnemy.position) > rangeAttack) return;
                 if (currentTimeAttack != 0f) return;
                 Attacks();
-                animator.SetBool(animationState.petIsRun, false);
+                animator.SetBool("isRun", false);
                 currentTimeAttack = TimeAttack;
             }
             else

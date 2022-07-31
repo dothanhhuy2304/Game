@@ -1,52 +1,74 @@
 using System.Collections;
+using Game.GamePlay;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class LoadingScreenManager : MonoBehaviour
+public class LoadingScreenManager : FastSingleton<LoadingScreenManager>
 {
-    [SerializeField] private PlayerData player;
-    [SerializeField] private GameObject uILoading;
-    private AsyncOperation loadOperation;
-    [SerializeField] private Slider slider;
-
-    public void LoadingScreen(int i)
+    [SerializeField] private GameObject uiLoading;
+    [SerializeField] private Image fillLoading;
+    private AsyncOperation async;
+    
+    public static int LoadCurrentScreen()
     {
-        StartCoroutine(nameof(LoadAsyncScene), i);
+        return GameManager.instance.playerData.playerDataObj.currentScenes;
     }
 
-    public int LoadCurrentScreen()
+    public static int RestartLevel()
     {
-        return player.playerDataObj.currentScenes;
-    }
-
-    private void Update()
-    {
-        if (!slider.IsActive()) return;
-        slider.value = loadOperation.progress;
-    }
-
-    public int RestartLevel()
-    {
-        player.playerDataObj.currentScenes = 0;
-        return player.playerDataObj.currentScenes;
+        int currentScene = GameManager.instance.playerData.playerDataObj.currentScenes = 0;
+        return currentScene;
     }
 
     public int NextScreen(int i)
     {
-        player.playerDataObj.currentScenes = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex + i;
-        return player.playerDataObj.currentScenes;
+        int currentScene = GameManager.instance.playerData.playerDataObj.currentScenes =
+            SceneManager.GetActiveScene().buildIndex + i;
+        return currentScene;
     }
 
-    private IEnumerator LoadAsyncScene(int index)
+    public void FadeLoadingScene(int sceneIndex)
     {
-        loadOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(index);
-        uILoading.SetActive(true);
-        loadOperation.allowSceneActivation = false;
-        while (!loadOperation.isDone)
+        uiLoading.SetActive(true);
+        fillLoading.fillAmount = 0f;
+        StartCoroutine(DelayFrameToLoadScene(sceneIndex));
+
+    }
+
+    private IEnumerator DelayFrameToLoadScene(int sceneIndex)
+    {
+        yield return null;
+        async = SceneManager.LoadSceneAsync(sceneIndex);
+        StartCoroutine(IEFadeIn());
+    }
+
+    private IEnumerator IEFadeIn()
+    {
+        if (async != null)
         {
-            loadOperation.allowSceneActivation = true;
-            yield return new WaitForSeconds(1f);
-            uILoading.SetActive(false);
+            while (!async.isDone)
+            {
+                fillLoading.fillAmount = async.progress / 0.9f;
+                yield return null;
+            }
         }
+        else
+        {
+            float t = 0f;
+            float time = 5f;
+            while (t < time)
+            {
+                t += Time.deltaTime;
+                float percentage = t / time;
+                percentage = percentage > 1 ? 1 : percentage;
+                fillLoading.fillAmount = percentage / 2;
+                yield return null;
+            }
+        }
+
+        yield return 0.5f;
+        uiLoading.SetActive(false);
+        yield return null;
     }
 }

@@ -3,13 +3,11 @@ using Game.Player;
 
 public class Car : MonoBehaviour
 {
-    private PlayerHealth playerHealth;
     [SerializeField] private Transform[] carTrans;
     [SerializeField] private Vector3[] currentPos;
 
     private void Start()
     {
-        playerHealth = FindObjectOfType<PlayerHealth>().GetComponent<PlayerHealth>();
         currentPos[0] = carTrans[0].position;
         currentPos[1] = carTrans[1].position;
         currentPos[2] = carTrans[2].position;
@@ -17,8 +15,7 @@ public class Car : MonoBehaviour
 
     private void Update()
     {
-        if (!playerHealth.PlayerIsDeath()) return;
-
+        if (!HuyManager.PlayerIsDeath()) return;
         StartCoroutine(nameof(WaitingPlayerRespawn), 4f);
     }
 

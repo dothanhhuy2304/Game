@@ -1,3 +1,4 @@
+using Game.Core;
 using UnityEngine;
 
 namespace Game.Enemy
@@ -10,12 +11,12 @@ namespace Game.Enemy
 
         private void Update()
         {
-            if (playerHealth.PlayerIsDeath() && enemyHealth.EnemyDeath())
+            if (HuyManager.PlayerIsDeath() && enemyHealth.EnemyDeath())
             {
                 enemyHealth.EnemyRespawn();
             }
 
-            if (playerHealth.PlayerIsDeath())
+            if (HuyManager.PlayerIsDeath())
             {
                 if (!enemyHealth.EnemyDeath())
                 {
@@ -23,21 +24,16 @@ namespace Game.Enemy
                 }
             }
 
-            if (playerHealth.PlayerIsDeath()) return;
-            SetTimeAttack(ref currentTime);
+            if (HuyManager.PlayerIsDeath()) return;
+            BaseObject.SetTimeAttack(ref currentTime);
             if (enemyHealth.EnemyDeath()) return;
-            if (!isVisible) return;
             if (!CheckAttack(transform.position + (Vector3) posAttack, rangerAttack)) return;
             Flip();
             if (currentTime != 0) return;
-            animator.SetTrigger(animationState.trunkIsAttack);
+            animator.SetTrigger("isAttack");
             Attack();
             currentTime = maxTimeAttack;
         }
 
-        // private void OnDrawGizmos()
-        // {
-        //     Gizmos.DrawCube(transform.position + (Vector3) posAttack, rangerAttack);
-        // }
     }
 }

@@ -1,7 +1,6 @@
-using Game.Core;
 using UnityEngine;
 
-public class SawPatrol : BaseObject
+public class SawPatrol : MonoBehaviour
 {
     [SerializeField] private bool useLerp;
     [SerializeField] private Vector2[] listPoint;
@@ -10,7 +9,6 @@ public class SawPatrol : BaseObject
 
     private void Update()
     {
-        if (!isVisible) return;
         if (useLerp)
         {
             transform.position = Vector2.Lerp(transform.position, listPoint[currentPoint], speed * Time.deltaTime);

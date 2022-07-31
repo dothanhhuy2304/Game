@@ -7,9 +7,9 @@ namespace Game.GamePlay
         [SerializeField] private GameObject uiGuide;
         private LoadingScreenManager loadingScreenManager;
 
-        private void Awake()
+        private void Start()
         {
-            loadingScreenManager = FindObjectOfType<LoadingScreenManager>().GetComponent<LoadingScreenManager>();
+            loadingScreenManager = LoadingScreenManager.instance;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -23,7 +23,7 @@ namespace Game.GamePlay
             if (!other.CompareTag("Player")) return;
             if (Input.GetKey(KeyCode.F))
             {
-                loadingScreenManager.LoadingScreen(loadingScreenManager.NextScreen(1));
+                loadingScreenManager.FadeLoadingScene(loadingScreenManager.NextScreen(1));
             }
         }
 

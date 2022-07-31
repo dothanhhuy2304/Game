@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2491257784207205569}
   - component: {fileID: 2491257784207205568}
-  - component: {fileID: 2491257784207205631}
+  - component: {fileID: 5959942050923516927}
   m_Layer: 9
   m_Name: Strawberry
   m_TagString: Untagged
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &2491257784207205631
+--- !u!95 &5959942050923516927
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
@@ -150,7 +150,7 @@ MonoBehaviour:
   itemType: 0
   itemData: {fileID: 11400000, guid: 13a5d5efef5975544b0cf07cc09fd8b3, type: 2}
   itemCollider: {fileID: 6465029290852553197}
-  animator: {fileID: 2491257784207205631}
+  animator: {fileID: 5959942050923516927}
 --- !u!58 &6465029290852553197
 CircleCollider2D:
   m_ObjectHideFlags: 0

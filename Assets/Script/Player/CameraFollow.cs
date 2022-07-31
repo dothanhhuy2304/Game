@@ -4,25 +4,25 @@ namespace Game.Player
 {
     public class CameraFollow : MonoBehaviour
     {
-        private Transform playerPosition;
+        private CharacterController2D playerPosition;
         [SerializeField] private float smoothValue = 2f;
         [SerializeField] private float posX = 2f;
         [SerializeField] private float posY = 1f;
         private Vector3 targetPos = Vector3.zero;
-        private PlayerHealth playerHealth;
 
         private void Start()
         {
-            playerPosition = FindObjectOfType<CharacterController2D>().transform;
-            playerHealth = playerPosition.GetComponent<PlayerHealth>();
+            playerPosition = CharacterController2D.instance;
         }
 
         private void LateUpdate()
         {
-            if (playerHealth.PlayerIsDeath()) return;
-            var position = playerPosition.position;
-            targetPos = new Vector3(position.x + posX, position.y + posY, -10f);
-            transform.position = Vector3.Lerp(transform.position, targetPos, smoothValue * Time.deltaTime);
+            if (!HuyManager.PlayerIsDeath())
+            {
+                var position = playerPosition.transform.position;
+                targetPos = new Vector3(position.x + posX, position.y + posY, -10f);
+                transform.position = Vector3.Lerp(transform.position, targetPos, smoothValue * Time.deltaTime);
+            }
         }
     }
 }

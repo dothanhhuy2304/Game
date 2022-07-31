@@ -2,7 +2,7 @@ using UnityEngine;
 using Game.Core;
 using Game.Player;
 
-public class SpikeHead : BaseObject
+public class SpikeHead : MonoBehaviour
 {
     private Vector3 startPos;
     [SerializeField] private Vector2 endPos = Vector2.zero;
@@ -11,22 +11,21 @@ public class SpikeHead : BaseObject
     private float timeAttack;
     [SerializeField] private float resetTimeAttack = 2f;
 
-    private void Awake()
+    private void Start()
     {
         startPos = transform.position;
     }
 
     private void Update()
     {
-        if (!isVisible) return;
         transform.position = Vector2.Lerp(startPos, endPos, Mathf.PingPong(Time.time * speed, timeSleep));
-        SetTimeAttack(ref timeAttack);
+        BaseObject.SetTimeAttack(ref timeAttack);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
-        if (other.GetComponent<PlayerHealth>().PlayerIsDeath()) return;
+        if (HuyManager.PlayerIsDeath()) return;
         if (timeAttack != 0) return;
         other.GetComponent<PlayerHealth>().GetDamage(20f);
         timeAttack = resetTimeAttack;

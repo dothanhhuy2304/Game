@@ -1,14 +1,16 @@
-using Game.Core;
 using Game.GamePlay;
 using UnityEngine;
 
 namespace Game.Player
 {
-    public class CharacterController2D : BaseObject
+    public class CharacterController2D : FastSingleton<CharacterController2D>
     {
+        public Rigidbody2D body;
+        public Collider2D col;
+        public Data playerData;
         [Header("Movement")] private const float MovementSmoothing = .05f;
         private Vector2 velocity = Vector2.zero;
-        private float mHorizontal;
+        private float playerInput;
 
         [Space] [Header("Flip")] private bool mFacingRight = true;
         private bool isDashing;
@@ -16,129 +18,87 @@ namespace Game.Player
         private const float GroundedRadius = .3f;
         [SerializeField] private Transform groundCheck;
         [Space] [SerializeField] private LayerMask whatIsGround;
-        private bool isJump;
+        [SerializeField] private bool isJump;
         private bool mDBJump;
-        [SerializeField] private Animator animator;
+        public Animator animator;
         [SerializeField] private float clampMinX, clampMaxX;
-        [SerializeField] private PlayerHealth playerHealth;
-        private readonly AnimationStates animationState = new AnimationStates();
+        [HideInInspector] public PlayerHealth playerHealth;
         private bool isOnCar;
         public bool isHurt;
         private float startSpeed;
         private int jumpCount;
-        private PlayerAudio playerAudio;
-
-        //private DeviceManager deviceManager;
-        //private UnityEngine.EventSystems.EventTrigger btnLeft, btnRight, btnJump, btnAttack;
-        //private Weapon weapon;
-
-        protected override void Start()
+        private bool onWall;
+        
+        private void Start()
         {
-            base.Start();
-            startSpeed = playerHealth.playerData.movingSpeed;
-            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
-            //deviceManager = FindObjectOfType<DeviceManager>().GetComponent<DeviceManager>();
-            //weapon = GetComponent<Weapon>();
-            //OnControl();
+            playerHealth = PlayerHealth.instance;
+            startSpeed = playerData.movingSpeed;
         }
-
-        // private void OnControl()
-        // {
-        //     btnLeft = deviceManager.btnLeft.GetComponent<EventTrigger>();
-        //     btnRight = deviceManager.btnRight.GetComponent<EventTrigger>();
-        //     btnJump = deviceManager.btnJump.GetComponent<EventTrigger>();
-        //     btnAttack = deviceManager.btnAttack.GetComponent<EventTrigger>();
-        //     var eventBtnLeft = new EventTrigger.Entry();
-        //     var eventBtnLeftUp = new EventTrigger.Entry();
-        //     var eventBtnRight = new EventTrigger.Entry();
-        //     var eventBtnRightUp = new EventTrigger.Entry();
-        //     var eventBtnJump = new EventTrigger.Entry();
-        //     var eventBtnAttack = new EventTrigger.Entry();
-        //     eventBtnLeft.eventID = EventTriggerType.PointerDown;
-        //     eventBtnLeftUp.eventID = EventTriggerType.PointerUp;
-        //     eventBtnRight.eventID = EventTriggerType.PointerDown;
-        //     eventBtnRightUp.eventID = EventTriggerType.PointerUp;
-        //     eventBtnJump.eventID = EventTriggerType.PointerDown;
-        //     eventBtnAttack.eventID = EventTriggerType.PointerDown;
-        //     eventBtnLeft.callback.AddListener(t => { MobileMove(-1); });
-        //     eventBtnLeftUp.callback.AddListener(t => { MobileMove(0); });
-        //     eventBtnRight.callback.AddListener(t => { MobileMove(1); });
-        //     eventBtnRightUp.callback.AddListener(t => { MobileMove(0); });
-        //     eventBtnJump.callback.AddListener(t => { Jumps(); });
-        //     eventBtnAttack.callback.AddListener(t => { weapon.Attacks(); });
-        //     btnLeft.triggers.Add(eventBtnLeft);
-        //     btnLeft.triggers.Add(eventBtnLeftUp);
-        //     btnRight.triggers.Add(eventBtnRight);
-        //     btnRight.triggers.Add(eventBtnRightUp);
-        //     btnJump.triggers.Add(eventBtnJump);
-        //     btnAttack.triggers.Add(eventBtnAttack);
-        // }
 
         private void Update()
         {
-            //if (SystemInfo.deviceType != DeviceType.Desktop) return;
-            if (playerHealth.PlayerIsDeath() || body.bodyType == RigidbodyType2D.Static) return;
-            OnGroundCheck();
-            if (isHurt) return;
-            mHorizontal = Input.GetAxisRaw("Horizontal");
-            if (!mGrounded || mDBJump == false)
+            if (!HuyManager.PlayerIsDeath())
             {
-                if (Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1) && isDashing)
+                if (!isHurt)
                 {
-                    Dash(mHorizontal);
+                    GetInput();
+                    if (!mGrounded || mDBJump == false)
+                    {
+                        if (Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1) && isDashing)
+                        {
+                            Dash(playerInput);
+                        }
+                    }
                 }
             }
+        }
 
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                isJump = true;
-                //Jumps();
-            }
+        void GetInput()
+        {
+        #if UNITY_EDITOR || UNITY_STANDALONE
+            playerInput = Input.GetAxisRaw("Horizontal");
+            isJump |= Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow);
+        #elif !UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
+             playerInput = Input.GetAxisRaw("Vertical");
+             isJump |= Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow);
+        #endif
         }
 
         private void FixedUpdate()
         {
-            if (playerHealth.PlayerIsDeath() || body.bodyType == RigidbodyType2D.Static) return;
-            if (isHurt) return;
-            Move(mHorizontal * playerHealth.playerData.movingSpeed * Time.fixedDeltaTime);
-
-            if (isJump)
+            if (!HuyManager.PlayerIsDeath())
             {
-                Jumps();
+                if (!isHurt)
+                {
+                    Move(playerInput * playerData.movingSpeed * Time.fixedDeltaTime);
+
+                    if (isJump)
+                    {
+                        isJump = false;
+                        Jumps();
+                    }
+
+                    animator.SetFloat("y_velocity", body.velocity.y);
+                    if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
+                    {
+                        jumpCount = 0;
+                        AnimPlayerJump();
+                    }
+
+                    Vector3 position = transform.position;
+                    position = new Vector3(Mathf.Clamp(position.x, clampMinX, clampMaxX), position.y, position.z);
+                    body.transform.position = position;
+                }
             }
-
-            animator.SetFloat(animationState.playerJumpVelocity, body.velocity.y);
-            if (body.velocity.y < -.1f && mGrounded)
-            {
-                jumpCount = 0;
-                PlayerJump();
-            }
-
-            var position = transform.position;
-            position = new Vector3(Mathf.Clamp(position.x, clampMinX, clampMaxX), position.y, position.z);
-            body.transform.position = position;
-        }
-
-        private void OnGroundCheck()
-        {
-            mGrounded = Physics2D.OverlapCircle(groundCheck.position, GroundedRadius, whatIsGround);
-        }
-
-        private bool CheckHitWall()
-        {
-            var position = transform;
-            return Physics2D.Raycast(position.position, position.right, 0.8f,
-                1 << LayerMask.NameToLayer("ground"));
         }
 
         private void Move(float move)
         {
-            var position = body.velocity;
+            Vector3 position = body.velocity;
             body.velocity = Vector2.SmoothDamp(position, new Vector2(move * 10f, position.y), ref velocity,
                 MovementSmoothing);
 
-            //PlayerRun(!isOnCar ? Mathf.Abs(move) : 0f);
-            if (isOnCar || CheckHitWall())
+            if (isOnCar || onWall)
             {
                 PlayerRun(0f);
             }
@@ -159,63 +119,73 @@ namespace Game.Player
 
         private void MobileMove(float move)
         {
-            mHorizontal = move;
+            playerInput = move;
         }
 
         private void Jumps()
         {
-            // isJump = false;
-            // if (mGrounded)
-            // {
-            //     jumpCount = 0;
-            //     Jump();
-            //     mDBJump = true;
-            //     isDashing = true;
-            //     playerAudio.Play("Player_Jump");
-            //     //playerAudio.Plays_13("Player_Jump");
-            //     jumpCount++;
-            // }
-            // else if (mDBJump)
-            // {
-            //     Jump();
-            //     mDBJump = false;
-            //     isDashing = true;
-            //     playerAudio.Play("Player_Jump");
-            //     //playerAudio.Plays_13("Player_Jump");
-            //     jumpCount++;
-            // }
-
-            isJump = false;
             if (mGrounded)
             {
-                jumpCount = 0;
                 Jump();
                 mDBJump = true;
                 isDashing = true;
-                jumpCount++;
             }
             else if (mDBJump)
             {
                 Jump();
                 mDBJump = false;
                 isDashing = true;
-                jumpCount++;
             }
 
-            PlayerJump();
+            AnimPlayerJump();
         }
+
 
         private void Jump()
         {
-            //PlayerJump();
-            body.velocity = new Vector2(body.velocity.x, 0f);
-            body.AddForce(Vector2.up * playerHealth.playerData.jumpForce, ForceMode2D.Impulse);
-            playerAudio.Play("Player_Jump");
+            if (mGrounded || jumpCount < 2f)
+            {
+                body.velocity = new Vector2(body.velocity.x, 0f);
+                body.AddForce(Vector2.up * playerData.jumpForce, ForceMode2D.Impulse);
+                AudioManager.instance.Play("Player_Jump");
+                jumpCount++;
+            }
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            EvaluateCollision(other);
+        }
+
+        private void OnCollisionStay2D(Collision2D other)
+        {
+            EvaluateCollision(other);
+        }
+        
+        private void OnCollisionExit2D(Collision2D other)
+        {
+            mGrounded = false;
+        }
+
+        private void EvaluateCollision(Collision2D collision2D)
+        {
+            bool isWall = false;
+            for (int i = 0; i < collision2D.contactCount; i++)
+            {
+                Vector3 normal = collision2D.GetContact(i).normal;
+                mGrounded |= normal.y > 0.6f;
+                if (!collision2D.collider.CompareTag("ground"))
+                {
+                    isWall = true;
+                }
+            }
+
+            onWall = isWall;
         }
 
         private void Dash(float horizontal)
         {
-            body.AddForce(Vector2.right * (horizontal * playerHealth.playerData.dashSpeed), ForceMode2D.Impulse);
+            body.AddForce(Vector2.right * (horizontal * playerData.dashSpeed), ForceMode2D.Impulse);
             isDashing = false;
         }
 
@@ -229,46 +199,34 @@ namespace Game.Player
             transform.Rotate(0f, 180f, 0f);
         }
 
-        //Animator
         private void PlayerRun(float speed)
         {
-            animator.SetFloat(animationState.playerRun, speed);
+            animator.SetFloat("m_Run", speed);
         }
 
-        private void PlayerJump()
+        private void AnimPlayerJump()
         {
             switch (jumpCount)
             {
                 case 0:
-                    animator.SetBool(animationState.playerIsJump, false);
-                    animator.SetBool(animationState.playerIsDBJump, false);
+                    animator.SetBool("is_Jump", false);
+                    animator.SetBool("is_DBJump", false);
                     break;
                 case 1:
-                    animator.SetBool(animationState.playerIsJump, true);
+                    animator.SetBool("is_Jump", true);
                     break;
                 case 2:
-                    animator.SetBool(animationState.playerIsJump, false);
-                    animator.SetBool(animationState.playerIsDBJump, true);
+                    animator.SetBool("is_Jump", false);
+                    animator.SetBool("is_DBJump", true);
                     break;
             }
-        }
-
-        public void PlayerDeath()
-        {
-            animator.SetTrigger(animationState.playerIsDeath);
-            playerAudio.Play("Enemy_Death");
-        }
-
-        public void PlayerRigidbody(bool isDynamic)
-        {
-            body.bodyType = isDynamic ? RigidbodyType2D.Dynamic : RigidbodyType2D.Static;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.CompareTag("Grass"))
             {
-                playerHealth.playerData.movingSpeed -= 10;
+                playerData.movingSpeed -= 10;
             }
         }
 
@@ -289,24 +247,8 @@ namespace Game.Player
 
             if (other.CompareTag("Grass"))
             {
-                playerHealth.playerData.movingSpeed = startSpeed;
+                playerData.movingSpeed = startSpeed;
             }
-        }
-
-        public void PlayerHurt()
-        {
-            animator.SetTrigger(animationState.playerIsHurt);
-            body.bodyType = RigidbodyType2D.Static;
-            isHurt = true;
-            playerAudio.Play("Player_Hurt");
-            StartCoroutine(nameof(Hurting), 0.5f);
-        }
-
-        private System.Collections.IEnumerator Hurting(float delay)
-        {
-            yield return new WaitForSeconds(delay);
-            body.bodyType = RigidbodyType2D.Dynamic;
-            isHurt = false;
         }
 
         // public IEnumerator KnockBack(float knockDuration, float knockPower, Vector3 knockDir)
@@ -327,5 +269,6 @@ namespace Game.Player
         // {
         //     Gizmos.DrawSphere(groundCheck.position, GroundedRadius);
         // }
+
     }
 }

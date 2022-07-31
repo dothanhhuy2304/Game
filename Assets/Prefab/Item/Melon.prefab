@@ -48,7 +48,7 @@ MonoBehaviour:
   itemType: 0
   itemData: {fileID: 11400000, guid: 63f4535355509e84ab52ab150e191f4a, type: 2}
   itemCollider: {fileID: 7634576781835877160}
-  animator: {fileID: 7545538385439454091}
+  animator: {fileID: 917373922067439928}
 --- !u!70 &7634576781835877160
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -75,7 +75,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7545538385439454101}
   - component: {fileID: 7545538385439454090}
-  - component: {fileID: 7545538385439454091}
+  - component: {fileID: 917373922067439928}
   m_Layer: 9
   m_Name: Melon
   m_TagString: Untagged
@@ -148,7 +148,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &7545538385439454091
+--- !u!95 &917373922067439928
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0

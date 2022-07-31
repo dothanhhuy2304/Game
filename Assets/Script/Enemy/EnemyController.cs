@@ -7,9 +7,10 @@ using Game.GamePlay;
 namespace Game.Enemy
 {
     //Bug
-    public abstract class EnemyController : BaseObject
+    public abstract class EnemyController : MonoBehaviour
     {
         [Header("Types")] [SerializeField] protected EnemyType enemyType;
+        public Rigidbody2D body;
         [SerializeField] protected bool canMoving;
         [SerializeField] private float movingSpeed;
 
@@ -17,23 +18,18 @@ namespace Game.Enemy
         private FireProjectile[] projectiles;
 
         [SerializeField] private ProjectileArc[] projectileArcs;
-        protected Transform player;
+        public CharacterController2D playerCharacter;
         [SerializeField] private float offsetFlip;
         [Space] [Header("Time")] protected float currentTime;
         [SerializeField] protected float maxTimeAttack;
         [SerializeField] private Transform offsetAttack;
-        protected PlayerHealth playerHealth;
         [SerializeField] protected Animator animator;
         [SerializeField] protected EnemyHealth enemyHealth;
-        protected PlayerAudio playerAudio;
-        protected readonly AnimationStates animationState = new AnimationStates();
 
-        protected override void Start()
+        private void Start()
         {
-            base.Start();
-            player = FindObjectOfType<CharacterController2D>().transform;
-            playerHealth = player.GetComponent<PlayerHealth>();
-            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+            body = GetComponent<Rigidbody2D>();
+            playerCharacter = CharacterController2D.instance;
         }
 
         //protected virtual void FixedUpdate()
@@ -106,16 +102,16 @@ namespace Game.Enemy
         //     SetTimeAttack(ref currentTime);
         // }
 
-        protected void Moving(int states)
+        protected void Moving(string states)
         {
             body.velocity = body.transform.right * movingSpeed;
             animator.SetBool(states, true);
         }
 
-        protected void MovingToTarget(int states, bool value)
+        protected void MovingToTarget(string states, bool value)
         {
-            var target = new Vector3(player.position.x - transform.position.x, 0f, 0f).normalized;
-            if (Vector2.Distance(player.transform.position, transform.position) > 1f)
+            var target = new Vector3(playerCharacter.transform.position.x - transform.position.x, 0f, 0f).normalized;
+            if (Vector2.Distance(playerCharacter.transform.position, transform.position) > 1f)
             {
                 body.MovePosition(body.transform.position + target * (movingSpeed * Time.fixedDeltaTime));
             }
@@ -134,10 +130,8 @@ namespace Game.Enemy
                 body.velocity = Vector2.zero;
             }
 
-            var target = (player.position - transform.position).normalized;
-            transform.rotation =
-                Quaternion.Euler(new Vector3(0f, Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg + offsetFlip, 0f));
-            //transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            var target = (playerCharacter.transform.position - transform.position).normalized;
+            transform.rotation = Quaternion.Euler(new Vector3(0f, Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg + offsetFlip, 0f));
         }
 
         protected static bool CheckAttack(Vector2 point, Vector2 size)
@@ -147,7 +141,7 @@ namespace Game.Enemy
 
         protected void Attack()
         {
-            if (playerHealth.PlayerIsDeath() || enemyHealth.EnemyDeath()) return;
+            if (HuyManager.PlayerIsDeath() || enemyHealth.EnemyDeath()) return;
             StartCoroutine(DurationAttack(0.5f));
         }
 
@@ -192,21 +186,16 @@ namespace Game.Enemy
             projectiles[FindBullet()].transform.position = offsetAttack.position;
             projectiles[FindBullet()].transform.rotation = transform.rotation;
             projectiles[FindBullet()].SetActives();
-            playerAudio.Play("Enemy_Attack_Shoot");
-            //Instantiate(prefab, transform.TransformPoint(offsetAttack), transform.rotation);
+            AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
 
         private void AttackBulletDirection()
         {
-            var directionToPlayer = (player.position - transform.position).normalized;
-            //var lookRotation = Quaternion.LookRotation(Vector3.forward, directionVector);
-            //projectiles[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f, lookRotation.eulerAngles.z + 90f);
+            var directionToPlayer = (playerCharacter.transform.position - transform.position).normalized;
             projectiles[FindBullet()].transform.position = offsetAttack.position;
-            projectiles[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f,
-                Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg);
+            projectiles[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg);
             projectiles[FindBullet()].SetActives();
-            playerAudio.Play("Enemy_Attack_Shoot");
-            //Instantiate(prefab, transform.TransformPoint(offsetAttack), Quaternion.Euler(transform.rotation.x, transform.rotation.y, lookRotation.eulerAngles.z + 90));
+            AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
 
         private void AttackBulletArc()
@@ -214,7 +203,7 @@ namespace Game.Enemy
             projectileArcs[FindBulletArc()].transform.rotation = Quaternion.identity;
             projectileArcs[FindBulletArc()].transform.position = offsetAttack.position;
             projectileArcs[FindBulletArc()].SetActives();
-            playerAudio.Play("Enemy_Attack_Shoot");
+            AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
 
         private int FindBullet()
@@ -238,12 +227,5 @@ namespace Game.Enemy
 
             return 0;
         }
-
-        //void OnDrawGizmos()
-        //{
-        //Gizmos.DrawSphere(rangeAttackObj.position, radiusAttack);
-        //Gizmos.DrawSphere(transform.position, 2f);
-        //Gizmos.DrawSphere(offsetAttack,0.3f);
-        //}
     }
 }

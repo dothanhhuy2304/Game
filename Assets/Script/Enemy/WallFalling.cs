@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using Game.Player;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class WallFalling : MonoBehaviour
@@ -8,22 +7,16 @@ public class WallFalling : MonoBehaviour
     [SerializeField] private Rigidbody2D body;
     [SerializeField] private Collider2D colliders;
     [Range(0f, 10f)] [SerializeField] private float timeFalling;
-    private PlayerHealth playerHealth;
     private Vector2 startPos;
 
-    private void Awake()
+    private void Start()
     {
         startPos = transform.position;
     }
 
-    private void Start()
-    {
-        playerHealth = FindObjectOfType<PlayerHealth>()?.GetComponent<PlayerHealth>();
-    }
-
     private void FixedUpdate()
     {
-        if (!playerHealth.PlayerIsDeath()) return;
+        if (!HuyManager.PlayerIsDeath()) return;
         StartCoroutine(nameof(WaitingReset));
     }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Player
 {
-    public class Weapon : BaseObject
+    public class Weapon : MonoBehaviour
     {
         [SerializeField] private FireProjectile[] projectiles;
         [SerializeField] private Vector2 offset;
@@ -12,22 +12,20 @@ namespace Game.Player
         private CharacterController2D players;
         private float timeAttack;
         [SerializeField] private float resetTimeAttack = 0.5f;
-        private PlayerAudio playerAudio;
 
-        protected override void Start()
+        private void Start()
         {
-            playerHealth = GetComponent<PlayerHealth>();
-            players = GetComponent<CharacterController2D>();
-            playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+            playerHealth = PlayerHealth.instance;
+            players = CharacterController2D.instance;
             timeAttack = 0f;
         }
 
         private void LateUpdate()
         {
-            SetTimeAttack(ref timeAttack);
+            BaseObject.SetTimeAttack(ref timeAttack);
             if (timeAttack != 0) return;
             if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() ||
-                playerHealth.PlayerIsDeath()) return;
+                HuyManager.PlayerIsDeath()) return;
             if (players.isHurt) return;
             if (!Input.GetMouseButtonDown(0) && !Input.GetKeyDown(KeyCode.KeypadEnter)) return;
             Attacks();
@@ -42,11 +40,10 @@ namespace Game.Player
 
         private void Bullet()
         {
-            //Instantiate(fireObj, transform.TransformPoint(offset), transform.rotation);
             projectiles[FindBullet()].transform.position = transform.TransformPoint(offset);
             projectiles[FindBullet()].transform.rotation = transform.rotation;
             projectiles[FindBullet()].SetActives();
-            playerAudio.Play("Player_Bullet_Shoot");
+            AudioManager.instance.Play("Player_Bullet_Shoot");
         }
 
         private int FindBullet()

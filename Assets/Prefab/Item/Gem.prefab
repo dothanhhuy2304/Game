@@ -48,7 +48,7 @@ MonoBehaviour:
   itemType: 1
   itemData: {fileID: 11400000, guid: e7847ba3ba5bae04eba1278b4e36f6b1, type: 2}
   itemCollider: {fileID: 8006932759146997655}
-  animator: {fileID: 8006932760941348752}
+  animator: {fileID: 8061219069181752037}
 --- !u!58 &8006932759146997655
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -75,7 +75,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8006932760941348766}
   - component: {fileID: 8006932760941348753}
-  - component: {fileID: 8006932760941348752}
+  - component: {fileID: 8061219069181752037}
   m_Layer: 0
   m_Name: gem
   m_TagString: Untagged
@@ -148,7 +148,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &8006932760941348752
+--- !u!95 &8061219069181752037
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0

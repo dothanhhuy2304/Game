@@ -1,11 +1,11 @@
-using Game.Core;
 using Game.GamePlay;
 using Game.Player;
 using UnityEngine;
 
-public class ProjectileArc : BaseObject
+public class ProjectileArc : MonoBehaviour
 {
-    private Transform playerPos;
+    private CharacterController2D playerPos;
+    private Rigidbody2D body;
     [SerializeField] private float speed = 10;
     [SerializeField] private float arcHeight = 1;
     private Vector3 startPos = Vector3.zero;
@@ -13,18 +13,17 @@ public class ProjectileArc : BaseObject
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private GameObject explosionPrefab;
     private Vector3 targetPos = Vector3.zero;
-    private PlayerAudio playerAudio;
 
     private void Awake()
     {
-        playerPos = FindObjectOfType<CharacterController2D>().transform;
-        playerAudio = FindObjectOfType<PlayerAudio>().GetComponent<PlayerAudio>();
+        playerPos = CharacterController2D.instance;
+        body = GetComponent<Rigidbody2D>();
     }
 
     private void OnEnable()
     {
         startPos = transform.position;
-        targetPos = playerPos.position;
+        targetPos = playerPos.transform.position;
     }
 
     private void Update()
@@ -63,19 +62,19 @@ public class ProjectileArc : BaseObject
         if (other.CompareTag("Player"))
         {
             other.GetComponent<PlayerHealth>().GetDamage(20f);
-            playerAudio.Play("Enemy_Bullet_Explosion_1");
+            AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
             Explosion();
         }
         else if (other.CompareTag("ground"))
         {
             Arrived();
-            playerAudio.Play("Enemy_Bullet_Explosion_1");
+            AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
         }
         else if (other.CompareTag("Bullet"))
         {
             if (body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy"))) return;
             Arrived();
-            playerAudio.Play("Enemy_Bullet_Explosion_1");
+            AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
         }
     }
 

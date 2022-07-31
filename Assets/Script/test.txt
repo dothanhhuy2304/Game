@@ -1,0 +1,323 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CharacterController : FastSingleton<CharacterController>
+{
+    public CharacterShopConstume characterCostume;
+    public GameObject characterBodyView;
+    [Header("Camera")] 
+    public Camera cameraFollowPlayer;
+    [HideInInspector] public Vector3 forward = Vector3.zero;
+    [Header("Moving")] 
+    public Rigidbody body;
+    protected Vector3 velocity = Vector3.zero;
+    protected Vector3 desiredVelocity = Vector3.zero;
+    protected Vector3 playerInput = Vector3.zero;
+    private float jumpHeight = 2f;
+    [HideInInspector] public float maxSpeed = 7;
+    protected bool onGround;
+    private bool onWall;
+    [HideInInspector] protected bool canMove = true;
+    public bool desiredJump;
+    private int maxAirJumps = 0; //Allow Double jump
+    private int jumpPhase;
+    public FixedJoystick fixedJoyStick;
+    [Header("Animation")] 
+    public Animator playerAnimator;
+    public Animator carAnimator;
+    [Header("Car")] 
+    protected bool isDrivingCar;
+    protected GameObject currentCarDriving;
+    private Vector3 standPos;
+    [Header("Pet")] 
+    protected GameObject playerPet;
+    public DataPetMTP petDataMtp;
+    [Header("Emote")] 
+    public GameObject currentEmote;
+    [Header("BubblecHat")] 
+    public GameObject currentBubbleChat;
+    public GameObject bubbleChatPrefab;
+    public AudioPlay audioPlaySound;
+    private void Start()
+    {
+        Application.targetFrameRate = 120;
+        standPos = playerAnimator.gameObject.transform.localPosition;
+        gameObject.transform.position = GameManager.instance.lastPlayerPosition;
+        SpawnPet(PlayerData.GetIdPLayerCostume(PlayerData.CostumePetID), transform.position);
+    }
+
+    protected virtual void Update()
+    {
+        GetInput();
+        SetDesiredForce();
+        PlaySoundEffect();
+    }
+
+    protected void GetInput()
+    {
+#if UNITY_EDITOR || UNITY_STANDALONE
+        playerInput.x = Input.GetAxisRaw("Vertical");
+        playerInput.z = Input.GetAxisRaw("Horizontal");
+#elif !UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
+        playerInput.x = fixedJoyStick.Vertical;
+        playerInput.z = fixedJoyStick.Horizontal;
+#endif
+        playerInput.Normalize();
+    }
+
+    void PlaySoundEffect()
+    {
+        if (playerInput != Vector3.zero && !isDrivingCar  && onGround)
+        {
+            audioPlaySound.RunSound(playerInput != Vector3.zero);
+        }
+        if (isDrivingCar)
+        {
+            audioPlaySound.CarSound(playerInput != Vector3.zero);
+        }
+
+        if (playerInput != Vector3.zero)
+        {
+            audioPlaySound.StopDanceSound();
+        }
+    }
+    virtual public void SetDesiredForce()
+    {
+        if (canMove)
+        {
+            forward = Vector3.Scale(cameraFollowPlayer.transform.forward, new Vector3(1, 0, 1)).normalized;
+            desiredVelocity =
+                (playerInput.x * forward + playerInput.z * cameraFollowPlayer.transform.right).normalized * maxSpeed;
+            desiredJump |= Input.GetButtonDown("Jump") && !isDrivingCar;
+        }
+    }
+
+    protected void UpdateState()
+    {
+        velocity = body.velocity;
+        if (onGround)
+        {
+            jumpPhase = 0;
+        }
+    }
+
+    protected void FaceToDirectionMove()
+    {
+        if (playerInput != Vector3.zero && canMove)
+        {
+            Vector3 face = body.velocity;
+            face.y = 0;
+            Quaternion desiredRotation = Quaternion.LookRotation(face);
+            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * 5);
+        }
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        UpdateState();
+        ApplyDesiredVelocity();
+        if (desiredJump)
+        {
+            desiredJump = false;
+            Jump();
+        }
+        body.velocity = velocity;
+        desiredVelocity.Normalize();
+        FaceToDirectionMove();
+        onGround = false;
+        CheckPlayerAnimator();
+    }
+
+    public virtual void ApplyDesiredVelocity()
+    {
+        velocity.x = desiredVelocity.x;
+        velocity.z = desiredVelocity.z;
+    }
+
+    protected void CheckPlayerAnimator()
+    {
+        if (!isDrivingCar && canMove)
+        {
+            playerAnimator.SetBool("Run", playerInput != Vector3.zero);
+        }
+        else if (isDrivingCar && canMove)
+        {
+            if (carAnimator) carAnimator.SetBool("Run", playerInput != Vector3.zero);
+        }
+    }
+
+    protected void Jump()
+    {
+        if (onGround || jumpPhase < maxAirJumps)
+        {
+            if (!isDrivingCar)
+            {
+                playerAnimator.SetTrigger("Jump");
+            }
+            jumpPhase += 1;
+            float jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y * jumpHeight);
+            if (velocity.y > 0f)
+            {
+                jumpSpeed = Mathf.Max(jumpSpeed - velocity.y, 0f);
+            }
+            audioPlaySound.jumpSound();
+            velocity.y += jumpSpeed;
+        }
+    }
+
+    void OnCollisionStay(Collision collision)
+    {
+        EvaluateCollision(collision);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        EvaluateCollision(collision);
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        onGround = false;
+    }
+
+    void EvaluateCollision(Collision collision)
+    {
+        bool iswall = false;
+        for (int i = 0; i < collision.contactCount; i++)
+        {
+            Vector3 normal = collision.GetContact(i).normal;
+            onGround |= normal.y >= 0.9f;
+            if (collision.gameObject.tag != "Ground") iswall = true;
+        }
+
+        onWall = iswall;
+    }
+
+    #region CarAction
+
+    public void SpawnCar(GameObject carObj, int indexCar)
+    {
+        if (currentCarDriving)
+        {
+            Destroy(currentCarDriving);
+        }
+        else
+        {
+            //playerAnimator.gameObject.transform.localPosition = standPos + new Vector3(0, 0.5f, 0);
+        }
+        currentCarDriving = Instantiate(carObj, transform);
+        currentCarDriving.transform.localPosition = Vector3.zero;
+        currentCarDriving.transform.localRotation = Quaternion.identity;
+        isDrivingCar = true;
+        carAnimator = currentCarDriving.GetComponent<Animator>();
+        CarShopInfomation carInfo = carObj.GetComponent<CarShopInfomation>();
+        maxSpeed = carInfo.carSpeed;
+        playerAnimator.Play(carInfo.GetDrivingPose());
+        audioPlaySound.SetCarAudioClip(carInfo.carMoveAudio);
+        if (carInfo.hiddenPlayer)
+        {
+            characterBodyView.gameObject.SetActive(false);
+        }
+        else
+        {
+            characterBodyView.gameObject.SetActive(true);
+        }
+    }
+
+    public void GetOutCar()
+    {
+        characterBodyView.gameObject.SetActive(true);
+        playerAnimator.Play("Idle");
+        if (currentCarDriving) Destroy(currentCarDriving);
+        audioPlaySound.carAudioSource.Stop();
+        audioPlaySound.carAudioSource.clip = null;
+        maxSpeed = 7;
+        isDrivingCar = false;
+        playerAnimator.gameObject.transform.localPosition = standPos;
+    }
+
+    #endregion
+
+    #region Dance
+
+    public void PlayDance(DanceData danceData)
+    {
+        if (canMove)
+        {
+            desiredVelocity = Vector3.zero;
+            playerInput = Vector3.zero;
+            canMove = false;
+        }
+        playerAnimator.SetBool("Run", false);
+        playerAnimator.Play("Idle");
+        if (carAnimator){ carAnimator.SetBool("Run", false);}
+        playerAnimator.SetTrigger(danceData.emoteTriggerName);
+        StartCoroutine(DelayToMove(danceData.timeEmote));
+        audioPlaySound.PlayDanceSound(danceData.emoteAudioClip,0.3f);
+    }
+
+    IEnumerator DelayToMove(float time)
+    {
+        yield return new WaitForSeconds(time);
+        canMove = true;
+    }
+
+    #endregion
+    #region Emote
+
+    public void PlayEmote(EmoteData dateEmote)
+    {
+        if(currentEmote) Destroy(currentEmote);
+        currentEmote = Instantiate(dateEmote.emoteObj, characterCostume.head.transform);
+        currentEmote.transform.localPosition = new Vector3(0, 0.5f, 0);
+
+    }
+
+    #endregion
+
+    #region BubbleChat
+    public void PlayBubbleChat(BubbleChatData squelch)
+    {
+        if(currentBubbleChat) Destroy(currentBubbleChat);
+        currentBubbleChat = Instantiate(bubbleChatPrefab, transform);
+        currentBubbleChat.GetComponent<BubbleChatPlayer>().bubbleChatText.text = squelch.chatContent;
+        audioPlaySound.PlayChatSound(squelch.chatAudioClip,0.5f);
+    }
+    #endregion
+    #region PetAction
+
+    void SpawnPet(int idPet, Vector3 pos)
+    {
+        if (idPet >= 0)
+        {
+            playerPet = Instantiate(petDataMtp.listPet[idPet]);
+            playerPet.transform.position = pos;
+            playerPet.GetComponent<SphereCollider>().enabled = true;
+            PetFollowPlayer petFollow = playerPet.GetComponent<PetFollowPlayer>();
+            petFollow.enabled = true;
+            petFollow.master = characterBodyView;
+            bool petGra = !OceanManager.instance && !MoonBaseManager.instance;
+            playerPet.GetComponent<Rigidbody>().useGravity = petGra;
+        }
+    }
+
+    public void ChangePet(int id)
+    {
+        Vector3 pos;
+        if (playerPet)
+        {
+            pos = playerPet.transform.position;
+            Destroy(playerPet);
+        }
+        else
+        {
+            pos = transform.position;
+        }
+
+        SpawnPet(id, pos);
+    }
+
+    #endregion
+}
