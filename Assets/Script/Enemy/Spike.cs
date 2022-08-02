@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Game.Core;
 using Game.Player;
@@ -14,27 +15,46 @@ public class Spike : MonoBehaviour
         playerHealth = PlayerHealth.instance;
     }
 
-    private void Update()
-    {
-        if (!HuyManager.PlayerIsDeath())
-        {
-            HuyManager.SetTimeAttack(ref timeAttack);
-            if (isHurts)
-            {
-                if (timeAttack <= 0f)
-                {
-                    playerHealth.GetDamage(20f);
-                    timeAttack = maxTimeAttack;
-                }
-            }
-        }
-    }
+    // private void Update()
+    // {
+    //     if (!HuyManager.PlayerIsDeath())
+    //     {
+    //         HuyManager.SetTimeAttack(ref timeAttack);
+    //         if (isHurts)
+    //         {
+    //             if (timeAttack <= 0f)
+    //             {
+    //                 playerHealth.GetDamage(20f);
+    //                 timeAttack = maxTimeAttack;
+    //             }
+    //         }
+    //     }
+    // }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
             isHurts = true;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            if (!HuyManager.PlayerIsDeath())
+            {
+                HuyManager.SetTimeAttack(ref timeAttack);
+                if (isHurts)
+                {
+                    if (timeAttack <= 0f)
+                    {
+                        playerHealth.GetDamage(20f);
+                        timeAttack = maxTimeAttack;
+                    }
+                }
+            }
         }
     }
 

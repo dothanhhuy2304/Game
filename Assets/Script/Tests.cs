@@ -14,6 +14,7 @@ public class Tests : MonoBehaviour, IPointerDownHandler
     private Vector3 target;
 
     [SerializeField] private Transform[] waypoints;
+    [SerializeField] private float timeDurationMoving;
     private bool isFlip;
 
     private void Start()
@@ -38,7 +39,7 @@ public class Tests : MonoBehaviour, IPointerDownHandler
         }
     }
 
-    void Move()
+    private void Move()
     {
         if (transform.position != target)
         {
@@ -52,7 +53,7 @@ public class Tests : MonoBehaviour, IPointerDownHandler
                 if (isFlip)
                 {
                     isFlip = !isFlip;
-                    StartCoroutine(SetTarget(waypoints[1].position, 3f));
+                    StartCoroutine(SetTarget(waypoints[1].position, timeDurationMoving));
                 }
             }
             else
@@ -60,7 +61,7 @@ public class Tests : MonoBehaviour, IPointerDownHandler
                 if (!isFlip)
                 {
                     isFlip = !isFlip;
-                    StartCoroutine(SetTarget(waypoints[0].position, 3f));
+                    StartCoroutine(SetTarget(waypoints[0].position, timeDurationMoving));
                 }
             }
         }

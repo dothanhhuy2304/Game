@@ -6,6 +6,7 @@ namespace Game.GamePlay
 {
     public class GameManager : FastSingleton<GameManager>
     {
+        private string path = Application.persistentDataPath + "/saveData/";
         private const string ScoreData = "scoreData";
         private const string PlayerData = "playerData";
         [SerializeField] private ScoreData scoreData;
@@ -17,7 +18,7 @@ namespace Game.GamePlay
         private void Start()
         {
             DontDestroyOnLoad(this);
-            if (LoadData<PlayerDataObj>(PlayerData) == null)
+            if (LoadData<PlayerDataObj>(PlayerData, path) == null)
             {
                 playerData.playerDataObj.position = new[] {-4.95f, -4f, 0};
                 playerData.playerDataObj.characterSelection = 0;
@@ -28,23 +29,23 @@ namespace Game.GamePlay
             }
             else
             {
-                if (LoadData<PlayerDataObj>(PlayerData).position == null)
+                if (LoadData<PlayerDataObj>(PlayerData, path).position == null)
                 {
                     playerData.playerDataObj.position = new[] {-4.95f, -4f, 0};
                 }
                 else
                 {
-                    playerData.playerDataObj.position = LoadData<PlayerDataObj>(PlayerData).position;
+                    playerData.playerDataObj.position = LoadData<PlayerDataObj>(PlayerData, path).position;
                 }
 
-                playerData.playerDataObj.characterSelection = LoadData<PlayerDataObj>(PlayerData).characterSelection;
-                playerData.playerDataObj.currentScenes = LoadData<PlayerDataObj>(PlayerData).currentScenes;
-                playerData.playerDataObj.saveAudio = LoadData<PlayerDataObj>(PlayerData).saveAudio;
-                playerData.playerDataObj.soundEffect = LoadData<PlayerDataObj>(PlayerData).soundEffect;
-                playerData.playerDataObj.soundMusic = LoadData<PlayerDataObj>(PlayerData).soundMusic;
+                playerData.playerDataObj.characterSelection = LoadData<PlayerDataObj>(PlayerData, path).characterSelection;
+                playerData.playerDataObj.currentScenes = LoadData<PlayerDataObj>(PlayerData, path).currentScenes;
+                playerData.playerDataObj.saveAudio = LoadData<PlayerDataObj>(PlayerData, path).saveAudio;
+                playerData.playerDataObj.soundEffect = LoadData<PlayerDataObj>(PlayerData, path).soundEffect;
+                playerData.playerDataObj.soundMusic = LoadData<PlayerDataObj>(PlayerData, path).soundMusic;
             }
 
-            if (LoadData<ScoreDataObj>(ScoreData) == null)
+            if (LoadData<ScoreDataObj>(ScoreData, path) == null)
             {
                 scoreData.scoreDataObj.currentScore = 0;
                 scoreData.scoreDataObj.diamond = 0;
@@ -57,19 +58,17 @@ namespace Game.GamePlay
             else
             {
                 scoreData.scoreDataObj.currentScore = 0;
-                scoreData.scoreDataObj.highScore = LoadData<ScoreDataObj>(ScoreData).highScore;
+                scoreData.scoreDataObj.highScore = LoadData<ScoreDataObj>(ScoreData, path).highScore;
                 SetScore(0f);
-                SetMoney(LoadData<ScoreDataObj>(ScoreData).money);
-                SetDiamond(LoadData<ScoreDataObj>(ScoreData).diamond);
+                SetMoney(LoadData<ScoreDataObj>(ScoreData, path).money);
+                SetDiamond(LoadData<ScoreDataObj>(ScoreData, path).diamond);
             }
         }
-
 
         public void SetScore(float score)
         {
             scoreData.scoreDataObj.currentScore += score;
-            txtScore.text =
-                scoreData.scoreDataObj.currentScore.ToString(System.Globalization.CultureInfo.CurrentCulture);
+            txtScore.text = scoreData.scoreDataObj.currentScore.ToString(System.Globalization.CultureInfo.CurrentCulture);
         }
 
         public void SetDiamond(float diamond)
@@ -84,24 +83,22 @@ namespace Game.GamePlay
             txtMoney.text = scoreData.scoreDataObj.money + " $";
         }
 
-        private static void SaveData<T>(T obj, string key)
+        private static void SaveData<T>(T obj, string key, string path)
         {
-            var formatter = new BinaryFormatter();
-            var path = Application.persistentDataPath + "/saveData/";
+            BinaryFormatter formatter = new BinaryFormatter();
             Directory.CreateDirectory(path);
-            var fileStream = new FileStream(path + key, FileMode.Create);
+            FileStream fileStream = new FileStream(path + key, FileMode.OpenOrCreate);
             formatter.Serialize(fileStream, obj);
             fileStream.Close();
         }
 
-        private static T LoadData<T>(string key)
+        private static T LoadData<T>(string key, string path)
         {
             T data = default;
-            var formatter = new BinaryFormatter();
-            var path = Application.persistentDataPath + "/saveData/";
+            BinaryFormatter formatter = new BinaryFormatter();
             if (File.Exists(path + key))
             {
-                var fileStream = new FileStream(path + key, FileMode.OpenOrCreate);
+                FileStream fileStream = new FileStream(path + key, FileMode.OpenOrCreate);
                 data = (T) formatter.Deserialize(fileStream);
                 fileStream.Close();
             }
@@ -122,7 +119,7 @@ namespace Game.GamePlay
                 money = scoreData.scoreDataObj.money,
                 highScore = scoreData.scoreDataObj.highScore
             };
-            SaveData(scoreDatas, ScoreData);
+            SaveData(scoreDatas, ScoreData, path);
             var playerDatas = new PlayerDataObj
             {
                 position = playerData.playerDataObj.position,
@@ -132,7 +129,7 @@ namespace Game.GamePlay
                 soundEffect = playerData.playerDataObj.soundEffect,
                 soundMusic = playerData.playerDataObj.soundMusic
             };
-            SaveData(playerDatas, PlayerData);
+            SaveData(playerDatas, PlayerData, path);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Game.GamePlay
 
         private void Start()
         {
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(this);
             loadingScreenManager = LoadingScreenManager.instance;
             btnShowAndHiddenUI.onClick.AddListener(delegate {ShowAndHiddenUISetting(ref isShowUISetting);});
             btnBackToMenuUI.onClick.AddListener(BackToMenu);

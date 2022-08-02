@@ -50,7 +50,6 @@ public class FireTrap : MonoBehaviour
             animator.SetBool("hit", false);
             animator.SetBool("on", false);
             StopCoroutine(nameof(WaitingForFireOn));
-            yield return null;
         }
     }
 }
