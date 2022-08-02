@@ -196,18 +196,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72c9c041cb412be4c81d8710ae0c17ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyType: 1
   body: {fileID: 3443694513160801474}
   canMoving: 1
   movingSpeed: 2
   projectiles: []
   projectileArcs: []
-  playerCharacter: {fileID: 0}
   offsetFlip: 0
   maxTimeAttack: 3
   offsetAttack: {fileID: 3443694514636338317}
   animator: {fileID: 3443694513160801484}
   enemyHealth: {fileID: 3443694513160801480}
+  spriteBullet: {fileID: 0}
+  bulletSpeed: 15
   rangeAttackObj: {fileID: 3443694514636338317}
   radiusAttack: 1
   checkGroundPosition: {x: 0.55, y: 0}

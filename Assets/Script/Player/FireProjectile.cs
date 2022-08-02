@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Game.Core;
 using Game.Enemy;
@@ -9,12 +8,13 @@ public class FireProjectile : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D body;
     [SerializeField] private EnemyType enemyType;
-    [SerializeField] private float bulletSpeed = 10f;
+    public float bulletSpeed = 10f;
     [SerializeField] private GameObject bulletPrefab, explosionPrefab;
     private CharacterController2D playerCharacter;
     private Vector2 targetPetEnemy = Vector2.zero;
     private PlayerHealth playerHealth;
     private PetAI petAI;
+    public SpriteRenderer bulletSpriteRenderer;
 
     private void Awake()
     {

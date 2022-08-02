@@ -24,6 +24,7 @@ namespace Game.Player
         public bool isHurt;
         private float startSpeed;
         private int jumpCount;
+        private int maxJumpCount = 2;
         private bool onWall;
         
         private void Start()
@@ -139,7 +140,7 @@ namespace Game.Player
 
         private void Jump()
         {
-            if (mGrounded || jumpCount < 2f)
+            if (mGrounded || jumpCount < maxJumpCount)
             {
                 body.velocity = new Vector2(body.velocity.x, 0f);
                 body.AddForce(Vector2.up * playerData.jumpForce, ForceMode2D.Impulse);

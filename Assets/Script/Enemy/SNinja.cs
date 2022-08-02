@@ -1,3 +1,4 @@
+using System;
 using Game.Core;
 using Game.GamePlay;
 using UnityEngine;
@@ -12,7 +13,14 @@ namespace Game.Enemy
         [Space] [SerializeField] private Vector2 checkGroundPosition;
         [SerializeField] private Vector2 posAttack = Vector2.zero;
         [SerializeField] private Vector2 rangerAttack = Vector2.zero;
+        private bool onGround;
+        [Header("SetUp Patrol")]
+        [SerializeField] private Vector3 target;
 
+        [SerializeField] private Vector3 velocity;
+        [SerializeField] private Vector3 previousPos;
+        [SerializeField] private Transform[] waypoints;
+        
         private void FixedUpdate()
         {
             if (HuyManager.PlayerIsDeath())
@@ -54,6 +62,31 @@ namespace Game.Enemy
         {
             body.velocity = body.transform.right * movingSpeed;
             animator.SetBool(states, true);
+        }
+
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            EvaluateCollision(other);
+        }
+
+        private void OnCollisionStay2D(Collision2D other)
+        {
+            EvaluateCollision(other);
+        }
+
+        private void OnCollisionExit2D(Collision2D other)
+        {
+            onGround = false;
+        }
+
+        private void EvaluateCollision(Collision2D col)
+        {
+            for (int i = 0; i < col.contactCount; i++)
+            {
+                Vector3 normal = col.GetContact(i).normal;
+                onGround |= normal.y > 0.6f;
+            }
         }
 
 

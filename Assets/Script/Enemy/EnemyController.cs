@@ -1,7 +1,5 @@
-using System;
 using UnityEngine;
 using Game.Player;
-using Game.Core;
 using Game.GamePlay;
 
 namespace Game.Enemy
@@ -25,7 +23,10 @@ namespace Game.Enemy
         [SerializeField] private Transform offsetAttack;
         [SerializeField] protected Animator animator;
         [SerializeField] protected EnemyHealth enemyHealth;
+        [Header("Set Up Bullet")] 
+        [SerializeField] private Sprite spriteBullet;
 
+        [SerializeField] private float bulletSpeed;
         private void Start()
         {
             playerCharacter = CharacterController2D.instance;
@@ -86,6 +87,8 @@ namespace Game.Enemy
 
         protected void AttackBullet()
         {
+            projectiles[FindBullet()].bulletSpeed = bulletSpeed;
+            projectiles[FindBullet()].bulletSpriteRenderer.sprite = spriteBullet;
             projectiles[FindBullet()].transform.position = offsetAttack.position;
             projectiles[FindBullet()].transform.rotation = transform.rotation;
             projectiles[FindBullet()].SetActives();
@@ -94,7 +97,9 @@ namespace Game.Enemy
 
         protected void AttackBulletDirection()
         {
-            var directionToPlayer = (playerCharacter.transform.position - transform.position).normalized;
+            projectiles[FindBullet()].bulletSpeed = bulletSpeed;
+            projectiles[FindBullet()].bulletSpriteRenderer.sprite = spriteBullet;
+            Vector2 directionToPlayer = (playerCharacter.transform.position - transform.position).normalized;
             projectiles[FindBullet()].transform.position = offsetAttack.position;
             projectiles[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg);
             projectiles[FindBullet()].SetActives();

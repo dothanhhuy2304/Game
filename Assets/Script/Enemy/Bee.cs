@@ -1,5 +1,3 @@
-using Game.Core;
-using Game.Player;
 using UnityEngine;
 
 namespace Game.Enemy
