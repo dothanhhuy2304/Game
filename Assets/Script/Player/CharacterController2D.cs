@@ -15,9 +15,6 @@ namespace Game.Player
         [Space] [Header("Flip")] private bool mFacingRight = true;
         private bool isDashing;
         [SerializeField] private bool mGrounded;
-        private const float GroundedRadius = .3f;
-        [SerializeField] private Transform groundCheck;
-        [Space] [SerializeField] private LayerMask whatIsGround;
         [SerializeField] private bool isJump;
         private bool mDBJump;
         public Animator animator;
@@ -95,8 +92,7 @@ namespace Game.Player
         private void Move(float move)
         {
             Vector3 position = body.velocity;
-            body.velocity = Vector2.SmoothDamp(position, new Vector2(move * 10f, position.y), ref velocity,
-                MovementSmoothing);
+            body.velocity = Vector2.SmoothDamp(position, new Vector2(move * 10f, position.y), ref velocity, MovementSmoothing);
 
             if (isOnCar || onWall)
             {

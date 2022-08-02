@@ -135,7 +135,7 @@ Rigidbody2D:
   m_GameObject: {fileID: 3443694513160801475}
   m_BodyType: 1
   m_Simulated: 1
-  m_UseFullKinematicContacts: 1
+  m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
@@ -197,10 +197,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: 1
+  body: {fileID: 3443694513160801474}
   canMoving: 1
   movingSpeed: 2
   projectiles: []
   projectileArcs: []
+  playerCharacter: {fileID: 0}
   offsetFlip: 0
   maxTimeAttack: 3
   offsetAttack: {fileID: 3443694514636338317}

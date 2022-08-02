@@ -16,34 +16,42 @@ namespace Game.GamePlay
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (isOpen) return;
-            if (other.CompareTag("Player"))
+            if (!isOpen)
             {
-                uIGuild.SetActive(true);
+                if (other.CompareTag("Player"))
+                {
+                    uIGuild.SetActive(true);
+                }
             }
         }
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (isOpen) return;
-            if (!other.CompareTag("Player")) return;
-            if (!Input.GetKey(KeyCode.F)) return;
-            animator.SetBool(IsOpen, true);
-            uIGuild.SetActive(false);
-            //value
-            value = Random.Range(0, 10);
-            StartCoroutine(nameof(ActiveItem), 3f);
-            if (value != 0)
+            if (!isOpen)
             {
-                txtValueItem.text = "x" + value.ToString(System.Globalization.CultureInfo.CurrentCulture);
-                GameManager.instance.SetDiamond(value);
-            }
-            else
-            {
-                other.GetComponent<PlayerHealth>().GetDamage(20f);
-            }
+                if (other.CompareTag("Player"))
+                {
+                    if (Input.GetKey(KeyCode.F))
+                    {
+                        animator.SetBool(IsOpen, true);
+                        uIGuild.SetActive(false);
+                        //value
+                        value = Random.Range(0, 10);
+                        StartCoroutine(ActiveItem(3f));
+                        if (value != 0)
+                        {
+                            txtValueItem.text = "x" + value.ToString(System.Globalization.CultureInfo.CurrentCulture);
+                            GameManager.instance.SetDiamond(value);
+                        }
+                        else
+                        {
+                            PlayerHealth.instance.GetDamage(20f);
+                        }
 
-            isOpen = true;
+                        isOpen = true;
+                    }
+                }
+            }
         }
 
         private IEnumerator ActiveItem(float delay)
@@ -68,8 +76,10 @@ namespace Game.GamePlay
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (!other.CompareTag("Player")) return;
-            uIGuild.SetActive(false);
+            if (other.CompareTag("Player"))
+            {
+                uIGuild.SetActive(false);
+            }
         }
     }
 }

@@ -23,8 +23,7 @@ public class LoadingScreenManager : FastSingleton<LoadingScreenManager>
 
     public int NextScreen(int i)
     {
-        int currentScene = GameManager.instance.playerData.playerDataObj.currentScenes =
-            SceneManager.GetActiveScene().buildIndex + i;
+        int currentScene = GameManager.instance.playerData.playerDataObj.currentScenes = SceneManager.GetActiveScene().buildIndex + i;
         return currentScene;
     }
 

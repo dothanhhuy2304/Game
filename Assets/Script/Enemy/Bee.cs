@@ -9,7 +9,7 @@ namespace Game.Enemy
 
         [SerializeField] private Vector2 posAttack = Vector2.zero;
         [SerializeField] private Vector2 rangerAttack = Vector2.zero;
-        
+
         private void Update()
         {
             if (HuyManager.PlayerIsDeath() && enemyHealth.EnemyDeath())
@@ -32,8 +32,18 @@ namespace Game.Enemy
             Flip();
             if (currentTime != 0) return;
             animator.SetTrigger("isAttack");
-            Attack();
+            if (!HuyManager.PlayerIsDeath() || !enemyHealth.EnemyDeath())
+            {
+                StartCoroutine(DurationAttack(0.5f));
+            }
+
             currentTime = maxTimeAttack;
+        }
+
+        private System.Collections.IEnumerator DurationAttack(float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            AttackBulletDirection();
         }
     }
 }

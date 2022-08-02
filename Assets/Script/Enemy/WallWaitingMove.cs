@@ -62,18 +62,22 @@ namespace Game.Enemy
                 }
             }
 
-            if (!other.collider.CompareTag("Player")) return;
-            character.transform.parent = transform;
-            isMoving = true;
-            isComeback = false;
-            playerExit = false;
+            if (other.collider.CompareTag("Player"))
+            {
+                character.transform.parent = transform;
+                isMoving = true;
+                isComeback = false;
+                playerExit = false;
+            }
         }
 
         private void OnCollisionExit2D(Collision2D other)
         {
-            if (!other.collider.CompareTag("Player")) return;
-            character.transform.parent = null;
-            playerExit = true;
+            if (other.collider.CompareTag("Player"))
+            {
+                character.transform.parent = null;
+                playerExit = true;
+            }
         }
         
         

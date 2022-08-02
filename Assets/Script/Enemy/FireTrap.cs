@@ -17,16 +17,20 @@ public class FireTrap : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag("Player")) return;
-        isOut = true;
-        animator.SetBool("hit", true);
-        StartCoroutine(nameof(WaitingForFireOn), 1f);
+        if (other.CompareTag("Player"))
+        {
+            isOut = true;
+            animator.SetBool("hit", true);
+            StartCoroutine(WaitingForFireOn(1f));
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (!other.CompareTag("Player")) return;
-        isOut = false;
+        if (other.CompareTag("Player"))
+        {
+            isOut = false;
+        }
     }
 
     private IEnumerator WaitingForFireOn(float delay)

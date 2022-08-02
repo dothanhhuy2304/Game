@@ -8,7 +8,7 @@ namespace Game.Enemy
     {
         [SerializeField] private Collider2D chickenCol;
         [SerializeField] private GameObject explosionObj;
-        private SpriteRenderer spriteRenderer;
+        [SerializeField] private SpriteRenderer spriteRenderer;
         private bool isMoving;
         private bool destroy;
         private Vector2 startPos = Vector2.zero;
@@ -19,7 +19,6 @@ namespace Game.Enemy
 
         private void Awake()
         {
-            spriteRenderer = GetComponent<SpriteRenderer>();
             currentTime = maxTimeAttack;
             startPos = transform.position;
             timeRespawn = 4f;
@@ -61,8 +60,10 @@ namespace Game.Enemy
             if (destroy) return;
             if (!isMoving)
             {
-                if (Vector3.Distance(transform.position, playerCharacter.transform.position) > rangeAttack) return;
-                isMoving = true;
+                if (Vector3.Distance(transform.position, playerCharacter.transform.position) < rangeAttack)
+                {
+                    isMoving = true;
+                }
             }
             else
             {
@@ -99,15 +100,19 @@ namespace Game.Enemy
             }
         }
 
-        // private void OnDrawGizmos()
-        // {
-        //     Gizmos.DrawSphere(transform.position,rangeAttack);
-        // }
-    }
+        private void MovingToTarget(string states, bool value)
+        {
+            var target = new Vector3(playerCharacter.transform.position.x - transform.position.x, 0f, 0f).normalized;
+            if (Vector2.Distance(playerCharacter.transform.position, transform.position) > 1f)
+            {
+                body.MovePosition(body.transform.position + target * (movingSpeed * Time.fixedDeltaTime));
+            }
+            else
+            {
+                body.velocity = Vector2.zero;
+            }
 
-    // private void OnDrawGizmos()
-    // {
-    // Gizmos.DrawRay(transform.TransformPoint(groundCheck), Vector3.down * 2f);
-    // Gizmos.DrawSphere(transform.position, rangeAttack);
-    // }
+            animator.SetBool(states, value);
+        }
+    }
 }

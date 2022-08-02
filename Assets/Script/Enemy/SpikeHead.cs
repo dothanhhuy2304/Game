@@ -24,10 +24,16 @@ public class SpikeHead : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag("Player")) return;
-        if (HuyManager.PlayerIsDeath()) return;
-        if (timeAttack != 0) return;
-        other.GetComponent<PlayerHealth>().GetDamage(20f);
-        timeAttack = resetTimeAttack;
+        if (other.CompareTag("Player"))
+        {
+            if (!HuyManager.PlayerIsDeath())
+            {
+                if (timeAttack <= 0)
+                {
+                    PlayerHealth.instance.GetDamage(20f);
+                    timeAttack = resetTimeAttack;
+                }
+            }
+        }
     }
 }

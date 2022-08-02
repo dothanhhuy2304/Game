@@ -24,15 +24,31 @@ namespace Game.Enemy
                 }
             }
 
-            if (HuyManager.PlayerIsDeath()) return;
-            BaseObject.SetTimeAttack(ref currentTime);
-            if (enemyHealth.EnemyDeath()) return;
-            if (!CheckAttack(transform.position + (Vector3) posAttack, rangerAttack)) return;
-            Flip();
-            if (currentTime != 0) return;
-            animator.SetTrigger("isAttack");
-            Attack();
-            currentTime = maxTimeAttack;
+            if (!HuyManager.PlayerIsDeath())
+            {
+                BaseObject.SetTimeAttack(ref currentTime);
+                if (!enemyHealth.EnemyDeath())
+                {
+                    if (CheckAttack(transform.position + (Vector3) posAttack, rangerAttack))
+                    {
+                        Flip();
+                        if (currentTime != 0) return;
+                        animator.SetTrigger("isAttack");
+                        if (!HuyManager.PlayerIsDeath() || !enemyHealth.EnemyDeath())
+                        {
+                            StartCoroutine(DurationAttack(0.5f));
+                        }
+
+                        currentTime = maxTimeAttack;
+                    }
+                }
+            }
+        }
+
+        private System.Collections.IEnumerator DurationAttack(float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            AttackBulletArc();
         }
 
     }

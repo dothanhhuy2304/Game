@@ -14,9 +14,11 @@ public class Explosion : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         AudioManager.instance.Play("Boom_Explosion");
-        StartCoroutine(nameof(WaitingHide), 0.7f);
-        if (!other.CompareTag("Player")) return;
-        other.GetComponent<PlayerHealth>().GetDamage(20f);
+        StartCoroutine(WaitingHide(0.7f));
+        if (other.CompareTag("Player"))
+        {
+            PlayerHealth.instance.GetDamage(20f);
+        }
     }
 
     private System.Collections.IEnumerator WaitingHide(float delay)

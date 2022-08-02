@@ -5,7 +5,6 @@ namespace Game.GamePlay
 {
     public class UIManager : FastSingleton<UIManager>
     {
-        //private static UIManager _instance;
         [Header("UI Setting")]
         [SerializeField] private GameObject settingUI;
         [SerializeField] private Button btnShowAndHiddenUI;
@@ -27,7 +26,7 @@ namespace Game.GamePlay
 
         private void Start()
         {
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
             loadingScreenManager = LoadingScreenManager.instance;
             btnShowAndHiddenUI.onClick.AddListener(delegate {ShowAndHiddenUISetting(ref isShowUISetting);});
             btnBackToMenuUI.onClick.AddListener(BackToMenu);

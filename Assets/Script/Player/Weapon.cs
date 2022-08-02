@@ -8,14 +8,12 @@ namespace Game.Player
     {
         [SerializeField] private FireProjectile[] projectiles;
         [SerializeField] private Vector2 offset;
-        [SerializeField] private PlayerHealth playerHealth;
         private CharacterController2D players;
         private float timeAttack;
         [SerializeField] private float resetTimeAttack = 0.5f;
 
         private void Start()
         {
-            playerHealth = PlayerHealth.instance;
             players = CharacterController2D.instance;
             timeAttack = 0f;
         }
@@ -24,8 +22,7 @@ namespace Game.Player
         {
             BaseObject.SetTimeAttack(ref timeAttack);
             if (timeAttack != 0) return;
-            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() ||
-                HuyManager.PlayerIsDeath()) return;
+            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() || HuyManager.PlayerIsDeath()) return;
             if (players.isHurt) return;
             if (!Input.GetMouseButtonDown(0) && !Input.GetKeyDown(KeyCode.KeypadEnter)) return;
             Attacks();

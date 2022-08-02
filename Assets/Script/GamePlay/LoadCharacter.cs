@@ -9,16 +9,18 @@ public class LoadCharacter : MonoBehaviour
     private void Awake()
     {
         characters[playerData.playerDataObj.characterSelection].SetActive(true);
-        var uiManager = UIManager.instance;
+        UIManager uiManager = UIManager.instance;
         if (!AudioManager.instance.audioMusic.clip)
         {
             AudioManager.instance.Plays_Music("Music_Game");
         }
 
-        if (uiManager.healthUI.activeSelf || uiManager.scoreUI.activeSelf) return;
-        uiManager.healthUI.SetActive(true);
-        uiManager.scoreUI.SetActive(true);
-        uiManager.btnBackToMenuUI.gameObject.SetActive(true);
-        uiManager.btnRestart.gameObject.SetActive(true);
+        if (!uiManager.healthUI.activeSelf || !uiManager.scoreUI.activeSelf)
+        {
+            uiManager.healthUI.SetActive(true);
+            uiManager.scoreUI.SetActive(true);
+            uiManager.btnBackToMenuUI.gameObject.SetActive(true);
+            uiManager.btnRestart.gameObject.SetActive(true);
+        }
     }
 }

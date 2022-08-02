@@ -16,23 +16,33 @@ public class Spike : MonoBehaviour
 
     private void Update()
     {
-        BaseObject.SetTimeAttack(ref timeAttack);
-        if (HuyManager.PlayerIsDeath()) return;
-        if (!isHurts) return;
-        if (timeAttack != 0f) return;
-        playerHealth.GetDamage(20f);
-        timeAttack = maxTimeAttack;
+        if (!HuyManager.PlayerIsDeath())
+        {
+            BaseObject.SetTimeAttack(ref timeAttack);
+            if (isHurts)
+            {
+                if (timeAttack <= 0f)
+                {
+                    playerHealth.GetDamage(20f);
+                    timeAttack = maxTimeAttack;
+                }
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag("Player")) return;
-        isHurts = true;
+        if (other.CompareTag("Player"))
+        {
+            isHurts = true;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (!other.CompareTag("Player")) return;
-        isHurts = false;
+        if (other.CompareTag("Player"))
+        {
+            isHurts = false;
+        }
     }
 }

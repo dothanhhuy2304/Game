@@ -43,9 +43,7 @@ namespace Game.GamePlay
         public void LoadCharacter()
         {
             playerData.playerDataObj.characterSelection = currentCharacter;
-            loadingScreenManager.FadeLoadingScene(playerData.playerDataObj.currentScenes == 0
-                ? loadingScreenManager.NextScreen(1)
-                : LoadingScreenManager.LoadCurrentScreen());
+            loadingScreenManager.FadeLoadingScene(playerData.playerDataObj.currentScenes == 0 ? loadingScreenManager.NextScreen(1) : LoadingScreenManager.LoadCurrentScreen());
         }
     }
 }

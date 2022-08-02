@@ -15,8 +15,10 @@ public class Car : MonoBehaviour
 
     private void Update()
     {
-        if (!HuyManager.PlayerIsDeath()) return;
-        StartCoroutine(nameof(WaitingPlayerRespawn), 4f);
+        if (HuyManager.PlayerIsDeath())
+        {
+            StartCoroutine(nameof(WaitingPlayerRespawn), 4f);
+        }
     }
 
     private System.Collections.IEnumerator WaitingPlayerRespawn(float delay)

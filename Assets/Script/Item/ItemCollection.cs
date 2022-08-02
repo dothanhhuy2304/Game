@@ -21,37 +21,41 @@ namespace Game.Item
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (HuyManager.PlayerIsDeath()) return;
-            if (!other.CompareTag("Player")) return;
-            switch (itemType)
+            if (!HuyManager.PlayerIsDeath())
             {
-                case ItemType.Money:
+                if (other.CompareTag("Player"))
                 {
-                    GameManager.instance.SetScore(itemData.scoreReceive);
-                    GameManager.instance.SetMoney(itemData.moneyReceive);
-                    ScoreAndDiamondItems();
-                    break;
-                }
-                case ItemType.Diamond:
-                {
-                    GameManager.instance.SetScore(itemData.scoreReceive);
-                    GameManager.instance.SetDiamond(itemData.diamondReceive);
-                    ScoreAndDiamondItems();
-                    break;
-                }
-                case ItemType.Heal:
-                {
-                    HealItems(itemData.valueReceive);
-                    break;
-                }
-                case ItemType.Hurt:
-                {
-                    HurtItems(itemData.valueReceive);
-                    break;
-                }
-                default:
-                {
-                    throw new Exception();
+                    switch (itemType)
+                    {
+                        case ItemType.Money:
+                        {
+                            GameManager.instance.SetScore(itemData.scoreReceive);
+                            GameManager.instance.SetMoney(itemData.moneyReceive);
+                            ScoreAndDiamondItems();
+                            break;
+                        }
+                        case ItemType.Diamond:
+                        {
+                            GameManager.instance.SetScore(itemData.scoreReceive);
+                            GameManager.instance.SetDiamond(itemData.diamondReceive);
+                            ScoreAndDiamondItems();
+                            break;
+                        }
+                        case ItemType.Heal:
+                        {
+                            HealItems(itemData.valueReceive);
+                            break;
+                        }
+                        case ItemType.Hurt:
+                        {
+                            HurtItems(itemData.valueReceive);
+                            break;
+                        }
+                        default:
+                        {
+                            throw new Exception();
+                        }
+                    }
                 }
             }
         }
@@ -62,7 +66,7 @@ namespace Game.Item
             playerHealth.GetDamage(value);
             AudioManager.instance.Play("Item_Hurt");
             itemCollider.enabled = false;
-            StartCoroutine(nameof(TemporarilyDeactivate), 0.8f);
+            StartCoroutine(TemporarilyDeactivate(0.8f));
         }
 
         private void HealItems(float value)
@@ -71,7 +75,7 @@ namespace Game.Item
             playerHealth.Heal(value);
             AudioManager.instance.Play("Item_Heal");
             itemCollider.enabled = false;
-            StartCoroutine(nameof(TemporarilyDeactivate), 0.8f);
+            StartCoroutine(TemporarilyDeactivate(0.8f));
         }
 
         private void ScoreAndDiamondItems()
@@ -79,7 +83,7 @@ namespace Game.Item
             animator.SetLayerWeight(1, 1);
             AudioManager.instance.Play("Item_Heal");
             itemCollider.enabled = false;
-            StartCoroutine(nameof(TemporarilyDeactivate), 0.8f);
+            StartCoroutine(TemporarilyDeactivate(0.8f));
         }
 
         private IEnumerator TemporarilyDeactivate(float delay)

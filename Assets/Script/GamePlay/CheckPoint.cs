@@ -14,23 +14,29 @@ namespace Game.GamePlay
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (!other.CompareTag("Player")) return;
-            uiGuide.SetActive(true);
+            if (other.CompareTag("Player"))
+            {
+                uiGuide.SetActive(true);
+            }
         }
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (!other.CompareTag("Player")) return;
-            if (Input.GetKey(KeyCode.F))
+            if (other.CompareTag("Player"))
             {
-                loadingScreenManager.FadeLoadingScene(loadingScreenManager.NextScreen(1));
+                if (Input.GetKey(KeyCode.F))
+                {
+                    loadingScreenManager.FadeLoadingScene(loadingScreenManager.NextScreen(1));
+                }
             }
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (!other.CompareTag("Player")) return;
-            uiGuide.SetActive(false);
+            if (other.CompareTag("Player"))
+            {
+                uiGuide.SetActive(false);
+            }
         }
     }
 }

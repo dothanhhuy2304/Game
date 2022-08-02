@@ -527,6 +527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: 5
+  body: {fileID: 4456875694535532232}
   canMoving: 1
   movingSpeed: 5
   projectiles: []
@@ -538,6 +539,7 @@ MonoBehaviour:
   enemyHealth: {fileID: 0}
   chickenCol: {fileID: 3460286694531780528}
   explosionObj: {fileID: 4549498311450808679}
+  spriteRenderer: {fileID: 4549498311706445917}
   groundCheck: {x: -1, y: 0}
   rangeAttack: 3
 --- !u!1 &4549498311985406195

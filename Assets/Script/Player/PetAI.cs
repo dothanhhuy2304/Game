@@ -18,7 +18,6 @@ namespace Game.Player
         [SerializeField] private float rangeAttack;
         private float currentTimeAttack = 3f;
         private const float TimeAttack = 3f;
-        private PlayerHealth playerHealth;
         [SerializeField] private Animator animator;
 
         private void Start()
@@ -28,7 +27,6 @@ namespace Game.Player
             closestEnemy = null;
             enemyContact = false;
             multipleEnemy = GameObject.FindGameObjectsWithTag("Enemy");
-            playerHealth = PlayerHealth.instance;
         }
 
         private void FixedUpdate()
@@ -47,31 +45,41 @@ namespace Game.Player
 
                 BaseObject.SetTimeAttack(ref currentTimeAttack);
                 closestEnemy = FindClosestEnemy();
-                if (!enemyContact) return;
-                if (Vector2.Distance(transform.position, closestEnemy.position) > rangeAttack) return;
-                if (currentTimeAttack != 0f) return;
-                Attacks();
-                animator.SetBool("isRun", false);
-                currentTimeAttack = TimeAttack;
-            }
-            else
-            {
-                body.velocity = Vector2.zero;
+                if (enemyContact)
+                {
+                    if (Vector2.Distance(transform.position, closestEnemy.position) < rangeAttack)
+                    {
+                        if (currentTimeAttack <= 0f)
+                        {
+                            Attacks();
+                            animator.SetBool("isRun", false);
+                            currentTimeAttack = TimeAttack;
+                        }
+                        else
+                        {
+                            body.velocity = Vector2.zero;
+                        }
+                    }
+                }
             }
         }
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (!other.CompareTag("Enemy")) return;
-            closestEnemy.GetComponent<SpriteRenderer>().color = new Color(1f, 0.6f, 0.5f);
-            enemyContact = true;
+            if (other.CompareTag("Enemy"))
+            {
+                closestEnemy.GetComponent<SpriteRenderer>().color = new Color(1f, 0.6f, 0.5f);
+                enemyContact = true;
+            }
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (!other.CompareTag("Enemy")) return;
-            other.GetComponent<SpriteRenderer>().color = Color.white;
-            enemyContact = false;
+            if (other.CompareTag("Enemy"))
+            {
+                other.GetComponent<SpriteRenderer>().color = Color.white;
+                enemyContact = false;
+            }
         }
 
         private void Moving()

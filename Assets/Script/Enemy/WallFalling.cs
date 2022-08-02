@@ -16,8 +16,10 @@ public class WallFalling : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!HuyManager.PlayerIsDeath()) return;
-        StartCoroutine(nameof(WaitingReset));
+        if (HuyManager.PlayerIsDeath())
+        {
+            StartCoroutine(nameof(WaitingReset));
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -33,7 +35,6 @@ public class WallFalling : MonoBehaviour
         yield return new WaitForSeconds(delay);
         body.bodyType = RigidbodyType2D.Dynamic;
         colliders.isTrigger = true;
-        yield return null;
     }
 
     private IEnumerator WaitingReset()
@@ -42,6 +43,5 @@ public class WallFalling : MonoBehaviour
         body.bodyType = RigidbodyType2D.Static;
         body.transform.position = startPos;
         colliders.isTrigger = false;
-        yield return null;
     }
 }

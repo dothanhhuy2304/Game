@@ -10,7 +10,7 @@ namespace Game.Player
     {
         [SerializeField] private ScoreData scoreData;
         [SerializeField] private PlayerData playerDatas;
-        [SerializeField] private CharacterController2D playerCharacter;
+        private CharacterController2D playerCharacter;
         private PlayerHealthBar playerHealthBar;
         private PetAI petAI;
         [SerializeField] private GameObject uIDamagePlayer;

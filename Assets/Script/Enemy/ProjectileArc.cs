@@ -61,7 +61,7 @@ public class ProjectileArc : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.GetComponent<PlayerHealth>().GetDamage(20f);
+            PlayerHealth.instance.GetDamage(20f);
             AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
             Explosion();
         }
@@ -72,9 +72,11 @@ public class ProjectileArc : MonoBehaviour
         }
         else if (other.CompareTag("Bullet"))
         {
-            if (body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy"))) return;
-            Arrived();
-            AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
+            if (!body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy")))
+            {
+                Arrived();
+                AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
+            }
         }
     }
 

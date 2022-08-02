@@ -50,6 +50,13 @@ namespace Game.Enemy
             }
         }
 
+        private void Moving(string states)
+        {
+            body.velocity = body.transform.right * movingSpeed;
+            animator.SetBool(states, true);
+        }
+
+
         private void SNinjaAttack()
         {
             if (!CheckAttack(transform.position + (Vector3) posAttack, rangerAttack)) return;
@@ -63,7 +70,11 @@ namespace Game.Enemy
                 animator.SetBool("isRun", false);
                 if (HuyManager.PlayerIsDeath()) return;
                 if (currentTime != 0f) return;
-                Attack();
+                if (!HuyManager.PlayerIsDeath() || !enemyHealth.EnemyDeath())
+                {
+                    StartCoroutine(DurationAttack(0.5f));
+                }
+
                 currentTime = maxTimeAttack;
             }
         }
@@ -94,5 +105,12 @@ namespace Game.Enemy
                 AudioManager.instance.Play("Enemy_Attack_Sword");
             }
         }
+
+        private System.Collections.IEnumerator DurationAttack(float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            AttackBulletDirection();
+        }
+
     }
 }
