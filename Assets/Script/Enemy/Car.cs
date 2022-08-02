@@ -1,24 +1,17 @@
 using UnityEngine;
-using Game.Player;
+using UnityEngine.Events;
 
-public class Car : MonoBehaviour
+public class Car : FastSingleton<Car>
 {
     [SerializeField] private Transform[] carTrans;
     [SerializeField] private Vector3[] currentPos;
-
+    [HideInInspector] public UnityEvent eventResetCar;
     private void Start()
     {
         currentPos[0] = carTrans[0].position;
         currentPos[1] = carTrans[1].position;
         currentPos[2] = carTrans[2].position;
-    }
-
-    private void Update()
-    {
-        if (HuyManager.PlayerIsDeath())
-        {
-            StartCoroutine(nameof(WaitingPlayerRespawn), 4f);
-        }
+        eventResetCar.AddListener(delegate { StartCoroutine(WaitingPlayerRespawn(4f)); });
     }
 
     private System.Collections.IEnumerator WaitingPlayerRespawn(float delay)

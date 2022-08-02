@@ -7,32 +7,40 @@ namespace Game.Player
     {
         [SerializeField] private FireProjectile[] projectiles;
         [SerializeField] private Vector2 offset;
-        private CharacterController2D players;
         private float timeAttack;
         [SerializeField] private float resetTimeAttack = 0.5f;
 
-        private void Start()
-        {
-            players = CharacterController2D.instance;
-            timeAttack = 0f;
-        }
+        // private void Start()
+        // {
+        //     timeAttack = 0f;
+        // }
 
         private void LateUpdate()
         {
+            if (HuyManager.PlayerIsDeath() || UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
             HuyManager.SetTimeAttack(ref timeAttack);
-            if (timeAttack != 0) return;
-            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() || HuyManager.PlayerIsDeath()) return;
-            if (players.isHurt) return;
-            if (!Input.GetMouseButtonDown(0) && !Input.GetKeyDown(KeyCode.KeypadEnter)) return;
-            Attacks();
+            if (timeAttack <= 0)
+            {
+                if (!HuyManager.GetPlayerIsHurt())
+                {
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        Bullet();
+                        //reset time when player shoot
+                        timeAttack = resetTimeAttack;
+                    }
+                }
+            }
         }
 
-        public void Attacks()
-        {
-            if (timeAttack != 0) return;
-            Bullet();
-            timeAttack = resetTimeAttack;
-        }
+        // private void Attacks()
+        // {
+        //     if (timeAttack <= 0)
+        //     {
+        //         Bullet();
+        //         timeAttack = resetTimeAttack;
+        //     }
+        // }
 
         private void Bullet()
         {

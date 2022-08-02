@@ -21,7 +21,6 @@ namespace Game.Player
         [SerializeField] private float clampMinX, clampMaxX;
         [HideInInspector] public PlayerHealth playerHealth;
         private bool isOnCar;
-        public bool isHurt;
         private float startSpeed;
         private int jumpCount;
         private int maxJumpCount = 2;
@@ -37,7 +36,7 @@ namespace Game.Player
         {
             if (!HuyManager.PlayerIsDeath())
             {
-                if (!isHurt)
+                if (!HuyManager.GetPlayerIsHurt())
                 {
                     GetInput();
                     if (!mGrounded || mDBJump == false)
@@ -66,7 +65,7 @@ namespace Game.Player
         {
             if (!HuyManager.PlayerIsDeath())
             {
-                if (!isHurt)
+                if (!HuyManager.GetPlayerIsHurt())
                 {
                     Move(playerInput * playerData.movingSpeed * Time.fixedDeltaTime);
 

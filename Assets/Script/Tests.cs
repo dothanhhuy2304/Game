@@ -24,6 +24,14 @@ public class Tests : MonoBehaviour, IPointerDownHandler
     }
 
 
+    private void Update()
+    {
+        if (Input.GetMouseButtonUp(0))
+        {
+            Debug.Log("Touch");
+        }
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {

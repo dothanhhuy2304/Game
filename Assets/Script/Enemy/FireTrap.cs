@@ -6,12 +6,10 @@ public class FireTrap : MonoBehaviour
 {
     [SerializeField] private Animator animator;
     private PlayerHealth playerHealth;
-    private CharacterController2D player;
     private bool isOut;
 
     private void Start()
     {
-        player = CharacterController2D.instance;
         playerHealth = PlayerHealth.instance;
     }
 
@@ -36,7 +34,7 @@ public class FireTrap : MonoBehaviour
     private IEnumerator WaitingForFireOn(float delay)
     {
         if (HuyManager.PlayerIsDeath()) yield break;
-        if (player.isHurt) yield break;
+        if (HuyManager.GetPlayerIsHurt()) yield break;
         if (!isOut) yield break;
         yield return new WaitForSeconds(delay);
         if (isOut)

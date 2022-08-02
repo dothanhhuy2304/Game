@@ -1,5 +1,4 @@
 using UnityEngine;
-using Game.Core;
 using Game.Player;
 
 public class SpikeHead : MonoBehaviour
@@ -19,7 +18,16 @@ public class SpikeHead : MonoBehaviour
     private void Update()
     {
         transform.position = Vector2.Lerp(startPos, endPos, Mathf.PingPong(Time.time * speed, timeSleep));
-        HuyManager.SetTimeAttack(ref timeAttack);
+        //HuyManager.SetTimeAttack(ref timeAttack);
+    }
+
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            HuyManager.SetTimeAttack(ref timeAttack);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)

@@ -15,6 +15,16 @@ public static class HuyManager
         return PlayerPrefs.GetInt("PlayerIsDeath") == 1;
     }
 
+    public static void SetPlayerIsHurt(int state)
+    {
+        PlayerPrefs.SetInt("PlayerHurt", state);
+    }
+
+    public static bool GetPlayerIsHurt()
+    {
+        return PlayerPrefs.GetInt("PlayerHurt") == 1;
+    }
+
     public static IEnumerator EventDeath(Rigidbody2D body, Collider2D collider,Animator animator, float durationRespawn)
     {
         body.bodyType = RigidbodyType2D.Static;

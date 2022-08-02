@@ -57,9 +57,11 @@ namespace Game.GamePlay
 
         private void Update()
         {
-            if (!Input.GetKey(KeyCode.Escape)) return;
-            Time.timeScale = 0f;
-            settingUI.SetActive(true);
+            if (Input.GetKey(KeyCode.Escape))
+            {
+                Time.timeScale = 0f;
+                settingUI.SetActive(true);
+            }
         }
 
         private void ShowAndHiddenUISetting(ref bool isShow)

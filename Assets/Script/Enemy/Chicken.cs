@@ -67,10 +67,8 @@ namespace Game.Enemy
             }
             else
             {
-                var hit = Physics2D.Raycast(transform.TransformPoint(groundCheck), Vector3.down, 2f,
-                    1 << LayerMask.NameToLayer("ground"));
-                var hitRight = Physics.Raycast(transform.TransformPoint(groundCheck), Vector3.zero, 0f,
-                    1 << LayerMask.NameToLayer("ground"));
+                bool hit = Physics2D.Raycast(transform.TransformPoint(groundCheck), Vector3.down, 2f, 1 << LayerMask.NameToLayer("ground"));
+                bool hitRight = Physics2D.Raycast(transform.TransformPoint(groundCheck), Vector3.zero, 0f, 1 << LayerMask.NameToLayer("ground"));
                 HuyManager.SetTimeAttack(ref currentTime);
                 if (Vector3.Distance(transform.position, playerCharacter.transform.position) > 0.5f)
                 {
@@ -102,7 +100,7 @@ namespace Game.Enemy
 
         private void MovingToTarget(string states, bool value)
         {
-            var target = new Vector3(playerCharacter.transform.position.x - transform.position.x, 0f, 0f).normalized;
+            Vector3 target = new Vector3(playerCharacter.transform.position.x - transform.position.x, 0f, 0f).normalized;
             if (Vector2.Distance(playerCharacter.transform.position, transform.position) > 1f)
             {
                 body.MovePosition(body.transform.position + target * (movingSpeed * Time.fixedDeltaTime));

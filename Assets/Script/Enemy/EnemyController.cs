@@ -35,7 +35,7 @@ namespace Game.Enemy
         protected void Flip()
         {
             body.velocity = Vector2.zero;
-            var target = (playerCharacter.transform.position - transform.position).normalized;
+            Vector2 target = (playerCharacter.transform.position - transform.position).normalized;
             transform.rotation = Quaternion.Euler(new Vector3(0f, Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg + offsetFlip, 0f));
         }
 
@@ -43,7 +43,6 @@ namespace Game.Enemy
         {
             return Physics2D.OverlapBox(point, size, 0f, 1 << LayerMask.NameToLayer("Player"));
         }
-        
         
         // private void Attack()
         // {
@@ -83,7 +82,6 @@ namespace Game.Enemy
         //             break;
         //     }
         // }
-        
 
         protected void AttackBullet()
         {

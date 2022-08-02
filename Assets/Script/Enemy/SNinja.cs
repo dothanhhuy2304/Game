@@ -13,14 +13,6 @@ namespace Game.Enemy
         [Space] [SerializeField] private Vector2 checkGroundPosition;
         [SerializeField] private Vector2 posAttack = Vector2.zero;
         [SerializeField] private Vector2 rangerAttack = Vector2.zero;
-        private bool onGround;
-        [Header("SetUp Patrol")]
-        [SerializeField] private Vector3 target;
-
-        [SerializeField] private Vector3 velocity;
-        [SerializeField] private Vector3 previousPos;
-        [SerializeField] private Transform[] waypoints;
-        
         private void FixedUpdate()
         {
             if (HuyManager.PlayerIsDeath())
@@ -39,11 +31,8 @@ namespace Game.Enemy
 
                 if (canMoving)
                 {
-                    var hit = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.down,
-                        Distance, 1 << LayerMask.NameToLayer("ground"));
-                    var hitRight = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition),
-                        Vector2.right,
-                        0.5f, 1 << LayerMask.NameToLayer("ground"));
+                    bool hit = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.down, Distance, 1 << LayerMask.NameToLayer("ground"));
+                    bool hitRight = Physics2D.Raycast(transform.TransformPoint(checkGroundPosition), Vector2.right, 0.5f, 1 << LayerMask.NameToLayer("ground"));
                     if (!hit || hitRight)
                     {
                         transform.Rotate(new Vector3(0, -180f, 0));
@@ -52,9 +41,11 @@ namespace Game.Enemy
                     Moving("isRun");
                 }
 
-                if (HuyManager.PlayerIsDeath()) return;
-                HuyManager.SetTimeAttack(ref currentTime);
-                SNinjaAttack();
+                if (!HuyManager.PlayerIsDeath())
+                {
+                    HuyManager.SetTimeAttack(ref currentTime);
+                    SNinjaAttack();
+                }
             }
         }
 
@@ -64,62 +55,41 @@ namespace Game.Enemy
             animator.SetBool(states, true);
         }
 
-
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            EvaluateCollision(other);
-        }
-
-        private void OnCollisionStay2D(Collision2D other)
-        {
-            EvaluateCollision(other);
-        }
-
-        private void OnCollisionExit2D(Collision2D other)
-        {
-            onGround = false;
-        }
-
-        private void EvaluateCollision(Collision2D col)
-        {
-            for (int i = 0; i < col.contactCount; i++)
-            {
-                Vector3 normal = col.GetContact(i).normal;
-                onGround |= normal.y > 0.6f;
-            }
-        }
-
-
         private void SNinjaAttack()
         {
-            if (!CheckAttack(transform.position + (Vector3) posAttack, rangerAttack)) return;
-            if (Vector3.Distance(transform.position, playerCharacter.transform.position) <= 3f)
+            if (CheckAttack(transform.position + (Vector3) posAttack, rangerAttack))
             {
-                SNinjaAttackSword();
-            }
-            else
-            {
-                Flip();
-                animator.SetBool("isRun", false);
-                if (HuyManager.PlayerIsDeath()) return;
-                if (currentTime != 0f) return;
-                if (!HuyManager.PlayerIsDeath() || !enemyHealth.EnemyDeath())
+                if (Vector3.Distance(transform.position, playerCharacter.transform.position) <= 3f)
                 {
-                    StartCoroutine(DurationAttack(0.5f));
+                    SNinjaAttackSword();
                 }
+                else
+                {
+                    Flip();
+                    animator.SetBool("isRun", false);
+                    if (!HuyManager.PlayerIsDeath())
+                    {
+                        if (currentTime <= 0f)
+                        {
+                            if (!HuyManager.PlayerIsDeath() || !enemyHealth.EnemyDeath())
+                            {
+                                StartCoroutine(DurationAttack(0.5f));
+                            }
 
-                currentTime = maxTimeAttack;
+                            currentTime = maxTimeAttack;
+                        }
+                    }
+                }
             }
         }
 
         private void SNinjaAttackSword()
         {
             Flip();
-            var hits = Physics2D.OverlapCircle(rangeAttackObj.position, radiusAttack,
-                1 << LayerMask.NameToLayer("Player"));
+            bool hits = Physics2D.OverlapCircle(rangeAttackObj.position, radiusAttack, 1 << LayerMask.NameToLayer("Player"));
             if (Vector3.Distance(transform.position, playerCharacter.transform.position) >= 2f)
             {
-                var pos = playerCharacter.transform.position - transform.position;
+                Vector2 pos = playerCharacter.transform.position - transform.position;
                 body.velocity = pos * (35f * Time.fixedDeltaTime);
                 animator.SetBool("isRun", true);
             }
@@ -127,15 +97,17 @@ namespace Game.Enemy
             {
                 body.velocity = Vector2.zero;
                 animator.SetBool("isRun", false);
-                if (currentTime != 0f) return;
-                animator.SetTrigger("isAttack1");
-                currentTime = 1.5f;
-                if (hits)
+                if (currentTime <= 0f)
                 {
-                    playerCharacter.playerHealth.GetDamage(21f);
-                }
+                    animator.SetTrigger("isAttack1");
+                    currentTime = 1.5f;
+                    if (hits)
+                    {
+                        playerCharacter.playerHealth.GetDamage(21f);
+                    }
 
-                AudioManager.instance.Play("Enemy_Attack_Sword");
+                    AudioManager.instance.Play("Enemy_Attack_Sword");
+                }
             }
         }
 

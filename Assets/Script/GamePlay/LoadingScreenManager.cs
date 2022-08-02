@@ -17,14 +17,12 @@ public class LoadingScreenManager : FastSingleton<LoadingScreenManager>
 
     public static int RestartLevel()
     {
-        int currentScene = GameManager.instance.playerData.playerDataObj.currentScenes = 0;
-        return currentScene;
+        return GameManager.instance.playerData.playerDataObj.currentScenes = 0;
     }
 
     public int NextScreen(int i)
     {
-        int currentScene = GameManager.instance.playerData.playerDataObj.currentScenes = SceneManager.GetActiveScene().buildIndex + i;
-        return currentScene;
+        return GameManager.instance.playerData.playerDataObj.currentScenes = SceneManager.GetActiveScene().buildIndex + i;
     }
 
     public void FadeLoadingScene(int sceneIndex)

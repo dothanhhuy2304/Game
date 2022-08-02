@@ -39,15 +39,14 @@ namespace Game.Enemy
             if (currentHealth <= 0) Die();
             txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
             enemyHealthBar.SetHealth(currentHealth, maxHealth);
-            var uIDamageInstance = Instantiate(uIDamageEnemy, transform.position + Vector3.up, Quaternion.identity);
+            GameObject uIDamageInstance = Instantiate(uIDamageEnemy, transform.position + Vector3.up, Quaternion.identity);
             Destroy(uIDamageInstance, 0.5f);
         }
 
         public void Heal(float value)
         {
             currentHealth = Mathf.Clamp(currentHealth + value, 0f, maxHealth);
-            if (currentHealth > maxHealth)
-                currentHealth = maxHealth;
+            if (currentHealth > maxHealth) currentHealth = maxHealth;
             enemyHealthBar.SetHealth(currentHealth, maxHealth);
         }
 
@@ -76,8 +75,10 @@ namespace Game.Enemy
 
         public void EnemyRespawn()
         {
-            if (canRespawn) return;
-            StartCoroutine(Respawn(timeRespawn));
+            if (canRespawn)
+            {
+                StartCoroutine(Respawn(timeRespawn));
+            }
         }
 
         private IEnumerator Respawn(float timeDelay)

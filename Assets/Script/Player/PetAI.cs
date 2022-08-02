@@ -24,8 +24,6 @@ namespace Game.Player
         {
             body = GetComponent<Rigidbody2D>();
             playerPos = CharacterController2D.instance;
-            closestEnemy = null;
-            enemyContact = false;
             multipleEnemy = GameObject.FindGameObjectsWithTag("Enemy");
         }
 
@@ -84,7 +82,7 @@ namespace Game.Player
 
         private void Moving()
         {
-            var angle = (playerPos.transform.position - transform.position).normalized;
+            Vector2 angle = (playerPos.transform.position - transform.position).normalized;
             body.velocity = Vector2.SmoothDamp(body.velocity, angle * petData.movingSpeed, ref velocity, .05f);
         }
 

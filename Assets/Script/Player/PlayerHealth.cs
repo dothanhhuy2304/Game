@@ -28,7 +28,7 @@ namespace Game.Player
             }
             else
             {
-                GetCurrentHealth();
+                LoadCurrentHealth();
             }
             HuyManager.SetPlayerIsDeath(0);
         }
@@ -40,7 +40,7 @@ namespace Game.Player
             playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
         }
 
-        private void GetCurrentHealth()
+        private void LoadCurrentHealth()
         {
             playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
         }
@@ -52,8 +52,12 @@ namespace Game.Player
             { 
                 PlayerHurt();
             }
+            else
+            {
+                Die();
+            }
 
-            if (playerCharacter.playerData.currentHealth <= 0) Die();
+            //if (playerCharacter.playerData.currentHealth <= 0) Die();
             txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
             playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
             var uIDamageInstance = Instantiate(uIDamagePlayer, transform.position + Vector3.up, Quaternion.identity);
@@ -71,26 +75,23 @@ namespace Game.Player
         public void Die()
         {
             playerCharacter.playerData.currentHealth = 0f;
-            if (playerCharacter.playerData.currentHealth == 0)
-            {
-                PlayAnimPlayerDeath();
-            }
+            PlayAnimPlayerDeath(playerCharacter.animator);
 
-            //save score
+            //save score when player are death
             if (scoreData.scoreDataObj.currentScore > scoreData.scoreDataObj.highScore)
             {
                 scoreData.scoreDataObj.highScore = scoreData.scoreDataObj.currentScore;
             }
 
-            StartCoroutine(EventDeath(playerCharacter.body, playerCharacter.col, playerCharacter.animator, 3f));
+            StartCoroutine(EventPlayerDeath(playerCharacter.body, playerCharacter.col, playerCharacter.animator, 3f));
         }
-        
-        private void PlayAnimPlayerDeath()
+
+        private static void PlayAnimPlayerDeath(Animator animator)
         {
-            playerCharacter.animator.SetTrigger("is_Death");
+            animator.SetTrigger("is_Death");
             AudioManager.instance.Play("Enemy_Death");
         }
-        
+
 
         public void DieByFalling()
         {
@@ -102,52 +103,56 @@ namespace Game.Player
                 scoreData.scoreDataObj.highScore = scoreData.scoreDataObj.currentScore;
             }
 
-            StartCoroutine(nameof(TimeDelayDeathFalling), 3f);
+            StartCoroutine(TimeDeathByFalling(3f));
         }
 
-        private IEnumerator TimeDelayDeathFalling(float delay)
+        private IEnumerator TimeDeathByFalling(float delay)
         {
             yield return new WaitForSeconds(delay);
             SetMaxHealth(playerCharacter.playerData.heathDefault, playerCharacter.playerData.hpIc);
-            var position = transform; position.position = new Vector3(playerDatas.playerDataObj.position[0], playerDatas.playerDataObj.position[1], playerDatas.playerDataObj.position[2]);
+            Transform position = transform;
+            position.position = new Vector3(playerDatas.playerDataObj.position[0], playerDatas.playerDataObj.position[1], playerDatas.playerDataObj.position[2]);
             petAI.transform.position = position.up;
             HuyManager.SetPlayerIsDeath(0);
+            //rest environment when player death
+            Car.instance.eventResetCar?.Invoke();
         }
-        
-        private IEnumerator EventDeath(Rigidbody2D body, Collider2D col, Animator animator, float durationRespawn)
+
+        private IEnumerator EventPlayerDeath(Rigidbody2D body, Collider2D col, Animator animator, float durationRespawn)
         {
             HuyManager.SetPlayerIsDeath(1);
             body.bodyType = RigidbodyType2D.Static;
             col.enabled = false;
             animator.SetLayerWeight(1, 1f);
             AudioManager.instance.Play("Enemy_Death");
-            yield return new WaitForSeconds(0.6f);
             yield return new WaitForSeconds(durationRespawn);
             SetMaxHealth(playerCharacter.playerData.heathDefault, playerCharacter.playerData.hpIc);
-            var position = transform;
+            Transform position = transform;
             position.position = new Vector3(playerDatas.playerDataObj.position[0], playerDatas.playerDataObj.position[1], playerDatas.playerDataObj.position[2]);
             petAI.transform.position = position.up;
             animator.SetLayerWeight(1, 0);
-            body.bodyType = RigidbodyType2D.Dynamic;
-            yield return new WaitForSeconds(0.1f);
-            HuyManager.SetPlayerIsDeath(0);
             col.enabled = true;
+            body.bodyType = RigidbodyType2D.Dynamic;
+            yield return new WaitForSeconds(0.2f);
+            HuyManager.SetPlayerIsDeath(0);
+            //rest environment when player death
+            Car.instance.eventResetCar?.Invoke();
         }
 
-        public void PlayerHurt()
+        private void PlayerHurt()
         {
             playerCharacter.animator.SetTrigger("is_Hurt");
             playerCharacter.body.bodyType = RigidbodyType2D.Static;
-            playerCharacter.isHurt = true;
+            HuyManager.SetPlayerIsHurt(1);
             AudioManager.instance.Play("Player_Hurt");
-            StartCoroutine(nameof(Hurting), 0.5f);
+            StartCoroutine(Hurting(0.5f));
         }
 
         private IEnumerator Hurting(float delay)
         {
             yield return new WaitForSeconds(delay);
             playerCharacter.body.bodyType = RigidbodyType2D.Dynamic;
-            playerCharacter.isHurt = false;
+            HuyManager.SetPlayerIsHurt(0);
         }
         
         private void OnApplicationQuit()
