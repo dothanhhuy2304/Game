@@ -25,5 +25,17 @@ public static class HuyManager
         body.bodyType = RigidbodyType2D.Dynamic;
         collider.enabled = true;
     }
+    
+    public static void SetTimeAttack(ref float currentTime)
+    {
+        if (currentTime > 0f)
+        {
+            currentTime -= Time.deltaTime;
+        }
+        else
+        {
+            currentTime = 0f;
+        }
+    }
 
 }

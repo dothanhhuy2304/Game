@@ -30,34 +30,35 @@ public class FireProjectile : MonoBehaviour
             targetPetEnemy = (petAI.closestEnemy.position - transform.position).normalized;
         }
 
-        StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
-        if (!body.isKinematic) return;
-        switch (enemyType)
+        StartCoroutine(TemporarilyDeactivate(1.7f));
+        if (body.isKinematic)
         {
-            case EnemyType.SNINJA:
+            switch (enemyType)
             {
-                body.velocity = SetAngleSNinja() * bulletSpeed;
-                break;
+                case EnemyType.SNINJA:
+                {
+                    body.velocity = SetAngleSNinja() * bulletSpeed;
+                    break;
+                }
+                case EnemyType.CarnivorousPlant:
+                {
+                    body.velocity = transform.right * bulletSpeed;
+                    break;
+                }
+                case EnemyType.Player:
+                {
+                    body.velocity = transform.right * bulletSpeed;
+                    break;
+                }
+                case EnemyType.Pet:
+                {
+                    body.velocity = targetPetEnemy * bulletSpeed;
+                    break;
+                }
+                case EnemyType.Bee:
+                    body.velocity = SetAngleSNinja() * bulletSpeed;
+                    break;
             }
-
-            case EnemyType.CarnivorousPlant:
-            {
-                body.velocity = transform.right * bulletSpeed;
-                break;
-            }
-            case EnemyType.Player:
-            {
-                body.velocity = transform.right * bulletSpeed;
-                break;
-            }
-            case EnemyType.Pet:
-            {
-                body.velocity = targetPetEnemy * bulletSpeed;
-                break;
-            }
-            case EnemyType.Bee:
-                body.velocity = SetAngleSNinja() * bulletSpeed;
-                break;
         }
     }
 

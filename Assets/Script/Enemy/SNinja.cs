@@ -45,7 +45,7 @@ namespace Game.Enemy
                 }
 
                 if (HuyManager.PlayerIsDeath()) return;
-                BaseObject.SetTimeAttack(ref currentTime);
+                HuyManager.SetTimeAttack(ref currentTime);
                 SNinjaAttack();
             }
         }

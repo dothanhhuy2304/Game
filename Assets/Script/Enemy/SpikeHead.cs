@@ -19,7 +19,7 @@ public class SpikeHead : MonoBehaviour
     private void Update()
     {
         transform.position = Vector2.Lerp(startPos, endPos, Mathf.PingPong(Time.time * speed, timeSleep));
-        BaseObject.SetTimeAttack(ref timeAttack);
+        HuyManager.SetTimeAttack(ref timeAttack);
     }
 
     private void OnTriggerEnter2D(Collider2D other)

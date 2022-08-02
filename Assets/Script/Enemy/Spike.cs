@@ -18,7 +18,7 @@ public class Spike : MonoBehaviour
     {
         if (!HuyManager.PlayerIsDeath())
         {
-            BaseObject.SetTimeAttack(ref timeAttack);
+            HuyManager.SetTimeAttack(ref timeAttack);
             if (isHurts)
             {
                 if (timeAttack <= 0f)

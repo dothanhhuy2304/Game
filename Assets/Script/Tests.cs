@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class Tests : MonoBehaviour
+public class Tests : MonoBehaviour, IPointerDownHandler
 {
     // Start is called before the first frame update
     void Start()
@@ -22,5 +23,10 @@ public class Tests : MonoBehaviour
                 Debug.Log(hit2D.collider.gameObject.name);
             }
         }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        Debug.Log(eventData.position);
     }
 }

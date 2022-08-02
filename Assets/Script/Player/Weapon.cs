@@ -1,4 +1,3 @@
-using Game.Core;
 using Game.GamePlay;
 using UnityEngine;
 
@@ -20,7 +19,7 @@ namespace Game.Player
 
         private void LateUpdate()
         {
-            BaseObject.SetTimeAttack(ref timeAttack);
+            HuyManager.SetTimeAttack(ref timeAttack);
             if (timeAttack != 0) return;
             if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() || HuyManager.PlayerIsDeath()) return;
             if (players.isHurt) return;

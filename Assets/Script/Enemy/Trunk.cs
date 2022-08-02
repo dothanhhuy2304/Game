@@ -26,7 +26,7 @@ namespace Game.Enemy
 
             if (!HuyManager.PlayerIsDeath())
             {
-                BaseObject.SetTimeAttack(ref currentTime);
+                HuyManager.SetTimeAttack(ref currentTime);
                 if (!enemyHealth.EnemyDeath())
                 {
                     if (CheckAttack(transform.position + (Vector3) posAttack, rangerAttack))

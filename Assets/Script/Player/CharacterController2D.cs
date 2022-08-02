@@ -50,7 +50,7 @@ namespace Game.Player
             }
         }
 
-        void GetInput()
+        private void GetInput()
         {
         #if UNITY_EDITOR || UNITY_STANDALONE
             playerInput = Input.GetAxisRaw("Horizontal");

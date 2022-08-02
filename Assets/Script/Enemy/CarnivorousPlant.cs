@@ -16,17 +16,14 @@ namespace Game.Enemy
                 enemyHealth.EnemyRespawn();
             }
 
-            if (HuyManager.PlayerIsDeath())
+            if (HuyManager.PlayerIsDeath() && !enemyHealth.EnemyDeath())
             {
-                if (!enemyHealth.EnemyDeath())
-                {
-                    enemyHealth.ResetHeathDefault();
-                }
+                enemyHealth.ResetHeathDefault();
             }
 
             if (!HuyManager.PlayerIsDeath())
             {
-                BaseObject.SetTimeAttack(ref currentTime);
+                HuyManager.SetTimeAttack(ref currentTime);
                 if (!enemyHealth.EnemyDeath())
                 {
                     if (CheckAttack(transform.position + (Vector3) posAttack, rangerAttack))

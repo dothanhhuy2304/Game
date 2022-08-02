@@ -43,7 +43,7 @@ namespace Game.Player
                     body.velocity = Vector2.zero;
                 }
 
-                BaseObject.SetTimeAttack(ref currentTimeAttack);
+                HuyManager.SetTimeAttack(ref currentTimeAttack);
                 closestEnemy = FindClosestEnemy();
                 if (enemyContact)
                 {

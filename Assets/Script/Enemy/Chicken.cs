@@ -40,7 +40,7 @@ namespace Game.Enemy
             {
                 if (!spriteRenderer.enabled)
                 {
-                    BaseObject.SetTimeAttack(ref timeRespawn);
+                    HuyManager.SetTimeAttack(ref timeRespawn);
                     if (timeRespawn != 0) return;
                     body.bodyType = RigidbodyType2D.Kinematic;
                     destroy = false;
@@ -71,7 +71,7 @@ namespace Game.Enemy
                     1 << LayerMask.NameToLayer("ground"));
                 var hitRight = Physics.Raycast(transform.TransformPoint(groundCheck), Vector3.zero, 0f,
                     1 << LayerMask.NameToLayer("ground"));
-                BaseObject.SetTimeAttack(ref currentTime);
+                HuyManager.SetTimeAttack(ref currentTime);
                 if (Vector3.Distance(transform.position, playerCharacter.transform.position) > 0.5f)
                 {
                     Flip();
