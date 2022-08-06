@@ -6,10 +6,9 @@ namespace Game.GamePlay
 {
     public class GameManager : FastSingleton<GameManager>
     {
-        private string path = Application.persistentDataPath + "/saveData/";
         private const string ScoreData = "scoreData";
         private const string PlayerData = "playerData";
-        [SerializeField] private ScoreData scoreData;
+        public CharacterScriptTableObject listCharacter;
         public PlayerData playerData;
         [SerializeField] private TMPro.TextMeshProUGUI txtScore;
         [SerializeField] private TMPro.TextMeshProUGUI txtDiamond;
@@ -18,7 +17,7 @@ namespace Game.GamePlay
         private void Start()
         {
             DontDestroyOnLoad(this);
-            if (LoadData<PlayerDataObj>(PlayerData, path) == null)
+            if (LoadData<PlayerDataObj>(PlayerData) == null)
             {
                 playerData.playerDataObj.position = new[] {-4.95f, -4f, 0};
                 playerData.playerDataObj.characterSelection = 0;
@@ -29,73 +28,75 @@ namespace Game.GamePlay
             }
             else
             {
-                if (LoadData<PlayerDataObj>(PlayerData, path).position == null)
+                if (LoadData<PlayerDataObj>(PlayerData).position == null)
                 {
                     playerData.playerDataObj.position = new[] {-4.95f, -4f, 0};
                 }
                 else
                 {
-                    playerData.playerDataObj.position = LoadData<PlayerDataObj>(PlayerData, path).position;
+                    playerData.playerDataObj.position = LoadData<PlayerDataObj>(PlayerData).position;
                 }
 
-                playerData.playerDataObj.characterSelection = LoadData<PlayerDataObj>(PlayerData, path).characterSelection;
-                playerData.playerDataObj.currentScenes = LoadData<PlayerDataObj>(PlayerData, path).currentScenes;
-                playerData.playerDataObj.saveAudio = LoadData<PlayerDataObj>(PlayerData, path).saveAudio;
-                playerData.playerDataObj.soundEffect = LoadData<PlayerDataObj>(PlayerData, path).soundEffect;
-                playerData.playerDataObj.soundMusic = LoadData<PlayerDataObj>(PlayerData, path).soundMusic;
+                playerData.playerDataObj.characterSelection = LoadData<PlayerDataObj>(PlayerData).characterSelection;
+                playerData.playerDataObj.currentScenes = LoadData<PlayerDataObj>(PlayerData).currentScenes;
+                playerData.playerDataObj.saveAudio = LoadData<PlayerDataObj>(PlayerData).saveAudio;
+                playerData.playerDataObj.soundEffect = LoadData<PlayerDataObj>(PlayerData).soundEffect;
+                playerData.playerDataObj.soundMusic = LoadData<PlayerDataObj>(PlayerData).soundMusic;
             }
 
-            if (LoadData<ScoreDataObj>(ScoreData, path) == null)
+            if (LoadData<ScoreDataObj>(ScoreData) == null)
             {
-                scoreData.scoreDataObj.currentScore = 0;
-                scoreData.scoreDataObj.diamond = 0;
-                scoreData.scoreDataObj.money = 0;
-                scoreData.scoreDataObj.highScore = 0;
+                playerData.scoreDataObj.currentScore = 0;
+                playerData.scoreDataObj.diamond = 0;
+                playerData.scoreDataObj.money = 0;
+                playerData.scoreDataObj.highScore = 0;
                 txtDiamond.text = 0.ToString();
                 txtMoney.text = 0.ToString();
                 txtScore.text = 0.ToString();
             }
             else
             {
-                scoreData.scoreDataObj.currentScore = 0;
-                scoreData.scoreDataObj.highScore = LoadData<ScoreDataObj>(ScoreData, path).highScore;
+                playerData.scoreDataObj.currentScore = 0;
+                playerData.scoreDataObj.highScore = LoadData<ScoreDataObj>(ScoreData).highScore;
                 SetScore(0f);
-                SetMoney(LoadData<ScoreDataObj>(ScoreData, path).money);
-                SetDiamond(LoadData<ScoreDataObj>(ScoreData, path).diamond);
+                SetMoney(LoadData<ScoreDataObj>(ScoreData).money);
+                SetDiamond(LoadData<ScoreDataObj>(ScoreData).diamond);
             }
         }
 
         public void SetScore(float score)
         {
-            scoreData.scoreDataObj.currentScore += score;
-            txtScore.text = scoreData.scoreDataObj.currentScore.ToString(System.Globalization.CultureInfo.CurrentCulture);
+            playerData.scoreDataObj.currentScore += score;
+            txtScore.text = playerData.scoreDataObj.currentScore.ToString(System.Globalization.CultureInfo.CurrentCulture);
         }
 
         public void SetDiamond(float diamond)
         {
-            scoreData.scoreDataObj.diamond += diamond;
-            txtDiamond.text = scoreData.scoreDataObj.diamond.ToString(System.Globalization.CultureInfo.CurrentCulture);
+            playerData.scoreDataObj.diamond += diamond;
+            txtDiamond.text = playerData.scoreDataObj.diamond.ToString(System.Globalization.CultureInfo.CurrentCulture);
         }
 
         public void SetMoney(float money)
         {
-            scoreData.scoreDataObj.money += money;
-            txtMoney.text = scoreData.scoreDataObj.money + " $";
+            playerData.scoreDataObj.money += money;
+            txtMoney.text = playerData.scoreDataObj.money + " $";
         }
 
-        private static void SaveData<T>(T obj, string key, string path)
+        private static void SaveData<T>(T obj, string key)
         {
             BinaryFormatter formatter = new BinaryFormatter();
+            string path = Application.persistentDataPath + "/saveData/";
             Directory.CreateDirectory(path);
             FileStream fileStream = new FileStream(path + key, FileMode.OpenOrCreate);
             formatter.Serialize(fileStream, obj);
             fileStream.Close();
         }
 
-        private static T LoadData<T>(string key, string path)
+        private static T LoadData<T>(string key)
         {
             T data = default;
             BinaryFormatter formatter = new BinaryFormatter();
+            string path = Application.persistentDataPath + "/saveData/";
             if (File.Exists(path + key))
             {
                 FileStream fileStream = new FileStream(path + key, FileMode.OpenOrCreate);
@@ -115,11 +116,11 @@ namespace Game.GamePlay
             var scoreDatas = new ScoreDataObj
             {
                 currentScore = 0,
-                diamond = scoreData.scoreDataObj.diamond,
-                money = scoreData.scoreDataObj.money,
-                highScore = scoreData.scoreDataObj.highScore
+                diamond = playerData.scoreDataObj.diamond,
+                money = playerData.scoreDataObj.money,
+                highScore = playerData.scoreDataObj.highScore
             };
-            SaveData(scoreDatas, ScoreData, path);
+            SaveData(scoreDatas, ScoreData);
             var playerDatas = new PlayerDataObj
             {
                 position = playerData.playerDataObj.position,
@@ -129,7 +130,7 @@ namespace Game.GamePlay
                 soundEffect = playerData.playerDataObj.soundEffect,
                 soundMusic = playerData.playerDataObj.soundMusic
             };
-            SaveData(playerDatas, PlayerData, path);
+            SaveData(playerDatas, PlayerData);
         }
     }
 }

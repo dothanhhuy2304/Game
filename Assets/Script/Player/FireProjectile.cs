@@ -14,7 +14,6 @@ public class FireProjectile : MonoBehaviour
     private Vector2 targetPetEnemy = Vector2.zero;
     private PlayerHealth playerHealth;
     private PetAI petAI;
-    public SpriteRenderer bulletSpriteRenderer;
 
     private void Awake()
     {

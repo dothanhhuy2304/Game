@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Game.Core;
 
@@ -10,8 +12,8 @@ namespace Game.Player
         private Rigidbody2D body;
         private CharacterController2D playerPos;
         private Vector2 velocity = Vector2.zero;
-        [SerializeField] private FireProjectile[] projectiles;
-        [HideInInspector] public GameObject[] multipleEnemy;
+        [SerializeField] private List<FireProjectile> projectiles;
+        [HideInInspector] public List<GameObject> multipleEnemy;
         [HideInInspector] public Transform closestEnemy;
         private bool enemyContact;
         [SerializeField] private float distancePlayer;
@@ -24,7 +26,7 @@ namespace Game.Player
         {
             body = GetComponent<Rigidbody2D>();
             playerPos = CharacterController2D.instance;
-            multipleEnemy = GameObject.FindGameObjectsWithTag("Enemy");
+            multipleEnemy = GameObject.FindGameObjectsWithTag("Enemy").ToList();
         }
 
         private void FixedUpdate()
@@ -88,9 +90,9 @@ namespace Game.Player
 
         private void Attacks()
         {
-            projectiles[FindBullet()].transform.position = transform.position;
-            projectiles[FindBullet()].transform.rotation = transform.rotation;
-            projectiles[FindBullet()].SetActives();
+            projectiles[FindBullet(projectiles)].transform.position = transform.position;
+            projectiles[FindBullet(projectiles)].transform.rotation = transform.rotation;
+            projectiles[FindBullet(projectiles)].SetActives();
         }
 
         private Transform FindClosestEnemy()
@@ -111,11 +113,11 @@ namespace Game.Player
             return trans;
         }
 
-        private int FindBullet()
+        private int FindBullet(List<FireProjectile> projectile)
         {
-            for (var i = 0; i < projectiles.Length; i++)
+            for (var i = 0; i < projectile.Count; i++)
             {
-                if (!projectiles[i].gameObject.activeInHierarchy)
+                if (!projectile[i].gameObject.activeInHierarchy)
                 {
                     return i;
                 }

@@ -1023,7 +1023,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &331655125
 GameObject:
@@ -1715,7 +1715,6 @@ MonoBehaviour:
   uiVolume: {fileID: 1122209769}
   btnBackToMenuUI: {fileID: 291916468}
   btnRestart: {fileID: 482252631}
-  playerData: {fileID: 11400000, guid: 08e5aa38e1d66b141b421f095e45bea2, type: 2}
 --- !u!210 &492912731
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -3433,8 +3432,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56d91f5a4d467cc47b978cf8ae6590d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreData: {fileID: 11400000, guid: f8222b860886af9448e9b80d49666f6b, type: 2}
-  playerData: {fileID: 11400000, guid: 08e5aa38e1d66b141b421f095e45bea2, type: 2}
+  listCharacter: {fileID: 11400000, guid: 369b6f84b81373b40b29b53a2e0ad25a, type: 2}
+  playerData: {fileID: 11400000, guid: f8222b860886af9448e9b80d49666f6b, type: 2}
   txtScore: {fileID: 1311499198}
   txtDiamond: {fileID: 41982821}
   txtMoney: {fileID: 1401767659}
@@ -3450,7 +3449,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1140816396
 MonoBehaviour:
@@ -4651,7 +4650,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac83a3e0d6fc6fb458a81786f806750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerData: {fileID: 11400000, guid: 08e5aa38e1d66b141b421f095e45bea2, type: 2}
   characters:
   - {fileID: 1372389201}
   - {fileID: 1829731363}
@@ -5704,7 +5702,7 @@ Transform:
   m_Children:
   - {fileID: 1015625245}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1910489635
 MonoBehaviour:

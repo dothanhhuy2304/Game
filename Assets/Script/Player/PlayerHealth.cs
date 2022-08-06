@@ -8,8 +8,7 @@ namespace Game.Player
 {
     public class PlayerHealth : FastSingleton<PlayerHealth>, IHealthSystem
     {
-        [SerializeField] private ScoreData scoreData;
-        [SerializeField] private PlayerData playerDatas;
+        private GameManager gameManager;
         private CharacterController2D playerCharacter;
         private PlayerHealthBar playerHealthBar;
         private PetAI petAI;
@@ -18,6 +17,7 @@ namespace Game.Player
 
         private void Start()
         {
+            gameManager = GameManager.instance;
             playerCharacter = CharacterController2D.instance;
             playerHealthBar = PlayerHealthBar.instance;
             petAI = PetAI.instance;
@@ -31,6 +31,7 @@ namespace Game.Player
                 LoadCurrentHealth();
             }
             HuyManager.SetPlayerIsDeath(0);
+            HuyManager.SetPlayerIsHurt(0);
         }
 
         private void SetMaxHealth(float maxHealth, float hpIc)
@@ -78,9 +79,9 @@ namespace Game.Player
             PlayAnimPlayerDeath(playerCharacter.animator);
 
             //save score when player are death
-            if (scoreData.scoreDataObj.currentScore > scoreData.scoreDataObj.highScore)
+            if (gameManager.playerData.scoreDataObj.currentScore > gameManager.playerData.scoreDataObj.highScore)
             {
-                scoreData.scoreDataObj.highScore = scoreData.scoreDataObj.currentScore;
+                gameManager.playerData.scoreDataObj.highScore = gameManager.playerData.scoreDataObj.currentScore;
             }
 
             StartCoroutine(EventPlayerDeath(playerCharacter.body, playerCharacter.col, playerCharacter.animator, 3f));
@@ -92,15 +93,14 @@ namespace Game.Player
             AudioManager.instance.Play("Enemy_Death");
         }
 
-
         public void DieByFalling()
         {
             playerCharacter.playerData.currentHealth = 0f;
             AudioManager.instance.Play("Enemy_Death");
             HuyManager.SetPlayerIsDeath(1);
-            if (scoreData.scoreDataObj.currentScore > scoreData.scoreDataObj.highScore)
+            if (gameManager.playerData.scoreDataObj.currentScore > gameManager.playerData.scoreDataObj.highScore)
             {
-                scoreData.scoreDataObj.highScore = scoreData.scoreDataObj.currentScore;
+                gameManager.playerData.scoreDataObj.highScore = gameManager.playerData.scoreDataObj.currentScore;
             }
 
             StartCoroutine(TimeDeathByFalling(3f));
@@ -111,7 +111,7 @@ namespace Game.Player
             yield return new WaitForSeconds(delay);
             SetMaxHealth(playerCharacter.playerData.heathDefault, playerCharacter.playerData.hpIc);
             Transform position = transform;
-            position.position = new Vector3(playerDatas.playerDataObj.position[0], playerDatas.playerDataObj.position[1], playerDatas.playerDataObj.position[2]);
+            position.position = new Vector3(gameManager.playerData.playerDataObj.position[0], gameManager.playerData.playerDataObj.position[1], gameManager.playerData.playerDataObj.position[2]);
             petAI.transform.position = position.up;
             HuyManager.SetPlayerIsDeath(0);
             //rest environment when player death
@@ -128,7 +128,7 @@ namespace Game.Player
             yield return new WaitForSeconds(durationRespawn);
             SetMaxHealth(playerCharacter.playerData.heathDefault, playerCharacter.playerData.hpIc);
             Transform position = transform;
-            position.position = new Vector3(playerDatas.playerDataObj.position[0], playerDatas.playerDataObj.position[1], playerDatas.playerDataObj.position[2]);
+            position.position = new Vector3(gameManager.playerData.playerDataObj.position[0], gameManager.playerData.playerDataObj.position[1], gameManager.playerData.playerDataObj.position[2]);
             petAI.transform.position = position.up;
             animator.SetLayerWeight(1, 0);
             col.enabled = true;

@@ -18,25 +18,17 @@ public class SpikeHead : MonoBehaviour
     private void Update()
     {
         transform.position = Vector2.Lerp(startPos, endPos, Mathf.PingPong(Time.time * speed, timeSleep));
-        //HuyManager.SetTimeAttack(ref timeAttack);
     }
 
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (!HuyManager.PlayerIsDeath())
         {
-            HuyManager.SetTimeAttack(ref timeAttack);
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            if (!HuyManager.PlayerIsDeath())
+            if (other.CompareTag("Player"))
             {
-                if (timeAttack <= 0)
+                HuyManager.SetTimeAttack(ref timeAttack);
+                if (timeAttack <= 0f)
                 {
                     PlayerHealth.instance.GetDamage(20f);
                     timeAttack = resetTimeAttack;

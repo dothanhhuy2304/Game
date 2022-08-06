@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6704ec0325aa8fb42bec17f5a09d14ec, type: 3}
+  m_Script: {fileID: 11500000, guid: ac7d2243e1a0ae94ea184cf165a15618, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
   playerDataObj:
@@ -20,5 +20,10 @@ MonoBehaviour:
     - 0
     currentScenes: 1
     saveAudio: 1
-    soundMusic: 0.5
+    soundMusic: 1
     soundEffect: 1
+  scoreDataObj:
+    currentScore: 0
+    highScore: 0
+    money: 0
+    diamond: 0

@@ -25,7 +25,7 @@ namespace Game.Player
         private int jumpCount;
         private int maxJumpCount = 2;
         private bool onWall;
-        
+
         private void Start()
         {
             playerHealth = PlayerHealth.instance;
@@ -52,13 +52,13 @@ namespace Game.Player
 
         private void GetInput()
         {
-        #if UNITY_EDITOR || UNITY_STANDALONE
+#if UNITY_EDITOR || UNITY_STANDALONE
             playerInput = Input.GetAxisRaw("Horizontal");
             isJump |= Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow);
-        #elif !UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
+#elif !UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
              playerInput = Input.GetAxisRaw("Vertical");
              isJump |= Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow);
-        #endif
+#endif
         }
 
         private void FixedUpdate()
@@ -67,7 +67,8 @@ namespace Game.Player
             {
                 if (!HuyManager.GetPlayerIsHurt())
                 {
-                    Move(playerInput * playerData.movingSpeed * Time.fixedDeltaTime);
+                    //Move(playerInput * playerData.movingSpeed * Time.fixedDeltaTime);
+                    Move(playerInput * (startSpeed * Time.fixedDeltaTime));
 
                     if (isJump)
                     {
@@ -81,10 +82,6 @@ namespace Game.Player
                         jumpCount = 0;
                         AnimPlayerJump();
                     }
-
-                    Vector3 position = transform.position;
-                    position = new Vector3(Mathf.Clamp(position.x, clampMinX, clampMaxX), position.y, position.z);
-                    body.transform.position = position;
                 }
             }
         }
@@ -111,6 +108,10 @@ namespace Game.Player
             {
                 Flip();
             }
+
+            Vector3 pos = transform.position;
+            pos = new Vector3(Mathf.Clamp(pos.x, clampMinX, clampMaxX), pos.y, pos.z);
+            body.transform.position = pos;
         }
 
         private void MobileMove(float move)
@@ -157,7 +158,7 @@ namespace Game.Player
         {
             EvaluateCollision(other);
         }
-        
+
         private void OnCollisionExit2D(Collision2D other)
         {
             mGrounded = false;
@@ -222,7 +223,7 @@ namespace Game.Player
         {
             if (other.CompareTag("Grass"))
             {
-                playerData.movingSpeed -= 10;
+                startSpeed -= 10f;
             }
         }
 
@@ -243,28 +244,8 @@ namespace Game.Player
 
             if (other.CompareTag("Grass"))
             {
-                playerData.movingSpeed = startSpeed;
+                startSpeed = playerData.movingSpeed;
             }
         }
-
-        // public IEnumerator KnockBack(float knockDuration, float knockPower, Vector3 knockDir)
-        // {
-        //     var timer = 0f;
-        //     while (knockDuration > timer)
-        //     {
-        //         timer *= Time.deltaTime;
-        //         var position = transform.position;
-        //         var t = (position - knockDir).normalized;
-        //         body.AddForce(new Vector3(t.x * knockPower, position.y, position.z));
-        //     }
-        //
-        //     yield return null;
-        // }
-
-        // private void OnDrawGizmos()
-        // {
-        //     Gizmos.DrawSphere(groundCheck.position, GroundedRadius);
-        // }
-
     }
 }

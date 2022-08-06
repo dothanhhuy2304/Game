@@ -8,37 +8,31 @@ namespace Game.Enemy
         [SerializeField] private Vector2 rangerAttack = Vector2.zero;
         [SerializeField] private bool canFlip;
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (HuyManager.PlayerIsDeath() && enemyHealth.EnemyDeath())
             {
                 enemyHealth.EnemyRespawn();
             }
-
-            if (HuyManager.PlayerIsDeath() && !enemyHealth.EnemyDeath())
+            else if (HuyManager.PlayerIsDeath() && !enemyHealth.EnemyDeath())
             {
                 enemyHealth.ResetHeathDefault();
             }
 
-            if (!HuyManager.PlayerIsDeath())
+            if (!HuyManager.PlayerIsDeath() && !enemyHealth.EnemyDeath())
             {
                 HuyManager.SetTimeAttack(ref currentTime);
-                if (!enemyHealth.EnemyDeath())
+                if (CheckAttack(transform.position + (Vector3) posAttack, rangerAttack))
                 {
-                    if (CheckAttack(transform.position + (Vector3) posAttack, rangerAttack))
+                    if (canFlip)
                     {
-                        if (canFlip)
-                        {
-                            Flip();
-                        }
+                        Flip();
+                    }
 
-                        if (currentTime != 0f) return;
+                    if (currentTime <= 0f)
+                    {
                         animator.SetTrigger("isAttack");
-                        if (!HuyManager.PlayerIsDeath() || !enemyHealth.EnemyDeath())
-                        {
-                            StartCoroutine(DurationAttack(0.5f));
-                        }
-
+                        StartCoroutine(DurationAttack(0.5f));
                         currentTime = maxTimeAttack;
                     }
                 }

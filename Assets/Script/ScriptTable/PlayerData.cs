@@ -1,7 +1,8 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PlayerData", menuName = "ScriptTable/PlayerData", order = 1)]
+[CreateAssetMenu(fileName = "New Data Player", menuName = "ScriptTable/ScoreData", order = 1)]
 public class PlayerData : ScriptableObject
 {
     public PlayerDataObj playerDataObj;
+    public ScoreDataObj scoreDataObj;
 }

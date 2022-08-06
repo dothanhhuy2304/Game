@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Game.Player;
 using Game.GamePlay;
@@ -9,13 +10,10 @@ namespace Game.Enemy
     {
         [Header("Types")]
         [SerializeField] protected Rigidbody2D body;
-        [SerializeField] protected bool canMoving;
         [SerializeField] protected float movingSpeed;
-
-        [Space] [Header("Prefab")] [SerializeField]
-        private FireProjectile[] projectiles;
-
-        [SerializeField] private ProjectileArc[] projectileArcs;
+        [Space] [Header("Prefab")] 
+        [SerializeField] private List<FireProjectile> projectiles;
+        [SerializeField] private List<ProjectileArc> projectileArcs;
         protected CharacterController2D playerCharacter;
         [SerializeField] private float offsetFlip;
         [Space] [Header("Time")] protected float currentTime;
@@ -23,11 +21,8 @@ namespace Game.Enemy
         [SerializeField] private Transform offsetAttack;
         [SerializeField] protected Animator animator;
         [SerializeField] protected EnemyHealth enemyHealth;
-        [Header("Set Up Bullet")] 
-        [SerializeField] private Sprite spriteBullet;
 
-        [SerializeField] private float bulletSpeed;
-        private void Start()
+        protected virtual void Start()
         {
             playerCharacter = CharacterController2D.instance;
         }
@@ -85,49 +80,45 @@ namespace Game.Enemy
 
         protected void AttackBullet()
         {
-            projectiles[FindBullet()].bulletSpeed = bulletSpeed;
-            projectiles[FindBullet()].bulletSpriteRenderer.sprite = spriteBullet;
-            projectiles[FindBullet()].transform.position = offsetAttack.position;
-            projectiles[FindBullet()].transform.rotation = transform.rotation;
-            projectiles[FindBullet()].SetActives();
+            projectiles[FindBullet(projectiles)].transform.position = offsetAttack.position;
+            projectiles[FindBullet(projectiles)].transform.rotation = transform.rotation;
+            projectiles[FindBullet(projectiles)].SetActives();
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
 
         protected void AttackBulletDirection()
         {
-            projectiles[FindBullet()].bulletSpeed = bulletSpeed;
-            projectiles[FindBullet()].bulletSpriteRenderer.sprite = spriteBullet;
             Vector2 directionToPlayer = (playerCharacter.transform.position - transform.position).normalized;
-            projectiles[FindBullet()].transform.position = offsetAttack.position;
-            projectiles[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg);
-            projectiles[FindBullet()].SetActives();
+            projectiles[FindBullet(projectiles)].transform.position = offsetAttack.position;
+            projectiles[FindBullet(projectiles)].transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg);
+            projectiles[FindBullet(projectiles)].SetActives();
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
 
         protected void AttackBulletArc()
         {
-            projectileArcs[FindBulletArc()].transform.rotation = Quaternion.identity;
-            projectileArcs[FindBulletArc()].transform.position = offsetAttack.position;
-            projectileArcs[FindBulletArc()].SetActives();
+            projectileArcs[FindBullet(projectileArcs)].transform.rotation = Quaternion.identity;
+            projectileArcs[FindBullet(projectileArcs)].transform.position = offsetAttack.position;
+            projectileArcs[FindBullet(projectileArcs)].SetActives();
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
 
-        private int FindBullet()
+        private static int FindBullet(List<FireProjectile> projectile)
         {
-            for (var i = 0; i < projectiles.Length; i++)
+            for (var i = 0; i < projectile.Count; i++)
             {
-                if (!projectiles[i].gameObject.activeInHierarchy)
+                if (!projectile[i].gameObject.activeInHierarchy)
                     return i;
             }
 
             return 0;
         }
 
-        private int FindBulletArc()
+        private static int FindBullet(List<ProjectileArc> projectileArc)
         {
-            for (var i = 0; i < projectileArcs.Length; i++)
+            for (var i = 0; i < projectileArc.Count; i++)
             {
-                if (!projectileArcs[i].gameObject.activeInHierarchy)
+                if (!projectileArc[i].gameObject.activeInHierarchy)
                     return i;
             }
 

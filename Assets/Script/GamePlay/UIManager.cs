@@ -6,6 +6,7 @@ namespace Game.GamePlay
     public class UIManager : FastSingleton<UIManager>
     {
         [Header("UI Setting")]
+        private GameManager gameManager;
         [SerializeField] private GameObject settingUI;
         [SerializeField] private Button btnShowAndHiddenUI;
         [Header("UI Volume")]
@@ -19,7 +20,6 @@ namespace Game.GamePlay
         public GameObject uiVolume;
         public Button btnBackToMenuUI;
         public Button btnRestart;
-        [SerializeField] private PlayerData playerData;
         private LoadingScreenManager loadingScreenManager;
         private bool isShowUISetting;
         private bool isShowUIVolume;
@@ -27,6 +27,7 @@ namespace Game.GamePlay
         private void Start()
         {
             DontDestroyOnLoad(this);
+            gameManager = GameManager.instance;
             loadingScreenManager = LoadingScreenManager.instance;
             btnShowAndHiddenUI.onClick.AddListener(delegate {ShowAndHiddenUISetting(ref isShowUISetting);});
             btnBackToMenuUI.onClick.AddListener(BackToMenu);
@@ -35,19 +36,19 @@ namespace Game.GamePlay
             sliderMusic.onValueChanged.AddListener(ChangeVolumeMusic);
             sliderEffect.onValueChanged.AddListener(ChangeVolumeEffect);
             btnHiddenUIVolume.onClick.AddListener(HiddenVolumeUI);
-            if (!playerData.playerDataObj.saveAudio)
+            if (!gameManager.playerData.playerDataObj.saveAudio)
             {
-                playerData.playerDataObj.soundMusic = audioMusic.volume;
-                playerData.playerDataObj.soundEffect = AudioManager.instance.sounds[0].audioFX.volume;
-                playerData.playerDataObj.saveAudio = true;
+                gameManager.playerData.playerDataObj.soundMusic = audioMusic.volume;
+                gameManager.playerData.playerDataObj.soundEffect = AudioManager.instance.sounds[0].audioFX.volume;
+                gameManager.playerData.playerDataObj.saveAudio = true;
             }
 
-            sliderMusic.value = playerData.playerDataObj.soundMusic;
-            sliderEffect.value = playerData.playerDataObj.soundEffect;
-            audioMusic.volume = playerData.playerDataObj.soundMusic;
+            sliderMusic.value = gameManager.playerData.playerDataObj.soundMusic;
+            sliderEffect.value = gameManager.playerData.playerDataObj.soundEffect;
+            audioMusic.volume = gameManager.playerData.playerDataObj.soundMusic;
             foreach (var source in AudioManager.instance.sounds)
             {
-                source.audioFX.volume = playerData.playerDataObj.soundEffect;
+                source.audioFX.volume = gameManager.playerData.playerDataObj.soundEffect;
             }
 
             btnBackToMenuUI.gameObject.SetActive(false);
@@ -88,12 +89,12 @@ namespace Game.GamePlay
         private void ChangeVolumeMusic(float sliderValue)
         {
             audioMusic.volume = sliderValue;
-            playerData.playerDataObj.soundMusic = sliderValue;
+            gameManager.playerData.playerDataObj.soundMusic = sliderValue;
         }
 
         private void ChangeVolumeEffect(float sliderValue)
         {
-            playerData.playerDataObj.soundEffect = sliderValue;
+            gameManager.playerData.playerDataObj.soundEffect = sliderValue;
             foreach (var source in AudioManager.instance.sounds)
             {
                 source.audioFX.volume = sliderValue;
