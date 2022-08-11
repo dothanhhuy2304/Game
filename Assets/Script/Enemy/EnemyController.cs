@@ -82,7 +82,7 @@ namespace Game.Enemy
         {
             projectiles[FindBullet(projectiles)].transform.position = offsetAttack.position;
             projectiles[FindBullet(projectiles)].transform.rotation = transform.rotation;
-            projectiles[FindBullet(projectiles)].SetActives();
+            projectiles[FindBullet(projectiles)].Shoot();
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
 
@@ -91,7 +91,7 @@ namespace Game.Enemy
             Vector2 directionToPlayer = (playerCharacter.transform.position - transform.position).normalized;
             projectiles[FindBullet(projectiles)].transform.position = offsetAttack.position;
             projectiles[FindBullet(projectiles)].transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg);
-            projectiles[FindBullet(projectiles)].SetActives();
+            projectiles[FindBullet(projectiles)].Shoot();
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
 

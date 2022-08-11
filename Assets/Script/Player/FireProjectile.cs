@@ -9,7 +9,8 @@ public class FireProjectile : MonoBehaviour
     [SerializeField] private Rigidbody2D body;
     [SerializeField] private EnemyType enemyType;
     public float bulletSpeed = 10f;
-    [SerializeField] private GameObject bulletPrefab, explosionPrefab;
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private ParticleSystem explosionFxObj;
     private CharacterController2D playerCharacter;
     private Vector2 targetPetEnemy = Vector2.zero;
     private PlayerHealth playerHealth;
@@ -22,7 +23,7 @@ public class FireProjectile : MonoBehaviour
         petAI = PetAI.instance;
     }
 
-    private void OnEnable()
+    private void BulletDirection()
     {
         if (petAI)
         {
@@ -180,7 +181,8 @@ public class FireProjectile : MonoBehaviour
     private void PlayerExplosions()
     {
         bulletPrefab.SetActive(false);
-        explosionPrefab.SetActive(true);
+        explosionFxObj.gameObject.SetActive(true);
+        explosionFxObj.Play();
         AudioManager.instance.Play("Player_Bullet_Explosion_1");
         body.bodyType = RigidbodyType2D.Static;
         StartCoroutine(TemporarilyDeactivate(1.7f));
@@ -189,7 +191,8 @@ public class FireProjectile : MonoBehaviour
     private void EnemyExplosions()
     {
         bulletPrefab.SetActive(false);
-        explosionPrefab.SetActive(true);
+        explosionFxObj.gameObject.SetActive(true);
+        explosionFxObj.Play();
         AudioManager.instance.Play("Player_Bullet_Explosion_1");
         body.bodyType = RigidbodyType2D.Static;
         StartCoroutine(TemporarilyDeactivate(1.7f));
@@ -198,7 +201,8 @@ public class FireProjectile : MonoBehaviour
     private void BulletExplosions()
     {
         bulletPrefab.SetActive(false);
-        explosionPrefab.SetActive(true);
+        explosionFxObj.gameObject.SetActive(true);
+        explosionFxObj.Play();
         body.bodyType = RigidbodyType2D.Static;
         StartCoroutine(TemporarilyDeactivate(1.7f));
     }
@@ -210,10 +214,11 @@ public class FireProjectile : MonoBehaviour
         body.bodyType = RigidbodyType2D.Kinematic;
     }
 
-    public void SetActives()
+    public void Shoot()
     {
         gameObject.SetActive(true);
         bulletPrefab.SetActive(true);
-        explosionPrefab.SetActive(false);
+        BulletDirection();
+        explosionFxObj.gameObject.SetActive(false);
     }
 }

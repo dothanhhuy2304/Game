@@ -92,7 +92,7 @@ namespace Game.Player
         {
             projectiles[FindBullet(projectiles)].transform.position = transform.position;
             projectiles[FindBullet(projectiles)].transform.rotation = transform.rotation;
-            projectiles[FindBullet(projectiles)].SetActives();
+            projectiles[FindBullet(projectiles)].Shoot();
         }
 
         private Transform FindClosestEnemy()
