@@ -1,10 +1,13 @@
 using System.Collections;
+using System.Collections.Generic;
+using Game.GamePlay;
 using UnityEngine;
 
 namespace Game.Enemy
 {
     public class CarnivorousPlant : EnemyController
     {
+        [SerializeField] private List<FireProjectile> projectiles;
         [SerializeField] private Vector2 posAttack = Vector2.zero;
         [SerializeField] private Vector2 rangerAttack = Vector2.zero;
         [SerializeField] private bool canFlip;
@@ -44,7 +47,16 @@ namespace Game.Enemy
         private IEnumerator DurationAttack(float duration)
         {
             yield return new WaitForSeconds(duration);
-            enemyManager.AttackBullet(offsetAttack.position);
+            AttackBullet();
         }
+
+        private void AttackBullet()
+        {
+            projectiles[FindBullet(projectiles)].transform.position = offsetAttack.position;
+            projectiles[FindBullet(projectiles)].transform.rotation = transform.rotation;
+            projectiles[FindBullet(projectiles)].Shoot();
+            AudioManager.instance.Play("Enemy_Attack_Shoot");
+        }
+        
     }
 }

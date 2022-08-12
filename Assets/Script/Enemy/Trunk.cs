@@ -1,11 +1,13 @@
+using System.Collections.Generic;
 using Game.Core;
+using Game.GamePlay;
 using UnityEngine;
 
 namespace Game.Enemy
 {
     public class Trunk : EnemyController
     {
-
+        [SerializeField] private List<ProjectileArc> projectileArcs;
         [SerializeField] private Vector2 posAttack = Vector2.zero;
         [SerializeField] private Vector2 rangerAttack = Vector2.zero;
 
@@ -49,8 +51,15 @@ namespace Game.Enemy
         private System.Collections.IEnumerator DurationAttack(float duration)
         {
             yield return new WaitForSeconds(duration);
-            enemyManager.AttackBulletArc(offsetAttack.position);
+            AttackBulletArc();
         }
 
+        private void AttackBulletArc()
+        {
+            projectileArcs[FindBullet(projectileArcs)].transform.rotation = Quaternion.identity;
+            projectileArcs[FindBullet(projectileArcs)].transform.position = offsetAttack.position;
+            projectileArcs[FindBullet(projectileArcs)].SetActives();
+            AudioManager.instance.Play("Enemy_Attack_Shoot");
+        }
     }
 }

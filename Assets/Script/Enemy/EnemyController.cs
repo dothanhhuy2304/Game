@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Game.Player;
 
@@ -15,13 +16,11 @@ namespace Game.Enemy
         [SerializeField] protected Transform offsetAttack;
         [SerializeField] protected Animator animator;
         [SerializeField] protected EnemyHealth enemyHealth;
-        [SerializeField] protected EnemyManager enemyManager;
         protected bool isRangeAttack;
 
         protected virtual void Start()
         {
             playerCharacter = CharacterController2D.instance;
-            enemyManager = EnemyManager.instance;
         }
 
         protected void Flip()
@@ -30,11 +29,6 @@ namespace Game.Enemy
             Vector2 target = (playerCharacter.transform.position - transform.position).normalized;
             transform.rotation = Quaternion.Euler(new Vector3(0f, Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg + offsetFlip, 0f));
         }
-
-        // protected static bool CheckAttack(Vector2 point, Vector2 size)
-        // {
-        //     return Physics2D.OverlapBox(point, size, 0f, 1 << LayerMask.NameToLayer("Player"));
-        // }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
@@ -54,5 +48,28 @@ namespace Game.Enemy
                 isRangeAttack = canAttack;
             }
         }
+        
+        protected static int FindBullet(List<FireProjectile> projectile)
+        {
+            for (var i = 0; i < projectile.Count; i++)
+            {
+                if (!projectile[i].gameObject.activeInHierarchy)
+                    return i;
+            }
+
+            return 0;
+        }
+
+        protected static int FindBullet(List<ProjectileArc> projectileArc)
+        {
+            for (var i = 0; i < projectileArc.Count; i++)
+            {
+                if (!projectileArc[i].gameObject.activeInHierarchy)
+                    return i;
+            }
+
+            return 0;
+        }
+        
     }
 }

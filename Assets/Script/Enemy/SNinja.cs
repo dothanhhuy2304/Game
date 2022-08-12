@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Game.GamePlay;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ namespace Game.Enemy
 {
     public class SNinja : EnemyController
     {
+        [SerializeField] private List<FireProjectile> projectiles;
         [SerializeField] private Transform rangeAttackObj;
         [SerializeField] private float radiusAttack;
         //
@@ -139,7 +141,16 @@ namespace Game.Enemy
         private IEnumerator DurationAttack(float duration)
         {
             yield return new WaitForSeconds(duration);
-            enemyManager.AttackBulletDirection(offsetAttack.position);
+            AttackBulletDirection();
+        }
+
+        private void AttackBulletDirection()
+        {
+            Vector2 directionToPlayer = (playerCharacter.transform.position - transform.position).normalized;
+            projectiles[FindBullet(projectiles)].transform.position = offsetAttack.position;
+            projectiles[FindBullet(projectiles)].transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg);
+            projectiles[FindBullet(projectiles)].Shoot();
+            AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
 
     }
