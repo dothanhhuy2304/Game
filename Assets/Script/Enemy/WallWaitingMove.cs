@@ -13,16 +13,19 @@ namespace Game.Enemy
         private bool isComeback;
         private bool playerExit;
         private Vector3 startTrans = Vector3.zero;
-        private bool isVisible;
+
+        private SpriteRenderer spriteRenderer;
         private void Start()
         {
             character = CharacterController2D.instance;
             startTrans = transform.position;
+            //
+            spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
         private void Update()
         {
-            if (isVisible)
+            if (spriteRenderer.isVisible)
             {
                 if (isComeback)
                 {
@@ -31,7 +34,7 @@ namespace Game.Enemy
             }
 
             //
-            if (!isVisible)
+            if (!spriteRenderer.isVisible)
             {
                 isComeback = true;
             }
@@ -78,17 +81,6 @@ namespace Game.Enemy
                 character.transform.parent = null;
                 playerExit = true;
             }
-        }
-        
-        
-        private void OnBecameVisible()
-        {
-            isVisible = true;
-        }
-
-        private void OnBecameInvisible()
-        {
-            isVisible = false;
         }
     }
 }

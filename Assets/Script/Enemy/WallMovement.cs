@@ -6,7 +6,7 @@ namespace Game.Enemy
 {
     public class WallMovement : MonoBehaviour
     {
-        public float speed = 3f;
+        [SerializeField] private float speed = 3f;
         private CharacterController2D character;
         private Vector2 startPos = Vector2.zero;
         [SerializeField] private Vector2 endPos = Vector2.zero;

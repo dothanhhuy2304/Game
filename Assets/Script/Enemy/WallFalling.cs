@@ -18,7 +18,7 @@ public class WallFalling : MonoBehaviour
     {
         if (HuyManager.PlayerIsDeath())
         {
-            StartCoroutine(nameof(WaitingReset));
+            StartCoroutine(WaitingReset());
         }
     }
 
@@ -26,11 +26,11 @@ public class WallFalling : MonoBehaviour
     {
         if (other.collider.CompareTag("Player"))
         {
-            StartCoroutine(nameof(WaitingFallingDown), timeFalling);
+            StartCoroutine(WaitingFallingDown(timeFalling));
         }
     }
 
-    private IEnumerator WaitingFallingDown(int delay)
+    private IEnumerator WaitingFallingDown(float delay)
     {
         yield return new WaitForSeconds(delay);
         body.bodyType = RigidbodyType2D.Dynamic;

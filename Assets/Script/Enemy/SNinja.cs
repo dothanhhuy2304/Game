@@ -66,7 +66,7 @@ namespace Game.Enemy
             target = pos;
         }
 
-        void FaceToWards(Vector3 direction)
+        private void FaceToWards(Vector3 direction)
         {
             if (direction.x < 0f)
             {
@@ -139,7 +139,7 @@ namespace Game.Enemy
         private IEnumerator DurationAttack(float duration)
         {
             yield return new WaitForSeconds(duration);
-            AttackBulletDirection();
+            enemyManager.AttackBulletDirection(offsetAttack.position);
         }
 
     }

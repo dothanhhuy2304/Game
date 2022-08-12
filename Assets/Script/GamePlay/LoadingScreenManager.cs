@@ -9,7 +9,7 @@ public class LoadingScreenManager : FastSingleton<LoadingScreenManager>
     [SerializeField] private GameObject uiLoading;
     [SerializeField] private Image fillLoading;
     private AsyncOperation async;
-    
+
     public static int LoadCurrentScreen()
     {
         return GameManager.instance.playerData.playerDataObj.currentScenes;
@@ -64,7 +64,7 @@ public class LoadingScreenManager : FastSingleton<LoadingScreenManager>
             }
         }
 
-        yield return 0.5f;
+        yield return new WaitForSeconds(0.5f);
         uiLoading.SetActive(false);
         yield return null;
     }

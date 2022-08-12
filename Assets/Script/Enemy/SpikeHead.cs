@@ -8,7 +8,7 @@ public class SpikeHead : MonoBehaviour
     [SerializeField] private float speed = 2f;
     [SerializeField] private float timeSleep;
     private float timeAttack;
-    [SerializeField] private float resetTimeAttack = 2f;
+    [SerializeField] private float resetTimeAttack = 3f;
 
     private void Start()
     {

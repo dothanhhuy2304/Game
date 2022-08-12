@@ -6,14 +6,6 @@ public class Spike : MonoBehaviour
     private float timeAttack;
     [SerializeField] private float maxTimeAttack = 1f;
     private bool isHurts;
-    
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            isHurts = true;
-        }
-    }
 
     private void OnTriggerStay2D(Collider2D other)
     {
@@ -31,6 +23,14 @@ public class Spike : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            isHurts = true;
         }
     }
 

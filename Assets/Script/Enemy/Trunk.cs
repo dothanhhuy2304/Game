@@ -29,7 +29,8 @@ namespace Game.Enemy
                 HuyManager.SetTimeAttack(ref currentTime);
                 if (!enemyHealth.EnemyDeath())
                 {
-                    if (CheckAttack(transform.position + (Vector3) posAttack, rangerAttack))
+                    //if (CheckAttack(transform.position + (Vector3) posAttack, rangerAttack))
+                    if (isRangeAttack)
                     {
                         Flip();
                         if (currentTime != 0) return;
@@ -48,7 +49,7 @@ namespace Game.Enemy
         private System.Collections.IEnumerator DurationAttack(float duration)
         {
             yield return new WaitForSeconds(duration);
-            AttackBulletArc();
+            enemyManager.AttackBulletArc(offsetAttack.position);
         }
 
     }

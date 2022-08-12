@@ -1,4 +1,4 @@
-using Game.Core;
+using System.Collections;
 using UnityEngine;
 
 namespace Game.Enemy
@@ -12,16 +12,13 @@ namespace Game.Enemy
         private bool isMoving;
         private bool destroy;
         private Vector2 startPos = Vector2.zero;
-        private float timeRespawn;
         [SerializeField] private Vector2 groundCheck = Vector2.zero;
         [Range(0f, 100f)] [SerializeField] protected float rangeAttack = 3f;
-        private bool isRespawn;
-
+        private bool isHitGround;
         private void Awake()
         {
             currentTime = maxTimeAttack;
             startPos = transform.position;
-            timeRespawn = 4f;
         }
 
         private void OnEnable()
@@ -29,75 +26,90 @@ namespace Game.Enemy
             chickenCol.enabled = true;
         }
 
+        private IEnumerator IEDurationRespawn()
+        {
+            yield return new WaitForSeconds(4f);
+            if (!spriteRenderer.enabled)
+            {
+                body.bodyType = RigidbodyType2D.Kinematic;
+                destroy = false;
+                spriteRenderer.enabled = true;
+                chickenCol.enabled = true;
+                animator.enabled = true;
+                transform.position = startPos;
+                MovingToTarget("is_Run", false);
+            }
+        }
+
         private void FixedUpdate()
         {
             if (HuyManager.PlayerIsDeath())
             {
-                isRespawn = true;
+                StartCoroutine(IEDurationRespawn());
             }
 
-            if (isRespawn)
+            if (!destroy)
             {
-                if (!spriteRenderer.enabled)
+                if (!isMoving)
                 {
-                    HuyManager.SetTimeAttack(ref timeRespawn);
-                    if (timeRespawn != 0) return;
-                    body.bodyType = RigidbodyType2D.Kinematic;
-                    destroy = false;
-                    spriteRenderer.enabled = true;
-                    chickenCol.enabled = true;
-                    animator.enabled = true;
-                    transform.position = startPos;
-                    MovingToTarget("is_Run", false);
-                    timeRespawn = 4f;
+                    if (Vector3.Distance(transform.position, playerCharacter.transform.position) < rangeAttack)
+                    {
+                        isMoving = true;
+                    }
                 }
                 else
                 {
-                    isRespawn = false;
-                }
-            }
+                    //bool hit = Physics2D.Raycast(transform.TransformPoint(groundCheck), Vector3.down, 2f, 1 << LayerMask.NameToLayer("ground"));
+                    //bool hitRight = Physics2D.Raycast(transform.TransformPoint(groundCheck), Vector3.zero, 0f, 1 << LayerMask.NameToLayer("ground"));
+                    HuyManager.SetTimeAttack(ref currentTime);
+                    if (Vector3.Distance(transform.position, playerCharacter.transform.position) > 0.5f)
+                    {
+                        Flip();
+                    }
 
-            if (destroy) return;
-            if (!isMoving)
-            {
-                if (Vector3.Distance(transform.position, playerCharacter.transform.position) < rangeAttack)
-                {
-                    isMoving = true;
-                }
-            }
-            else
-            {
-                bool hit = Physics2D.Raycast(transform.TransformPoint(groundCheck), Vector3.down, 2f, 1 << LayerMask.NameToLayer("ground"));
-                bool hitRight = Physics2D.Raycast(transform.TransformPoint(groundCheck), Vector3.zero, 0f, 1 << LayerMask.NameToLayer("ground"));
-                HuyManager.SetTimeAttack(ref currentTime);
-                if (Vector3.Distance(transform.position, playerCharacter.transform.position) > 0.5f)
-                {
-                    Flip();
-                }
+                    //if (!hit || hitRight)
+                    if(!isHitGround)
+                    {
+                        body.velocity = Vector3.zero;
+                        animator.SetBool("is_Run", false);
+                    }
+                    else
+                    {
+                        MovingToTarget("is_Run", true);
+                    }
 
-                if (!hit || hitRight)
-                {
-                    body.velocity = Vector3.zero;
-                    animator.SetBool("is_Run", false);
+                    if (currentTime <= 0f)
+                    {
+                        isMoving = false;
+                        body.bodyType = RigidbodyType2D.Static;
+                        destroy = true;
+                        spriteRenderer.enabled = false;
+                        chickenCol.enabled = false;
+                        animator.enabled = false;
+                        explosionObj.transform.position = transform.position;
+                        explosionObj.SetActive(true);
+                        currentTime = maxTimeAttack;
+                    }
                 }
-                else
-                {
-                    MovingToTarget("is_Run", true);
-                }
-
-                if (currentTime != 0f) return;
-                body.bodyType = RigidbodyType2D.Static;
-                destroy = true;
-                isMoving = false;
-                spriteRenderer.enabled = false;
-                chickenCol.enabled = false;
-                animator.enabled = false;
-                explosionObj.transform.position = transform.position;
-                explosionObj.SetActive(true);
-                currentTime = maxTimeAttack;
             }
         }
 
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            if (other.CompareTag("ground"))
+            {
+                isHitGround = true;
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.CompareTag("ground"))
+            {
+                isHitGround = false;
+            }
+        }
+        
         private void MovingToTarget(string states, bool value)
         {
             Vector3 target = new Vector3(playerCharacter.transform.position.x - transform.position.x, 0f, 0f).normalized;

@@ -28,13 +28,13 @@ public class ProjectileArc : MonoBehaviour
 
     private void Update()
     {
-        var x0 = startPos.x;
-        var x1 = targetPos.x;
-        var dist = x1 - x0;
-        var nextX = Mathf.MoveTowards(transform.position.x, x1, speed * Time.deltaTime);
-        var baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - x0) / dist);
-        var arc = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
-        var nextPos = new Vector3(nextX, baseY + arc, transform.position.z);
+        float x0 = startPos.x;
+        float x1 = targetPos.x;
+        float dist = x1 - x0;
+        float nextX = Mathf.MoveTowards(transform.position.x, x1, speed * Time.deltaTime);
+        float baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - x0) / dist);
+        float arc = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
+        Vector3 nextPos = new Vector3(nextX, baseY + arc, transform.position.z);
         // Rotate to face the next position, and then move there
         transform.rotation = LookAt2D(nextPos - transform.position);
         transform.position = nextPos;

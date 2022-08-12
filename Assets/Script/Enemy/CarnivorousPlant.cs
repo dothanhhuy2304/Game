@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace Game.Enemy
@@ -22,7 +23,8 @@ namespace Game.Enemy
             if (!HuyManager.PlayerIsDeath() && !enemyHealth.EnemyDeath())
             {
                 HuyManager.SetTimeAttack(ref currentTime);
-                if (CheckAttack(transform.position + (Vector3) posAttack, rangerAttack))
+                //if (CheckAttack(transform.position + (Vector3) posAttack, rangerAttack))
+                if (isRangeAttack)
                 {
                     if (canFlip)
                     {
@@ -39,10 +41,10 @@ namespace Game.Enemy
             }
         }
 
-        private System.Collections.IEnumerator DurationAttack(float duration)
+        private IEnumerator DurationAttack(float duration)
         {
             yield return new WaitForSeconds(duration);
-            AttackBullet();
+            enemyManager.AttackBullet(offsetAttack.position);
         }
     }
 }

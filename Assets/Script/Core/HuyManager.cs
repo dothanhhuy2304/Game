@@ -1,5 +1,3 @@
-using System.Collections;
-using Game.GamePlay;
 using UnityEngine;
 
 public static class HuyManager
@@ -25,17 +23,6 @@ public static class HuyManager
         return PlayerPrefs.GetInt("PlayerHurt") == 1;
     }
 
-    public static IEnumerator EventDeath(Rigidbody2D body, Collider2D collider,Animator animator, float durationRespawn)
-    {
-        body.bodyType = RigidbodyType2D.Static;
-        collider.enabled = false;
-        animator.SetTrigger("is_Death");
-        AudioManager.instance.Play("Enemy_Death");
-        yield return new WaitForSeconds(durationRespawn);
-        body.bodyType = RigidbodyType2D.Dynamic;
-        collider.enabled = true;
-    }
-    
     public static void SetTimeAttack(ref float currentTime)
     {
         if (currentTime > 0f)
@@ -47,5 +34,4 @@ public static class HuyManager
             currentTime = 0f;
         }
     }
-
 }

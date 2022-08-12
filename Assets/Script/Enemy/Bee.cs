@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace Game.Enemy
@@ -7,6 +8,7 @@ namespace Game.Enemy
 
         [SerializeField] private Vector2 posAttack = Vector2.zero;
         [SerializeField] private Vector2 rangerAttack = Vector2.zero;
+        private static readonly int IsAttack = Animator.StringToHash("isAttack");
 
         private void Update()
         {
@@ -23,25 +25,34 @@ namespace Game.Enemy
                 }
             }
 
-            if (HuyManager.PlayerIsDeath()) return;
-            HuyManager.SetTimeAttack(ref currentTime);
-            if (enemyHealth.EnemyDeath()) return;
-            if (!CheckAttack(transform.position + (Vector3) posAttack, rangerAttack)) return;
-            Flip();
-            if (currentTime != 0) return;
-            animator.SetTrigger("isAttack");
-            if (!HuyManager.PlayerIsDeath() || !enemyHealth.EnemyDeath())
+            if (!HuyManager.PlayerIsDeath())
             {
-                StartCoroutine(DurationAttack(0.5f));
-            }
+                HuyManager.SetTimeAttack(ref currentTime);
+                if (!enemyHealth.EnemyDeath())
+                {
+                    //if (!CheckAttack(transform.position + (Vector3) posAttack, rangerAttack)) return;
+                    if (isRangeAttack)
+                    {
+                        Flip();
+                        if (currentTime <= 0)
+                        {
+                            if (!HuyManager.PlayerIsDeath() || !enemyHealth.EnemyDeath())
+                            {
+                                StartCoroutine(DurationAttack(0.5f));
+                            }
 
-            currentTime = maxTimeAttack;
+                            animator.SetTrigger(IsAttack);
+                            currentTime = maxTimeAttack;
+                        }
+                    }
+                }
+            }
         }
 
-        private System.Collections.IEnumerator DurationAttack(float duration)
+        private IEnumerator DurationAttack(float duration)
         {
             yield return new WaitForSeconds(duration);
-            AttackBulletDirection();
+            enemyManager.AttackBulletDirection(offsetAttack.position);
         }
     }
 }
