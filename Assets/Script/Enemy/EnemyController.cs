@@ -41,7 +41,7 @@ namespace Game.Enemy
         }
 
 
-        private void EvaluateCheckRangeAttack(Collider2D col, bool canAttack)
+        private void EvaluateCheckRangeAttack(Component col, bool canAttack)
         {
             if (col.CompareTag("Player"))
             {

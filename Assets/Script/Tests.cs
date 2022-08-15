@@ -17,6 +17,9 @@ public class Tests : MonoBehaviour, IPointerDownHandler
     [SerializeField] private float timeDurationMoving;
     private bool isFlip;
 
+    [SerializeField] private GameObject targetA;
+    [SerializeField] private GameObject targetB;
+
     private void Start()
     {
         cam = Camera.main;
@@ -35,6 +38,19 @@ public class Tests : MonoBehaviour, IPointerDownHandler
     // Update is called once per frame
     void FixedUpdate()
     {
+        var position = targetA.transform.position;
+        var position1 = targetB.transform.position;
+        float a = Vector3.Distance(position, position1);
+        float b = (position - position1).magnitude;
+        float c = (position - position1).sqrMagnitude;
+        Debug.Log(a);
+        Debug.Log(b);
+        Debug.Log(c);
+        TimeZoneInfo tzi = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+        DateTime timeNow = TimeZoneInfo.ConvertTime(DateTime.Now, tzi);
+        string dateNow = timeNow.Hour.ToString("00:00");
+        Debug.Log(dateNow);
+
         Move();
         if (Input.GetMouseButtonUp(0))
         {

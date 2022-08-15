@@ -15,6 +15,8 @@ namespace Game.Enemy
         [SerializeField] private Vector3 target;
         [SerializeField] private Vector3[] waypoints;
         [SerializeField] private float timeDurationMoving;
+        private static readonly int IsRun = Animator.StringToHash("isRun");
+        private static readonly int IsAttackSword = Animator.StringToHash("isAttack1");
 
         private void FixedUpdate()
         {
@@ -45,7 +47,7 @@ namespace Game.Enemy
                 Vector3 position = transform.position;
                 Vector3 moveDir = Vector3.MoveTowards(position, target, movingSpeed * Time.fixedDeltaTime);
                 body.MovePosition(moveDir);
-                animator.SetBool("isRun", true);
+                animator.SetBool(IsRun, true);
                 FaceToWards(target - position);
             }
             else
@@ -63,7 +65,7 @@ namespace Game.Enemy
 
         private IEnumerator SetTarget(Vector3 pos, float timeSleep)
         {
-            animator.SetBool("isRun", false);
+            animator.SetBool(IsRun, false);
             yield return new WaitForSeconds(timeSleep);
             target = pos;
         }
@@ -90,7 +92,7 @@ namespace Game.Enemy
             else if ((playerCharacter.transform.position - transform.position).magnitude <= 8)
             {
                 Flip();
-                animator.SetBool("isRun", false);
+                animator.SetBool(IsRun, false);
                 if (currentTime <= 0f)
                 {
                     if (!HuyManager.PlayerIsDeath())
@@ -112,21 +114,20 @@ namespace Game.Enemy
 
         private void SNinjaAttackSword()
         {
-            bool hits = Physics2D.OverlapCircle(rangeAttackObj.position, radiusAttack,
-                1 << LayerMask.NameToLayer("Player"));
+            bool hits = Physics2D.OverlapCircle(rangeAttackObj.position, radiusAttack, 1 << LayerMask.NameToLayer("Player"));
             if ((playerCharacter.transform.position - transform.position).magnitude >= 2f)
             {
                 Vector2 pos = playerCharacter.transform.position - transform.position;
                 body.velocity = pos * (35f * Time.fixedDeltaTime);
-                animator.SetBool("isRun", true);
+                animator.SetBool(IsRun, true);
             }
             else if ((playerCharacter.transform.position - transform.position).magnitude < 1.5f)
             {
-                animator.SetBool("isRun", false);
+                animator.SetBool(IsRun, false);
                 body.velocity = Vector2.zero;
                 if (currentTime <= 0f)
                 {
-                    animator.SetTrigger("isAttack1");
+                    animator.SetTrigger(IsAttackSword);
                     currentTime = 1.5f;
                     if (hits)
                     {

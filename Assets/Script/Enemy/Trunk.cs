@@ -1,5 +1,5 @@
+using System.Collections;
 using System.Collections.Generic;
-using Game.Core;
 using Game.GamePlay;
 using UnityEngine;
 
@@ -8,8 +8,6 @@ namespace Game.Enemy
     public class Trunk : EnemyController
     {
         [SerializeField] private List<ProjectileArc> projectileArcs;
-        [SerializeField] private Vector2 posAttack = Vector2.zero;
-        [SerializeField] private Vector2 rangerAttack = Vector2.zero;
 
         private void Update()
         {
@@ -35,20 +33,22 @@ namespace Game.Enemy
                     if (isRangeAttack)
                     {
                         Flip();
-                        if (currentTime != 0) return;
-                        animator.SetTrigger("isAttack");
-                        if (!HuyManager.PlayerIsDeath() || !enemyHealth.EnemyDeath())
+                        if (currentTime <= 0)
                         {
-                            StartCoroutine(DurationAttack(0.5f));
-                        }
+                            if (!HuyManager.PlayerIsDeath() || !enemyHealth.EnemyDeath())
+                            {
+                                StartCoroutine(DurationAttack(0.5f));
+                            }
 
-                        currentTime = maxTimeAttack;
+                            animator.SetTrigger("isAttack");
+                            currentTime = maxTimeAttack;
+                        }
                     }
                 }
             }
         }
 
-        private System.Collections.IEnumerator DurationAttack(float duration)
+        private IEnumerator DurationAttack(float duration)
         {
             yield return new WaitForSeconds(duration);
             AttackBulletArc();

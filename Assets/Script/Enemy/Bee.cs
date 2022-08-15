@@ -8,8 +8,6 @@ namespace Game.Enemy
     public class Bee : EnemyController
     {
         [SerializeField] private List<FireProjectile> projectiles;
-        [SerializeField] private Vector2 posAttack = Vector2.zero;
-        [SerializeField] private Vector2 rangerAttack = Vector2.zero;
         private static readonly int IsAttack = Animator.StringToHash("isAttack");
 
         private void Update()
