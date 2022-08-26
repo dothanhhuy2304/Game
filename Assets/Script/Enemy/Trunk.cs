@@ -1,14 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
-using Game.GamePlay;
 using UnityEngine;
 
 namespace Game.Enemy
 {
     public class Trunk : EnemyController
     {
-        [SerializeField] private List<ProjectileArc> projectileArcs;
-
         private void Update()
         {
             if (HuyManager.PlayerIsDeath() && enemyHealth.EnemyDeath())
@@ -29,7 +25,6 @@ namespace Game.Enemy
                 HuyManager.SetTimeAttack(ref currentTime);
                 if (!enemyHealth.EnemyDeath())
                 {
-                    //if (CheckAttack(transform.position + (Vector3) posAttack, rangerAttack))
                     if (isRangeAttack)
                     {
                         Flip();
@@ -52,14 +47,6 @@ namespace Game.Enemy
         {
             yield return new WaitForSeconds(duration);
             AttackBulletArc();
-        }
-
-        private void AttackBulletArc()
-        {
-            projectileArcs[FindBullet(projectileArcs)].transform.rotation = Quaternion.identity;
-            projectileArcs[FindBullet(projectileArcs)].transform.position = offsetAttack.position;
-            projectileArcs[FindBullet(projectileArcs)].SetActives();
-            AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
     }
 }

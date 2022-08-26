@@ -35,3 +35,13 @@ public static class HuyManager
         }
     }
 }
+
+public enum EnemyType
+{
+    Player,
+    Ninja,
+    CarnivorousPlant,
+    Pet,
+    Bee,
+    Trunk,
+}

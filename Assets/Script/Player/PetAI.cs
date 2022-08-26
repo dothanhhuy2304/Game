@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Game.Core;
 
 namespace Game.Player
 {
@@ -117,7 +116,7 @@ namespace Game.Player
         {
             for (var i = 0; i < projectile.Count; i++)
             {
-                if (!projectile[i].gameObject.activeInHierarchy)
+                if (!projectile[i].gameObject.activeSelf)
                 {
                     return i;
                 }

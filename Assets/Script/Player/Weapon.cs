@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Game.GamePlay;
 using UnityEngine;
 
@@ -5,15 +6,10 @@ namespace Game.Player
 {
     public class Weapon : MonoBehaviour
     {
-        [SerializeField] private FireProjectile[] projectiles;
+        [SerializeField] private List<FireProjectile> projectiles;
         [SerializeField] private Vector2 offset;
         private float timeAttack;
         [SerializeField] private float resetTimeAttack = 0.5f;
-
-        // private void Start()
-        // {
-        //     timeAttack = 0f;
-        // }
 
         private void LateUpdate()
         {
@@ -26,21 +22,11 @@ namespace Game.Player
                     if (Input.GetMouseButtonDown(0))
                     {
                         Bullet();
-                        //reset time when player shoot
                         timeAttack = resetTimeAttack;
                     }
                 }
             }
         }
-
-        // private void Attacks()
-        // {
-        //     if (timeAttack <= 0)
-        //     {
-        //         Bullet();
-        //         timeAttack = resetTimeAttack;
-        //     }
-        // }
 
         private void Bullet()
         {
@@ -52,9 +38,9 @@ namespace Game.Player
 
         private int FindBullet()
         {
-            for (var i = 0; i < projectiles.Length; i++)
+            for (var i = 0; i < projectiles.Count; i++)
             {
-                if (!projectiles[i].gameObject.activeInHierarchy)
+                if (!projectiles[i].gameObject.activeSelf)
                 {
                     return i;
                 }
