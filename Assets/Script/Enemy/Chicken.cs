@@ -1,43 +1,41 @@
+using System;
 using System.Collections;
+using Game.Player;
 using UnityEngine;
 
 namespace Game.Enemy
 {
 
-    public class Chicken : EnemyController
+    public class Chicken : MonoBehaviour
     {
+        [SerializeField] private Rigidbody2D body;
         [SerializeField] private Collider2D chickenCol;
-        [SerializeField] private GameObject explosionObj;
+        [SerializeField] private Explosion explosionObj;
         [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private float movingSpeed;
         private bool isMoving;
-        private bool destroy;
         private Vector2 startPos = Vector2.zero;
-        [SerializeField] private Vector2 groundCheck = Vector2.zero;
         [Range(0f, 100f)] [SerializeField] protected float rangeAttack = 3f;
-        private bool isHitGround;
-        private void Awake()
+        [SerializeField] private float currentTime;
+        [SerializeField] private float maxTimeAttack;
+        private CharacterController2D playerCharacter;
+        [SerializeField] private float offsetFlip;
+        [SerializeField] private Animator animator;
+        [SerializeField] private bool isHitGround;
+        private static readonly int IsRun = Animator.StringToHash("is_Run");
+
+        private void Start()
         {
             currentTime = maxTimeAttack;
             startPos = transform.position;
+            playerCharacter = CharacterController2D.instance;
         }
 
-        private void OnEnable()
+        private void Update()
         {
-            chickenCol.enabled = true;
-        }
-
-        private IEnumerator IEDurationRespawn()
-        {
-            yield return new WaitForSeconds(4f);
-            if (!spriteRenderer.enabled)
+            if (isMoving)
             {
-                body.bodyType = RigidbodyType2D.Kinematic;
-                destroy = false;
-                spriteRenderer.enabled = true;
-                chickenCol.enabled = true;
-                animator.enabled = true;
-                transform.position = startPos;
-                MovingToTarget("is_Run", false);
+                HuyManager.SetTimeAttack(ref currentTime);
             }
         }
 
@@ -47,8 +45,7 @@ namespace Game.Enemy
             {
                 StartCoroutine(IEDurationRespawn());
             }
-
-            if (!destroy)
+            else
             {
                 if (!isMoving)
                 {
@@ -59,39 +56,34 @@ namespace Game.Enemy
                 }
                 else
                 {
-                    //bool hit = Physics2D.Raycast(transform.TransformPoint(groundCheck), Vector3.down, 2f, 1 << LayerMask.NameToLayer("ground"));
-                    //bool hitRight = Physics2D.Raycast(transform.TransformPoint(groundCheck), Vector3.zero, 0f, 1 << LayerMask.NameToLayer("ground"));
-                    HuyManager.SetTimeAttack(ref currentTime);
                     if (Vector3.Distance(transform.position, playerCharacter.transform.position) > 0.5f)
                     {
                         Flip();
                     }
 
-                    //if (!hit || hitRight)
-                    if(!isHitGround)
-                    {
-                        body.velocity = Vector3.zero;
-                        animator.SetBool("is_Run", false);
-                    }
-                    else
-                    {
-                        MovingToTarget("is_Run", true);
-                    }
-
                     if (currentTime <= 0f)
                     {
                         isMoving = false;
-                        body.bodyType = RigidbodyType2D.Static;
-                        destroy = true;
+                        MovingToTarget(false);
                         spriteRenderer.enabled = false;
                         chickenCol.enabled = false;
                         animator.enabled = false;
                         explosionObj.transform.position = transform.position;
-                        explosionObj.SetActive(true);
+                        explosionObj.gameObject.SetActive(true);
                         currentTime = maxTimeAttack;
+                    }
+                    else
+                    {
+                        MovingToTarget(isHitGround);
                     }
                 }
             }
+        }
+        
+        private void Flip()
+        {
+            Vector2 target = (playerCharacter.transform.position - transform.position).normalized;
+            transform.rotation = Quaternion.Euler(new Vector3(0f, Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg + offsetFlip, 0f));
         }
 
         private void OnTriggerStay2D(Collider2D other)
@@ -109,20 +101,42 @@ namespace Game.Enemy
                 isHitGround = false;
             }
         }
-        
-        private void MovingToTarget(string states, bool value)
+
+        private void MovingToTarget(bool canMove)
         {
-            Vector3 target = new Vector3(playerCharacter.transform.position.x - transform.position.x, 0f, 0f).normalized;
-            if (Vector2.Distance(playerCharacter.transform.position, transform.position) > 1f)
+            if (canMove)
             {
-                body.MovePosition(body.transform.position + target * (movingSpeed * Time.fixedDeltaTime));
+                if (Vector2.Distance(playerCharacter.transform.position, transform.position) > 0.5f)
+                {
+                    body.bodyType = RigidbodyType2D.Kinematic;
+                    Vector3 movingTarget = new Vector3(playerCharacter.transform.position.x - transform.position.x, 0f, 0f).normalized;
+                    body.MovePosition(body.transform.position + movingTarget * (Time.fixedDeltaTime * movingSpeed));
+                }
+                else
+                {
+                    body.bodyType = RigidbodyType2D.Static;
+                }
             }
             else
             {
-                body.velocity = Vector2.zero;
+                body.bodyType = RigidbodyType2D.Static;
             }
 
-            animator.SetBool(states, value);
+            animator.SetBool(IsRun, canMove);
+        }
+
+        private IEnumerator IEDurationRespawn()
+        {
+            yield return new WaitForSeconds(4f);
+            if (!spriteRenderer.enabled)
+            {
+                body.bodyType = RigidbodyType2D.Kinematic;
+                spriteRenderer.enabled = true;
+                chickenCol.enabled = true;
+                animator.enabled = true;
+                transform.position = startPos;
+                MovingToTarget(false);
+            }
         }
     }
 }

@@ -35,7 +35,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1901574017916695586}
-  - {fileID: 5996468345212445128}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -185,19 +184,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9bf1a529247be2499e54ac00007caa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyType: 5
   body: {fileID: 5606069922568021621}
-  canMoving: 0
-  movingSpeed: 2
   projectiles: []
-  projectileArcs: []
+  movingSpeed: 2
   offsetFlip: 1215
   maxTimeAttack: 5
-  offsetAttack: {fileID: 5996468345212445128}
+  offsetAttack: {fileID: 0}
+  positionAttack: {x: -1, y: -0.25}
   animator: {fileID: 967367811024892476}
   enemyHealth: {fileID: 967367811024892466}
-  posAttack: {x: 0, y: 0}
-  rangerAttack: {x: 0, y: 0}
 --- !u!50 &5606069922568021621
 Rigidbody2D:
   serializedVersion: 4
@@ -219,36 +214,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!1 &6009209378266578496
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5996468345212445128}
-  m_Layer: 0
-  m_Name: PosAttack
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5996468345212445128
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6009209378266578496}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1, y: -0.25, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 967367811024892478}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &967367811740202693
 PrefabInstance:
   m_ObjectHideFlags: 0

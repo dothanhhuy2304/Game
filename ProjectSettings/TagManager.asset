@@ -10,6 +10,8 @@ TagManager:
   - Car
   - Box
   - Grass
+  - FxTemporaire
+  - Item
   layers:
   - Default
   - TransparentFX
@@ -20,8 +22,8 @@ TagManager:
   - Player
   - ground
   - Enemy
-  - Item
   - background
+  - Item
   - BulletPlayer
   - BulletEnemy
   - 

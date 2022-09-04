@@ -6,7 +6,6 @@ namespace Game.Enemy
 {
     public class SNinja : EnemyController
     {
-        [SerializeField] private Transform rangeAttackObj;
         [SerializeField] private float radiusAttack;
         //
         [Header("SetUp Patrol")] 
@@ -15,6 +14,11 @@ namespace Game.Enemy
         [SerializeField] private float timeDurationMoving;
         private static readonly int IsRun = Animator.StringToHash("isRun");
         private static readonly int IsAttackSword = Animator.StringToHash("isAttack1");
+
+        private void Update()
+        {
+            HuyManager.SetTimeAttack(ref currentTime);
+        }
 
         private void FixedUpdate()
         {
@@ -25,7 +29,7 @@ namespace Game.Enemy
             else
             {
                 body.bodyType = RigidbodyType2D.Kinematic;
-                HuyManager.SetTimeAttack(ref currentTime);
+                //HuyManager.SetTimeAttack(ref currentTime);
                 if (!HuyManager.PlayerIsDeath())
                 {
                     SNinjaAttack();
@@ -40,6 +44,7 @@ namespace Game.Enemy
         //Moving
         private void Move()
         {
+            body.bodyType = RigidbodyType2D.Kinematic;
             if (transform.position != target)
             {
                 Vector3 position = transform.position;
@@ -90,6 +95,7 @@ namespace Game.Enemy
             else if ((playerCharacter.transform.position - transform.position).magnitude <= 8)
             {
                 Flip();
+                body.bodyType = RigidbodyType2D.Static;
                 animator.SetBool(IsRun, false);
                 if (currentTime <= 0f)
                 {
@@ -112,17 +118,18 @@ namespace Game.Enemy
 
         private void SNinjaAttackSword()
         {
-            bool hits = Physics2D.OverlapCircle(rangeAttackObj.position, radiusAttack, 1 << LayerMask.NameToLayer("Player"));
-            if ((playerCharacter.transform.position - transform.position).magnitude >= 2f)
+            bool hits = Physics2D.OverlapCircle(transform.position, radiusAttack, 1 << LayerMask.NameToLayer("Player"));
+            if ((playerCharacter.transform.position - transform.position).magnitude > 1.5f && isHitGrounds)
             {
-                Vector2 pos = playerCharacter.transform.position - transform.position;
-                body.velocity = pos * (35f * Time.fixedDeltaTime);
+                Vector3 pos = new Vector3(playerCharacter.transform.position.x - body.transform.position.x, 0f, 0f);
+
+                body.velocity = pos * (30f * Time.fixedDeltaTime);
                 animator.SetBool(IsRun, true);
             }
             else if ((playerCharacter.transform.position - transform.position).magnitude < 1.5f)
             {
                 animator.SetBool(IsRun, false);
-                body.velocity = Vector2.zero;
+                body.bodyType = RigidbodyType2D.Static;
                 if (currentTime <= 0f)
                 {
                     animator.SetTrigger(IsAttackSword);
@@ -136,6 +143,7 @@ namespace Game.Enemy
                 }
             }
         }
+
 
         private IEnumerator DurationAttack(float duration)
         {

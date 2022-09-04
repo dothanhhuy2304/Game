@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Game.GamePlay;
 using UnityEngine;
@@ -15,9 +16,11 @@ namespace Game.Enemy
         [Space] [Header("Time")] protected float currentTime;
         [SerializeField] protected float maxTimeAttack;
         [SerializeField] protected Transform offsetAttack;
+        [SerializeField] protected Vector2 positionAttack;
         [SerializeField] protected Animator animator;
         [SerializeField] protected EnemyHealth enemyHealth;
         protected bool isRangeAttack;
+        protected bool isHitGrounds;
 
         protected virtual void Start()
         {
@@ -26,7 +29,6 @@ namespace Game.Enemy
 
         protected void Flip()
         {
-            body.velocity = Vector2.zero;
             Vector2 target = (playerCharacter.transform.position - transform.position).normalized;
             transform.rotation = Quaternion.Euler(new Vector3(0f, Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg + offsetFlip, 0f));
         }
@@ -35,11 +37,24 @@ namespace Game.Enemy
         {
             EvaluateCheckRangeAttack(other, true);
         }
+        
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            if (other.CompareTag("ground"))
+            {
+                isHitGrounds = true;
+            }
+        }
 
         private void OnTriggerExit2D(Collider2D other)
         {
             EvaluateCheckRangeAttack(other, false);
+            if (other.CompareTag("ground"))
+            {
+                isHitGrounds = false;
+            }
         }
+
 
         private void EvaluateCheckRangeAttack(Component col, bool canAttack)
         {
@@ -49,40 +64,46 @@ namespace Game.Enemy
             }
         }
 
-        private static int FindBullet(List<FireProjectile> projectile)
-        {
-            for (var i = 0; i < projectile.Count; i++)
-            {
-                if (!projectile[i].gameObject.activeSelf)
-                    return i;
-            }
-
-            return 0;
-        }
-        
         protected void AttackBulletDirection()
         {
             Vector2 directionToPlayer = (playerCharacter.transform.position - transform.position).normalized;
-            projectiles[FindBullet(projectiles)].transform.position = offsetAttack.position;
-            projectiles[FindBullet(projectiles)].transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg);
-            projectiles[FindBullet(projectiles)].Shoot();
+            //projectiles[FindBullet()].transform.position = offsetAttack.position;
+            projectiles[FindBullet()].transform.position = transform.TransformPoint(positionAttack);
+            projectiles[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg);
+            //projectiles[FindBullet(projectiles)].Shoot();
+            projectiles[FindBullet()].eventShoot?.Invoke();
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
         
         public void AttackBulletArc()
         {
-            projectiles[FindBullet(projectiles)].transform.rotation = Quaternion.identity;
-            projectiles[FindBullet(projectiles)].transform.position = offsetAttack.position;
-            projectiles[FindBullet(projectiles)].Shoot();
+            //projectiles[FindBullet()].transform.position = offsetAttack.position;
+            projectiles[FindBullet()].transform.position = transform.TransformPoint(positionAttack);
+            projectiles[FindBullet()].transform.rotation = Quaternion.identity;
+            //projectiles[FindBullet(projectiles)].Shoot();
+            projectiles[FindBullet()].eventShoot?.Invoke();
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
         
         public void AttackBullet()
         {
-            projectiles[FindBullet(projectiles)].transform.position = offsetAttack.position;
-            projectiles[FindBullet(projectiles)].transform.rotation = transform.rotation;
-            projectiles[FindBullet(projectiles)].Shoot();
+            //projectiles[FindBullet()].transform.position = offsetAttack.position;
+            projectiles[FindBullet()].transform.position = transform.TransformPoint(positionAttack);
+            projectiles[FindBullet()].transform.rotation = Quaternion.identity;
+            //projectiles[FindBullet(projectiles)].Shoot();
+            projectiles[FindBullet()].eventShoot?.Invoke();
             AudioManager.instance.Play("Enemy_Attack_Shoot");
+        }
+        
+        private int FindBullet()
+        {
+            for (var i = 0; i < projectiles.Count; i++)
+            {
+                if (!projectiles[i].gameObject.activeSelf)
+                    return i;
+            }
+
+            return 0;
         }
 
     }

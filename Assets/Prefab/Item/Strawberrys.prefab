@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2491257784207205569}
   - component: {fileID: 2491257784207205568}
   - component: {fileID: 5959942050923516927}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Strawberry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 6465029290852553195}
   - component: {fileID: 6465029290852553196}
   - component: {fileID: 6465029290852553197}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Strawberrys
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,7 +9,7 @@ namespace Game.Player
     public class PetAI : FastSingleton<PetAI>
     {
         public Data petData;
-        private Rigidbody2D body;
+        [SerializeField] private Rigidbody2D body;
         private CharacterController2D playerPos;
         private Vector2 velocity = Vector2.zero;
         [SerializeField] private List<FireProjectile> projectiles;
@@ -20,48 +21,57 @@ namespace Game.Player
         private float currentTimeAttack = 3f;
         private const float TimeAttack = 3f;
         [SerializeField] private Animator animator;
+        private static readonly int IsRun = Animator.StringToHash("isRun");
 
         private void Start()
         {
-            body = GetComponent<Rigidbody2D>();
             playerPos = CharacterController2D.instance;
             multipleEnemy = GameObject.FindGameObjectsWithTag("Enemy").ToList();
+        }
+
+
+        private void Update()
+        {
+            HuyManager.SetTimeAttack(ref currentTimeAttack);
         }
 
         private void FixedUpdate()
         {
             if (!HuyManager.PlayerIsDeath())
             {
-                if (Vector3.Distance(transform.position, playerPos.transform.position) > distancePlayer)
+                if (Vector3.Distance(playerPos.transform.position, transform.position) > distancePlayer)
                 {
                     Moving();
-                    animator.SetBool("isRun", true);
+                    animator.SetBool(IsRun, true);
+                    Attack();
                 }
                 else
                 {
+                    Attack();
                     body.velocity = Vector2.zero;
                 }
+            }
+        }
 
-                HuyManager.SetTimeAttack(ref currentTimeAttack);
-                closestEnemy = FindClosestEnemy();
-                if (enemyContact)
+
+
+        private void Attack()
+        {
+            closestEnemy = FindClosestEnemy();
+            if (enemyContact)
+            {
+                if (Vector2.Distance(transform.position, closestEnemy.position) < rangeAttack)
                 {
-                    if (Vector2.Distance(transform.position, closestEnemy.position) < rangeAttack)
+                    if (currentTimeAttack <= 0f)
                     {
-                        if (currentTimeAttack <= 0f)
-                        {
-                            Attacks();
-                            animator.SetBool("isRun", false);
-                            currentTimeAttack = TimeAttack;
-                        }
-                        else
-                        {
-                            body.velocity = Vector2.zero;
-                        }
+                        Attacks();
+                        animator.SetBool(IsRun, false);
+                        currentTimeAttack = TimeAttack;
                     }
                 }
             }
         }
+
 
         private void OnTriggerStay2D(Collider2D other)
         {
@@ -89,19 +99,19 @@ namespace Game.Player
 
         private void Attacks()
         {
-            projectiles[FindBullet(projectiles)].transform.position = transform.position;
-            projectiles[FindBullet(projectiles)].transform.rotation = transform.rotation;
-            projectiles[FindBullet(projectiles)].Shoot();
+            projectiles[FindBullet()].transform.position = transform.position;
+            projectiles[FindBullet()].transform.rotation = transform.rotation;
+            projectiles[FindBullet()].eventShoot?.Invoke();
         }
 
         private Transform FindClosestEnemy()
         {
-            var closestDistance = Mathf.Infinity;
+            float closestDistance = Mathf.Infinity;
             Transform trans = null;
             foreach (var go in multipleEnemy)
             {
                 if (!go) continue;
-                var currentDistance = Vector3.Distance(transform.position, go.transform.position);
+                float currentDistance = Vector3.Distance(transform.position, go.transform.position);
                 if (currentDistance < closestDistance)
                 {
                     closestDistance = currentDistance;
@@ -112,11 +122,11 @@ namespace Game.Player
             return trans;
         }
 
-        private int FindBullet(List<FireProjectile> projectile)
+        private int FindBullet()
         {
-            for (var i = 0; i < projectile.Count; i++)
+            for (var i = 0; i < projectiles.Count; i++)
             {
-                if (!projectile[i].gameObject.activeSelf)
+                if (!projectiles[i].gameObject.activeSelf)
                 {
                     return i;
                 }

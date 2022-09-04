@@ -3,6 +3,7 @@ using UnityEngine;
 using Game.Enemy;
 using Game.Player;
 using Game.GamePlay;
+using UnityEngine.Events;
 
 public class FireProjectile : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class FireProjectile : MonoBehaviour
     [SerializeField] private float arcHeight = 1;
     private Vector3 startPos = Vector3.zero;
     private Vector3 targetPos = Vector3.zero;
+    public UnityEvent eventShoot;
     
     private void Awake()
     {

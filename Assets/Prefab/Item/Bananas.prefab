@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5430441285361542491}
   - component: {fileID: 2509518318234597953}
   - component: {fileID: 5430441285361542488}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Bananas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -76,7 +76,7 @@ GameObject:
   - component: {fileID: 7504055726810617676}
   - component: {fileID: 7504055726810617677}
   - component: {fileID: 4564913614570842705}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Bananas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
