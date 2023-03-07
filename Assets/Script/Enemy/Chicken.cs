@@ -1,69 +1,101 @@
 using System;
 using System.Collections;
+using DG.Tweening;
 using Game.Player;
 using UnityEngine;
 
 namespace Game.Enemy
 {
-
-    public class Chicken : MonoBehaviour
+    public class Chicken : EnemyController
     {
-        [SerializeField] private Rigidbody2D body;
         [SerializeField] private Collider2D chickenCol;
         [SerializeField] private Explosion explosionObj;
         [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private float movingSpeed;
-        private bool isMoving;
-        private Vector2 startPos = Vector2.zero;
         [Range(0f, 100f)] [SerializeField] protected float rangeAttack = 3f;
-        [SerializeField] private float currentTime;
-        [SerializeField] private float maxTimeAttack;
-        private CharacterController2D playerCharacter;
-        [SerializeField] private float offsetFlip;
-        [SerializeField] private Animator animator;
         [SerializeField] private bool isHitGround;
         private static readonly int IsRun = Animator.StringToHash("is_Run");
-
-        private void Start()
+        private Sequence sequence;
+        protected override void Start()
         {
             currentTime = maxTimeAttack;
-            startPos = transform.position;
+            transform.position = enemySetting.startPosition;
             playerCharacter = CharacterController2D.instance;
+            ChickenMoving();
+        }
+
+        private void ChickenMoving()
+        {
+            sequence = DOTween.Sequence()
+                .AppendCallback(() =>
+                {
+                    animator.SetBool(IsRun, true);
+                    body.DOMove(enemySetting.endPosition, 9).SetEase(Ease.Linear)
+                        .OnComplete(() =>
+                        {
+                            animator.SetBool(IsRun, false);
+                        });
+                }).AppendInterval(12f)
+                .AppendCallback(() =>
+                {
+                    FlipMoving(spriteRenderer, true);
+                })
+                .AppendCallback(() =>
+                {
+                    animator.SetBool(IsRun, true);
+                    body.DOMove(enemySetting.startPosition, 9).SetEase(Ease.Linear)
+                        .OnComplete(() =>
+                        {
+                            animator.SetBool(IsRun, false);
+                        });
+                }).AppendInterval(12)
+                .AppendCallback(() =>
+                {
+                    FlipMoving(spriteRenderer, false);
+                })
+                .SetLoops(int.MaxValue).Play();
         }
 
         private void Update()
         {
-            if (isMoving)
+            if (enemySetting.canAttack)
             {
+                sequence.Kill();
                 HuyManager.SetTimeAttack(ref currentTime);
             }
+            
         }
 
         private void FixedUpdate()
         {
             if (HuyManager.PlayerIsDeath())
             {
-                StartCoroutine(IEDurationRespawn());
+                StartCoroutine(IeDurationSpawn());
             }
             else
             {
-                if (!isMoving)
+                if (!enemySetting.canAttack)
                 {
-                    if (Vector3.Distance(transform.position, playerCharacter.transform.position) < rangeAttack)
+                    if (Vector3.Distance(playerCharacter.transform.position, offsetAttack.transform.position) < rangeAttack)
                     {
-                        isMoving = true;
+                        enemySetting.canAttack = true;
+                        body.bodyType = RigidbodyType2D.Kinematic;
                     }
                 }
-                else
+
+                if (enemySetting.canAttack)
                 {
-                    if (Vector3.Distance(transform.position, playerCharacter.transform.position) > 0.5f)
+                    if (Vector3.Distance(playerCharacter.transform.position, offsetAttack.transform.position) > 0.5f)
                     {
-                        Flip();
+                        MovingToTarget(isHitGround);
+                    }
+                    else
+                    {
+                        MovingToTarget(false);
                     }
 
                     if (currentTime <= 0f)
                     {
-                        isMoving = false;
+                        enemySetting.canAttack = false;
                         MovingToTarget(false);
                         spriteRenderer.enabled = false;
                         chickenCol.enabled = false;
@@ -72,18 +104,38 @@ namespace Game.Enemy
                         explosionObj.gameObject.SetActive(true);
                         currentTime = maxTimeAttack;
                     }
-                    else
-                    {
-                        MovingToTarget(isHitGround);
-                    }
                 }
             }
         }
-        
-        private void Flip()
+
+        private void MovingToTarget(bool canMove)
         {
-            Vector2 target = (playerCharacter.transform.position - transform.position).normalized;
-            transform.rotation = Quaternion.Euler(new Vector3(0f, Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg + offsetFlip, 0f));
+            if (canMove)
+            {
+                Flip();
+                Vector3 trans = offsetAttack.transform.position;
+                Vector3 movingTarget = (playerCharacter.transform.position - trans);
+                Vector3 fixMoving = new Vector3(movingTarget.x, 0);
+                body.MovePosition(trans + fixMoving * (Time.fixedDeltaTime * movingSpeed));
+            }
+            else
+            {
+                body.MovePosition(body.transform.position);
+            }
+
+            animator.SetBool(IsRun, canMove);
+        }
+
+        private IEnumerator IeDurationSpawn()
+        {
+            Stun(true, RigidbodyType2D.Static);
+            yield return new WaitForSeconds(4f);
+            Stun(false, RigidbodyType2D.Kinematic);
+            spriteRenderer.enabled = true;
+            chickenCol.enabled = true;
+            animator.enabled = true;
+            transform.position = enemySetting.startPosition;
+            MovingToTarget(false);
         }
 
         private void OnTriggerStay2D(Collider2D other)
@@ -99,43 +151,6 @@ namespace Game.Enemy
             if (other.CompareTag("ground"))
             {
                 isHitGround = false;
-            }
-        }
-
-        private void MovingToTarget(bool canMove)
-        {
-            if (canMove)
-            {
-                if (Vector2.Distance(playerCharacter.transform.position, transform.position) > 0.5f)
-                {
-                    body.bodyType = RigidbodyType2D.Kinematic;
-                    Vector3 movingTarget = new Vector3(playerCharacter.transform.position.x - transform.position.x, 0f, 0f).normalized;
-                    body.MovePosition(body.transform.position + movingTarget * (Time.fixedDeltaTime * movingSpeed));
-                }
-                else
-                {
-                    body.bodyType = RigidbodyType2D.Static;
-                }
-            }
-            else
-            {
-                body.bodyType = RigidbodyType2D.Static;
-            }
-
-            animator.SetBool(IsRun, canMove);
-        }
-
-        private IEnumerator IEDurationRespawn()
-        {
-            yield return new WaitForSeconds(4f);
-            if (!spriteRenderer.enabled)
-            {
-                body.bodyType = RigidbodyType2D.Kinematic;
-                spriteRenderer.enabled = true;
-                chickenCol.enabled = true;
-                animator.enabled = true;
-                transform.position = startPos;
-                MovingToTarget(false);
             }
         }
     }

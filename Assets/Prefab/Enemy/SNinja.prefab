@@ -197,6 +197,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72c9c041cb412be4c81d8710ae0c17ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemySetting:
+    startPosition: {x: 0, y: 0, z: 0}
+    endPosition: {x: 0, y: 0, z: 0}
+    canMoving: 0
+    enemyHeal: {fileID: 3443694513160801480}
   body: {fileID: 3443694513160801474}
   projectiles: []
   movingSpeed: 2

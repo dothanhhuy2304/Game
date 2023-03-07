@@ -325,7 +325,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4549498311450808679}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -631,7 +631,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.056800693, y: -0.24217057}
+  m_Offset: {x: -0.69650537, y: -0.24217057}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -642,7 +642,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.6380704, y: 1.6239963}
+  m_Size: {x: 1.0162736, y: 1.6239963}
   m_EdgeRadius: 0
 --- !u!114 &8736459600110473510
 MonoBehaviour:
@@ -656,14 +656,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dff536ddec1d76f428769bb15bbcca0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemySetting:
+    startPosition: {x: 0, y: 0, z: 0}
+    endPosition: {x: 0, y: 0, z: 0}
+    isStun: 0
+    canAttack: 0
+    enemyHeal: {fileID: 0}
   body: {fileID: 7777926475499111050}
+  projectiles: []
+  movingSpeed: 5
+  offsetFlip: 1215
+  maxTimeAttack: 3
+  offsetAttack: {fileID: 4549498311706445918}
+  positionAttack: {x: 0, y: 0}
+  animator: {fileID: 4549498311706445916}
   chickenCol: {fileID: 8924637331163455981}
   explosionObj: {fileID: 4549498311450808673}
   spriteRenderer: {fileID: 4549498311706445917}
-  movingSpeed: 5
   rangeAttack: 3
-  currentTime: 3
-  maxTimeAttack: 3
-  offsetFlip: 1215
-  animator: {fileID: 4549498311706445916}
   isHitGround: 0

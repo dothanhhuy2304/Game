@@ -6,8 +6,20 @@ using Game.Player;
 
 namespace Game.Enemy
 {
+
+    [System.Serializable]
+    public class EnemySetting
+    {
+        public Vector3 startPosition;
+        public Vector3 endPosition;
+        public bool isStun;
+        public bool canAttack;
+        public EnemyHealth enemyHeal;
+    }
+
     public abstract class EnemyController : MonoBehaviour
     {
+        public EnemySetting enemySetting;
         [Header("Types")] [SerializeField] protected Rigidbody2D body;
         [SerializeField] private List<FireProjectile> projectiles;
         [SerializeField] protected float movingSpeed;
@@ -18,9 +30,14 @@ namespace Game.Enemy
         [SerializeField] protected Transform offsetAttack;
         [SerializeField] protected Vector2 positionAttack;
         [SerializeField] protected Animator animator;
-        [SerializeField] protected EnemyHealth enemyHealth;
         protected bool isRangeAttack;
         protected bool isHitGrounds;
+
+        public void Stun(bool isStun, RigidbodyType2D bodyType)
+        {
+            enemySetting.isStun = isStun;
+            body.bodyType = bodyType;
+        }
 
         protected virtual void Start()
         {
@@ -33,30 +50,13 @@ namespace Game.Enemy
             transform.rotation = Quaternion.Euler(new Vector3(0f, Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg + offsetFlip, 0f));
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
+        protected void FlipMoving(SpriteRenderer sprite , bool isFlip)
         {
-            EvaluateCheckRangeAttack(other, true);
-        }
-        
-        private void OnTriggerStay2D(Collider2D other)
-        {
-            if (other.CompareTag("ground"))
-            {
-                isHitGrounds = true;
-            }
-        }
-
-        private void OnTriggerExit2D(Collider2D other)
-        {
-            EvaluateCheckRangeAttack(other, false);
-            if (other.CompareTag("ground"))
-            {
-                isHitGrounds = false;
-            }
+            sprite.flipX = isFlip;
         }
 
 
-        private void EvaluateCheckRangeAttack(Component col, bool canAttack)
+        protected void EvaluateCheckRangeAttack(Component col, bool canAttack)
         {
             if (col.CompareTag("Player"))
             {

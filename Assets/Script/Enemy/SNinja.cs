@@ -22,7 +22,7 @@ namespace Game.Enemy
 
         private void FixedUpdate()
         {
-            if (enemyHealth.EnemyDeath())
+            if (enemySetting.enemyHeal.EnemyDeath())
             {
                 body.bodyType = RigidbodyType2D.Static;
             }
@@ -101,7 +101,7 @@ namespace Game.Enemy
                 {
                     if (!HuyManager.PlayerIsDeath())
                     {
-                        if (!enemyHealth.EnemyDeath())
+                        if (!enemySetting.enemyHeal.EnemyDeath())
                         {
                             StartCoroutine(DurationAttack(0.5f));
                         }
@@ -149,6 +149,28 @@ namespace Game.Enemy
         {
             yield return new WaitForSeconds(duration);
             AttackBulletDirection();
+        }
+        
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            EvaluateCheckRangeAttack(other, true);
+        }
+        
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            if (other.CompareTag("ground"))
+            {
+                isHitGrounds = true;
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            EvaluateCheckRangeAttack(other, false);
+            if (other.CompareTag("ground"))
+            {
+                isHitGrounds = false;
+            }
         }
 
     }

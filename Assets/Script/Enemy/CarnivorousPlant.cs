@@ -9,16 +9,16 @@ namespace Game.Enemy
 
         private void FixedUpdate()
         {
-            if (HuyManager.PlayerIsDeath() && enemyHealth.EnemyDeath())
+            if (HuyManager.PlayerIsDeath() && enemySetting.enemyHeal.EnemyDeath())
             {
-                enemyHealth.EnemyRespawn();
+                enemySetting.enemyHeal.EnemyRespawn();
             }
-            else if (HuyManager.PlayerIsDeath() && !enemyHealth.EnemyDeath())
+            else if (HuyManager.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
             {
-                enemyHealth.ResetHeathDefault();
+                enemySetting.enemyHeal.ResetHeathDefault();
             }
 
-            if (!HuyManager.PlayerIsDeath() && !enemyHealth.EnemyDeath())
+            if (!HuyManager.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
             {
                 HuyManager.SetTimeAttack(ref currentTime);
                 if (isRangeAttack)
@@ -42,6 +42,28 @@ namespace Game.Enemy
         {
             yield return new WaitForSeconds(duration);
             AttackBullet();
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            EvaluateCheckRangeAttack(other, true);
+        }
+
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            if (other.CompareTag("ground"))
+            {
+                isHitGrounds = true;
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            EvaluateCheckRangeAttack(other, false);
+            if (other.CompareTag("ground"))
+            {
+                isHitGrounds = false;
+            }
         }
 
     }

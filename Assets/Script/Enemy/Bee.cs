@@ -9,30 +9,30 @@ namespace Game.Enemy
 
         private void Update()
         {
-            if (HuyManager.PlayerIsDeath() && enemyHealth.EnemyDeath())
+            if (HuyManager.PlayerIsDeath() && enemySetting.enemyHeal.EnemyDeath())
             {
-                enemyHealth.EnemyRespawn();
+                enemySetting.enemyHeal.EnemyRespawn();
             }
 
             if (HuyManager.PlayerIsDeath())
             {
-                if (!enemyHealth.EnemyDeath())
+                if (!enemySetting.enemyHeal.EnemyDeath())
                 {
-                    enemyHealth.ResetHeathDefault();
+                    enemySetting.enemyHeal.ResetHeathDefault();
                 }
             }
 
             if (!HuyManager.PlayerIsDeath())
             {
                 HuyManager.SetTimeAttack(ref currentTime);
-                if (!enemyHealth.EnemyDeath())
+                if (!enemySetting.enemyHeal.EnemyDeath())
                 {
                     if (isRangeAttack)
                     {
                         Flip();
                         if (currentTime <= 0)
                         {
-                            if (!HuyManager.PlayerIsDeath() || !enemyHealth.EnemyDeath())
+                            if (!HuyManager.PlayerIsDeath() || !enemySetting.enemyHeal.EnemyDeath())
                             {
                                 StartCoroutine(DurationAttack(0.5f));
                             }
@@ -50,6 +50,29 @@ namespace Game.Enemy
             yield return new WaitForSeconds(duration);
             AttackBulletDirection();
         }
+        
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            EvaluateCheckRangeAttack(other, true);
+        }
+        
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            if (other.CompareTag("ground"))
+            {
+                isHitGrounds = true;
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            EvaluateCheckRangeAttack(other, false);
+            if (other.CompareTag("ground"))
+            {
+                isHitGrounds = false;
+            }
+        }
+        
 
     }
 }
