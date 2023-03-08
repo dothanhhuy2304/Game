@@ -77,7 +77,7 @@ namespace Game.Player
         {
             if (other.CompareTag("Enemy"))
             {
-                closestEnemy.GetComponent<SpriteRenderer>().color = new Color(1f, 0.6f, 0.5f);
+                closestEnemy.GetComponentInChildren<SpriteRenderer>().color = new Color(1f, 0.6f, 0.5f);
                 enemyContact = true;
             }
         }
@@ -86,7 +86,7 @@ namespace Game.Player
         {
             if (other.CompareTag("Enemy"))
             {
-                other.GetComponent<SpriteRenderer>().color = Color.white;
+                other.GetComponentInChildren<SpriteRenderer>().color = Color.white;
                 enemyContact = false;
             }
         }

@@ -1,4 +1,5 @@
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Game.Enemy
@@ -7,16 +8,19 @@ namespace Game.Enemy
     {
         private void Update()
         {
-            if (HuyManager.PlayerIsDeath() && enemySetting.enemyHeal.EnemyDeath())
-            {
-                enemySetting.enemyHeal.EnemyRespawn();
-            }
-
             if (HuyManager.PlayerIsDeath())
             {
-                if (!enemySetting.enemyHeal.EnemyDeath())
+                if (enemySetting.enemyHeal.EnemyDeath())
                 {
                     enemySetting.enemyHeal.ResetHeathDefault();
+                    enemySetting.enemyHeal.ReSpawn(2);
+                }
+                else
+                {
+                    DOTween.Sequence()
+                        .AppendInterval(2f)
+                        .AppendCallback(enemySetting.enemyHeal.ResetHeathDefault)
+                        .Play();
                 }
             }
 

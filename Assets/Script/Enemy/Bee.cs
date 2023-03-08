@@ -1,4 +1,4 @@
-using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Game.Enemy
@@ -9,48 +9,45 @@ namespace Game.Enemy
 
         private void Update()
         {
-            if (HuyManager.PlayerIsDeath() && enemySetting.enemyHeal.EnemyDeath())
-            {
-                enemySetting.enemyHeal.EnemyRespawn();
-            }
-
             if (HuyManager.PlayerIsDeath())
             {
-                if (!enemySetting.enemyHeal.EnemyDeath())
+                if (enemySetting.enemyHeal.EnemyDeath())
                 {
                     enemySetting.enemyHeal.ResetHeathDefault();
+                    enemySetting.enemyHeal.ReSpawn(2);
+                }
+                else
+                {
+                    DOTween.Sequence()
+                        .AppendInterval(2f)
+                        .AppendCallback(enemySetting.enemyHeal.ResetHeathDefault)
+                        .Play();
                 }
             }
 
-            if (!HuyManager.PlayerIsDeath())
+            if (!HuyManager.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
             {
                 HuyManager.SetTimeAttack(ref currentTime);
-                if (!enemySetting.enemyHeal.EnemyDeath())
+                if ((playerCharacter.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
-                    if (isRangeAttack)
+                    Flip();
+                    if (currentTime <= 0)
                     {
-                        Flip();
-                        if (currentTime <= 0)
-                        {
-                            if (!HuyManager.PlayerIsDeath() || !enemySetting.enemyHeal.EnemyDeath())
-                            {
-                                StartCoroutine(DurationAttack(0.5f));
-                            }
-
-                            animator.SetTrigger(IsAttack);
-                            currentTime = maxTimeAttack;
-                        }
+                        BulletAttack();
+                        animator.SetTrigger(IsAttack);
+                        currentTime = maxTimeAttack;
                     }
                 }
             }
         }
 
-        private IEnumerator DurationAttack(float duration)
+        private void BulletAttack()
         {
-            yield return new WaitForSeconds(duration);
-            AttackBulletDirection();
+            DOTween.Sequence()
+                .AppendInterval(0.5f)
+                .AppendCallback(AttackBulletDirection);
         }
-        
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             EvaluateCheckRangeAttack(other, true);

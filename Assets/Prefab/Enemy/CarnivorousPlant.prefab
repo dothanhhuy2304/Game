@@ -211,6 +211,7 @@ MonoBehaviour:
     isStun: 0
     canAttack: 0
     enemyHeal: {fileID: 7130098565743549990}
+    rangeAttack: 10
   body: {fileID: 3137032912317739878}
   projectiles: []
   movingSpeed: 2
