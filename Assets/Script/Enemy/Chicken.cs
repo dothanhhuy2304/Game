@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using DG.Tweening;
 using Game.Player;
@@ -75,7 +74,7 @@ namespace Game.Enemy
             {
                 if (!enemySetting.canAttack)
                 {
-                    if (Vector3.Distance(playerCharacter.transform.position, offsetAttack.transform.position) < rangeAttack)
+                    if ((playerCharacter.transform.position - transform.position).magnitude < rangeAttack)
                     {
                         enemySetting.canAttack = true;
                         body.bodyType = RigidbodyType2D.Kinematic;
@@ -84,23 +83,23 @@ namespace Game.Enemy
 
                 if (enemySetting.canAttack)
                 {
-                    if (Vector3.Distance(playerCharacter.transform.position, offsetAttack.transform.position) > 0.5f)
+                    if ((playerCharacter.transform.position - transform.position).magnitude > 0.5f && isHitGround)
                     {
-                        MovingToTarget(isHitGround);
+                        MoveToTarget(isHitGround);
                     }
                     else
                     {
-                        MovingToTarget(false);
+                        MoveToTarget(false);
                     }
 
                     if (currentTime <= 0f)
                     {
                         enemySetting.canAttack = false;
-                        MovingToTarget(false);
+                        MoveToTarget(false);
                         spriteRenderer.enabled = false;
                         chickenCol.enabled = false;
                         animator.enabled = false;
-                        explosionObj.transform.position = transform.position;
+                        explosionObj.transform.position = offsetAttack.position;
                         explosionObj.gameObject.SetActive(true);
                         currentTime = maxTimeAttack;
                     }
@@ -108,21 +107,22 @@ namespace Game.Enemy
             }
         }
 
-        private void MovingToTarget(bool canMove)
+        private void MoveToTarget(bool canMove)
         {
             if (canMove)
             {
-                Flip();
+                spriteRenderer.flipX = false;
                 Vector3 trans = offsetAttack.transform.position;
-                Vector3 movingTarget = (playerCharacter.transform.position - trans);
-                Vector3 fixMoving = new Vector3(movingTarget.x, 0);
-                body.MovePosition(trans + fixMoving * (Time.fixedDeltaTime * movingSpeed));
+                Vector3 movingTarget = (playerCharacter.transform.position - trans).normalized;
+                Vector3 fixMove = new Vector3(movingTarget.x, 0);
+                body.MovePosition(trans + fixMove * (Time.fixedDeltaTime * movingSpeed));
             }
             else
             {
                 body.MovePosition(body.transform.position);
             }
 
+            Flip();
             animator.SetBool(IsRun, canMove);
         }
 
@@ -135,7 +135,7 @@ namespace Game.Enemy
             chickenCol.enabled = true;
             animator.enabled = true;
             transform.position = enemySetting.startPosition;
-            MovingToTarget(false);
+            MoveToTarget(false);
         }
 
         private void OnTriggerStay2D(Collider2D other)

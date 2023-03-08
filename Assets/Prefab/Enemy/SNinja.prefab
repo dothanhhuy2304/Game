@@ -200,7 +200,8 @@ MonoBehaviour:
   enemySetting:
     startPosition: {x: 0, y: 0, z: 0}
     endPosition: {x: 0, y: 0, z: 0}
-    canMoving: 0
+    isStun: 0
+    canAttack: 0
     enemyHeal: {fileID: 3443694513160801480}
   body: {fileID: 3443694513160801474}
   projectiles: []
@@ -210,12 +211,8 @@ MonoBehaviour:
   offsetAttack: {fileID: 0}
   positionAttack: {x: 0.45, y: 0}
   animator: {fileID: 3443694513160801484}
-  enemyHealth: {fileID: 3443694513160801480}
-  radiusAttack: 1
+  radiusAttack: 2
   target: {x: 0, y: 0, z: 0}
-  waypoints:
-  - {x: -8.026278e-17, y: 6.03e-43, z: 0.0000000026249374}
-  - {x: 0.0000002136301, y: -1.074407e+10, z: 6.03e-43}
   timeDurationMoving: 0
 --- !u!1 &4225494196039031798
 GameObject:

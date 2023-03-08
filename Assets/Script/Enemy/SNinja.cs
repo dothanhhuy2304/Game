@@ -1,4 +1,4 @@
-using System.Collections;
+using DG.Tweening;
 using Game.GamePlay;
 using UnityEngine;
 
@@ -7,70 +7,91 @@ namespace Game.Enemy
     public class SNinja : EnemyController
     {
         [SerializeField] private float radiusAttack;
-        //
-        [Header("SetUp Patrol")] 
+        [Header("SetUp Patrol")]
         [SerializeField] private Vector3 target;
-        [SerializeField] private Vector3[] waypoints;
         [SerializeField] private float timeDurationMoving;
         private static readonly int IsRun = Animator.StringToHash("isRun");
         private static readonly int IsAttackSword = Animator.StringToHash("isAttack1");
+        private bool wasAttackSword;
+
+        private void Awake()
+        {
+            currentTime = 0;
+        }
 
         private void Update()
         {
-            HuyManager.SetTimeAttack(ref currentTime);
+            if (!HuyManager.PlayerIsDeath())
+            {
+                HuyManager.SetTimeAttack(ref currentTime);
+            }
         }
 
         private void FixedUpdate()
         {
-            if (enemySetting.enemyHeal.EnemyDeath())
+            if (!HuyManager.PlayerIsDeath())
             {
-                body.bodyType = RigidbodyType2D.Static;
-            }
-            else
-            {
-                body.bodyType = RigidbodyType2D.Kinematic;
-                //HuyManager.SetTimeAttack(ref currentTime);
-                if (!HuyManager.PlayerIsDeath())
+                if (enemySetting.enemyHeal.EnemyDeath())
                 {
-                    SNinjaAttack();
+                    body.bodyType = RigidbodyType2D.Static;
                 }
                 else
                 {
-                    Move();
+                    Stun(false, RigidbodyType2D.Kinematic);
+                    if (!HuyManager.PlayerIsDeath())
+                    {
+                        SNinjaAttack();
+                    }
+                    else
+                    {
+                        DOTween.Sequence()
+                            .AppendInterval(0.5f)
+                            .AppendCallback(MoveToPosition).Play();
+                    }
                 }
+            }
+            else
+            {
+                DOTween.Sequence()
+                    .AppendInterval(0.5f)
+                    .AppendCallback(MoveToPosition).Play();
             }
         }
 
-        //Moving
-        private void Move()
+        private void MoveToPosition()
         {
-            body.bodyType = RigidbodyType2D.Kinematic;
             if (transform.position != target)
             {
-                Vector3 position = transform.position;
-                Vector3 moveDir = Vector3.MoveTowards(position, target, movingSpeed * Time.fixedDeltaTime);
+                Vector3 trans = transform.position;
+                Vector3 moveDir = Vector3.MoveTowards(trans, target, movingSpeed * Time.fixedDeltaTime);
                 body.MovePosition(moveDir);
                 animator.SetBool(IsRun, true);
-                FaceToWards(target - position);
+                FaceToWards(target - trans);
             }
             else
             {
-                if (target == waypoints[0])
+                if (target == enemySetting.startPosition)
                 {
-                    StartCoroutine(SetTarget(waypoints[1], timeDurationMoving));
+                    SetUpTargetToMove(enemySetting.endPosition, timeDurationMoving);
                 }
                 else
                 {
-                    StartCoroutine(SetTarget(waypoints[0], timeDurationMoving));
+                    SetUpTargetToMove(enemySetting.startPosition, timeDurationMoving);
                 }
             }
         }
 
-        private IEnumerator SetTarget(Vector3 pos, float timeSleep)
+        private void SetUpTargetToMove(Vector3 pos, float timeSleep)
         {
-            animator.SetBool(IsRun, false);
-            yield return new WaitForSeconds(timeSleep);
-            target = pos;
+            DOTween.Sequence()
+                .AppendCallback(() =>
+                {
+                    animator.SetBool(IsRun, false);
+                }).AppendInterval(timeSleep)
+                .AppendCallback(() =>
+                {
+                    target = pos;
+                }).Play();
         }
 
         private void FaceToWards(Vector3 direction)
@@ -89,68 +110,94 @@ namespace Game.Enemy
         {
             if ((playerCharacter.transform.position - transform.position).magnitude < 3f)
             {
-                Flip();
-                SNinjaAttackSword();
+                AttackSword();
             }
             else if ((playerCharacter.transform.position - transform.position).magnitude <= 8)
             {
-                Flip();
-                body.bodyType = RigidbodyType2D.Static;
-                animator.SetBool(IsRun, false);
-                if (currentTime <= 0f)
-                {
-                    if (!HuyManager.PlayerIsDeath())
-                    {
-                        if (!enemySetting.enemyHeal.EnemyDeath())
-                        {
-                            StartCoroutine(DurationAttack(0.5f));
-                        }
-                    }
-
-                    currentTime = maxTimeAttack;
-                }
+                SetUpAttackBullet();
             }
             else
             {
-                Move();
+                MoveToPosition();
             }
         }
 
-        private void SNinjaAttackSword()
+        private void AttackSword()
         {
-            bool hits = Physics2D.OverlapCircle(transform.position, radiusAttack, 1 << LayerMask.NameToLayer("Player"));
-            if ((playerCharacter.transform.position - transform.position).magnitude > 1.5f && isHitGrounds)
+            Flip();
+            if (isHitGrounds)
             {
-                Vector3 pos = new Vector3(playerCharacter.transform.position.x - body.transform.position.x, 0f, 0f);
-
-                body.velocity = pos * (30f * Time.fixedDeltaTime);
-                animator.SetBool(IsRun, true);
-            }
-            else if ((playerCharacter.transform.position - transform.position).magnitude < 1.5f)
-            {
-                animator.SetBool(IsRun, false);
-                body.bodyType = RigidbodyType2D.Static;
-                if (currentTime <= 0f)
+                if ((playerCharacter.transform.position - transform.position).magnitude > 2f)
                 {
-                    animator.SetTrigger(IsAttackSword);
-                    currentTime = 1.5f;
-                    if (hits)
-                    {
-                        playerCharacter.playerHealth.GetDamage(21f);
-                    }
+                    Vector3 currentPosition = body.transform.position;
+                    Vector3 targetPosition = new Vector3(playerCharacter.transform.position.x - currentPosition.x, 0f, 0f);
+                    //body.velocity = targetPosition * (30f * Time.fixedDeltaTime);
+                    body.MovePosition(currentPosition + targetPosition * Time.fixedDeltaTime);
+                    animator.SetBool(IsRun, true);
+                }
 
-                    AudioManager.instance.Play("Enemy_Attack_Sword");
+                if ((playerCharacter.transform.position - transform.position).magnitude < 2f)
+                {
+                    if (HuyManager.PlayerIsDeath())
+                        return;
+                    DOTween.Sequence()
+                        .AppendCallback(() =>
+                        {
+                            body.MovePosition(body.transform.position);
+                            animator.SetBool(IsRun, false);
+                            if (currentTime <= 0f)
+                            {
+                                wasAttackSword = true;
+                                animator.SetTrigger(IsAttackSword);
+                                AudioManager.instance.Play("Enemy_Attack_Sword");
+                                currentTime = 1.5f;
+                            }
+                        })
+                        .AppendInterval(1f)
+                        .AppendCallback(() =>
+                        {
+                            if (wasAttackSword)
+                            {
+                                bool hits = Physics2D.OverlapCircle(transform.position, radiusAttack, 1 << LayerMask.NameToLayer("Player"));
+                                if (hits)
+                                {
+                                    playerCharacter.playerHealth.GetDamage(21f);
+                                }
+
+                                wasAttackSword = false;
+                            }
+                        }).Play();
                 }
             }
         }
 
-
-        private IEnumerator DurationAttack(float duration)
+        private void SetUpAttackBullet()
         {
-            yield return new WaitForSeconds(duration);
-            AttackBulletDirection();
+            Flip();
+            animator.SetBool(IsRun, false);
+            body.MovePosition(body.transform.position);
+            if (currentTime <= 0f)
+            {
+                if (!HuyManager.PlayerIsDeath())
+                {
+                    if (!enemySetting.enemyHeal.EnemyDeath())
+                    {
+                        ShootAttack(0.5f);
+                    }
+                }
+
+                currentTime = maxTimeAttack;
+            }
         }
-        
+
+
+        private void ShootAttack(float durationAttack)
+        {
+            DOTween.Sequence()
+                .AppendInterval(durationAttack)
+                .AppendCallback(AttackBulletDirection);
+        }
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             EvaluateCheckRangeAttack(other, true);

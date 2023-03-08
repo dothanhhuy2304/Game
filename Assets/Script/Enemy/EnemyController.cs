@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Game.GamePlay;
 using UnityEngine;
@@ -33,7 +32,7 @@ namespace Game.Enemy
         protected bool isRangeAttack;
         protected bool isHitGrounds;
 
-        public void Stun(bool isStun, RigidbodyType2D bodyType)
+        protected void Stun(bool isStun, RigidbodyType2D bodyType)
         {
             enemySetting.isStun = isStun;
             body.bodyType = bodyType;
@@ -47,7 +46,8 @@ namespace Game.Enemy
         protected void Flip()
         {
             Vector2 target = (playerCharacter.transform.position - transform.position).normalized;
-            transform.rotation = Quaternion.Euler(new Vector3(0f, Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg + offsetFlip, 0f));
+            float angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(new Vector3(0, angle + offsetFlip, 0));
         }
 
         protected void FlipMoving(SpriteRenderer sprite , bool isFlip)
