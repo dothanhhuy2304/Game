@@ -1,4 +1,3 @@
-using System.Collections;
 using DG.Tweening;
 using Game.Player;
 using UnityEngine;
@@ -68,7 +67,7 @@ namespace Game.Enemy
         {
             if (HuyManager.PlayerIsDeath())
             {
-                StartCoroutine(IeDurationSpawn());
+                WaitToSpawn();
             }
             else
             {
@@ -126,16 +125,18 @@ namespace Game.Enemy
             animator.SetBool(IsRun, canMove);
         }
 
-        private IEnumerator IeDurationSpawn()
+        private void WaitToSpawn()
         {
-            Stun(true, RigidbodyType2D.Static);
-            yield return new WaitForSeconds(4f);
-            Stun(false, RigidbodyType2D.Kinematic);
-            spriteRenderer.enabled = true;
-            chickenCol.enabled = true;
-            animator.enabled = true;
-            transform.position = enemySetting.startPosition;
-            MoveToTarget(false);
+            DOTween.Sequence()
+                .AppendCallback(() => { body.MovePosition(body.transform.position); }).AppendInterval(4f)
+                .AppendCallback(() =>
+                {
+                    spriteRenderer.enabled = true;
+                    chickenCol.enabled = true;
+                    animator.enabled = true;
+                    transform.position = enemySetting.startPosition;
+                    MoveToTarget(false);
+                }).Play();
         }
 
         private void OnTriggerStay2D(Collider2D other)

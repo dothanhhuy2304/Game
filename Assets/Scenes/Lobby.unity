@@ -1705,7 +1705,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settingUI: {fileID: 162290227}
   btnShowAndHiddenUI: {fileID: 348107846}
-  uiSelectCharacter: {fileID: 1429065811}
   btnShowVolumeUI: {fileID: 1451403060}
   audioMusic: {fileID: 1015625246}
   sliderMusic: {fileID: 171716500}

@@ -32,12 +32,6 @@ namespace Game.Enemy
         protected bool isRangeAttack;
         protected bool isHitGrounds;
 
-        protected void Stun(bool isStun, RigidbodyType2D bodyType)
-        {
-            enemySetting.isStun = isStun;
-            body.bodyType = bodyType;
-        }
-
         protected virtual void Start()
         {
             playerCharacter = CharacterController2D.instance;

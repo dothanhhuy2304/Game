@@ -9,7 +9,6 @@ namespace Game.GamePlay
         private GameManager gameManager;
         [SerializeField] private GameObject settingUI;
         [SerializeField] private Button btnShowAndHiddenUI;
-        [SerializeField] private GameObject uiSelectCharacter;
         [Header("UI Volume")]
         [SerializeField] private Button btnShowVolumeUI;
         [SerializeField] private AudioSource audioMusic;
@@ -70,7 +69,6 @@ namespace Game.GamePlay
         {
             isShow = !isShow;
             settingUI.SetActive(isShow);
-            uiSelectCharacter.SetActive(!isShow);
             Time.timeScale = isShow ? 0f : 1f;
         }
 

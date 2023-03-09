@@ -37,7 +37,6 @@ namespace Game.Enemy
                 }
                 else
                 {
-                    Stun(false, RigidbodyType2D.Kinematic);
                     if (!HuyManager.PlayerIsDeath())
                     {
                         SNinjaAttack();
