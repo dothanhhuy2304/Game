@@ -1,4 +1,4 @@
-using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Game.Enemy
@@ -9,19 +9,26 @@ namespace Game.Enemy
 
         private void FixedUpdate()
         {
-            if (HuyManager.PlayerIsDeath() && enemySetting.enemyHeal.EnemyDeath())
+            if (HuyManager.PlayerIsDeath())
             {
-                enemySetting.enemyHeal.EnemyRespawn();
-            }
-            else if (HuyManager.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
-            {
-                enemySetting.enemyHeal.ResetHeathDefault();
+                if (enemySetting.enemyHeal.EnemyDeath())
+                {
+                    enemySetting.enemyHeal.ResetHeathDefault();
+                    enemySetting.enemyHeal.ReSpawn(2);
+                }
+                else
+                {
+                    DOTween.Sequence()
+                        .AppendInterval(2f)
+                        .AppendCallback(enemySetting.enemyHeal.ResetHeathDefault)
+                        .Play();
+                }
             }
 
             if (!HuyManager.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
             {
                 HuyManager.SetTimeAttack(ref currentTime);
-                if (isRangeAttack)
+                if ((playerCharacter.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
                     if (canFlip)
                     {
@@ -31,17 +38,19 @@ namespace Game.Enemy
                     if (currentTime <= 0f)
                     {
                         animator.SetTrigger("isAttack");
-                        StartCoroutine(DurationAttack(0.5f));
+                        BulletAttack();
                         currentTime = maxTimeAttack;
                     }
                 }
             }
         }
 
-        private IEnumerator DurationAttack(float duration)
+        private void BulletAttack()
         {
-            yield return new WaitForSeconds(duration);
-            AttackBullet();
+            DOTween.Sequence()
+                .AppendInterval(0.5f)
+                .AppendCallback(AttackBullet)
+                .Play();
         }
 
         private void OnTriggerEnter2D(Collider2D other)

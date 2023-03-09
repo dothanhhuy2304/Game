@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Globalization;
+using DG.Tweening;
 using UnityEngine;
 using Game.Core;
 using Game.GamePlay;
@@ -63,7 +64,7 @@ namespace Game.Enemy
             AudioManager.instance.Play("Enemy_Death");
             if (canRespawn)
             {
-                StartCoroutine(Respawn(timeRespawn));
+                ReSpawn(timeRespawn);
             }
         }
 
@@ -73,21 +74,23 @@ namespace Game.Enemy
             enemyHealthBar.SetHealth(currentHealth, maxHealth);
         }
 
-        public void EnemyRespawn()
+        public void EnemyReSpawn()
         {
             if (canRespawn)
             {
-                StartCoroutine(Respawn(timeRespawn));
+                ReSpawn(timeRespawn);
             }
         }
 
-        private IEnumerator Respawn(float timeDelay)
+        public void ReSpawn(float timeDelay)
         {
-            yield return new WaitForSeconds(timeDelay);
-            SetMaxHealth(heathDefault, hpIc);
-            spriteRenderer.enabled = true;
-            enemyCollider.enabled = true;
-            yield return null;
+            DOTween.Sequence().AppendInterval(timeDelay)
+                .AppendCallback(() =>
+                {
+                    SetMaxHealth(heathDefault, hpIc);
+                    spriteRenderer.enabled = true;
+                    enemyCollider.enabled = true;
+                }).Play();
         }
     }
 }
