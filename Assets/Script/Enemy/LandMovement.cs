@@ -4,7 +4,7 @@ using Game.Player;
 //Improver
 namespace Game.Enemy
 {
-    public class WallMovement : MoveLandController
+    public class LandMovement : MoveLandController
     {
         private CharacterController2D character;
         [SerializeField] private Vector2 endPos = Vector2.zero;

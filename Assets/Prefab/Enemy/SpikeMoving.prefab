@@ -71,9 +71,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4da8726fe345b6b4e8e60a0c2d0e60ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeEndAction: 4
+  timeEndAction: 3
+  animator: {fileID: 1255750898260068384}
   endPos: {x: 33.5, y: 4.75}
-  resetTimeAttack: 2
+  resetTimeAttack: 1
 --- !u!1 &2274324574713771061
 GameObject:
   m_ObjectHideFlags: 0

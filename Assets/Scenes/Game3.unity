@@ -1025,7 +1025,12 @@ MonoBehaviour:
   enemyType: 3
   bulletSpeed: 10
   bulletPrefab: {fileID: 1982345708}
-  explosionPrefab: {fileID: 1847358448}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!58 &57403276
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1067,11 +1072,6 @@ Rigidbody2D:
 Transform:
   m_CorrespondingSourceObject: {fileID: 8183758440019976683, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
   m_PrefabInstance: {fileID: 208751522}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &62258063 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 5435154624614321916, guid: 88a6355c46aa0414a9d7e953b5230953, type: 3}
-  m_PrefabInstance: {fileID: 5435154625196353594}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &69698163
 GameObject:
@@ -1195,7 +1195,12 @@ MonoBehaviour:
   enemyType: 1
   bulletSpeed: 15
   bulletPrefab: {fileID: 2104876030}
-  explosionPrefab: {fileID: 125502862}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!50 &85672273
 Rigidbody2D:
   serializedVersion: 4
@@ -1705,7 +1710,12 @@ MonoBehaviour:
   enemyType: 2
   bulletSpeed: -20
   bulletPrefab: {fileID: 1145771380}
-  explosionPrefab: {fileID: 88915689}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &163544694 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1639425138275322623, guid: 6c71107698ec5544dab4b0b16294552d, type: 3}
@@ -3949,7 +3959,12 @@ MonoBehaviour:
   enemyType: 2
   bulletSpeed: -20
   bulletPrefab: {fileID: 258025956}
-  explosionPrefab: {fileID: 841474867}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &438244158
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5093,7 +5108,12 @@ MonoBehaviour:
   enemyType: 0
   bulletSpeed: 20
   bulletPrefab: {fileID: 447397921}
-  explosionPrefab: {fileID: 1439444077}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!50 &648481050
 Rigidbody2D:
   serializedVersion: 4
@@ -5268,7 +5288,12 @@ MonoBehaviour:
   enemyType: 2
   bulletSpeed: -20
   bulletPrefab: {fileID: 1876220317}
-  explosionPrefab: {fileID: 2026730730}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &707933015
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5690,7 +5715,12 @@ MonoBehaviour:
   enemyType: 3
   bulletSpeed: 10
   bulletPrefab: {fileID: 1895488211}
-  explosionPrefab: {fileID: 1026286807}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!58 &756560279
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -6644,7 +6674,12 @@ MonoBehaviour:
   enemyType: 0
   bulletSpeed: 20
   bulletPrefab: {fileID: 341704747}
-  explosionPrefab: {fileID: 10905421}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!50 &804903816
 Rigidbody2D:
   serializedVersion: 4
@@ -7283,7 +7318,12 @@ MonoBehaviour:
   enemyType: 4
   bulletSpeed: 12
   bulletPrefab: {fileID: 1711745598}
-  explosionPrefab: {fileID: 1157618510}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &920369176
 GameObject:
   m_ObjectHideFlags: 0
@@ -7462,6 +7502,22 @@ PrefabInstance:
       propertyPath: bulletHolder.Array.data[4]
       value: 
       objectReference: {fileID: 163283217}
+    - target: {fileID: 5142780678492179408, guid: e770a049b7b864d498c45f063ce4e6c6, type: 3}
+      propertyPath: m_Size.x
+      value: 0.81972504
+      objectReference: {fileID: 0}
+    - target: {fileID: 5142780678492179408, guid: e770a049b7b864d498c45f063ce4e6c6, type: 3}
+      propertyPath: m_Size.y
+      value: 1.4721289
+      objectReference: {fileID: 0}
+    - target: {fileID: 5142780678492179408, guid: e770a049b7b864d498c45f063ce4e6c6, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.17324448
+      objectReference: {fileID: 0}
+    - target: {fileID: 5142780678492179408, guid: e770a049b7b864d498c45f063ce4e6c6, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.1676023
+      objectReference: {fileID: 0}
     - target: {fileID: 5142780678492179413, guid: e770a049b7b864d498c45f063ce4e6c6, type: 3}
       propertyPath: m_Name
       value: CarnivorousPlant
@@ -8355,12 +8411,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a755d335ffa980c44808bd3178cf9367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreData: {fileID: 11400000, guid: f8222b860886af9448e9b80d49666f6b, type: 2}
-  playerDatas: {fileID: 11400000, guid: 08e5aa38e1d66b141b421f095e45bea2, type: 2}
-  playerCharacter: {fileID: 1052932679}
   uIDamagePlayer: {fileID: 898911466340090346, guid: 60b1aed8d968ce9499c3afcb26e22f95, type: 3}
-  spriteRenderer: {fileID: 274263588}
-  col: {fileID: 1052932675}
 --- !u!114 &1052932678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8382,7 +8433,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   offset: {x: 1, y: 0}
-  playerHealth: {fileID: 1052932677}
   resetTimeAttack: 0.5
 --- !u!114 &1052932679
 MonoBehaviour:
@@ -8396,18 +8446,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06d95b80c6c38704f9cf1ed4799ac333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  body: {fileID: 0}
+  col: {fileID: 0}
   playerData: {fileID: 11400000, guid: 30a0c1bb8ddbd264f86e65b17e588602, type: 2}
   mGrounded: 0
-  groundCheck: {fileID: 1273239613}
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 128
   isJump: 0
   animator: {fileID: 274263587}
   clampMinX: -6.46
   clampMaxX: 227
   playerHealth: {fileID: 0}
-  isHurt: 0
 --- !u!4 &1069690855 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4747694866668042341, guid: 0cde5280cb0df5240bf5cc2866248e08, type: 3}
@@ -9121,12 +9168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a755d335ffa980c44808bd3178cf9367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreData: {fileID: 11400000, guid: f8222b860886af9448e9b80d49666f6b, type: 2}
-  playerDatas: {fileID: 11400000, guid: 08e5aa38e1d66b141b421f095e45bea2, type: 2}
-  playerCharacter: {fileID: 1150173271}
   uIDamagePlayer: {fileID: 898911466340090346, guid: 60b1aed8d968ce9499c3afcb26e22f95, type: 3}
-  spriteRenderer: {fileID: 1244015355}
-  col: {fileID: 1150173272}
 --- !u!114 &1150173270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9148,7 +9190,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   offset: {x: 1, y: 0}
-  playerHealth: {fileID: 1150173269}
   resetTimeAttack: 0.5
 --- !u!114 &1150173271
 MonoBehaviour:
@@ -9162,18 +9203,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06d95b80c6c38704f9cf1ed4799ac333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  body: {fileID: 0}
+  col: {fileID: 0}
   playerData: {fileID: 11400000, guid: 0844518f0f0c29c4cb88c37d6ac01270, type: 2}
   mGrounded: 0
-  groundCheck: {fileID: 103041403}
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 128
   isJump: 0
   animator: {fileID: 1244015354}
   clampMinX: -6.46
   clampMaxX: 227
   playerHealth: {fileID: 0}
-  isHurt: 0
 --- !u!61 &1150173272
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9456,7 +9494,12 @@ MonoBehaviour:
   enemyType: 1
   bulletSpeed: 15
   bulletPrefab: {fileID: 303920799}
-  explosionPrefab: {fileID: 1908102478}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!50 &1181517953
 Rigidbody2D:
   serializedVersion: 4
@@ -9993,7 +10036,12 @@ MonoBehaviour:
   enemyType: 1
   bulletSpeed: 15
   bulletPrefab: {fileID: 1398968370}
-  explosionPrefab: {fileID: 1304013896}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!50 &1276383395
 Rigidbody2D:
   serializedVersion: 4
@@ -11333,7 +11381,12 @@ MonoBehaviour:
   enemyType: 4
   bulletSpeed: 12
   bulletPrefab: {fileID: 1522669683}
-  explosionPrefab: {fileID: 1078217569}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1376261781
 GameObject:
   m_ObjectHideFlags: 0
@@ -11405,7 +11458,12 @@ MonoBehaviour:
   enemyType: 2
   bulletSpeed: -20
   bulletPrefab: {fileID: 741224785}
-  explosionPrefab: {fileID: 374226522}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1377970017
 GameObject:
   m_ObjectHideFlags: 0
@@ -11724,7 +11782,12 @@ MonoBehaviour:
   enemyType: 3
   bulletSpeed: 10
   bulletPrefab: {fileID: 975765122}
-  explosionPrefab: {fileID: 1377970017}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!58 &1400240101
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -12300,7 +12363,12 @@ MonoBehaviour:
   enemyType: 4
   bulletSpeed: 12
   bulletPrefab: {fileID: 1300246720}
-  explosionPrefab: {fileID: 620992341}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1486454711
 GameObject:
   m_ObjectHideFlags: 0
@@ -12349,12 +12417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a755d335ffa980c44808bd3178cf9367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreData: {fileID: 11400000, guid: f8222b860886af9448e9b80d49666f6b, type: 2}
-  playerDatas: {fileID: 11400000, guid: 08e5aa38e1d66b141b421f095e45bea2, type: 2}
-  playerCharacter: {fileID: 1486454715}
   uIDamagePlayer: {fileID: 898911466340090346, guid: 60b1aed8d968ce9499c3afcb26e22f95, type: 3}
-  spriteRenderer: {fileID: 513050180}
-  col: {fileID: 1486454716}
 --- !u!114 &1486454714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12376,7 +12439,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   offset: {x: 1, y: 0}
-  playerHealth: {fileID: 1486454713}
   resetTimeAttack: 0.5
 --- !u!114 &1486454715
 MonoBehaviour:
@@ -12390,18 +12452,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06d95b80c6c38704f9cf1ed4799ac333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  body: {fileID: 0}
+  col: {fileID: 0}
   playerData: {fileID: 11400000, guid: bd7db7d6c43903248b2e2851fb9245fe, type: 2}
   mGrounded: 0
-  groundCheck: {fileID: 1121183111}
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 128
   isJump: 0
   animator: {fileID: 513050179}
   clampMinX: -6.46
   clampMaxX: 227
   playerHealth: {fileID: 0}
-  isHurt: 0
 --- !u!61 &1486454716
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12580,7 +12639,12 @@ MonoBehaviour:
   enemyType: 0
   bulletSpeed: 20
   bulletPrefab: {fileID: 1137056428}
-  explosionPrefab: {fileID: 1102750312}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!50 &1508023019
 Rigidbody2D:
   serializedVersion: 4
@@ -13118,7 +13182,12 @@ MonoBehaviour:
   enemyType: 1
   bulletSpeed: 15
   bulletPrefab: {fileID: 998790984}
-  explosionPrefab: {fileID: 1652272530}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!50 &1542519703
 Rigidbody2D:
   serializedVersion: 4
@@ -14215,7 +14284,12 @@ MonoBehaviour:
   enemyType: 3
   bulletSpeed: 10
   bulletPrefab: {fileID: 1366510926}
-  explosionPrefab: {fileID: 789430486}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!58 &1644096480
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -14592,7 +14666,12 @@ MonoBehaviour:
   enemyType: 0
   bulletSpeed: 20
   bulletPrefab: {fileID: 364200182}
-  explosionPrefab: {fileID: 1801924712}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!50 &1710467239
 Rigidbody2D:
   serializedVersion: 4
@@ -14970,7 +15049,12 @@ MonoBehaviour:
   enemyType: 4
   bulletSpeed: 12
   bulletPrefab: {fileID: 1963278439}
-  explosionPrefab: {fileID: 1214931063}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &1762945541 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6470441644502814732, guid: ab2f44b99adf358449c83b74c274b97b, type: 3}
@@ -40315,7 +40399,12 @@ MonoBehaviour:
   enemyType: 3
   bulletSpeed: 10
   bulletPrefab: {fileID: 1947287909}
-  explosionPrefab: {fileID: 1887157056}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!58 &1794924456
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -42726,7 +42815,12 @@ MonoBehaviour:
   enemyType: 4
   bulletSpeed: 12
   bulletPrefab: {fileID: 1633678616}
-  explosionPrefab: {fileID: 1876800381}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1970229370
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -43008,12 +43102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a755d335ffa980c44808bd3178cf9367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreData: {fileID: 11400000, guid: f8222b860886af9448e9b80d49666f6b, type: 2}
-  playerDatas: {fileID: 11400000, guid: 08e5aa38e1d66b141b421f095e45bea2, type: 2}
-  playerCharacter: {fileID: 1998853690}
   uIDamagePlayer: {fileID: 898911466340090346, guid: 60b1aed8d968ce9499c3afcb26e22f95, type: 3}
-  spriteRenderer: {fileID: 324282754}
-  col: {fileID: 1998853691}
 --- !u!114 &1998853689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43035,7 +43124,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   offset: {x: 1, y: 0}
-  playerHealth: {fileID: 1998853688}
   resetTimeAttack: 0.5
 --- !u!114 &1998853690
 MonoBehaviour:
@@ -43049,18 +43137,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06d95b80c6c38704f9cf1ed4799ac333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  body: {fileID: 0}
+  col: {fileID: 0}
   playerData: {fileID: 11400000, guid: 954bc62a90d001a41a173ad8d413a47d, type: 2}
   mGrounded: 0
-  groundCheck: {fileID: 1008053266}
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 128
   isJump: 0
   animator: {fileID: 324282753}
   clampMinX: -6.46
   clampMaxX: 227
   playerHealth: {fileID: 0}
-  isHurt: 0
 --- !u!61 &1998853691
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -97643,7 +97728,12 @@ MonoBehaviour:
   enemyType: 0
   bulletSpeed: 20
   bulletPrefab: {fileID: 2095788342}
-  explosionPrefab: {fileID: 1777432548}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!50 &2103687980
 Rigidbody2D:
   serializedVersion: 4
@@ -97715,7 +97805,12 @@ MonoBehaviour:
   enemyType: 0
   bulletSpeed: 20
   bulletPrefab: {fileID: 173494838}
-  explosionPrefab: {fileID: 1634469368}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!50 &2104864519
 Rigidbody2D:
   serializedVersion: 4
@@ -98207,7 +98302,12 @@ MonoBehaviour:
   enemyType: 1
   bulletSpeed: 15
   bulletPrefab: {fileID: 7242084529998978844}
-  explosionPrefab: {fileID: 5564545394812354102}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2072238189505317149
 GameObject:
   m_ObjectHideFlags: 0
@@ -98605,7 +98705,12 @@ MonoBehaviour:
   enemyType: 0
   bulletSpeed: 20
   bulletPrefab: {fileID: 2217144145128359107}
-  explosionPrefab: {fileID: 5564844308299982559}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &3960427216496763887
 Transform:
   m_ObjectHideFlags: 0
@@ -99205,7 +99310,7 @@ PrefabInstance:
     - target: {fileID: 5435154624614321904, guid: 88a6355c46aa0414a9d7e953b5230953, type: 3}
       propertyPath: animator
       value: 
-      objectReference: {fileID: 62258063}
+      objectReference: {fileID: 0}
     - target: {fileID: 5435154624614321906, guid: 88a6355c46aa0414a9d7e953b5230953, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -100475,4 +100580,9 @@ MonoBehaviour:
   enemyType: 2
   bulletSpeed: -20
   bulletPrefab: {fileID: 1498920916852465862}
-  explosionPrefab: {fileID: 3055373953240892230}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []

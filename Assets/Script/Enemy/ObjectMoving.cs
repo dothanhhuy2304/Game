@@ -1,12 +1,12 @@
 using Game.Player;
 using UnityEngine;
 
-public class SpikeMoving : MoveLandController
+public class ObjectMoving : MoveLandController
 {
     [SerializeField] private Animator animator;
     [SerializeField] private Vector2 endPos = Vector2.zero;
     private float timeAttack;
-    [SerializeField] private float resetTimeAttack = 3f;
+    [SerializeField] private float resetTimeAttack;
 
     private void Start()
     {
