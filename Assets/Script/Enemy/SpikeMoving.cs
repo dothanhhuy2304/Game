@@ -11,7 +11,8 @@ public class SpikeMoving : MoveLandController
     private void Start()
     {
         numberLoop = int.MaxValue;
-        MoveLandNormalWithAnimation(transform, endPos, timeEndAction, numberLoop, animator, "TopHit", "ButtomHit");
+        MoveLandNormal(transform, endPos, timeEndAction, numberLoop);
+        //MoveLandNormalWithAnimation(transform, endPos, timeEndAction, numberLoop, animator, "TopHit", "ButtomHit");
     }
 
     // private void Update()

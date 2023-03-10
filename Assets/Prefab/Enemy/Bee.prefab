@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7350970975510589210}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &403972066533097755
 SpriteRenderer:
@@ -69,8 +69,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -720821971
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: -7659945631384244969, guid: 8721cbbfe3ba6a8418cd21a8de3a410c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -134,8 +134,8 @@ Transform:
   m_LocalPosition: {x: 0.42, y: 0.11, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 8146059271400800961}
   - {fileID: 6583803374075034375}
+  - {fileID: 8146059271400800961}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -152,8 +152,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0137351155, y: -0.07325369}
-  m_Size: {x: 1.288545, y: 1.7738508}
+  m_Offset: {x: 0.00061893463, y: -0.07325369}
+  m_Size: {x: 1.1067274, y: 1.7738508}
   m_Direction: 0
 --- !u!114 &7350970975510589211
 MonoBehaviour:
@@ -318,7 +318,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1661679385207538407, guid: 36889752821b70443ad174dc6f1ba8be, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1661679385207538407, guid: 36889752821b70443ad174dc6f1ba8be, type: 3}
       propertyPath: m_AnchorMax.x

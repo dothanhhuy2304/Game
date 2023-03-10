@@ -447,8 +447,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -720821971
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: -23792059411196189, guid: f729d6acae7cd754a864abda75a4bbd7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -662,14 +662,15 @@ MonoBehaviour:
     isStun: 0
     canAttack: 0
     enemyHeal: {fileID: 0}
+    rangeAttack: 0
   body: {fileID: 7777926475499111050}
+  animator: {fileID: 4549498311706445916}
   projectiles: []
   movingSpeed: 5
   offsetFlip: 1215
   maxTimeAttack: 3
   offsetAttack: {fileID: 4549498311706445918}
   positionAttack: {x: 0, y: 0}
-  animator: {fileID: 4549498311706445916}
   chickenCol: {fileID: 8924637331163455981}
   explosionObj: {fileID: 4549498311450808673}
   spriteRenderer: {fileID: 4549498311706445917}

@@ -115,7 +115,7 @@ GameObject:
   - component: {fileID: 2427728925719784625}
   - component: {fileID: 187116037902469795}
   m_Layer: 0
-  m_Name: fireball
+  m_Name: FireballModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -334,10 +334,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3812a7182b0821c4cb6e5feb9109894a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  body: {fileID: 0}
   enemyType: 1
   bulletSpeed: 15
   bulletPrefab: {fileID: 2427728925719784590}
-  explosionPrefab: {fileID: 579055149005426084}
-  soundExplosion:
-  - {fileID: 8300000, guid: 2e071f5b8b8467d45a5e6e24c23c6ad4, type: 3}
-  - {fileID: 8300000, guid: 958408b32ccf3714ea02821877b0870c, type: 3}
+  explosionFxObj: {fileID: 0}
+  explosionSpriteFxObj: {fileID: 0}
+  arcHeight: 1
+  eventShoot:
+    m_PersistentCalls:
+      m_Calls: []
