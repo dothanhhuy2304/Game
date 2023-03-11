@@ -8,19 +8,20 @@ public class LoadCharacter : MonoBehaviour
 
     private void Awake()
     {
-        characters[playerData.playerDataObj.characterSelection].SetActive(true);
-        UIManager uiManager = UIManager.instance;
-        if (!AudioManager.instance.audioMusic.clip)
+        if (!GameManager.instance)
         {
-            AudioManager.instance.Plays_Music("Music_Game");
+            Instantiate(Resources.Load<GameObject>("GameManager"));
         }
 
-        if (!uiManager.healthUI.activeSelf || !uiManager.scoreUI.activeSelf)
+        characters[playerData.playerDataObj.characterSelection].SetActive(true);
+
+        AudioManager.instance.Plays_Music("Music_Game");
+
+        if (!UIManager.instance.scoreUI.activeSelf)
         {
-            uiManager.healthUI.SetActive(true);
-            uiManager.scoreUI.SetActive(true);
-            uiManager.btnBackToMenuUI.gameObject.SetActive(true);
-            uiManager.btnRestart.gameObject.SetActive(true);
+            UIManager.instance.scoreUI.SetActive(true);
+            UIManager.instance.btnBackToMenuUI.gameObject.SetActive(true);
+            UIManager.instance.btnRestart.gameObject.SetActive(true);
         }
     }
 }

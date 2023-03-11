@@ -6,6 +6,9 @@ namespace Game.Enemy
 {
     public class Chicken : EnemyController
     {
+        [SerializeField] private float moveTime = 9f;
+        [SerializeField] private float moveWaitingTime = 12f;
+        [SerializeField] private int[] rotations;
         [SerializeField] private Collider2D chickenCol;
         [SerializeField] private Explosion explosionObj;
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -27,28 +30,28 @@ namespace Game.Enemy
                 .AppendCallback(() =>
                 {
                     animator.SetBool(IsRun, true);
-                    body.DOMove(enemySetting.endPosition, 9).SetEase(Ease.Linear)
+                    body.DOMove(enemySetting.endPosition, moveTime).SetEase(Ease.Linear)
                         .OnComplete(() =>
                         {
                             animator.SetBool(IsRun, false);
                         });
-                }).AppendInterval(12f)
+                }).AppendInterval(moveWaitingTime)
                 .AppendCallback(() =>
                 {
-                    FlipMoving(spriteRenderer, true);
+                    body.transform.DORotate(new Vector3(0, rotations[0], 0), 0);
                 })
                 .AppendCallback(() =>
                 {
                     animator.SetBool(IsRun, true);
-                    body.DOMove(enemySetting.startPosition, 9).SetEase(Ease.Linear)
+                    body.DOMove(enemySetting.startPosition, moveTime).SetEase(Ease.Linear)
                         .OnComplete(() =>
                         {
                             animator.SetBool(IsRun, false);
                         });
-                }).AppendInterval(12)
+                }).AppendInterval(moveWaitingTime)
                 .AppendCallback(() =>
                 {
-                    FlipMoving(spriteRenderer, false);
+                    body.transform.DORotate(new Vector3(0, rotations[1], 0), 0);
                 })
                 .SetLoops(int.MaxValue).Play();
         }
@@ -110,7 +113,6 @@ namespace Game.Enemy
         {
             if (canMove)
             {
-                spriteRenderer.flipX = false;
                 Vector3 trans = offsetAttack.transform.position;
                 Vector3 movingTarget = (playerCharacter.transform.position - trans).normalized;
                 Vector3 fixMove = new Vector3(movingTarget.x, 0);

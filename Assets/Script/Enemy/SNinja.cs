@@ -48,7 +48,10 @@ namespace Game.Enemy
             {
                 if (enemySetting.enemyHeal.EnemyDeath())
                 {
-                    body.MovePosition(body.transform.position);
+                    if (enemySetting.canMoving)
+                    {
+                        body.MovePosition(body.transform.position);
+                    }
                 }
                 else
                 {
@@ -58,17 +61,23 @@ namespace Game.Enemy
                     }
                     else
                     {
-                        DOTween.Sequence()
-                            .AppendInterval(0.5f)
-                            .AppendCallback(MoveToPosition).Play();
+                        if (enemySetting.canMoving)
+                        {
+                            DOTween.Sequence()
+                                .AppendInterval(0.5f)
+                                .AppendCallback(MoveToPosition).Play();
+                        }
                     }
                 }
             }
             else
             {
-                DOTween.Sequence()
-                    .AppendInterval(0.5f)
-                    .AppendCallback(MoveToPosition).Play();
+                if (enemySetting.canMoving)
+                {
+                    DOTween.Sequence()
+                        .AppendInterval(0.5f)
+                        .AppendCallback(MoveToPosition).Play();
+                }
             }
         }
 
@@ -132,7 +141,10 @@ namespace Game.Enemy
             }
             else
             {
-                MoveToPosition();
+                if (enemySetting.canMoving)
+                {
+                    MoveToPosition();
+                }
             }
         }
 

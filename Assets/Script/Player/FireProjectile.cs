@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Game.Enemy;
 using Game.Player;
 using Game.GamePlay;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class FireProjectile : MonoBehaviour
 {
@@ -21,7 +23,6 @@ public class FireProjectile : MonoBehaviour
     [SerializeField] private float arcHeight = 1;
     private Vector3 startPos = Vector3.zero;
     private Vector3 targetPos = Vector3.zero;
-    public UnityEvent eventShoot;
     
     private void Awake()
     {
@@ -79,7 +80,7 @@ public class FireProjectile : MonoBehaviour
     }
     //end trunk
 
-    private void BulletDirection()
+    private void BulletDirection(Transform trans)
     {
         if (petAI)
         {
@@ -93,17 +94,17 @@ public class FireProjectile : MonoBehaviour
             {
                 case EnemyType.Ninja:
                 {
-                    body.velocity = SetAngleSNinja() * bulletSpeed;
+                    body.velocity = GetTarget(trans) * bulletSpeed;
                     break;
                 }
                 case EnemyType.CarnivorousPlant:
                 {
-                    body.velocity = transform.right * bulletSpeed;
+                    body.velocity = trans.right * bulletSpeed;
                     break;
                 }
                 case EnemyType.Player:
                 {
-                    body.velocity = transform.right * bulletSpeed;
+                    body.velocity = trans.right * bulletSpeed;
                     break;
                 }
                 case EnemyType.Pet:
@@ -112,7 +113,7 @@ public class FireProjectile : MonoBehaviour
                     break;
                 }
                 case EnemyType.Bee:
-                    body.velocity = SetAngleSNinja() * bulletSpeed;
+                    body.velocity = GetTarget(trans) * bulletSpeed;
                     break;
             }
         }
@@ -251,9 +252,9 @@ public class FireProjectile : MonoBehaviour
         }
     }
 
-    private Vector2 SetAngleSNinja()
+    private Vector2 GetTarget(Transform trans)
     {
-        return (playerCharacter.transform.position - transform.position).normalized;
+        return (playerCharacter.transform.position - trans.position).normalized;
     }
 
     private void BulletExplosions()
@@ -281,11 +282,11 @@ public class FireProjectile : MonoBehaviour
         body.bodyType = RigidbodyType2D.Kinematic;
     }
 
-    public void Shoot()
+    public void Shoot(Transform trans)
     {
         gameObject.SetActive(true);
         bulletPrefab.SetActive(true);
-        BulletDirection();
+        BulletDirection(trans);
         if (explosionFxObj)
         {
             explosionFxObj.gameObject.SetActive(false);

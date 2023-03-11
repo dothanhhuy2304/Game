@@ -1,12 +1,13 @@
+using System;
 using System.Collections.Generic;
 using Game.GamePlay;
-using UnityEngine;
 using Game.Player;
+using UnityEngine;
 
 namespace Game.Enemy
 {
 
-    [System.Serializable]
+    [Serializable]
     public class EnemySetting
     {
         public Vector3 startPosition;
@@ -15,6 +16,7 @@ namespace Game.Enemy
         public bool canAttack;
         public EnemyHealth enemyHeal;
         public float rangeAttack;
+        public bool canMoving;
     }
 
     public abstract class EnemyController : MonoBehaviour
@@ -45,11 +47,6 @@ namespace Game.Enemy
             transform.rotation = Quaternion.Euler(new Vector3(0, angle + offsetFlip, 0));
         }
 
-        protected void FlipMoving(SpriteRenderer sprite , bool isFlip)
-        {
-            sprite.flipX = isFlip;
-        }
-
 
         protected void EvaluateCheckRangeAttack(Component col, bool canAttack)
         {
@@ -61,35 +58,30 @@ namespace Game.Enemy
 
         protected void AttackBulletDirection()
         {
-            //projectiles[FindBullet()].transform.position = offsetAttack.position;
             projectiles[FindBullet()].transform.position = transform.TransformPoint(positionAttack);
             Vector2 directionToPlayer = (playerCharacter.transform.position - transform.position).normalized;
-            projectiles[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg);
-            //projectiles[FindBullet(projectiles)].Shoot();
-            projectiles[FindBullet()].eventShoot?.Invoke();
+            projectiles[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f,
+                Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg);
+            projectiles[FindBullet()].Shoot(transform);
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
-        
+
         protected void AttackBulletArc()
         {
-            //projectiles[FindBullet()].transform.position = offsetAttack.position;
             projectiles[FindBullet()].transform.position = transform.TransformPoint(positionAttack);
             projectiles[FindBullet()].transform.rotation = Quaternion.identity;
-            //projectiles[FindBullet(projectiles)].Shoot();
-            projectiles[FindBullet()].eventShoot?.Invoke();
+            projectiles[FindBullet()].Shoot(transform);
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
-        
+
         protected void AttackBullet()
         {
-            //projectiles[FindBullet()].transform.position = offsetAttack.position;
             projectiles[FindBullet()].transform.position = transform.TransformPoint(positionAttack);
             projectiles[FindBullet()].transform.rotation = Quaternion.identity;
-            //projectiles[FindBullet(projectiles)].Shoot();
-            projectiles[FindBullet()].eventShoot?.Invoke();
+            projectiles[FindBullet()].Shoot(transform);
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
-        
+
         private int FindBullet()
         {
             for (var i = 0; i < projectiles.Count; i++)

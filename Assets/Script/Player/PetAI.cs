@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -101,7 +100,7 @@ namespace Game.Player
         {
             projectiles[FindBullet()].transform.position = transform.position;
             projectiles[FindBullet()].transform.rotation = transform.rotation;
-            projectiles[FindBullet()].eventShoot?.Invoke();
+            projectiles[FindBullet()].Shoot(transform);
         }
 
         private Transform FindClosestEnemy()

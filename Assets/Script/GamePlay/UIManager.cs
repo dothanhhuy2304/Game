@@ -15,7 +15,7 @@ namespace Game.GamePlay
         [SerializeField] private Slider sliderMusic;
         [SerializeField] private Slider sliderEffect;
         public Button btnHiddenUIVolume;
-        public GameObject healthUI;
+        //public GameObject healthUI;
         public GameObject scoreUI;
         public GameObject uiVolume;
         public Button btnBackToMenuUI;
@@ -26,7 +26,7 @@ namespace Game.GamePlay
 
         private void Start()
         {
-            DontDestroyOnLoad(this);
+            //DontDestroyOnLoad(this);
             gameManager = GameManager.instance;
             loadingScreenManager = LoadingScreenManager.instance;
             btnShowAndHiddenUI.onClick.AddListener(delegate {ShowAndHiddenUISetting(ref isShowUISetting);});
@@ -107,7 +107,6 @@ namespace Game.GamePlay
             isShowUISetting = false;
             Time.timeScale = 1f;
             settingUI.SetActive(false);
-            healthUI.SetActive(false);
             scoreUI.SetActive(false);
             btnBackToMenuUI.gameObject.SetActive(false);
             btnRestart.gameObject.SetActive(false);
@@ -121,7 +120,6 @@ namespace Game.GamePlay
             isShowUISetting = false;
             Time.timeScale = 1f;
             settingUI.SetActive(false);
-            healthUI.SetActive(false);
             scoreUI.SetActive(false);
             btnBackToMenuUI.gameObject.SetActive(false);
             btnRestart.gameObject.SetActive(false);

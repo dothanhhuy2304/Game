@@ -1,0 +1,255 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3983179492591213425
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3983179492591213424}
+  - component: {fileID: 3983179492591213427}
+  m_Layer: 0
+  m_Name: Music_Background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &3983179492591213424
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3983179492591213425}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3983179493485571919}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &3983179492591213427
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3983179492591213425}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: -6199355094069668498, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  m_audioClip: {fileID: 8300000, guid: 0a75eb139adbe364899a19f9d15b2da0, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.5
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!1 &3983179493485571916
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3983179493485571919}
+  - component: {fileID: 3983179493485571918}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &3983179493485571919
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3983179493485571916}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 3983179492591213424}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3983179493485571918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3983179493485571916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c318bee1fcf8f294aafed2c621c12b5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioMusic: {fileID: 3983179492591213427}
+  sounds:
+  - name: Player_Land_1
+    audioClip: {fileID: 8300000, guid: b9f95e88528322d45ab468493fda9ea6, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: 4135007194732662723, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Player_Land_2
+    audioClip: {fileID: 8300000, guid: 354e3255e5315484d92e71b81aea53e4, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: 4135007194732662723, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Player_Land_3
+    audioClip: {fileID: 8300000, guid: 8c2653fdb3b7ed14b81e093ec9edf966, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: 4135007194732662723, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Player_Jump
+    audioClip: {fileID: 8300000, guid: a06a8efe949a3d743a3b4b5b81c39fc7, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: 4135007194732662723, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Player_Bullet_Shoot
+    audioClip: {fileID: 8300000, guid: a37f44cbf8c2a7443a3c361efa2f233a, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: -7052232441672528835, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Player_Bullet_Explosion_1
+    audioClip: {fileID: 8300000, guid: 1fd31868d68903d4f9e2c4a3b7ef98f3, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Player_Bullet_Explosion_2
+    audioClip: {fileID: 8300000, guid: 986d6b30567e30e428f3f21373fe45ca, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Player_Hurt
+    audioClip: {fileID: 8300000, guid: 11196f3af1fc4094bbe46bd402a1d074, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: 4135007194732662723, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Enemy_Bullet_Explosion_1
+    audioClip: {fileID: 8300000, guid: 2e071f5b8b8467d45a5e6e24c23c6ad4, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Enemy_Bullet_Explosion_2
+    audioClip: {fileID: 8300000, guid: 958408b32ccf3714ea02821877b0870c, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Enemy_Attack_Shoot
+    audioClip: {fileID: 8300000, guid: 5ff823f546b52574a931e1d9b44290a6, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Enemy_Attack_Sword
+    audioClip: {fileID: 8300000, guid: 0826ecc5e9093214fb82e8580759353c, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Enemy_Death
+    audioClip: {fileID: 8300000, guid: d5160c7fd13b56c4080fb54ad2b161e3, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: 2638039841184198782, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Item_Hurt
+    audioClip: {fileID: 8300000, guid: 6dd7024f00606b44eb5884197a66a893, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: -7052232441672528835, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Item_Heal
+    audioClip: {fileID: 8300000, guid: 3f711525e7aa548438f26675e2910de2, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: -7052232441672528835, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Chest
+    audioClip: {fileID: 8300000, guid: 4352d1e8bbb9cb442bb61f248d9f4cf0, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: -7052232441672528835, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Boom_Explosion
+    audioClip: {fileID: 8300000, guid: bb2e2714f962491428dcb0b38598b251, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Hover_Effect
+    audioClip: {fileID: 8300000, guid: 8f6a7003e5d83314fad9a02a39fc899b, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Music_Menu
+    audioClip: {fileID: 8300000, guid: 0a75eb139adbe364899a19f9d15b2da0, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}
+  - name: Music_Game
+    audioClip: {fileID: 8300000, guid: c6b1e4491dcc9de4dad8102c76c2b05e, type: 3}
+    audioFX: {fileID: 0}
+    audioMixerGroup: {fileID: 5389394202498480056, guid: a3e49311117e629449a05e57f806934d, type: 2}

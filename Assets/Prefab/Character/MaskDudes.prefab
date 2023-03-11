@@ -241,7 +241,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a755d335ffa980c44808bd3178cf9367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerDatas: {fileID: 11400000, guid: f8222b860886af9448e9b80d49666f6b, type: 2}
+  playerCharacter: {fileID: 8953777265638131187}
+  playerHealthBar: {fileID: 0}
+  petAi: {fileID: 0}
   uIDamagePlayer: {fileID: 898911466340090346, guid: 60b1aed8d968ce9499c3afcb26e22f95, type: 3}
 --- !u!1 &8953777265762801142
 GameObject:

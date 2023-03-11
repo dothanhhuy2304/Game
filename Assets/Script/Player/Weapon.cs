@@ -32,8 +32,7 @@ namespace Game.Player
         {
             projectiles[FindBullet()].transform.position = transform.TransformPoint(offset);
             projectiles[FindBullet()].transform.rotation = transform.rotation;
-            //projectiles[FindBullet()].Shoot();
-            projectiles[FindBullet()].eventShoot?.Invoke();
+            projectiles[FindBullet()].Shoot(transform);
             AudioManager.instance.Play("Player_Bullet_Shoot");
         }
 

@@ -20,11 +20,6 @@ namespace Game.GamePlay
             }
         }
 
-        private void Start()
-        {
-            DontDestroyOnLoad(this);
-        }
-
         public void Plays_Music(string clip)
         {
             var s = Array.Find(sounds, sound => sound.name == clip);

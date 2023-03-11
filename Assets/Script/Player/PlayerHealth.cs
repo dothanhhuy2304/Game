@@ -9,18 +9,15 @@ namespace Game.Player
     public class PlayerHealth : FastSingleton<PlayerHealth>, IHealthSystem
     {
         private GameManager gameManager;
-        private CharacterController2D playerCharacter;
-        private PlayerHealthBar playerHealthBar;
-        private PetAI petAI;
+        [SerializeField] private CharacterController2D playerCharacter;
+        [SerializeField] private PlayerHealthBar playerHealthBar;
+        [SerializeField] private PetAI petAi;
         [SerializeField] private GameObject uIDamagePlayer;
         private TMPro.TextMeshProUGUI txtDamage;
 
         private void Start()
         {
             gameManager = GameManager.instance;
-            playerCharacter = CharacterController2D.instance;
-            playerHealthBar = PlayerHealthBar.instance;
-            petAI = PetAI.instance;
             txtDamage = uIDamagePlayer.GetComponentInChildren<TMPro.TextMeshProUGUI>();
             if (playerCharacter.playerData.currentHealth == 0)
             {
@@ -112,10 +109,9 @@ namespace Game.Player
             SetMaxHealth(playerCharacter.playerData.heathDefault, playerCharacter.playerData.hpIc);
             Transform position = transform;
             position.position = new Vector3(gameManager.playerData.playerDataObj.position[0], gameManager.playerData.playerDataObj.position[1], gameManager.playerData.playerDataObj.position[2]);
-            petAI.transform.position = position.up;
+            petAi.transform.position = position.up;
             HuyManager.SetPlayerIsDeath(0);
             //rest environment when player death
-            Car.instance.eventResetCar?.Invoke();
         }
 
         private IEnumerator EventPlayerDeath(Rigidbody2D body, Collider2D col, Animator animator, float durationRespawn)
@@ -129,7 +125,7 @@ namespace Game.Player
             SetMaxHealth(playerCharacter.playerData.heathDefault, playerCharacter.playerData.hpIc);
             Transform position = transform;
             position.position = new Vector3(gameManager.playerData.playerDataObj.position[0], gameManager.playerData.playerDataObj.position[1], gameManager.playerData.playerDataObj.position[2]);
-            petAI.transform.position = position.up;
+            petAi.transform.position = position.up;
             animator.SetLayerWeight(1, 0);
             col.enabled = true;
             body.bodyType = RigidbodyType2D.Dynamic;
