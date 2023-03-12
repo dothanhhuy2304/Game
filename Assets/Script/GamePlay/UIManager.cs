@@ -7,7 +7,6 @@ namespace Game.GamePlay
     public class UIManager : FastSingleton<UIManager>
     {
         [Header("UI Setting")]
-        private GameManager gameManager;
         [SerializeField] private GameObject settingUI;
         [SerializeField] private Button btnShowAndHiddenUI;
         [Header("UI Volume")]
@@ -28,7 +27,6 @@ namespace Game.GamePlay
         private void Start()
         {
             //DontDestroyOnLoad(this);
-            gameManager = GameManager.instance;
             loadingScreenManager = LoadingScreenManager.instance;
             btnShowAndHiddenUI.onClick.AddListener(() => { ShowAndHiddenUiSetting(ref isShowUISetting); });
             btnBackToMenuUI.onClick.AddListener(BackToMenu);
@@ -99,16 +97,27 @@ namespace Game.GamePlay
         private void ChangeVolumeMusic(float sliderValue)
         {
             audioMusic.volume = sliderValue;
-            gameManager.playerData.playerDataObj.soundMusic = sliderValue;
+            DataService.PlayerSetting playerSetting = new DataService.PlayerSetting();
+            var player = DataService.GetConnection().Table<DataService.PlayerSetting>().FirstOrDefault();
+            playerSetting.PlayerId = player.PlayerId;
+            playerSetting.soundMusic = sliderValue;
+            playerSetting.soundEffect = player.soundEffect;
+            DataService.GetConnection().Table<DataService.PlayerSetting>().Connection.Update(playerSetting);
         }
 
         private void ChangeVolumeEffect(float sliderValue)
         {
-            gameManager.playerData.playerDataObj.soundEffect = sliderValue;
             foreach (var source in AudioManager.instance.sounds)
             {
                 source.audioFX.volume = sliderValue;
             }
+
+            DataService.PlayerSetting playerSetting = new DataService.PlayerSetting();
+            var player = DataService.GetConnection().Table<DataService.PlayerSetting>().FirstOrDefault();
+            playerSetting.PlayerId = player.PlayerId;
+            playerSetting.soundMusic = player.soundMusic;
+            playerSetting.soundEffect = sliderValue;
+            DataService.GetConnection().Table<DataService.PlayerSetting>().Connection.Update(playerSetting);
         }
 
         private void BackToMenu()

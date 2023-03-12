@@ -85,7 +85,7 @@ public class DataService
     [Serializable]
     public class GameData
     {
-        [Unique] public string PlayerId { get; set; }
+        [PrimaryKey] public string PlayerId { get; set; }
         public int characterSelect { get; set; }
         public int levelId { get; set; }
         public float positionX { get; set; }
@@ -100,7 +100,7 @@ public class DataService
     [Serializable]
     public class PlayerSetting
     {
-        [Unique] public string PlayerId { get; set; }
+        [PrimaryKey] public string PlayerId { get; set; }
         public float soundMusic { get; set; }
         public float soundEffect { get; set; }
     }
