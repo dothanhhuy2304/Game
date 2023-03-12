@@ -1,22 +1,46 @@
+using System;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+using TMPro;
 using UnityEngine;
 
 namespace Game.GamePlay
 {
+    public class UserPref
+    {
+        public static string userId;
+    }
+    
     public class GameManager : FastSingleton<GameManager>
     {
         private const string ScoreData = "scoreData";
         private const string PlayerData = "playerData";
+        [SerializeField] private UIManager uiManager;
         public CharacterScriptTableObject listCharacter;
         public PlayerData playerData;
-        [SerializeField] private TMPro.TextMeshProUGUI txtScore;
-        [SerializeField] private TMPro.TextMeshProUGUI txtDiamond;
-        [SerializeField] private TMPro.TextMeshProUGUI txtMoney;
+        [SerializeField] private TextMeshProUGUI txtScore;
+        [SerializeField] private TextMeshProUGUI txtDiamond;
+        [SerializeField] private TextMeshProUGUI txtMoney;
+        //
+        private int numberScore;
+        private int numberGold;
+        private int numberDiamond;
 
         private void Start()
         {
-            DontDestroyOnLoad(this);
+
+            if (!DataService.GetConnection().Table<DataService.PlayerProfileData>().Any())
+            {
+                uiManager.PopupCreateAccount();
+            }
+            else
+            {
+                UserPref.userId = DataService.GetConnection().Table<DataService.PlayerProfileData>().FirstOrDefault().Id;
+                Debug.LogError("Exit data");
+            }
+
             if (LoadData<PlayerDataObj>(PlayerData) == null)
             {
                 playerData.playerDataObj.position = new[] {-4.95f, -4f, 0};
@@ -44,42 +68,37 @@ namespace Game.GamePlay
                 playerData.playerDataObj.soundMusic = LoadData<PlayerDataObj>(PlayerData).soundMusic;
             }
 
-            if (LoadData<ScoreDataObj>(ScoreData) == null)
+            var listPlayerData = DataService.GetConnection().Table<DataService.GameData>().ToList();
+            foreach (var player in listPlayerData)
             {
-                playerData.scoreDataObj.currentScore = 0;
-                playerData.scoreDataObj.diamond = 0;
-                playerData.scoreDataObj.money = 0;
-                playerData.scoreDataObj.highScore = 0;
-                txtDiamond.text = 0.ToString();
-                txtMoney.text = 0.ToString();
-                txtScore.text = 0.ToString();
+                if (player.PlayerId.Equals(UserPref.userId))
+                {
+                    SetScore(player.score);
+                    SetMoney(player.gold);
+                    SetDiamond(player.diamond);
+                }
             }
-            else
-            {
-                playerData.scoreDataObj.currentScore = 0;
-                playerData.scoreDataObj.highScore = LoadData<ScoreDataObj>(ScoreData).highScore;
-                SetScore(0f);
-                SetMoney(LoadData<ScoreDataObj>(ScoreData).money);
-                SetDiamond(LoadData<ScoreDataObj>(ScoreData).diamond);
-            }
+            
+
+            DontDestroyOnLoad(this);
         }
 
         public void SetScore(float score)
         {
-            playerData.scoreDataObj.currentScore += score;
-            txtScore.text = playerData.scoreDataObj.currentScore.ToString(System.Globalization.CultureInfo.CurrentCulture);
+            numberScore += (int) score;
+            txtScore.text = numberScore.ToString();
         }
 
         public void SetDiamond(float diamond)
         {
-            playerData.scoreDataObj.diamond += diamond;
-            txtDiamond.text = playerData.scoreDataObj.diamond.ToString(System.Globalization.CultureInfo.CurrentCulture);
+            numberDiamond += (int) diamond;
+            txtDiamond.text = numberDiamond.ToString();
         }
 
-        public void SetMoney(float money)
+        public void SetMoney(float gold)
         {
-            playerData.scoreDataObj.money += money;
-            txtMoney.text = playerData.scoreDataObj.money + " $";
+            numberGold += (int) gold;
+            txtMoney.text = numberGold + " $";
         }
 
         private static void SaveData<T>(T obj, string key)
@@ -131,6 +150,11 @@ namespace Game.GamePlay
                 soundMusic = playerData.playerDataObj.soundMusic
             };
             SaveData(playerDatas, PlayerData);
+        }
+
+        private void OnDisable()
+        {
+            DataService.CleanConnection();
         }
     }
 }

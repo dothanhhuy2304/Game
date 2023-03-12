@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,26 +30,35 @@ namespace Game.GamePlay
             //DontDestroyOnLoad(this);
             gameManager = GameManager.instance;
             loadingScreenManager = LoadingScreenManager.instance;
-            btnShowAndHiddenUI.onClick.AddListener(delegate {ShowAndHiddenUISetting(ref isShowUISetting);});
+            btnShowAndHiddenUI.onClick.AddListener(() => { ShowAndHiddenUiSetting(ref isShowUISetting); });
             btnBackToMenuUI.onClick.AddListener(BackToMenu);
             btnRestart.onClick.AddListener(RestartLevel);
-            btnShowVolumeUI.onClick.AddListener(delegate { ShowVolumeUI(ref isShowUIVolume); });
+            btnShowVolumeUI.onClick.AddListener(() => { ShowVolumeUi(ref isShowUIVolume); });
             sliderMusic.onValueChanged.AddListener(ChangeVolumeMusic);
             sliderEffect.onValueChanged.AddListener(ChangeVolumeEffect);
-            btnHiddenUIVolume.onClick.AddListener(HiddenVolumeUI);
-            if (!gameManager.playerData.playerDataObj.saveAudio)
+            btnHiddenUIVolume.onClick.AddListener(HiddenVolumeUi);
+            if (string.IsNullOrEmpty(UserPref.userId))
             {
-                gameManager.playerData.playerDataObj.soundMusic = audioMusic.volume;
-                gameManager.playerData.playerDataObj.soundEffect = AudioManager.instance.sounds[0].audioFX.volume;
-                gameManager.playerData.playerDataObj.saveAudio = true;
+                sliderMusic.value = 1f;
+                sliderEffect.value = 1f;
+                audioMusic.volume = audioMusic.volume;
+                return;
             }
 
-            sliderMusic.value = gameManager.playerData.playerDataObj.soundMusic;
-            sliderEffect.value = gameManager.playerData.playerDataObj.soundEffect;
-            audioMusic.volume = gameManager.playerData.playerDataObj.soundMusic;
-            foreach (var source in AudioManager.instance.sounds)
+            var playerSetting = DataService.GetConnection().Table<DataService.PlayerSetting>().ToList();
+
+            foreach (var player in playerSetting)
             {
-                source.audioFX.volume = gameManager.playerData.playerDataObj.soundEffect;
+                if (player.PlayerId.Equals(UserPref.userId))
+                {
+                    sliderMusic.value = player.soundMusic;
+                    sliderEffect.value = player.soundEffect;
+                    audioMusic.volume = player.soundMusic;
+                    foreach (var source in AudioManager.instance.sounds)
+                    {
+                        source.audioFX.volume = player.soundEffect;
+                    }
+                }
             }
 
             btnBackToMenuUI.gameObject.SetActive(false);
@@ -65,21 +75,21 @@ namespace Game.GamePlay
             }
         }
 
-        private void ShowAndHiddenUISetting(ref bool isShow)
+        private void ShowAndHiddenUiSetting(ref bool isShow)
         {
             isShow = !isShow;
             settingUI.SetActive(isShow);
             Time.timeScale = isShow ? 0f : 1f;
         }
 
-        private void ShowVolumeUI(ref bool isShow)
+        private void ShowVolumeUi(ref bool isShow)
         {
             isShow = !isShow;
             btnShowAndHiddenUI.gameObject.SetActive(false);
             uiVolume.gameObject.SetActive(isShow);
         }
 
-        private void HiddenVolumeUI()
+        private void HiddenVolumeUi()
         {
             isShowUIVolume = false;
             btnShowAndHiddenUI.gameObject.SetActive(true);
@@ -131,6 +141,11 @@ namespace Game.GamePlay
         {
             Time.timeScale = 1f;
             Application.Quit();
+        }
+
+        public void PopupCreateAccount()
+        {
+            Instantiate(Resources.Load<GameObject>("PopupRegister"));
         }
 
         public void ButtonHover()
