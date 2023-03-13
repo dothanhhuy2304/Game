@@ -245,7 +245,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1526492133}
-        m_TargetAssemblyTypeName: CharacterSelection, Assembly-CSharp
+        m_TargetAssemblyTypeName: Game.GamePlay.CharacterSelection, Assembly-CSharp
         m_MethodName: ChangeCharacter
         m_Mode: 3
         m_Arguments:
@@ -910,7 +910,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1526492133}
-        m_TargetAssemblyTypeName: CharacterSelection, Assembly-CSharp
+        m_TargetAssemblyTypeName: Game.GamePlay.CharacterSelection, Assembly-CSharp
         m_MethodName: ChangeCharacter
         m_Mode: 3
         m_Arguments:
@@ -1085,10 +1085,10 @@ RectTransform:
   m_Father: {fileID: 380701638}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1280, y: 720}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1516151737
 GameObject:
@@ -1124,8 +1124,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -379.99994, y: 0}
-  m_SizeDelta: {x: 759.9999, y: 0}
+  m_AnchoredPosition: {x: -329.99994, y: 0}
+  m_SizeDelta: {x: 660, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1516151739
 MonoBehaviour:
@@ -1194,7 +1194,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1526492133
 MonoBehaviour:
@@ -1243,16 +1243,16 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1565509269}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -9720}
-  m_LocalScale: {x: 108, y: 108, z: 108}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1429065812}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.98, y: -442}
-  m_SizeDelta: {x: 3.96, y: 1.5100098}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 150}
+  m_SizeDelta: {x: 396, y: 151}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1565509271
 MonoBehaviour:
@@ -1328,7 +1328,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1526492133}
-        m_TargetAssemblyTypeName: CharacterSelection, Assembly-CSharp
+        m_TargetAssemblyTypeName: Game.GamePlay.CharacterSelection, Assembly-CSharp
         m_MethodName: LoadCharacter
         m_Mode: 1
         m_Arguments:
@@ -1596,13 +1596,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
-    - target: {fileID: 7305501568197246342, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
-      propertyPath: uiManager
-      value: 
-      objectReference: {fileID: 492912730}
     - target: {fileID: 7305501568197246343, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7305501568197246343, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
       propertyPath: m_LocalPosition.x

@@ -75,6 +75,9 @@ public class UserRegister : MonoBehaviour
                 DataService.Item item = new DataService.Item {name = "tEst", value = 2};
                 DataService.GetConnection().Table<DataService.Item>().Connection.Insert(item);
                 //Load Data
+                UserPref.currentPosition[0] = gameData.positionX;
+                UserPref.currentPosition[1] = gameData.positionY;
+                UserPref.currentPosition[2] = gameData.positionZ;
                 var data = DataService.GetConnection().Table<DataService.GameData>().FirstOrDefault();
                 gameManager.SetScore(data.score);
                 gameManager.SetMoney(data.gold);

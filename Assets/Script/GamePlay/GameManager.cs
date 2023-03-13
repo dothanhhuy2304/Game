@@ -1,8 +1,4 @@
-using System;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using TMPro;
 using UnityEngine;
 
@@ -11,22 +7,21 @@ namespace Game.GamePlay
     public class UserPref
     {
         public static string userId;
+        public static int characterSelected;
+        public static int currentScreen;
+        public static float[] currentPosition = new float[3];
     }
     
     public class GameManager : FastSingleton<GameManager>
     {
-        private const string ScoreData = "scoreData";
-        private const string PlayerData = "playerData";
         [SerializeField] private UIManager uiManager;
-        public CharacterScriptTableObject listCharacter;
-        public PlayerData playerData;
         [SerializeField] private TextMeshProUGUI txtScore;
         [SerializeField] private TextMeshProUGUI txtDiamond;
         [SerializeField] private TextMeshProUGUI txtMoney;
         //
-        private int numberScore;
-        private int numberGold;
-        private int numberDiamond;
+        [HideInInspector] public int numberScore;
+        [HideInInspector ]public int numberGold;
+        [HideInInspector] public int numberDiamond;
 
         private void Start()
         {
@@ -41,44 +36,32 @@ namespace Game.GamePlay
                 Debug.LogError("Exit data");
             }
 
-            if (LoadData<PlayerDataObj>(PlayerData) == null)
+            if (!string.IsNullOrEmpty(UserPref.userId))
             {
-                playerData.playerDataObj.position = new[] {-4.95f, -4f, 0};
-                playerData.playerDataObj.characterSelection = 0;
-                playerData.playerDataObj.currentScenes = 0;
-                playerData.playerDataObj.saveAudio = false;
-                playerData.playerDataObj.soundEffect = 0;
-                playerData.playerDataObj.soundMusic = 0;
+                var listPlayerData = DataService.GetConnection().Table<DataService.GameData>().ToList();
+                foreach (var player in listPlayerData)
+                {
+                    if (player.PlayerId.Equals(UserPref.userId))
+                    {
+                        SetScore(player.score);
+                        SetMoney(player.gold);
+                        SetDiamond(player.diamond);
+                        UserPref.characterSelected = player.characterSelect;
+                        UserPref.currentScreen = player.levelId;
+                        UserPref.currentPosition[0] = player.positionX;
+                        UserPref.currentPosition[1] = player.positionY;
+                        UserPref.currentPosition[2] = player.positionZ;
+                    }
+                }
             }
             else
             {
-                if (LoadData<PlayerDataObj>(PlayerData).position == null)
-                {
-                    playerData.playerDataObj.position = new[] {-4.95f, -4f, 0};
-                }
-                else
-                {
-                    playerData.playerDataObj.position = LoadData<PlayerDataObj>(PlayerData).position;
-                }
-
-                playerData.playerDataObj.characterSelection = LoadData<PlayerDataObj>(PlayerData).characterSelection;
-                playerData.playerDataObj.currentScenes = LoadData<PlayerDataObj>(PlayerData).currentScenes;
-                playerData.playerDataObj.saveAudio = LoadData<PlayerDataObj>(PlayerData).saveAudio;
-                playerData.playerDataObj.soundEffect = LoadData<PlayerDataObj>(PlayerData).soundEffect;
-                playerData.playerDataObj.soundMusic = LoadData<PlayerDataObj>(PlayerData).soundMusic;
+                SetScore(0);
+                SetMoney(0);
+                SetDiamond(0);
+                UserPref.characterSelected = 0;
+                UserPref.currentScreen = 0;
             }
-
-            var listPlayerData = DataService.GetConnection().Table<DataService.GameData>().ToList();
-            foreach (var player in listPlayerData)
-            {
-                if (player.PlayerId.Equals(UserPref.userId))
-                {
-                    SetScore(player.score);
-                    SetMoney(player.gold);
-                    SetDiamond(player.diamond);
-                }
-            }
-            
 
             DontDestroyOnLoad(this);
         }
@@ -101,55 +84,67 @@ namespace Game.GamePlay
             txtMoney.text = numberGold + " $";
         }
 
-        private static void SaveData<T>(T obj, string key)
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            string path = Application.persistentDataPath + "/saveData/";
-            Directory.CreateDirectory(path);
-            FileStream fileStream = new FileStream(path + key, FileMode.OpenOrCreate);
-            formatter.Serialize(fileStream, obj);
-            fileStream.Close();
-        }
+        // private static void SaveData<T>(T obj, string key)
+        // {
+        //     BinaryFormatter formatter = new BinaryFormatter();
+        //     string path = Application.persistentDataPath + "/saveData/";
+        //     Directory.CreateDirectory(path);
+        //     FileStream fileStream = new FileStream(path + key, FileMode.OpenOrCreate);
+        //     formatter.Serialize(fileStream, obj);
+        //     fileStream.Close();
+        // }
 
-        private static T LoadData<T>(string key)
-        {
-            T data = default;
-            BinaryFormatter formatter = new BinaryFormatter();
-            string path = Application.persistentDataPath + "/saveData/";
-            if (File.Exists(path + key))
-            {
-                FileStream fileStream = new FileStream(path + key, FileMode.OpenOrCreate);
-                data = (T) formatter.Deserialize(fileStream);
-                fileStream.Close();
-            }
-            else
-            {
-                return data;
-            }
-
-            return data;
-        }
+        // private static T LoadData<T>(string key)
+        // {
+        //     T data = default;
+        //     BinaryFormatter formatter = new BinaryFormatter();
+        //     string path = Application.persistentDataPath + "/saveData/";
+        //     if (File.Exists(path + key))
+        //     {
+        //         FileStream fileStream = new FileStream(path + key, FileMode.OpenOrCreate);
+        //         data = (T) formatter.Deserialize(fileStream);
+        //         fileStream.Close();
+        //     }
+        //     else
+        //     {
+        //         return data;
+        //     }
+        //
+        //     return data;
+        // }
 
         private void OnApplicationQuit()
         {
-            var scoreDatas = new ScoreDataObj
-            {
-                currentScore = 0,
-                diamond = playerData.scoreDataObj.diamond,
-                money = playerData.scoreDataObj.money,
-                highScore = playerData.scoreDataObj.highScore
-            };
-            SaveData(scoreDatas, ScoreData);
-            var playerDatas = new PlayerDataObj
-            {
-                position = playerData.playerDataObj.position,
-                characterSelection = playerData.playerDataObj.characterSelection,
-                currentScenes = playerData.playerDataObj.currentScenes,
-                saveAudio = playerData.playerDataObj.saveAudio,
-                soundEffect = playerData.playerDataObj.soundEffect,
-                soundMusic = playerData.playerDataObj.soundMusic
-            };
-            SaveData(playerDatas, PlayerData);
+            // var scoreDatas = new ScoreDataObj
+            // {
+            //     currentScore = 0,
+            //     diamond = playerData.scoreDataObj.diamond,
+            //     money = playerData.scoreDataObj.money,
+            //     highScore = playerData.scoreDataObj.highScore
+            // };
+            //SaveData(scoreDatas, ScoreData);
+            // var playerDatas = new PlayerDataObj
+            // {
+            //     position = playerData.playerDataObj.position,
+            //     characterSelection = playerData.playerDataObj.characterSelection,
+            //     currentScenes = playerData.playerDataObj.currentScenes,
+            //     saveAudio = playerData.playerDataObj.saveAudio,
+            //     soundEffect = playerData.playerDataObj.soundEffect,
+            //     soundMusic = playerData.playerDataObj.soundMusic
+            // };
+            // SaveData(playerDatas, PlayerData);
+            DataService.GameData gameData = new DataService.GameData();
+            gameData.PlayerId = UserPref.userId;
+            gameData.characterSelect = UserPref.characterSelected;
+            gameData.levelId = UserPref.currentScreen;
+            gameData.positionX = UserPref.currentPosition[0];
+            gameData.positionY = UserPref.currentPosition[1];
+            gameData.positionZ = UserPref.currentPosition[2];
+            gameData.score = numberScore;
+            gameData.gold = numberGold;
+            gameData.diamond = numberDiamond;
+            gameData.health = gameData.health;
+            DataService.GetConnection().Table<DataService.GameData>().Connection.Update(gameData);
         }
 
         private void OnDisable()

@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class LoadCharacter : MonoBehaviour
 {
-    [SerializeField] private PlayerData playerData;
     [SerializeField] private GameObject[] characters;
 
     private void Awake()
@@ -13,7 +12,7 @@ public class LoadCharacter : MonoBehaviour
             Instantiate(Resources.Load<GameObject>("GameManager"));
         }
 
-        characters[playerData.playerDataObj.characterSelection].SetActive(true);
+        characters[UserPref.characterSelected].SetActive(true);
 
         AudioManager.instance.Plays_Music("Music_Game");
 

@@ -76,10 +76,8 @@ namespace Game.Player
             PlayAnimPlayerDeath(playerCharacter.animator);
 
             //save score when player are death
-            if (gameManager.playerData.scoreDataObj.currentScore > gameManager.playerData.scoreDataObj.highScore)
-            {
-                gameManager.playerData.scoreDataObj.highScore = gameManager.playerData.scoreDataObj.currentScore;
-            }
+            gameManager.numberScore = 0;
+            gameManager.SetScore(0);
 
             StartCoroutine(EventPlayerDeath(playerCharacter.body, playerCharacter.col, playerCharacter.animator, 3f));
         }
@@ -95,10 +93,8 @@ namespace Game.Player
             playerCharacter.playerData.currentHealth = 0f;
             AudioManager.instance.Play("Enemy_Death");
             HuyManager.SetPlayerIsDeath(1);
-            if (gameManager.playerData.scoreDataObj.currentScore > gameManager.playerData.scoreDataObj.highScore)
-            {
-                gameManager.playerData.scoreDataObj.highScore = gameManager.playerData.scoreDataObj.currentScore;
-            }
+            gameManager.numberScore = 0;
+            gameManager.SetScore(0);
 
             StartCoroutine(TimeDeathByFalling(3f));
         }
@@ -108,7 +104,7 @@ namespace Game.Player
             yield return new WaitForSeconds(delay);
             SetMaxHealth(playerCharacter.playerData.heathDefault, playerCharacter.playerData.hpIc);
             Transform position = transform;
-            position.position = new Vector3(gameManager.playerData.playerDataObj.position[0], gameManager.playerData.playerDataObj.position[1], gameManager.playerData.playerDataObj.position[2]);
+            position.position = new Vector3(UserPref.currentPosition[0], UserPref.currentPosition[1], UserPref.currentPosition[2]);
             petAi.transform.position = position.up;
             HuyManager.SetPlayerIsDeath(0);
             //rest environment when player death
@@ -124,7 +120,7 @@ namespace Game.Player
             yield return new WaitForSeconds(durationRespawn);
             SetMaxHealth(playerCharacter.playerData.heathDefault, playerCharacter.playerData.hpIc);
             Transform position = transform;
-            position.position = new Vector3(gameManager.playerData.playerDataObj.position[0], gameManager.playerData.playerDataObj.position[1], gameManager.playerData.playerDataObj.position[2]);
+            position.position = new Vector3(UserPref.currentPosition[0], UserPref.currentPosition[1], UserPref.currentPosition[2]);
             petAi.transform.position = position.up;
             animator.SetLayerWeight(1, 0);
             col.enabled = true;

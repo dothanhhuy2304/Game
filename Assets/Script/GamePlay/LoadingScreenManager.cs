@@ -10,37 +10,37 @@ public class LoadingScreenManager : FastSingleton<LoadingScreenManager>
     [SerializeField] private Image fillLoading;
     private AsyncOperation async;
 
-    public static int LoadCurrentScreen()
+    public int LoadCurrentScreen()
     {
-        return GameManager.instance.playerData.playerDataObj.currentScenes;
+        return UserPref.currentScreen;
     }
 
-    public static int RestartLevel()
+    public int RestartLevel()
     {
-        return GameManager.instance.playerData.playerDataObj.currentScenes = 0;
+        UserPref.currentScreen = 0;
+        return UserPref.currentScreen;
     }
 
     public int NextScreen(int i)
     {
-        return GameManager.instance.playerData.playerDataObj.currentScenes = SceneManager.GetActiveScene().buildIndex + i;
+        return UserPref.currentScreen = SceneManager.GetActiveScene().buildIndex + i;
     }
 
     public void FadeLoadingScene(int sceneIndex)
     {
         uiLoading.SetActive(true);
         fillLoading.fillAmount = 0f;
-        StartCoroutine(DelayFrameToLoadScene(sceneIndex));
+        LoadScene(sceneIndex);
 
     }
 
-    private IEnumerator DelayFrameToLoadScene(int sceneIndex)
+    private void LoadScene(int sceneIndex)
     {
-        yield return null;
         async = SceneManager.LoadSceneAsync(sceneIndex);
-        StartCoroutine(IEFadeIn());
+        StartCoroutine(IeFadeIn());
     }
 
-    private IEnumerator IEFadeIn()
+    private IEnumerator IeFadeIn()
     {
         if (async != null)
         {

@@ -97,12 +97,15 @@ namespace Game.GamePlay
         private void ChangeVolumeMusic(float sliderValue)
         {
             audioMusic.volume = sliderValue;
-            DataService.PlayerSetting playerSetting = new DataService.PlayerSetting();
-            var player = DataService.GetConnection().Table<DataService.PlayerSetting>().FirstOrDefault();
-            playerSetting.PlayerId = player.PlayerId;
-            playerSetting.soundMusic = sliderValue;
-            playerSetting.soundEffect = player.soundEffect;
-            DataService.GetConnection().Table<DataService.PlayerSetting>().Connection.Update(playerSetting);
+            if (DataService.GetConnection().Table<DataService.PlayerSetting>().Any())
+            {
+                DataService.PlayerSetting playerSetting = new DataService.PlayerSetting();
+                var player = DataService.GetConnection().Table<DataService.PlayerSetting>().FirstOrDefault();
+                playerSetting.PlayerId = player.PlayerId;
+                playerSetting.soundMusic = sliderValue;
+                playerSetting.soundEffect = player.soundEffect;
+                DataService.GetConnection().Table<DataService.PlayerSetting>().Connection.Update(playerSetting);
+            }
         }
 
         private void ChangeVolumeEffect(float sliderValue)
@@ -112,12 +115,15 @@ namespace Game.GamePlay
                 source.audioFX.volume = sliderValue;
             }
 
-            DataService.PlayerSetting playerSetting = new DataService.PlayerSetting();
-            var player = DataService.GetConnection().Table<DataService.PlayerSetting>().FirstOrDefault();
-            playerSetting.PlayerId = player.PlayerId;
-            playerSetting.soundMusic = player.soundMusic;
-            playerSetting.soundEffect = sliderValue;
-            DataService.GetConnection().Table<DataService.PlayerSetting>().Connection.Update(playerSetting);
+            if (DataService.GetConnection().Table<DataService.PlayerSetting>().Any())
+            {
+                DataService.PlayerSetting playerSetting = new DataService.PlayerSetting();
+                var player = DataService.GetConnection().Table<DataService.PlayerSetting>().FirstOrDefault();
+                playerSetting.PlayerId = player.PlayerId;
+                playerSetting.soundMusic = player.soundMusic;
+                playerSetting.soundEffect = sliderValue;
+                DataService.GetConnection().Table<DataService.PlayerSetting>().Connection.Update(playerSetting);
+            }
         }
 
         private void BackToMenu()
@@ -143,7 +149,7 @@ namespace Game.GamePlay
             btnBackToMenuUI.gameObject.SetActive(false);
             btnRestart.gameObject.SetActive(false);
             AudioManager.instance.Plays_Music("Music_Menu");
-            loadingScreenManager.FadeLoadingScene(LoadingScreenManager.RestartLevel());
+            loadingScreenManager.FadeLoadingScene(loadingScreenManager.RestartLevel());
         }
 
         public void ExitGame()
