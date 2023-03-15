@@ -17,12 +17,12 @@ public class LoadingScreenManager : FastSingleton<LoadingScreenManager>
 
     public int RestartLevel()
     {
-        UserPref.currentScreen = 0;
-        return UserPref.currentScreen;
+        return UserPref.currentScreen = 0;
     }
 
     public int NextScreen(int i)
     {
+        DataService.GetConnection().Execute($"update GameData set levelId = '{UserPref.saveScreenPass}' where PlayerId = '{UserPref.userId}'");
         return UserPref.currentScreen = SceneManager.GetActiveScene().buildIndex + i;
     }
 
@@ -36,12 +36,14 @@ public class LoadingScreenManager : FastSingleton<LoadingScreenManager>
 
     private void LoadScene(int sceneIndex)
     {
-        async = SceneManager.LoadSceneAsync(sceneIndex);
-        StartCoroutine(IeFadeIn());
+        //StartCoroutine(IeFadeIn());
+        StartCoroutine(IeFadeLoadingScreen(sceneIndex));
     }
 
-    private IEnumerator IeFadeIn()
+    #region OldVersion
+    private IEnumerator IeFadeIn(int scene)
     {
+        async = SceneManager.LoadSceneAsync(scene);
         if (async != null)
         {
             while (!async.isDone)
@@ -67,5 +69,19 @@ public class LoadingScreenManager : FastSingleton<LoadingScreenManager>
         yield return new WaitForSeconds(0.5f);
         uiLoading.SetActive(false);
         yield return null;
+    }
+    #endregion
+    
+    private IEnumerator IeFadeLoadingScreen(int scene)
+    {
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(scene);
+        while (!asyncOperation.isDone)
+        {
+            fillLoading.fillAmount = asyncOperation.progress / 0.9f;
+            yield return null;
+        }
+
+        yield return new WaitWhile(() => !asyncOperation.isDone);
+        uiLoading.SetActive(false);
     }
 }

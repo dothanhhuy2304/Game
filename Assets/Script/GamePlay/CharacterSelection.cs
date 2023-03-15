@@ -6,7 +6,6 @@ namespace Game.GamePlay
 {
     public class CharacterSelection : MonoBehaviour
     {
-        private GameManager gameManager;
         [SerializeField] private List<GameObject> characters;
         private int currentCharacter;
         [SerializeField] private Button btnNext, btnPreview;
@@ -14,14 +13,13 @@ namespace Game.GamePlay
 
         private void Start()
         {
-            gameManager = GameManager.instance;
             loadingScreenManager = LoadingScreenManager.instance;
             for (var i = 0; i < characters.Count; i++)
             {
                 characters[i].SetActive(i == 0);
             }
 
-            UpdateButton();
+            SwitchCharacterIndex();
         }
 
         public void ChangeCharacter(int index)
@@ -33,10 +31,10 @@ namespace Game.GamePlay
             }
 
             characters[currentCharacter].SetActive(true);
-            UpdateButton();
+            SwitchCharacterIndex();
         }
 
-        private void UpdateButton()
+        private void SwitchCharacterIndex()
         {
             btnNext.interactable = currentCharacter != characters.Count - 1;
             btnPreview.interactable = currentCharacter != 0;
@@ -46,7 +44,7 @@ namespace Game.GamePlay
         {
             UserPref.characterSelected = currentCharacter;
             loadingScreenManager.FadeLoadingScene(
-                DataService.GetConnection().Table<DataService.GameData>().FirstOrDefault().levelId == 0
+                UserPref.currentScreen == 0
                     ? loadingScreenManager.NextScreen(1)
                     : loadingScreenManager.LoadCurrentScreen());
             //loadingScreenManager.FadeLoadingScene(gameManager.playerData.playerDataObj.currentScenes == 0 ? loadingScreenManager.NextScreen(1) : LoadingScreenManager.LoadCurrentScreen());

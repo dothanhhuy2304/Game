@@ -9,6 +9,7 @@ namespace Game.GamePlay
         public static string userId;
         public static int characterSelected;
         public static int currentScreen;
+        public static int saveScreenPass;
         public static float[] currentPosition = new float[3];
     }
     
