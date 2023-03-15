@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Game.Player
@@ -80,7 +81,6 @@ namespace Game.Player
             }
         }
 
-
         private void OnTriggerStay2D(Collider2D other)
         {
             if (other.CompareTag("Enemy"))
@@ -101,8 +101,10 @@ namespace Game.Player
 
         private void MoveToPlayer()
         {
-            Vector2 angle = (player.transform.position - transform.position).normalized;
-            body.velocity = Vector2.SmoothDamp(body.velocity, angle * petData.movingSpeed, ref velocity, .05f);
+            //Vector2 angle = (player.transform.position - transform.position).normalized;
+            //body.velocity = Vector2.SmoothDamp(body.velocity, angle * petData.movingSpeed, ref velocity, .05f);
+            Vector2 playerPos = player.transform.position;
+            body.transform.DOMove(new Vector3(playerPos.x - 1f, playerPos.y + 1), 0.5f).SetEase(Ease.Linear);
         }
 
         private void BulletAttack()
