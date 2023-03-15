@@ -9,7 +9,7 @@ namespace Game.Player
     {
         public Data petData;
         [SerializeField] private Rigidbody2D body;
-        private CharacterController2D playerPos;
+        private CharacterController2D player;
         private Vector2 velocity = Vector2.zero;
         [SerializeField] private List<FireProjectile> projectiles;
         [HideInInspector] public List<GameObject> multipleEnemy;
@@ -24,7 +24,7 @@ namespace Game.Player
 
         private void Start()
         {
-            playerPos = CharacterController2D.instance;
+            player = CharacterController2D.instance;
             multipleEnemy = GameObject.FindGameObjectsWithTag("Enemy").ToList();
         }
 
@@ -38,15 +38,15 @@ namespace Game.Player
         {
             if (!HuyManager.PlayerIsDeath())
             {
-                if (Vector3.Distance(playerPos.transform.position, transform.position) > distancePlayer)
+                if (Vector3.Distance(player.transform.position, transform.position) > distancePlayer)
                 {
-                    Moving();
+                    MoveToPlayer();
                     animator.SetBool(IsRun, true);
-                    Attack();
+                    CheckAttack();
                 }
                 else
                 {
-                    Attack();
+                    CheckAttack();
                     body.velocity = Vector2.zero;
                 }
             }
@@ -54,16 +54,25 @@ namespace Game.Player
 
 
 
-        private void Attack()
+        private void CheckAttack()
         {
             closestEnemy = FindClosestEnemy();
+            RaycastHit2D hit = Physics2D.Linecast(transform.position, closestEnemy.transform.position, 1 << LayerMask.NameToLayer("ground"));
+            if (hit)
+            {
+                if (hit.collider.CompareTag("ground"))
+                {
+                    return;
+                }
+            }
+
             if (enemyContact)
             {
                 if (Vector2.Distance(transform.position, closestEnemy.position) < rangeAttack)
                 {
                     if (currentTimeAttack <= 0f)
                     {
-                        Attacks();
+                        BulletAttack();
                         animator.SetBool(IsRun, false);
                         currentTimeAttack = TimeAttack;
                     }
@@ -90,13 +99,13 @@ namespace Game.Player
             }
         }
 
-        private void Moving()
+        private void MoveToPlayer()
         {
-            Vector2 angle = (playerPos.transform.position - transform.position).normalized;
+            Vector2 angle = (player.transform.position - transform.position).normalized;
             body.velocity = Vector2.SmoothDamp(body.velocity, angle * petData.movingSpeed, ref velocity, .05f);
         }
 
-        private void Attacks()
+        private void BulletAttack()
         {
             projectiles[FindBullet()].transform.position = transform.position;
             projectiles[FindBullet()].transform.rotation = transform.rotation;
