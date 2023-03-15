@@ -18,7 +18,6 @@ public class FireTrap : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isOut = true;
-            animator.SetBool("hit", true);
             StartCoroutine(WaitingForFireOn(1f));
         }
     }
@@ -36,12 +35,13 @@ public class FireTrap : MonoBehaviour
         if (HuyManager.PlayerIsDeath()) yield break;
         if (HuyManager.GetPlayerIsHurt()) yield break;
         if (!isOut) yield break;
+        animator.SetBool("hit", true);
         yield return new WaitForSeconds(delay);
         if (isOut)
         {
             animator.SetBool("on", true);
             playerHealth.GetDamage(1f);
-            StartCoroutine(nameof(WaitingForFireOn), 0.5f);
+            StartCoroutine(WaitingForFireOn(0.5f));
         }
         else
         {
