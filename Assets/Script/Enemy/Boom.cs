@@ -1,52 +1,60 @@
-using System.Collections;
+using DG.Tweening;
 using Game.GamePlay;
-using UnityEngine;
 using Game.Player;
+using UnityEngine;
 
 public class Boom : MonoBehaviour
 {
     [SerializeField] private GameObject boomObj, explosionObj;
     [SerializeField] private Collider2D colObj;
     [SerializeField] private float timeRespawn;
+    private bool isReSpawn;
 
     private void Update()
     {
-        if (HuyManager.PlayerIsDeath())
+        if (HuyManager.PlayerIsDeath() && !isReSpawn)
         {
-            if (!boomObj.activeSelf)
-            {
-                StartCoroutine(nameof(RespawnObject), timeRespawn);
-            }
+            ReSpawnObject(timeRespawn);
+            isReSpawn = true;
         }
     }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (!HuyManager.PlayerIsDeath())
+
+        if (other.collider.CompareTag("Player"))
         {
-            if (other.collider.CompareTag("Player"))
-            {
-                PlayerHealth.instance.GetDamage(30f);
-                StartCoroutine(Explosion(1f));
-            }
+            PlayExplosion(1);
         }
     }
 
-    private IEnumerator RespawnObject(float delay)
+    private void ReSpawnObject(float delay)
     {
-        yield return new WaitForSeconds(delay);
-        boomObj.SetActive(true);
-        explosionObj.SetActive(false);
-        colObj.enabled = true;
+        DOTween.Sequence()
+            .AppendInterval(delay)
+            .AppendCallback(() =>
+            {
+                boomObj.SetActive(true);
+                explosionObj.SetActive(false);
+                colObj.enabled = true;
+            }).Play();
     }
 
-    private IEnumerator Explosion(float delay)
+    private void PlayExplosion(float delay)
     {
-        boomObj.SetActive(false);
-        explosionObj.SetActive(true);
-        colObj.enabled = false;
-        AudioManager.instance.Play("Boom_Explosion");
-        yield return new WaitForSeconds(delay);
-        explosionObj.SetActive(false);
+        DOTween.Sequence()
+            .AppendCallback(() =>
+            {
+                boomObj.SetActive(false);
+                explosionObj.SetActive(true);
+                colObj.enabled = false;
+                AudioManager.instance.Play("Boom_Explosion");
+                PlayerHealth.instance.GetDamage(30f);
+            }).AppendInterval(delay)
+            .AppendCallback(() =>
+            {
+                explosionObj.SetActive(false);
+                isReSpawn = false;
+            }).Play();
     }
 }
