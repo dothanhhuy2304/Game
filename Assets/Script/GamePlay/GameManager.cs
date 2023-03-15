@@ -115,24 +115,6 @@ namespace Game.GamePlay
 
         private void OnApplicationQuit()
         {
-            // var scoreDatas = new ScoreDataObj
-            // {
-            //     currentScore = 0,
-            //     diamond = playerData.scoreDataObj.diamond,
-            //     money = playerData.scoreDataObj.money,
-            //     highScore = playerData.scoreDataObj.highScore
-            // };
-            //SaveData(scoreDatas, ScoreData);
-            // var playerDatas = new PlayerDataObj
-            // {
-            //     position = playerData.playerDataObj.position,
-            //     characterSelection = playerData.playerDataObj.characterSelection,
-            //     currentScenes = playerData.playerDataObj.currentScenes,
-            //     saveAudio = playerData.playerDataObj.saveAudio,
-            //     soundEffect = playerData.playerDataObj.soundEffect,
-            //     soundMusic = playerData.playerDataObj.soundMusic
-            // };
-            // SaveData(playerDatas, PlayerData);
             DataService.GameData gameData = new DataService.GameData();
             gameData.PlayerId = UserPref.userId;
             gameData.characterSelect = UserPref.characterSelected;

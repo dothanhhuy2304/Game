@@ -4,17 +4,17 @@ namespace Game.GamePlay
 {
     public class ParallaxBackground : MonoBehaviour
     {
-        private Camera camPos;
+        private Camera cam;
         [SerializeField] private Vector3 movementScale = Vector3.zero;
 
         private void Awake()
         {
-            camPos = Camera.main;
+            cam = Camera.main;
         }
 
         private void LateUpdate()
         {
-            transform.position = Vector3.Scale(camPos.transform.position, movementScale);
+            transform.position = Vector3.Scale(cam.transform.position, movementScale);
         }
     }
 }
