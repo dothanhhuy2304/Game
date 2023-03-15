@@ -1,5 +1,4 @@
-using System;
-using System.Collections;
+using DG.Tweening;
 using Game.GamePlay;
 using Game.Player;
 using UnityEngine;
@@ -13,9 +12,11 @@ namespace Game.Item
         [SerializeField] private Collider2D itemCollider;
         [SerializeField] private Animator animator;
         private PlayerHealth playerHealth;
+        private GameManager gameManager;
 
         private void Start()
         {
+            gameManager = GameManager.instance;
             playerHealth = PlayerHealth.instance;
         }
 
@@ -29,15 +30,15 @@ namespace Game.Item
                     {
                         case ItemType.Money:
                         {
-                            GameManager.instance.SetScore(itemData.scoreReceive);
-                            GameManager.instance.SetMoney(itemData.moneyReceive);
+                            gameManager.SetScore(itemData.scoreReceive);
+                            gameManager.SetMoney(itemData.moneyReceive);
                             ScoreAndDiamondItems();
                             break;
                         }
                         case ItemType.Diamond:
                         {
-                            GameManager.instance.SetScore(itemData.scoreReceive);
-                            GameManager.instance.SetDiamond(itemData.diamondReceive);
+                            gameManager.SetScore(itemData.scoreReceive);
+                            gameManager.SetDiamond(itemData.diamondReceive);
                             ScoreAndDiamondItems();
                             break;
                         }
@@ -51,10 +52,6 @@ namespace Game.Item
                             HurtItems(itemData.valueReceive);
                             break;
                         }
-                        default:
-                        {
-                            throw new Exception();
-                        }
                     }
                 }
             }
@@ -66,7 +63,7 @@ namespace Game.Item
             playerHealth.GetDamage(value);
             AudioManager.instance.Play("Item_Hurt");
             itemCollider.enabled = false;
-            StartCoroutine(TemporarilyDeactivate(0.8f));
+            TemporarilyDeactivate(0.8f);
         }
 
         private void HealItems(float value)
@@ -75,7 +72,7 @@ namespace Game.Item
             playerHealth.Heal(value);
             AudioManager.instance.Play("Item_Heal");
             itemCollider.enabled = false;
-            StartCoroutine(TemporarilyDeactivate(0.8f));
+            TemporarilyDeactivate(0.8f);
         }
 
         private void ScoreAndDiamondItems()
@@ -83,14 +80,18 @@ namespace Game.Item
             animator.SetLayerWeight(1, 1);
             AudioManager.instance.Play("Item_Heal");
             itemCollider.enabled = false;
-            StartCoroutine(TemporarilyDeactivate(0.8f));
+            TemporarilyDeactivate(0.8f);
         }
 
-        private IEnumerator TemporarilyDeactivate(float delay)
+        private void TemporarilyDeactivate(float delay)
         {
-            yield return new WaitForSeconds(delay);
-            animator.SetLayerWeight(0, 1);
-            gameObject.SetActive(false);
+            DOTween.Sequence()
+                .AppendInterval(delay)
+                .AppendCallback(() =>
+                {
+                    animator.SetLayerWeight(0, 1);
+                    gameObject.SetActive(false);
+                }).Play();
         }
     }
 
