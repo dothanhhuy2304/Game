@@ -26,7 +26,6 @@ namespace Game.GamePlay
 
         private void Start()
         {
-            //DontDestroyOnLoad(this);
             loadingScreenManager = LoadingScreenManager.instance;
             btnShowAndHiddenUI.onClick.AddListener(() => { ShowAndHiddenUiSetting(ref isShowUISetting); });
             btnBackToMenuUI.onClick.AddListener(BackToMenu);
@@ -99,12 +98,7 @@ namespace Game.GamePlay
             audioMusic.volume = sliderValue;
             if (DataService.GetConnection().Table<DataService.PlayerSetting>().Any())
             {
-                DataService.PlayerSetting playerSetting = new DataService.PlayerSetting();
-                var player = DataService.GetConnection().Table<DataService.PlayerSetting>().FirstOrDefault();
-                playerSetting.PlayerId = player.PlayerId;
-                playerSetting.soundMusic = sliderValue;
-                playerSetting.soundEffect = player.soundEffect;
-                DataService.GetConnection().Table<DataService.PlayerSetting>().Connection.Update(playerSetting);
+                DataService.GetConnection().Execute($"update PlayerSetting set soundMusic = '{sliderValue}' where PlayerId = '{UserPref.userId}'");
             }
         }
 
@@ -117,12 +111,7 @@ namespace Game.GamePlay
 
             if (DataService.GetConnection().Table<DataService.PlayerSetting>().Any())
             {
-                DataService.PlayerSetting playerSetting = new DataService.PlayerSetting();
-                var player = DataService.GetConnection().Table<DataService.PlayerSetting>().FirstOrDefault();
-                playerSetting.PlayerId = player.PlayerId;
-                playerSetting.soundMusic = player.soundMusic;
-                playerSetting.soundEffect = sliderValue;
-                DataService.GetConnection().Table<DataService.PlayerSetting>().Connection.Update(playerSetting);
+                DataService.GetConnection().Execute($"update PlayerSetting set soundEffect = '{sliderValue}' where PlayerId = '{UserPref.userId}'");
             }
         }
 

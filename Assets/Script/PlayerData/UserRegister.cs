@@ -49,10 +49,10 @@ public class UserRegister : MonoBehaviour
 
                 DataService.GetConnection().Table<DataService.PlayerProfileData>().Connection
                     .InsertOrReplace(playerProfileData);
-
+                UserPref.userId = playerProfileData.Id;
                 DataService.GameData gameData = new DataService.GameData
                 {
-                    PlayerId = DataService.GetConnection().Table<DataService.PlayerProfileData>().FirstOrDefault().Id,
+                    PlayerId = UserPref.userId,
                     characterSelect = 0,
                     levelId = 0,
                     gold = 0,
@@ -66,9 +66,9 @@ public class UserRegister : MonoBehaviour
 
                 DataService.PlayerSetting playerSetting = new DataService.PlayerSetting
                 {
-                    PlayerId = DataService.GetConnection().Table<DataService.PlayerProfileData>().FirstOrDefault().Id,
-                    soundMusic = 0.8f,
-                    soundEffect = 0.8f
+                    PlayerId = UserPref.userId,
+                    soundMusic = 1f,
+                    soundEffect = 1f
                 };
                 DataService.GetConnection().Table<DataService.GameData>().Connection.InsertOrReplace(playerSetting);
 
