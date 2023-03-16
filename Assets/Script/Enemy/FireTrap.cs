@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using Game.Player;
 using UnityEngine;
 
@@ -55,5 +56,25 @@ public class FireTrap : MonoBehaviour
         playerHealth.GetDamage(1f);
         isFirst = false;
         currentCoroutine = StartCoroutine(IeFireOn(delay));
+    }
+
+    private async void FireOn(int delay)
+    {
+        if (isFirst)
+        {
+            animator.Play("Begin");
+            await Task.Delay(600);
+        }
+        animator.Play("On");
+        if (isFirst)
+        {
+            await Task.Delay(100);
+        }
+        else
+        {
+            await Task.Delay(delay);
+        }
+        playerHealth.GetDamage(1f);
+        FireOn(delay);
     }
 }
