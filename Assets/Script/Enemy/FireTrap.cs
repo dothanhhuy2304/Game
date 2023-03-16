@@ -1,12 +1,13 @@
 using System.Collections;
-using UnityEngine;
 using Game.Player;
+using UnityEngine;
 
 public class FireTrap : MonoBehaviour
 {
     [SerializeField] private Animator animator;
     private PlayerHealth playerHealth;
-    private bool isOut;
+    private bool isFirst;
+    private Coroutine currentCoroutine;
 
     private void Start()
     {
@@ -17,8 +18,7 @@ public class FireTrap : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            isOut = true;
-            StartCoroutine(WaitingForFireOn(1f));
+            currentCoroutine = StartCoroutine(IeFireOn(1f));
         }
     }
 
@@ -26,28 +26,34 @@ public class FireTrap : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            isOut = false;
+            animator.Play("Idle");
+            isFirst = true;
+            StopCoroutine(currentCoroutine);
         }
     }
 
-    private IEnumerator WaitingForFireOn(float delay)
+    private IEnumerator IeFireOn(float delay)
     {
         if (HuyManager.PlayerIsDeath()) yield break;
         if (HuyManager.GetPlayerIsHurt()) yield break;
-        if (!isOut) yield break;
-        animator.SetBool("hit", true);
-        yield return new WaitForSeconds(delay);
-        if (isOut)
+        if (isFirst)
         {
-            animator.SetBool("on", true);
-            playerHealth.GetDamage(1f);
-            StartCoroutine(WaitingForFireOn(0.5f));
+            animator.Play("Begin");
+            yield return new WaitForSeconds(0.6f);
+        }
+
+        animator.Play("On");
+        if (isFirst)
+        {
+            yield return new WaitForSeconds(0.1f);
         }
         else
         {
-            animator.SetBool("hit", false);
-            animator.SetBool("on", false);
-            StopCoroutine(nameof(WaitingForFireOn));
+            yield return new WaitForSeconds(delay);
         }
+
+        playerHealth.GetDamage(1f);
+        isFirst = false;
+        currentCoroutine = StartCoroutine(IeFireOn(delay));
     }
 }
