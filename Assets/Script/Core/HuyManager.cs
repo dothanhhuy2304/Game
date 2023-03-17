@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public static class HuyManager
@@ -33,6 +34,11 @@ public static class HuyManager
         {
             currentTime = 0f;
         }
+    }
+
+    public static void CameraShake(Camera camera, float duration,Vector3 strength,int vibrato,float randomness,bool fadeOut)
+    {
+        camera.DOShakePosition(duration, strength, vibrato, randomness, fadeOut);
     }
 }
 

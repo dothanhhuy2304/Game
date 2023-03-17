@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using Game.GamePlay;
 using Game.Player;
@@ -9,7 +10,13 @@ public class Explosion : MonoBehaviour
     [SerializeField] private Collider2D col;
     [SerializeField] private GameObject parentObject;
     public UnityEvent eventTriggerEnter;
-    
+    private Camera cam;
+
+    private void Start()
+    {
+        cam = Camera.main;
+    }
+
     private void OnEnable()
     {
         eventTriggerEnter?.Invoke();
@@ -35,6 +42,7 @@ public class Explosion : MonoBehaviour
             .AppendCallback(() =>
             {
                 AudioManager.instance.Play("Boom_Explosion");
+                HuyManager.CameraShake(cam, 1f, new Vector3(0.5f, 0.5f, 0.5f), 10, 90f, true);
             }).AppendInterval(0.2f)
             .AppendCallback(() =>
             {

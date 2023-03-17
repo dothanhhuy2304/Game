@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using Game.Enemy;
 using Game.Player;
@@ -60,13 +62,6 @@ public class FireProjectile : MonoBehaviour
             }
         }
     }
-    
-    // private void Explosion()
-    // {
-    //     bulletPrefab.SetActive(false);
-    //     explosionSpriteFxObj.gameObject.SetActive(true);
-    //     StartCoroutine(TemporarilyDeactivate(1.7f));
-    // }
 
     private void Arrived()
     {
@@ -87,7 +82,7 @@ public class FireProjectile : MonoBehaviour
             targetPetEnemy = (petAI.closestEnemy.position - transform.position).normalized;
         }
 
-        StartCoroutine(TemporarilyDeactivate(1.7f));
+        TemporarilyDeactivate(1700);
         if (body.isKinematic)
         {
             switch (enemyType)
@@ -128,12 +123,14 @@ public class FireProjectile : MonoBehaviour
                 {
                     BulletExplosions();
                 }
-                else if (other.CompareTag("Player"))
+
+                if (other.CompareTag("Player"))
                 {
                     playerHealth.GetDamage(20f);
                     BulletExplosions();
                 }
-                else if (other.CompareTag("Bullet"))
+
+                if (other.CompareTag("Bullet"))
                 {
                     if (!body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy")))
                     {
@@ -148,12 +145,14 @@ public class FireProjectile : MonoBehaviour
                 {
                     BulletExplosions();
                 }
-                else if (other.CompareTag("Player"))
+
+                if (other.CompareTag("Player"))
                 {
                     playerHealth.GetDamage(14f);
                     BulletExplosions();
                 }
-                else if (other.CompareTag("Bullet"))
+
+                if (other.CompareTag("Bullet"))
                 {
                     if (!body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy")))
                     {
@@ -168,12 +167,14 @@ public class FireProjectile : MonoBehaviour
                 {
                     BulletExplosions();
                 }
-                else if (other.CompareTag("Player"))
+
+                if (other.CompareTag("Player"))
                 {
                     playerHealth.GetDamage(18f);
                     BulletExplosions();
                 }
-                else if (other.CompareTag("Bullet"))
+
+                if (other.CompareTag("Bullet"))
                 {
                     if (!body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy")))
                     {
@@ -188,16 +189,19 @@ public class FireProjectile : MonoBehaviour
                 {
                     BulletExplosions();
                 }
-                else if (other.CompareTag("Enemy"))
+
+                if (other.CompareTag("Enemy"))
                 {
                     other.GetComponent<EnemyHealth>().GetDamage(playerCharacter.playerData.damageAttack);
                     BulletExplosions();
                 }
-                else if (other.CompareTag("Box"))
+
+                if (other.CompareTag("Box"))
                 {
                     Destroy(other.gameObject);
                 }
-                else if (other.CompareTag("Bullet"))
+
+                if (other.CompareTag("Bullet"))
                 {
                     if (!body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletPlayer")))
                     {
@@ -213,11 +217,13 @@ public class FireProjectile : MonoBehaviour
                     other.GetComponent<EnemyHealth>().GetDamage(petAI.petData.damageAttack);
                     BulletExplosions();
                 }
-                else if (other.CompareTag("Bullet"))
+
+                if (other.CompareTag("Bullet"))
                 {
                     BulletExplosions();
                 }
-                else if (other.CompareTag("Bullet"))
+
+                if (other.CompareTag("Bullet"))
                 {
                     if (!body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletPlayer")))
                     {
@@ -234,12 +240,14 @@ public class FireProjectile : MonoBehaviour
                     BulletExplosions();
                     AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
                 }
-                else if (other.CompareTag("ground"))
+
+                if (other.CompareTag("ground"))
                 {
                     Arrived();
                     AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
                 }
-                else if (other.CompareTag("Bullet"))
+
+                if (other.CompareTag("Bullet"))
                 {
                     if (!body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy")))
                     {
@@ -272,12 +280,12 @@ public class FireProjectile : MonoBehaviour
 
         AudioManager.instance.Play("Player_Bullet_Explosion_1");
         body.bodyType = RigidbodyType2D.Static;
-        StartCoroutine(TemporarilyDeactivate(1.7f));
+        TemporarilyDeactivate(1700);
     }
 
-    private IEnumerator TemporarilyDeactivate(float delay)
+    private async void TemporarilyDeactivate(int delay)
     {
-        yield return new WaitForSeconds(delay);
+        await Task.Delay(delay);
         gameObject.SetActive(false);
         body.bodyType = RigidbodyType2D.Kinematic;
     }
