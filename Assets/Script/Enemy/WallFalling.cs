@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -6,7 +6,7 @@ public class WallFalling : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D body;
     [SerializeField] private Collider2D colliders;
-    [Range(0f, 10f)] [SerializeField] private float timeFalling;
+    [Range(0, 10)] [SerializeField] private int timeFalling;
     private Vector2 startPos;
 
     private void Start()
@@ -18,7 +18,7 @@ public class WallFalling : MonoBehaviour
     {
         if (HuyManager.PlayerIsDeath())
         {
-            StartCoroutine(WaitingReset());
+            WaitToReset();
         }
     }
 
@@ -26,20 +26,20 @@ public class WallFalling : MonoBehaviour
     {
         if (other.collider.CompareTag("Player"))
         {
-            StartCoroutine(WaitingFallingDown(timeFalling));
+            WaitToFalling(timeFalling * 1000);
         }
     }
 
-    private IEnumerator WaitingFallingDown(float delay)
+    private async void WaitToFalling(int delay)
     {
-        yield return new WaitForSeconds(delay);
+        await Task.Delay(delay);
         body.bodyType = RigidbodyType2D.Dynamic;
         colliders.isTrigger = true;
     }
 
-    private IEnumerator WaitingReset()
+    private async void WaitToReset()
     {
-        yield return new WaitForSeconds(3.5f);
+        await Task.Delay(3500);
         body.bodyType = RigidbodyType2D.Static;
         body.transform.position = startPos;
         colliders.isTrigger = false;

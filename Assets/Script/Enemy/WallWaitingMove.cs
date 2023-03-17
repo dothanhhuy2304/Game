@@ -1,6 +1,5 @@
-using UnityEngine;
-using Game.Core;
 using Game.Player;
+using UnityEngine;
 
 namespace Game.Enemy
 {
@@ -15,11 +14,11 @@ namespace Game.Enemy
         private Vector3 startTrans = Vector3.zero;
 
         private SpriteRenderer spriteRenderer;
+
         private void Start()
         {
             character = CharacterController2D.instance;
             startTrans = transform.position;
-            //
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
@@ -67,7 +66,7 @@ namespace Game.Enemy
 
             if (other.collider.CompareTag("Player"))
             {
-                character.transform.parent = transform;
+                character.transform.SetParent(transform);
                 isMoving = true;
                 isComeback = false;
                 playerExit = false;
@@ -78,7 +77,7 @@ namespace Game.Enemy
         {
             if (other.collider.CompareTag("Player"))
             {
-                character.transform.parent = null;
+                character.transform.SetParent(null);
                 playerExit = true;
             }
         }

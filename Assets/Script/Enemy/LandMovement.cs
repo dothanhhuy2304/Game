@@ -25,7 +25,7 @@ namespace Game.Enemy
         {
             if (other.collider.CompareTag("Player"))
             {
-                character.transform.parent = transform;
+                character.transform.SetParent(transform);
             }
         }
 
@@ -33,7 +33,7 @@ namespace Game.Enemy
         {
             if (other.collider.CompareTag("Player"))
             {
-                character.transform.parent = null;
+                character.transform.SetParent(null);
             }
         }
     }
