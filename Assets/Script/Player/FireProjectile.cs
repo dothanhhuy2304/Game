@@ -1,13 +1,8 @@
-using System;
-using System.Collections;
-using System.Threading.Tasks;
 using DG.Tweening;
-using UnityEngine;
 using Game.Enemy;
-using Game.Player;
 using Game.GamePlay;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
+using Game.Player;
+using UnityEngine;
 
 public class FireProjectile : MonoBehaviour
 {
@@ -66,7 +61,7 @@ public class FireProjectile : MonoBehaviour
     private void Arrived()
     {
         bulletPrefab.SetActive(false);
-        StartCoroutine(nameof(TemporarilyDeactivate), 1.7f);
+        TemporarilyDeactivate(1.7f);
     }
 
     private static Quaternion LookAt2D(Vector2 forward)
@@ -82,7 +77,7 @@ public class FireProjectile : MonoBehaviour
             targetPetEnemy = (petAI.closestEnemy.position - transform.position).normalized;
         }
 
-        TemporarilyDeactivate(1700);
+        TemporarilyDeactivate(1.7f);
         if (body.isKinematic)
         {
             switch (enemyType)
@@ -280,14 +275,18 @@ public class FireProjectile : MonoBehaviour
 
         AudioManager.instance.Play("Player_Bullet_Explosion_1");
         body.bodyType = RigidbodyType2D.Static;
-        TemporarilyDeactivate(1700);
+        TemporarilyDeactivate(1.7f);
     }
 
-    private async void TemporarilyDeactivate(int delay)
+    private void TemporarilyDeactivate(float delay)
     {
-        await Task.Delay(delay);
-        gameObject.SetActive(false);
-        body.bodyType = RigidbodyType2D.Kinematic;
+        DOTween.Sequence()
+            .AppendInterval(delay)
+            .AppendCallback(() =>
+            {
+                gameObject.SetActive(false);
+                body.bodyType = RigidbodyType2D.Kinematic;
+            }).Play();
     }
 
     public void Shoot(Transform trans)

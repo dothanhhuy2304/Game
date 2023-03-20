@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -26,22 +26,30 @@ public class WallFalling : MonoBehaviour
     {
         if (other.collider.CompareTag("Player"))
         {
-            WaitToFalling(timeFalling * 1000);
+            WaitToFalling(timeFalling);
         }
     }
 
-    private async void WaitToFalling(int delay)
+    private void WaitToFalling(int delay)
     {
-        await Task.Delay(delay);
-        body.bodyType = RigidbodyType2D.Dynamic;
-        colliders.isTrigger = true;
+        DOTween.Sequence()
+            .AppendInterval(delay)
+            .AppendCallback(() =>
+            {
+                body.bodyType = RigidbodyType2D.Dynamic;
+                colliders.isTrigger = true;
+            }).Play();
     }
 
-    private async void WaitToReset()
+    private void WaitToReset()
     {
-        await Task.Delay(3500);
-        body.bodyType = RigidbodyType2D.Static;
-        body.transform.position = startPos;
-        colliders.isTrigger = false;
+        DOTween.Sequence()
+            .AppendInterval(3.5f)
+            .AppendCallback(() =>
+            {
+                body.bodyType = RigidbodyType2D.Static;
+                body.transform.position = startPos;
+                colliders.isTrigger = false;
+            }).Play();
     }
 }
