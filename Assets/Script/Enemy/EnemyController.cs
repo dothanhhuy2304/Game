@@ -32,7 +32,7 @@ namespace Game.Enemy
         [SerializeField] protected float maxTimeAttack;
         [SerializeField] protected Transform offsetAttack;
         [SerializeField] protected Vector2 positionAttack;
-        protected bool isRangeAttack;
+        [SerializeField] protected CheckCollision checkCollision;
         protected bool isHitGrounds;
 
         protected virtual void Start()

@@ -15,7 +15,6 @@ namespace Game.Enemy
         private static readonly int IsRun = Animator.StringToHash("isRun");
         private static readonly int IsAttackSword = Animator.StringToHash("isAttack1");
         private bool wasAttackSword;
-        
 
         private void Awake()
         {
@@ -47,55 +46,48 @@ namespace Game.Enemy
 
         private void FixedUpdate()
         {
-            if (!HuyManager.PlayerIsDeath())
+            if (checkCollision.canAttack)
             {
-                //check again
-                RaycastHit2D hit = Physics2D.Linecast(currentTrans.position, playerCharacter.transform.position, 1 << LayerMask.NameToLayer("ground"));
-                if (hit)
+                if (!HuyManager.PlayerIsDeath())
                 {
-                    if (hit.collider.CompareTag("ground"))
+                    if (enemySetting.enemyHeal.EnemyDeath())
                     {
                         if (enemySetting.canMoving)
                         {
-                            MoveToPosition();
+                            body.MovePosition(body.transform.position);
                         }
-
-                        return;
                     }
-                }
-
-                if (enemySetting.enemyHeal.EnemyDeath())
-                {
-                    if (enemySetting.canMoving)
+                    else
                     {
-                        body.MovePosition(body.transform.position);
+                        if (!HuyManager.PlayerIsDeath())
+                        {
+                            SNinjaAttack();
+                        }
+                        else
+                        {
+                            if (enemySetting.canMoving)
+                            {
+                                DOTween.Sequence()
+                                    .AppendInterval(0.5f)
+                                    .AppendCallback(MoveToPosition).Play();
+                            }
+                        }
                     }
                 }
                 else
                 {
-                    if (!HuyManager.PlayerIsDeath())
+                    if (enemySetting.canMoving)
                     {
-                        SNinjaAttack();
-                    }
-                    else
-                    {
-                        if (enemySetting.canMoving)
-                        {
-                            DOTween.Sequence()
-                                .AppendInterval(0.5f)
-                                .AppendCallback(MoveToPosition).Play();
-                        }
+                        DOTween.Sequence()
+                            .AppendInterval(0.5f)
+                            .AppendCallback(MoveToPosition).Play();
                     }
                 }
             }
             else
             {
-                if (enemySetting.canMoving)
-                {
-                    DOTween.Sequence()
-                        .AppendInterval(0.5f)
-                        .AppendCallback(MoveToPosition).Play();
-                }
+                //check again
+                MoveToPosition();
             }
         }
 
