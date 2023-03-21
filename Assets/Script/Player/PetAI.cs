@@ -22,6 +22,7 @@ namespace Game.Player
         private const float TimeAttack = 3f;
         [SerializeField] private Animator animator;
         private static readonly int IsRun = Animator.StringToHash("isRun");
+        private bool checkHitGround;
 
         private void Start()
         {
@@ -63,10 +64,12 @@ namespace Game.Player
             {
                 if (hit.collider.CompareTag("ground"))
                 {
+                    checkHitGround = true;
                     return;
                 }
             }
 
+            checkHitGround = false;
             if (enemyContact)
             {
                 if (Vector2.Distance(transform.position, closestEnemy.position) < rangeAttack)
@@ -85,16 +88,25 @@ namespace Game.Player
         {
             if (other.CompareTag("Enemy"))
             {
-                closestEnemy.GetComponentInChildren<SpriteRenderer>().color = new Color(1f, 0.6f, 0.5f);
-                enemyContact = true;
+                if (!checkHitGround)
+                {
+                    closestEnemy.GetComponentInChildren<SpriteRenderer>().DOColor(new Color(1f, 0.6f, 0.5f),0.3f);
+                    enemyContact = true;
+                }
+                else
+                {
+                    closestEnemy.GetComponentInChildren<SpriteRenderer>().DOColor(Color.white, 0.3f);
+                    enemyContact = false;
+                }
             }
         }
+        
 
         private void OnTriggerExit2D(Collider2D other)
         {
             if (other.CompareTag("Enemy"))
             {
-                other.GetComponentInChildren<SpriteRenderer>().color = Color.white;
+                other.GetComponentInChildren<SpriteRenderer>().DOColor(Color.white, 0.3f);
                 enemyContact = false;
             }
         }
@@ -104,7 +116,7 @@ namespace Game.Player
             //Vector2 angle = (player.transform.position - transform.position).normalized;
             //body.velocity = Vector2.SmoothDamp(body.velocity, angle * petData.movingSpeed, ref velocity, .05f);
             Vector2 playerPos = player.transform.position;
-            body.transform.DOMove(new Vector3(playerPos.x - 1f, playerPos.y + 1), 0.5f).SetEase(Ease.Linear);
+            body.transform.DOMove(new Vector3(playerPos.x + Random.Range(- 2f , 2f), playerPos.y + 1), 0.5f).SetEase(Ease.Linear);
         }
 
         private void BulletAttack()
