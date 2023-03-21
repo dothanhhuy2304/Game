@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Game.GamePlay;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Game.Player
 {
@@ -13,7 +14,7 @@ namespace Game.Player
 
         private void LateUpdate()
         {
-            if (HuyManager.PlayerIsDeath() || UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
+            if (HuyManager.PlayerIsDeath() || EventSystem.current.IsPointerOverGameObject()) return;
             HuyManager.SetTimeAttack(ref timeAttack);
             if (timeAttack <= 0)
             {
@@ -21,14 +22,14 @@ namespace Game.Player
                 {
                     if (Input.GetMouseButtonDown(0))
                     {
-                        Bullet();
+                        BulletAttack();
                         timeAttack = resetTimeAttack;
                     }
                 }
             }
         }
 
-        private void Bullet()
+        private void BulletAttack()
         {
             projectiles[FindBullet()].transform.position = transform.TransformPoint(offset);
             projectiles[FindBullet()].transform.rotation = transform.rotation;
