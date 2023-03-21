@@ -1,3 +1,4 @@
+using System.Linq;
 using DG.Tweening;
 using Game.GamePlay;
 using UnityEngine;
@@ -15,6 +16,8 @@ namespace Game.Enemy
         private static readonly int IsRun = Animator.StringToHash("isRun");
         private static readonly int IsAttackSword = Animator.StringToHash("isAttack1");
         private bool wasAttackSword;
+        private bool canAttack;
+        [SerializeField] private LayerMask mask;
 
         private void Awake()
         {
@@ -46,7 +49,21 @@ namespace Game.Enemy
 
         private void FixedUpdate()
         {
-            if (checkCollision.canAttack)
+            RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, mask);
+            Debug.DrawLine(transform.position, playerCharacter.transform.position);
+            if (hit)
+            {
+                if (hit.collider.CompareTag("Player"))
+                {
+                    canAttack = true;
+                }
+                else if (hit.collider.CompareTag("ground"))
+                {
+                    canAttack = false;
+                }
+            }
+
+            if (canAttack)
             {
                 if (!HuyManager.PlayerIsDeath())
                 {
@@ -86,8 +103,12 @@ namespace Game.Enemy
             }
             else
             {
-                //check again
-                MoveToPosition();
+                if (enemySetting.canMoving)
+                {
+                    DOTween.Sequence()
+                        .AppendInterval(0.3f)
+                        .AppendCallback(MoveToPosition).Play();
+                }
             }
         }
 
