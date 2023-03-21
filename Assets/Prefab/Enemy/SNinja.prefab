@@ -143,6 +143,7 @@ MonoBehaviour:
   positionAttack: {x: 0.45, y: 0}
   radiusAttack: 2
   target: {x: 0, y: 0, z: 0}
+  currentTrans: {fileID: 3443694513160801486}
   timeDurationMoving: 0
 --- !u!1 &7307979241942103034
 GameObject:

@@ -48,13 +48,13 @@ namespace Game.Enemy
         }
 
 
-        protected void EvaluateCheckRangeAttack(Component col, bool canAttack)
-        {
-            if (col.CompareTag("Player"))
-            {
-                isRangeAttack = canAttack;
-            }
-        }
+        // protected void EvaluateCheckRangeAttack(Component col, bool canAttack)
+        // {
+        //     if (col.CompareTag("Player"))
+        //     {
+        //         isRangeAttack = canAttack;
+        //     }
+        // }
 
         protected void AttackBulletDirection()
         {

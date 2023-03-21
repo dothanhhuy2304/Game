@@ -30,6 +30,12 @@ namespace Game.Enemy
                 HuyManager.SetTimeAttack(ref currentTime);
                 if ((playerCharacter.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
+                    RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, 1 << LayerMask.NameToLayer("ground"));
+                    if (hit && hit.collider.CompareTag("ground"))
+                    {
+                        return;
+                    }
+
                     if (canFlip)
                     {
                         Flip();
@@ -53,10 +59,10 @@ namespace Game.Enemy
                 .Play();
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            EvaluateCheckRangeAttack(other, true);
-        }
+        // private void OnTriggerEnter2D(Collider2D other)
+        // {
+        //     EvaluateCheckRangeAttack(other, true);
+        // }
 
         private void OnTriggerStay2D(Collider2D other)
         {
@@ -68,7 +74,7 @@ namespace Game.Enemy
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            EvaluateCheckRangeAttack(other, false);
+            //EvaluateCheckRangeAttack(other, false);
             if (other.CompareTag("ground"))
             {
                 isHitGrounds = false;

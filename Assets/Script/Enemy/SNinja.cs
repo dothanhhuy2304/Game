@@ -9,10 +9,13 @@ namespace Game.Enemy
         [SerializeField] private float radiusAttack;
         [Header("SetUp Patrol")]
         [SerializeField] private Vector3 target;
+
+        [SerializeField] private Transform currentTrans;
         [SerializeField] private float timeDurationMoving;
         private static readonly int IsRun = Animator.StringToHash("isRun");
         private static readonly int IsAttackSword = Animator.StringToHash("isAttack1");
         private bool wasAttackSword;
+        
 
         private void Awake()
         {
@@ -46,6 +49,21 @@ namespace Game.Enemy
         {
             if (!HuyManager.PlayerIsDeath())
             {
+                //check again
+                RaycastHit2D hit = Physics2D.Linecast(currentTrans.position, playerCharacter.transform.position, 1 << LayerMask.NameToLayer("ground"));
+                if (hit)
+                {
+                    if (hit.collider.CompareTag("ground"))
+                    {
+                        if (enemySetting.canMoving)
+                        {
+                            MoveToPosition();
+                        }
+
+                        return;
+                    }
+                }
+
                 if (enemySetting.enemyHeal.EnemyDeath())
                 {
                     if (enemySetting.canMoving)
@@ -224,10 +242,10 @@ namespace Game.Enemy
                 .AppendCallback(AttackBulletDirection);
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            EvaluateCheckRangeAttack(other, true);
-        }
+        // private void OnTriggerEnter2D(Collider2D other)
+        // {
+        //     EvaluateCheckRangeAttack(other, true);
+        // }
         
         private void OnTriggerStay2D(Collider2D other)
         {
@@ -239,7 +257,7 @@ namespace Game.Enemy
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            EvaluateCheckRangeAttack(other, false);
+            //EvaluateCheckRangeAttack(other, false);
             if (other.CompareTag("ground"))
             {
                 isHitGrounds = false;

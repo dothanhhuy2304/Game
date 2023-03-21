@@ -1,4 +1,3 @@
-using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 
@@ -6,6 +5,7 @@ namespace Game.Enemy
 {
     public class Trunk : EnemyController
     {
+        [SerializeField] private float rangeAttack = 10f;
         private void Update()
         {
             if (HuyManager.PlayerIsDeath())
@@ -29,14 +29,20 @@ namespace Game.Enemy
                 HuyManager.SetTimeAttack(ref currentTime);
                 if (!enemySetting.enemyHeal.EnemyDeath())
                 {
-                    if (isRangeAttack)
+                    if ((playerCharacter.transform.position - transform.position).magnitude < rangeAttack)
                     {
+                        RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, 1 << LayerMask.NameToLayer("ground"));
+                        if (hit && hit.collider.CompareTag("ground"))
+                        {
+                            return;
+                        }
+
                         Flip();
                         if (currentTime <= 0)
                         {
                             if (!HuyManager.PlayerIsDeath() || !enemySetting.enemyHeal.EnemyDeath())
                             {
-                                StartCoroutine(DurationAttack(0.5f));
+                                DurationAttack(0.5f);
                             }
 
                             animator.SetTrigger("isAttack");
@@ -47,16 +53,17 @@ namespace Game.Enemy
             }
         }
 
-        private IEnumerator DurationAttack(float duration)
+        private void DurationAttack(float duration)
         {
-            yield return new WaitForSeconds(duration);
-            AttackBulletArc();
+            DOTween.Sequence()
+                .AppendInterval(duration)
+                .AppendCallback(AttackBulletArc).Play();
         }
-        
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            EvaluateCheckRangeAttack(other, true);
-        }
+
+        // private void OnTriggerEnter2D(Collider2D other)
+        // {
+        //     EvaluateCheckRangeAttack(other, true);
+        // }
         
         private void OnTriggerStay2D(Collider2D other)
         {
@@ -68,7 +75,7 @@ namespace Game.Enemy
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            EvaluateCheckRangeAttack(other, false);
+            //EvaluateCheckRangeAttack(other, false);
             if (other.CompareTag("ground"))
             {
                 isHitGrounds = false;
