@@ -253,6 +253,9 @@ MonoBehaviour:
   offsetAttack: {fileID: 1778465740}
   positionAttack: {x: -1, y: 0}
   canFlip: 0
+  mask:
+    serializedVersion: 2
+    m_Bits: 192
 --- !u!50 &3137032912317739878
 Rigidbody2D:
   serializedVersion: 4

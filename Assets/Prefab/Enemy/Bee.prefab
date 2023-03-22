@@ -214,6 +214,9 @@ MonoBehaviour:
   maxTimeAttack: 4
   offsetAttack: {fileID: 2778163511123401750}
   positionAttack: {x: 0, y: -1}
+  mask:
+    serializedVersion: 2
+    m_Bits: 192
 --- !u!114 &7350970975510589207
 MonoBehaviour:
   m_ObjectHideFlags: 0

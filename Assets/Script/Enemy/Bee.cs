@@ -6,6 +6,7 @@ namespace Game.Enemy
     public class Bee : EnemyController
     {
         private static readonly int IsAttack = Animator.StringToHash("isAttack");
+        [SerializeField] private LayerMask mask;
 
         private void Update()
         {
@@ -30,21 +31,19 @@ namespace Game.Enemy
                 HuyManager.SetTimeAttack(ref currentTime);
                 if ((playerCharacter.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
-                    RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, 1 << LayerMask.NameToLayer("ground"));
+                    RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, mask);
                     if (hit)
                     {
-                        if (hit.collider.CompareTag("ground"))
+                        if (hit.collider.CompareTag("Player"))
                         {
-                            return;
+                            Flip();
+                            if (currentTime <= 0)
+                            {
+                                BulletAttack();
+                                animator.SetTrigger(IsAttack);
+                                currentTime = maxTimeAttack;
+                            }
                         }
-                    }
-
-                    Flip();
-                    if (currentTime <= 0)
-                    {
-                        BulletAttack();
-                        animator.SetTrigger(IsAttack);
-                        currentTime = maxTimeAttack;
                     }
                 }
             }
@@ -54,31 +53,8 @@ namespace Game.Enemy
         {
             DOTween.Sequence()
                 .AppendInterval(0.5f)
-                .AppendCallback(AttackBulletDirection);
+                .AppendCallback(AttackBulletDirection)
+                .Play();
         }
-
-        // private void OnTriggerEnter2D(Collider2D other)
-        // {
-        //     EvaluateCheckRangeAttack(other, true);
-        // }
-        
-        private void OnTriggerStay2D(Collider2D other)
-        {
-            if (other.CompareTag("ground"))
-            {
-                isHitGrounds = true;
-            }
-        }
-
-        private void OnTriggerExit2D(Collider2D other)
-        {
-            //EvaluateCheckRangeAttack(other, false);
-            if (other.CompareTag("ground"))
-            {
-                isHitGrounds = false;
-            }
-        }
-        
-
     }
 }

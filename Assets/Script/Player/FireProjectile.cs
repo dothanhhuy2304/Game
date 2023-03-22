@@ -37,6 +37,7 @@ public class FireProjectile : MonoBehaviour
         }
     }
 
+    #region TrunkEnemy
     private void Update()
     {
         if (enemyType == EnemyType.Trunk)
@@ -68,7 +69,7 @@ public class FireProjectile : MonoBehaviour
     {
         return Quaternion.Euler(0, 0, Mathf.Atan2(forward.y, forward.x) * Mathf.Rad2Deg);
     }
-    //end trunk
+    #endregion
 
     private void BulletDirection(Transform trans)
     {
@@ -84,7 +85,7 @@ public class FireProjectile : MonoBehaviour
             {
                 case EnemyType.Ninja:
                 {
-                    body.velocity = GetTarget(trans) * bulletSpeed;
+                    body.velocity = GetDistanceObjectToPlayer(trans) * bulletSpeed;
                     break;
                 }
                 case EnemyType.CarnivorousPlant:
@@ -103,7 +104,7 @@ public class FireProjectile : MonoBehaviour
                     break;
                 }
                 case EnemyType.Bee:
-                    body.velocity = GetTarget(trans) * bulletSpeed;
+                    body.velocity = GetDistanceObjectToPlayer(trans) * bulletSpeed;
                     break;
             }
         }
@@ -255,7 +256,7 @@ public class FireProjectile : MonoBehaviour
         }
     }
 
-    private Vector2 GetTarget(Transform trans)
+    private Vector2 GetDistanceObjectToPlayer(Transform trans)
     {
         return (playerCharacter.transform.position - trans.position).normalized;
     }
@@ -266,15 +267,14 @@ public class FireProjectile : MonoBehaviour
         if (explosionFxObj)
         {
             explosionFxObj.gameObject.SetActive(true);
-            explosionFxObj.Play();
         }
         else
         {
             explosionSpriteFxObj.SetActive(true);
         }
 
-        AudioManager.instance.Play("Player_Bullet_Explosion_1");
         body.bodyType = RigidbodyType2D.Static;
+        AudioManager.instance.Play("Player_Bullet_Explosion_1");
         TemporarilyDeactivate(1.7f);
     }
 
@@ -284,8 +284,16 @@ public class FireProjectile : MonoBehaviour
             .AppendInterval(delay)
             .AppendCallback(() =>
             {
-                gameObject.SetActive(false);
+                if (explosionFxObj)
+                {
+                    explosionFxObj.gameObject.SetActive(false);
+                }
+                else
+                {
+                    explosionSpriteFxObj.SetActive(false);
+                }
                 body.bodyType = RigidbodyType2D.Kinematic;
+                gameObject.SetActive(false);
             }).Play();
     }
 
@@ -294,14 +302,6 @@ public class FireProjectile : MonoBehaviour
         gameObject.SetActive(true);
         bulletPrefab.SetActive(true);
         BulletDirection(trans);
-        if (explosionFxObj)
-        {
-            explosionFxObj.gameObject.SetActive(false);
-        }
-        else
-        {
-            explosionSpriteFxObj.SetActive(false);
-        }
     }
 
 }

@@ -130,6 +130,10 @@ MonoBehaviour:
   maxTimeAttack: 5
   offsetAttack: {fileID: 6824136752933056127}
   positionAttack: {x: -1, y: -0.25}
+  rangeAttack: 10
+  mask:
+    serializedVersion: 2
+    m_Bits: 192
 --- !u!50 &5606069922568021621
 Rigidbody2D:
   serializedVersion: 4

@@ -32,7 +32,6 @@ namespace Game.Enemy
         [SerializeField] protected float maxTimeAttack;
         [SerializeField] protected Transform offsetAttack;
         [SerializeField] protected Vector2 positionAttack;
-        [SerializeField] protected CheckCollision checkCollision;
         protected bool isHitGrounds;
 
         protected virtual void Start()
@@ -46,30 +45,13 @@ namespace Game.Enemy
             float angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(new Vector3(0, angle + offsetFlip, 0));
         }
-
-
-        // protected void EvaluateCheckRangeAttack(Component col, bool canAttack)
-        // {
-        //     if (col.CompareTag("Player"))
-        //     {
-        //         isRangeAttack = canAttack;
-        //     }
-        // }
-
+        
         protected void AttackBulletDirection()
         {
             projectiles[FindBullet()].transform.position = transform.TransformPoint(positionAttack);
-            Vector2 directionToPlayer = (playerCharacter.transform.position - transform.position).normalized;
+            Vector2 direction = (playerCharacter.transform.position - transform.position).normalized;
             projectiles[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f,
-                Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg);
-            projectiles[FindBullet()].Shoot(transform);
-            AudioManager.instance.Play("Enemy_Attack_Shoot");
-        }
-
-        protected void AttackBulletArc()
-        {
-            projectiles[FindBullet()].transform.position = transform.TransformPoint(positionAttack);
-            projectiles[FindBullet()].transform.rotation = Quaternion.identity;
+                Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
             projectiles[FindBullet()].Shoot(transform);
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
@@ -87,7 +69,9 @@ namespace Game.Enemy
             for (var i = 0; i < projectiles.Count; i++)
             {
                 if (!projectiles[i].gameObject.activeSelf)
+                {
                     return i;
+                }
             }
 
             return 0;

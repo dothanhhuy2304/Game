@@ -188,7 +188,6 @@ namespace Game.Enemy
                 {
                     Vector3 currentPosition = body.transform.position;
                     Vector3 targetPosition = new Vector3(playerCharacter.transform.position.x - currentPosition.x, 0f, 0f);
-                    //body.velocity = targetPosition * (30f * Time.fixedDeltaTime);
                     body.MovePosition(currentPosition + targetPosition * Time.fixedDeltaTime);
                     animator.SetBool(IsRun, true);
                 }
@@ -247,19 +246,14 @@ namespace Game.Enemy
             }
         }
 
-
         private void ShootAttack(float durationAttack)
         {
             DOTween.Sequence()
                 .AppendInterval(durationAttack)
-                .AppendCallback(AttackBulletDirection);
+                .AppendCallback(AttackBulletDirection)
+                .Play();
         }
 
-        // private void OnTriggerEnter2D(Collider2D other)
-        // {
-        //     EvaluateCheckRangeAttack(other, true);
-        // }
-        
         private void OnTriggerStay2D(Collider2D other)
         {
             if (other.CompareTag("ground"))
@@ -270,7 +264,6 @@ namespace Game.Enemy
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            //EvaluateCheckRangeAttack(other, false);
             if (other.CompareTag("ground"))
             {
                 isHitGrounds = false;

@@ -20,7 +20,7 @@ namespace Game.Player
             {
                 if (!HuyManager.GetPlayerIsHurt())
                 {
-                    if (Input.GetMouseButtonDown(0))
+                    if (Input.GetMouseButton(0)||Input.GetKey(KeyCode.L))
                     {
                         BulletAttack();
                         timeAttack = resetTimeAttack;

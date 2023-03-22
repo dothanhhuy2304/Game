@@ -6,6 +6,8 @@ namespace Game.Enemy
     public class Trunk : EnemyController
     {
         [SerializeField] private float rangeAttack = 10f;
+        [SerializeField] private LayerMask mask;
+
         private void Update()
         {
             if (HuyManager.PlayerIsDeath())
@@ -24,29 +26,23 @@ namespace Game.Enemy
                 }
             }
 
-            if (!HuyManager.PlayerIsDeath())
+            if (!HuyManager.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
             {
                 HuyManager.SetTimeAttack(ref currentTime);
-                if (!enemySetting.enemyHeal.EnemyDeath())
+                if ((playerCharacter.transform.position - transform.position).magnitude < rangeAttack)
                 {
-                    if ((playerCharacter.transform.position - transform.position).magnitude < rangeAttack)
+                    RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, mask);
+                    if (hit)
                     {
-                        RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, 1 << LayerMask.NameToLayer("ground"));
-                        if (hit && hit.collider.CompareTag("ground"))
+                        if (hit.collider.CompareTag("Player"))
                         {
-                            return;
-                        }
-
-                        Flip();
-                        if (currentTime <= 0)
-                        {
-                            if (!HuyManager.PlayerIsDeath() || !enemySetting.enemyHeal.EnemyDeath())
+                            Flip();
+                            if (currentTime <= 0)
                             {
                                 DurationAttack(0.5f);
+                                animator.SetTrigger("isAttack");
+                                currentTime = maxTimeAttack;
                             }
-
-                            animator.SetTrigger("isAttack");
-                            currentTime = maxTimeAttack;
                         }
                     }
                 }
@@ -57,29 +53,8 @@ namespace Game.Enemy
         {
             DOTween.Sequence()
                 .AppendInterval(duration)
-                .AppendCallback(AttackBulletArc).Play();
-        }
-
-        // private void OnTriggerEnter2D(Collider2D other)
-        // {
-        //     EvaluateCheckRangeAttack(other, true);
-        // }
-        
-        private void OnTriggerStay2D(Collider2D other)
-        {
-            if (other.CompareTag("ground"))
-            {
-                isHitGrounds = true;
-            }
-        }
-
-        private void OnTriggerExit2D(Collider2D other)
-        {
-            //EvaluateCheckRangeAttack(other, false);
-            if (other.CompareTag("ground"))
-            {
-                isHitGrounds = false;
-            }
+                .AppendCallback(AttackBullet)
+                .Play();
         }
     }
 }

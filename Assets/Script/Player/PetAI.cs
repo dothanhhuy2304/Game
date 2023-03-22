@@ -54,8 +54,6 @@ namespace Game.Player
             }
         }
 
-
-
         private void CheckAttack()
         {
             closestEnemy = FindClosestEnemy();

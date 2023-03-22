@@ -6,6 +6,7 @@ namespace Game.Enemy
     public class CarnivorousPlant : EnemyController
     {
         [SerializeField] private bool canFlip;
+        [SerializeField] private LayerMask mask;
 
         private void FixedUpdate()
         {
@@ -30,22 +31,23 @@ namespace Game.Enemy
                 HuyManager.SetTimeAttack(ref currentTime);
                 if ((playerCharacter.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
-                    RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, 1 << LayerMask.NameToLayer("ground"));
-                    if (hit && hit.collider.CompareTag("ground"))
+                    RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, mask);
+                    if (hit)
                     {
-                        return;
-                    }
+                        if (hit.collider.CompareTag("Player"))
+                        {
+                            if (canFlip)
+                            {
+                                Flip();
+                            }
 
-                    if (canFlip)
-                    {
-                        Flip();
-                    }
-
-                    if (currentTime <= 0f)
-                    {
-                        animator.SetTrigger("isAttack");
-                        BulletAttack();
-                        currentTime = maxTimeAttack;
+                            if (currentTime <= 0f)
+                            {
+                                BulletAttack();
+                                animator.SetTrigger("isAttack");
+                                currentTime = maxTimeAttack;
+                            }
+                        }
                     }
                 }
             }
@@ -58,28 +60,5 @@ namespace Game.Enemy
                 .AppendCallback(AttackBullet)
                 .Play();
         }
-
-        // private void OnTriggerEnter2D(Collider2D other)
-        // {
-        //     EvaluateCheckRangeAttack(other, true);
-        // }
-
-        private void OnTriggerStay2D(Collider2D other)
-        {
-            if (other.CompareTag("ground"))
-            {
-                isHitGrounds = true;
-            }
-        }
-
-        private void OnTriggerExit2D(Collider2D other)
-        {
-            //EvaluateCheckRangeAttack(other, false);
-            if (other.CompareTag("ground"))
-            {
-                isHitGrounds = false;
-            }
-        }
-
     }
 }
