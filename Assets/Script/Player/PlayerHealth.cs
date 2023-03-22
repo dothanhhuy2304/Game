@@ -73,15 +73,15 @@ namespace Game.Player
         public void Die()
         {
             DOTween.Sequence()
+
                 .AppendCallback(() =>
                 {
+                    //set score
                     playerCharacter.playerData.currentHealth = 0f;
-                    PlayAnimPlayerDeath(playerCharacter.animator);
+                    PlayerDeathAnim(playerCharacter.animator);
                     gameManager.numberScore = 0;
                     gameManager.SetScore(0);
-                }).AppendInterval(3f)
-                .AppendCallback(() =>
-                {
+                    //end set score
                     HuyManager.SetPlayerIsDeath(1);
                     playerCharacter.body.bodyType = RigidbodyType2D.Static;
                     playerCharacter.col.enabled = false;
@@ -95,16 +95,11 @@ namespace Game.Player
                     position.position = new Vector3(UserPref.currentPosition[0], UserPref.currentPosition[1], UserPref.currentPosition[2]);
                     petAi.transform.position = position.up;
                     playerCharacter.animator.SetLayerWeight(1, 0);
+                    playerCharacter.body.bodyType = RigidbodyType2D.Dynamic;
                     playerCharacter.col.enabled = true;
                     HuyManager.SetPlayerIsDeath(0);
                     Car.instance.eventResetCar?.Invoke();
                 }).Play();
-        }
-
-        private static void PlayAnimPlayerDeath(Animator animator)
-        {
-            animator.SetTrigger("is_Death");
-            AudioManager.instance.Play("Enemy_Death");
         }
 
         public void DieByFalling()
@@ -125,6 +120,7 @@ namespace Game.Player
                     position.position = new Vector3(UserPref.currentPosition[0], UserPref.currentPosition[1], UserPref.currentPosition[2]);
                     petAi.transform.position = position.up;
                     HuyManager.SetPlayerIsDeath(0);
+                    Car.instance.eventResetCar?.Invoke();
                 }).Play();
         }
 
@@ -133,16 +129,27 @@ namespace Game.Player
             DOTween.Sequence()
                 .AppendCallback(() =>
                 {
-                    playerCharacter.animator.SetTrigger("is_Hurt");
                     playerCharacter.body.bodyType = RigidbodyType2D.Static;
+                    PlayerHurtAnim(playerCharacter.animator);
                     HuyManager.SetPlayerIsHurt(1);
-                    AudioManager.instance.Play("Player_Hurt");
                 }).AppendInterval(0.5f)
                 .AppendCallback(() =>
                 {
                     playerCharacter.body.bodyType = RigidbodyType2D.Dynamic;
                     HuyManager.SetPlayerIsHurt(0);
                 }).Play();
+        }
+
+        private static void PlayerDeathAnim(Animator animator)
+        {
+            animator.SetTrigger("is_Death");
+            AudioManager.instance.Play("Enemy_Death");
+        }
+
+        private static void PlayerHurtAnim(Animator animator)
+        {
+            animator.SetTrigger("is_Hurt");
+            AudioManager.instance.Play("Player_Hurt");
         }
 
         private void OnApplicationQuit()

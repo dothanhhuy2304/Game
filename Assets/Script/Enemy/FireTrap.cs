@@ -34,8 +34,7 @@ public class FireTrap : MonoBehaviour
 
     private IEnumerator IeFireOn(float delay)
     {
-        if (HuyManager.PlayerIsDeath()) yield break;
-        if (HuyManager.GetPlayerIsHurt()) yield break;
+        if (HuyManager.PlayerIsDeath() || HuyManager.GetPlayerIsHurt()) yield break;
         if (isFirst)
         {
             animator.Play("Begin");

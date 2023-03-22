@@ -11,21 +11,19 @@ public class Spike : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (!HuyManager.PlayerIsDeath())
+            if (HuyManager.PlayerIsDeath() || HuyManager.GetPlayerIsHurt()) return;
+            HuyManager.SetTimeAttack(ref timeAttack);
+            if (isHurts)
             {
-                HuyManager.SetTimeAttack(ref timeAttack);
-                if (isHurts)
+                if (timeAttack <= 0f)
                 {
-                    if (timeAttack <= 0f)
-                    {
-                        PlayerHealth.instance.GetDamage(20f);
-                        timeAttack = maxTimeAttack;
-                    }
+                    PlayerHealth.instance.GetDamage(20f);
+                    timeAttack = maxTimeAttack;
                 }
             }
         }
     }
-    
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))

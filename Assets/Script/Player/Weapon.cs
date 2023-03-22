@@ -10,34 +10,52 @@ namespace Game.Player
         [SerializeField] private List<FireProjectile> projectiles;
         [SerializeField] private Vector2 offset;
         private float timeAttack;
-        [SerializeField] private float resetTimeAttack = 0.5f;
+        [SerializeField] private float resetTimeAttack;
 
         private void LateUpdate()
         {
-            if (HuyManager.PlayerIsDeath() || EventSystem.current.IsPointerOverGameObject()) return;
             HuyManager.SetTimeAttack(ref timeAttack);
+            if (HuyManager.PlayerIsDeath() || HuyManager.GetPlayerIsHurt() || EventSystem.current.IsPointerOverGameObject()) return;
             if (timeAttack <= 0)
             {
-                if (!HuyManager.GetPlayerIsHurt())
+                if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.L))
                 {
-                    if (Input.GetMouseButtonDown(0)||Input.GetKeyDown(KeyCode.L))
-                    {
-                        BulletAttack();
-                        timeAttack = resetTimeAttack;
-                    }
+                    BulletAttack();
+                    timeAttack = resetTimeAttack;
                 }
             }
         }
 
         private void BulletAttack()
         {
-            projectiles[FindBullet()].transform.position = transform.TransformPoint(offset);
-            projectiles[FindBullet()].transform.rotation = transform.rotation;
-            projectiles[FindBullet()].Shoot(transform);
+            int index = FindBullet();
+            projectiles[index].transform.position = transform.TransformPoint(offset);
+            projectiles[index].transform.rotation = transform.rotation;
+            projectiles[index].Shoot(transform);
             AudioManager.instance.Play("Player_Bullet_Shoot");
         }
 
+        private int tempIndex;
+
         private int FindBullet()
+        {
+            if (tempIndex >= projectiles.Count)
+            {
+                return tempIndex = 0;
+            }
+
+            tempIndex++;
+            if (!projectiles[tempIndex].gameObject.activeSelf)
+            {
+                return tempIndex;
+            }
+
+            return 0;
+        }
+
+        #region Old Version
+
+        private int FindBullets()
         {
             for (var i = 0; i < projectiles.Count; i++)
             {
@@ -50,5 +68,6 @@ namespace Game.Player
             return 0;
         }
 
+        #endregion
     }
 }

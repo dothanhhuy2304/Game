@@ -119,9 +119,10 @@ namespace Game.Player
 
         private void BulletAttack()
         {
-            projectiles[FindBullet()].transform.position = transform.position;
-            projectiles[FindBullet()].transform.rotation = transform.rotation;
-            projectiles[FindBullet()].Shoot(transform);
+            int index = FindBullet();
+            projectiles[index].transform.position = transform.position;
+            projectiles[index].transform.rotation = transform.rotation;
+            projectiles[index].Shoot(transform);
         }
 
         private Transform FindClosestEnemy()
@@ -142,14 +143,19 @@ namespace Game.Player
             return trans;
         }
 
+        private int tempIndex;
+
         private int FindBullet()
         {
-            for (var i = 0; i < projectiles.Count; i++)
+            if (tempIndex >= projectiles.Count - 1)
             {
-                if (!projectiles[i].gameObject.activeSelf)
-                {
-                    return i;
-                }
+                return tempIndex = 0;
+            }
+
+            tempIndex++;
+            if (!projectiles[tempIndex].gameObject.activeSelf)
+            {
+                return tempIndex;
             }
 
             return 0;

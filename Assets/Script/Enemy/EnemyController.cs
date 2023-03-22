@@ -48,30 +48,37 @@ namespace Game.Enemy
         
         protected void AttackBulletDirection()
         {
-            projectiles[FindBullet()].transform.position = transform.TransformPoint(positionAttack);
+            int index = FindBullet();
+            projectiles[index].transform.position = transform.TransformPoint(positionAttack);
             Vector2 direction = (playerCharacter.transform.position - transform.position).normalized;
-            projectiles[FindBullet()].transform.rotation = Quaternion.Euler(0f, 0f,
+            projectiles[index].transform.rotation = Quaternion.Euler(0f, 0f, 
                 Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-            projectiles[FindBullet()].Shoot(transform);
+            projectiles[index].Shoot(transform);
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
 
         protected void AttackBullet()
         {
-            projectiles[FindBullet()].transform.position = transform.TransformPoint(positionAttack);
-            projectiles[FindBullet()].transform.rotation = Quaternion.identity;
-            projectiles[FindBullet()].Shoot(transform);
+            int index = FindBullet();
+            projectiles[index].transform.position = transform.TransformPoint(positionAttack);
+            projectiles[index].transform.rotation = Quaternion.identity;
+            projectiles[index].Shoot(transform);
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
 
+        private int tempIndex;
+
         private int FindBullet()
         {
-            for (var i = 0; i < projectiles.Count; i++)
+            if (tempIndex >= projectiles.Count)
             {
-                if (!projectiles[i].gameObject.activeSelf)
-                {
-                    return i;
-                }
+                return tempIndex = 0;
+            }
+
+            tempIndex++;
+            if (!projectiles[tempIndex].gameObject.activeSelf)
+            {
+                return tempIndex;
             }
 
             return 0;
