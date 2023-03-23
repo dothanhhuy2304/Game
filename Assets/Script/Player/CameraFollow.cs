@@ -5,10 +5,8 @@ namespace Game.Player
     public class CameraFollow : MonoBehaviour
     {
         private CharacterController2D playerPosition;
-        [SerializeField] private float smoothValue = 2f;
-        [SerializeField] private float posX = 2f;
-        [SerializeField] private float posY = 1f;
-        private Vector3 targetPos = Vector3.zero;
+        [SerializeField] private float smoothValue;
+        [SerializeField] private Vector2 offset;
 
         private void Start()
         {
@@ -19,9 +17,9 @@ namespace Game.Player
         {
             if (!HuyManager.PlayerIsDeath())
             {
-                var position = playerPosition.transform.position;
-                targetPos = new Vector3(position.x + posX, position.y + posY, -10f);
-                transform.position = Vector3.Lerp(transform.position, targetPos, smoothValue * Time.deltaTime);
+                Vector3 target = playerPosition.transform.position;
+                Vector3 desiredPosition = new Vector3(target.x + offset.x, target.y + offset.y, -10f);
+                transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothValue * Time.deltaTime);
             }
         }
     }

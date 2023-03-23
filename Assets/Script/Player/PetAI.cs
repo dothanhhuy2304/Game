@@ -11,9 +11,9 @@ namespace Game.Player
         public Data petData;
         [SerializeField] private Rigidbody2D body;
         private CharacterController2D player;
-        private Vector2 velocity = Vector2.zero;
+        //private Vector2 velocity = Vector2.zero;
         [SerializeField] private List<FireProjectile> projectiles;
-        [HideInInspector] public List<GameObject> multipleEnemy;
+        private List<GameObject> listEnemyInMap;
         [HideInInspector] public Transform closestEnemy;
         private bool enemyContact;
         [SerializeField] private float distancePlayer;
@@ -27,7 +27,7 @@ namespace Game.Player
         private void Start()
         {
             player = CharacterController2D.instance;
-            multipleEnemy = GameObject.FindGameObjectsWithTag("Enemy").ToList();
+            listEnemyInMap = GameObject.FindGameObjectsWithTag("Enemy").ToList();
         }
 
 
@@ -40,7 +40,7 @@ namespace Game.Player
         {
             if (!HuyManager.PlayerIsDeath())
             {
-                if (Vector3.Distance(player.transform.position, transform.position) > distancePlayer)
+                if ((player.transform.position - transform.position).magnitude > distancePlayer)
                 {
                     MoveToPlayer();
                     animator.SetBool(IsRun, true);
@@ -129,10 +129,10 @@ namespace Game.Player
         {
             float closestDistance = Mathf.Infinity;
             Transform trans = null;
-            foreach (var go in multipleEnemy)
+            foreach (var go in listEnemyInMap)
             {
                 if (!go) continue;
-                float currentDistance = Vector3.Distance(transform.position, go.transform.position);
+                float currentDistance = (transform.position - go.transform.position).magnitude;
                 if (currentDistance < closestDistance)
                 {
                     closestDistance = currentDistance;

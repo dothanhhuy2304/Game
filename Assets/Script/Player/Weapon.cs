@@ -39,7 +39,7 @@ namespace Game.Player
 
         private int FindBullet()
         {
-            if (tempIndex >= projectiles.Count)
+            if (tempIndex >= projectiles.Count - 1)
             {
                 return tempIndex = 0;
             }

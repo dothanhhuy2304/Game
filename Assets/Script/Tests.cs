@@ -40,7 +40,7 @@ public class Tests : MonoBehaviour, IPointerDownHandler
     {
         var position = targetA.transform.position;
         var position1 = targetB.transform.position;
-        float a = Vector3.Distance(position, position1);
+        float a = (position - position1).magnitude;
         float b = (position - position1).magnitude;
         float c = (position - position1).sqrMagnitude;
         Debug.Log(a);

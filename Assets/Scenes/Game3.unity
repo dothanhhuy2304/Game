@@ -999,7 +999,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d6536abf0ff4574bbbb56df652eea31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerData: {fileID: 11400000, guid: f8222b860886af9448e9b80d49666f6b, type: 2}
   characters:
   - {fileID: 887641874}
   - {fileID: 993606474}
@@ -2606,8 +2605,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   smoothValue: 4
-  posX: 2
-  posY: 1
+  offset: {x: 2, y: 1}
 --- !u!114 &574977832
 MonoBehaviour:
   m_ObjectHideFlags: 0
