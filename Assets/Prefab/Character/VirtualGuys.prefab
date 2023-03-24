@@ -188,7 +188,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 772435844488864099}
   col: {fileID: 772435844488864100}
-  effect: {fileID: 5621145496202273162}
   playerData: {fileID: 11400000, guid: 30a0c1bb8ddbd264f86e65b17e588602, type: 2}
   mGrounded: 0
   isJump: 0
@@ -251,7 +250,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 3
   m_Material: {fileID: 0}
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4

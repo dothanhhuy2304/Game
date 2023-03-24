@@ -155,7 +155,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 3
   m_Material: {fileID: 0}
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
@@ -199,7 +199,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 6529767382540131349}
   col: {fileID: 6529767382540131348}
-  effect: {fileID: 2667014992058011213}
   playerData: {fileID: 11400000, guid: 0844518f0f0c29c4cb88c37d6ac01270, type: 2}
   mGrounded: 0
   isJump: 0
