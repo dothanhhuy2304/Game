@@ -1,39 +1,42 @@
 using UnityEngine;
 
-public class SawPatrol : MonoBehaviour
+namespace Script.Enemy
 {
-    [SerializeField] private bool useLerp;
-    [SerializeField] private Vector2[] listPoint;
-    private int currentPoint;
-    [SerializeField] private float speed = 2f;
-
-    private void Update()
+    public class SawPatrol : MonoBehaviour
     {
-        if (useLerp)
+        [SerializeField] private bool useLerp;
+        [SerializeField] private Vector2[] listPoint;
+        private int currentPoint;
+        [SerializeField] private float speed = 2f;
+
+        private void Update()
         {
-            transform.position = Vector2.Lerp(transform.position, listPoint[currentPoint], speed * Time.deltaTime);
-        }
-        else
-        {
-            transform.position =
-                Vector2.MoveTowards(transform.position, listPoint[currentPoint], speed * Time.deltaTime);
+            if (useLerp)
+            {
+                transform.position = Vector2.Lerp(transform.position, listPoint[currentPoint], speed * Time.deltaTime);
+            }
+            else
+            {
+                transform.position =
+                    Vector2.MoveTowards(transform.position, listPoint[currentPoint], speed * Time.deltaTime);
+            }
+
+            if (Vector2.Distance(transform.position, listPoint[currentPoint]) < 0.1f)
+            {
+                GetCurrentPoint();
+            }
         }
 
-        if (Vector2.Distance(transform.position, listPoint[currentPoint]) < 0.1f)
+        private void GetCurrentPoint()
         {
-            GetCurrentPoint();
-        }
-    }
-
-    private void GetCurrentPoint()
-    {
-        if (listPoint.Length - 1 > currentPoint)
-        {
-            currentPoint++;
-        }
-        else
-        {
-            currentPoint = 0;
+            if (listPoint.Length - 1 > currentPoint)
+            {
+                currentPoint++;
+            }
+            else
+            {
+                currentPoint = 0;
+            }
         }
     }
 }

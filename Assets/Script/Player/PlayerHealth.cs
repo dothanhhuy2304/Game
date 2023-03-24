@@ -1,11 +1,11 @@
 using System.Globalization;
 using DG.Tweening;
-using Game.Core;
-using Game.GamePlay;
+using Script.Core;
+using Script.GamePlay;
 using TMPro;
 using UnityEngine;
-
-namespace Game.Player
+using Script.Enemy;
+namespace Script.Player
 {
     public class PlayerHealth : FastSingleton<PlayerHealth>, IHealthSystem
     {

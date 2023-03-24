@@ -1,9 +1,9 @@
-using System.Linq;
 using DG.Tweening;
-using Game.GamePlay;
+using Script.Player;
 using UnityEngine;
+using Script.Core;
 
-namespace Game.Enemy
+namespace Script.Enemy
 {
     public class SNinja : EnemyController
     {

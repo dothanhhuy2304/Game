@@ -1,8 +1,9 @@
 using DG.Tweening;
-using Game.Player;
+using Script.Player;
 using UnityEngine;
+using Script.Core;
 
-namespace Game.Enemy
+namespace Script.Enemy
 {
     public class Chicken : EnemyController
     {

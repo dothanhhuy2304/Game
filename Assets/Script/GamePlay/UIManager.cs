@@ -1,10 +1,11 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Script.Player;
 
-namespace Game.GamePlay
+namespace Script.GamePlay
 {
-    public class UIManager : FastSingleton<UIManager>
+    public class UiManager : FastSingleton<UiManager>
     {
         [Header("UI Setting")]
         [SerializeField] private GameObject settingUI;

@@ -1,26 +1,29 @@
-using Game.GamePlay;
+using Script.Player;
 using UnityEngine;
 
-public class LoadCharacter : MonoBehaviour
+namespace Script.GamePlay
 {
-    [SerializeField] private GameObject[] characters;
-
-    private void Awake()
+    public class LoadCharacter : MonoBehaviour
     {
-        if (!GameManager.instance)
+        [SerializeField] private GameObject[] characters;
+
+        private void Awake()
         {
-            Instantiate(Resources.Load<GameObject>("GameManager"));
-        }
+            if (!GameManager.instance)
+            {
+                Instantiate(Resources.Load<GameObject>("GameManager"));
+            }
 
-        characters[UserPref.characterSelected].SetActive(true);
+            characters[UserPref.characterSelected].SetActive(true);
 
-        AudioManager.instance.Plays_Music("Music_Game");
+            AudioManager.instance.Plays_Music("Music_Game");
 
-        if (!UIManager.instance.scoreUI.activeSelf)
-        {
-            UIManager.instance.scoreUI.SetActive(true);
-            UIManager.instance.btnBackToMenuUI.gameObject.SetActive(true);
-            UIManager.instance.btnRestart.gameObject.SetActive(true);
+            if (!UiManager.instance.scoreUI.activeSelf)
+            {
+                UiManager.instance.scoreUI.SetActive(true);
+                UiManager.instance.btnBackToMenuUI.gameObject.SetActive(true);
+                UiManager.instance.btnRestart.gameObject.SetActive(true);
+            }
         }
     }
 }

@@ -2,7 +2,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-namespace Game.GamePlay
+namespace Script.GamePlay
 {
     public class UserPref
     {
@@ -15,7 +15,7 @@ namespace Game.GamePlay
     
     public class GameManager : FastSingleton<GameManager>
     {
-        [SerializeField] private UIManager uiManager;
+        [SerializeField] private UiManager uiManager;
         [SerializeField] private TextMeshProUGUI txtScore;
         [SerializeField] private TextMeshProUGUI txtDiamond;
         [SerializeField] private TextMeshProUGUI txtMoney;

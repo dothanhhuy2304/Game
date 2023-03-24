@@ -1,11 +1,10 @@
-using System.Collections;
 using System.Globalization;
 using DG.Tweening;
 using UnityEngine;
-using Game.Core;
-using Game.GamePlay;
+using Script.Core;
+using Script.Player;
 
-namespace Game.Enemy
+namespace Script.Enemy
 {
     public class EnemyHealth : MonoBehaviour, IHealthSystem
     {

@@ -1,6 +1,6 @@
 using System;
 using DG.Tweening;
-using Game.GamePlay;
+using Script.GamePlay;
 using TMPro;
 using UnityEngine;
 

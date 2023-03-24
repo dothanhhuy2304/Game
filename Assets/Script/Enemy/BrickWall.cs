@@ -1,23 +1,26 @@
 using UnityEngine;
 
-public class BrickWall : MonoBehaviour
+namespace Script.Enemy
 {
-
-    [SerializeField] private SpriteRenderer spriteRenderer;
-
-    private void OnTriggerEnter2D(Collider2D other)
+    public class BrickWall : MonoBehaviour
     {
-        if (other.CompareTag("Player"))
+
+        [SerializeField] private SpriteRenderer spriteRenderer;
+
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            spriteRenderer.color = Color.gray;
+            if (other.CompareTag("Player"))
+            {
+                spriteRenderer.color = Color.gray;
+            }
         }
-    }
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
+        private void OnTriggerExit2D(Collider2D other)
         {
-            spriteRenderer.color = Color.white;
+            if (other.CompareTag("Player"))
+            {
+                spriteRenderer.color = Color.white;
+            }
         }
     }
 }

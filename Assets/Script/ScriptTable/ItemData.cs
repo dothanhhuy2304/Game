@@ -1,11 +1,14 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Item", menuName = "ScriptTable/ItemData", order = 1)]
-public class ItemData : ScriptableObject
+namespace Script.ScriptTable
 {
-    public string itemName;
-    public float valueReceive;
-    public float scoreReceive;
-    public float moneyReceive;
-    public float diamondReceive;
+    [CreateAssetMenu(fileName = "New Item", menuName = "ScriptTable/ItemData", order = 1)]
+    public class ItemData : ScriptableObject
+    {
+        public string itemName;
+        public float valueReceive;
+        public float scoreReceive;
+        public float moneyReceive;
+        public float diamondReceive;
+    }
 }

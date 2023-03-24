@@ -1,36 +1,40 @@
-using Game.Player;
+using Script.Player;
 using UnityEngine;
+using Script.Core;
 
-public class ObjectMoving : MoveLandController
+namespace Script.Enemy
 {
-    [SerializeField] private Animator animator;
-    [SerializeField] private Vector2 endPos = Vector2.zero;
-    private float timeAttack;
-    [SerializeField] private float resetTimeAttack;
-
-    private void Start()
+    public class ObjectMoving : MoveLandController
     {
-        numberLoop = int.MaxValue;
-        MoveLandNormal(transform, endPos, timeEndAction, numberLoop);
-        //MoveLandNormalWithAnimation(transform, endPos, timeEndAction, numberLoop, animator, "TopHit", "ButtomHit");
-    }
+        [SerializeField] private Animator animator;
+        [SerializeField] private Vector2 endPos = Vector2.zero;
+        private float timeAttack;
+        [SerializeField] private float resetTimeAttack;
 
-    // private void Update()
-    // {
-    //     transform.position = Vector2.Lerp(startPos, endPos, Mathf.PingPong(Time.time * speed, timeSleep));
-    // }
-
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (!HuyManager.PlayerIsDeath())
+        private void Start()
         {
-            if (other.CompareTag("Player"))
+            numberLoop = int.MaxValue;
+            MoveLandNormal(transform, endPos, timeEndAction, numberLoop);
+            //MoveLandNormalWithAnimation(transform, endPos, timeEndAction, numberLoop, animator, "TopHit", "ButtomHit");
+        }
+
+        // private void Update()
+        // {
+        //     transform.position = Vector2.Lerp(startPos, endPos, Mathf.PingPong(Time.time * speed, timeSleep));
+        // }
+
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            if (!HuyManager.PlayerIsDeath())
             {
-                HuyManager.SetTimeAttack(ref timeAttack);
-                if (timeAttack <= 0f)
+                if (other.CompareTag("Player"))
                 {
-                    PlayerHealth.instance.GetDamage(20f);
-                    timeAttack = resetTimeAttack;
+                    HuyManager.SetTimeAttack(ref timeAttack);
+                    if (timeAttack <= 0f)
+                    {
+                        PlayerHealth.instance.GetDamage(20f);
+                        timeAttack = resetTimeAttack;
+                    }
                 }
             }
         }

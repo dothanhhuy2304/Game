@@ -1,5 +1,5 @@
 
-namespace Game.Core
+namespace Script.Core
 {
     public interface IHealthSystem
     {

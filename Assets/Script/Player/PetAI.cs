@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using UnityEngine;
+using Script.Core;
+using Script.ScriptTable;
 
-namespace Game.Player
+namespace Script.Player
 {
 
     public class PetAI : FastSingleton<PetAI>

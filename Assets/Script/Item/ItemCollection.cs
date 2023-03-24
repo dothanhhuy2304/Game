@@ -1,9 +1,11 @@
 using DG.Tweening;
-using Game.GamePlay;
-using Game.Player;
+using Script.GamePlay;
+using Script.Player;
 using UnityEngine;
+using Script.Core;
+using Script.ScriptTable;
 
-namespace Game.Item
+namespace Script.Item
 {
     public class ItemCollection : MonoBehaviour
     {

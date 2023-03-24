@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Game.GamePlay;
-using Game.Player;
+using Script.Player;
 using UnityEngine;
 
-namespace Game.Enemy
+namespace Script.Enemy
 {
 
     [Serializable]

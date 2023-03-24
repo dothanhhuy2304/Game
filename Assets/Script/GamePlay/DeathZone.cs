@@ -1,7 +1,7 @@
 using UnityEngine;
-using Game.Player;
+using Script.Player;
 
-namespace Game.GamePlay
+namespace Script.GamePlay
 {
     public class DeathZone : MonoBehaviour
     {

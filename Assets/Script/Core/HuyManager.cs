@@ -1,53 +1,57 @@
 using DG.Tweening;
 using UnityEngine;
 
-public static class HuyManager
+namespace Script.Core
 {
-
-    public static void SetPlayerIsDeath(int state)
+    public static class HuyManager
     {
-        PlayerPrefs.SetInt("PlayerIsDeath", state);
-    }
 
-    public static bool PlayerIsDeath()
-    {
-        return PlayerPrefs.GetInt("PlayerIsDeath") == 1;
-    }
-
-    public static void SetPlayerIsHurt(int state)
-    {
-        PlayerPrefs.SetInt("PlayerHurt", state);
-    }
-
-    public static bool GetPlayerIsHurt()
-    {
-        return PlayerPrefs.GetInt("PlayerHurt") == 1;
-    }
-
-    public static void SetTimeAttack(ref float currentTime)
-    {
-        if (currentTime > 0f)
+        public static void SetPlayerIsDeath(int state)
         {
-            currentTime -= Time.deltaTime;
+            PlayerPrefs.SetInt("PlayerIsDeath", state);
         }
-        else
+
+        public static bool PlayerIsDeath()
         {
-            currentTime = 0f;
+            return PlayerPrefs.GetInt("PlayerIsDeath") == 1;
+        }
+
+        public static void SetPlayerIsHurt(int state)
+        {
+            PlayerPrefs.SetInt("PlayerHurt", state);
+        }
+
+        public static bool GetPlayerIsHurt()
+        {
+            return PlayerPrefs.GetInt("PlayerHurt") == 1;
+        }
+
+        public static void SetTimeAttack(ref float currentTime)
+        {
+            if (currentTime > 0f)
+            {
+                currentTime -= Time.deltaTime;
+            }
+            else
+            {
+                currentTime = 0f;
+            }
+        }
+
+        public static void CameraShake(Camera camera, float duration, Vector3 strength, int vibrato, float randomness,
+            bool fadeOut)
+        {
+            camera.DOShakePosition(duration, strength, vibrato, randomness, fadeOut);
         }
     }
 
-    public static void CameraShake(Camera camera, float duration,Vector3 strength,int vibrato,float randomness,bool fadeOut)
+    public enum EnemyType
     {
-        camera.DOShakePosition(duration, strength, vibrato, randomness, fadeOut);
+        Player,
+        Ninja,
+        CarnivorousPlant,
+        Pet,
+        Bee,
+        Trunk,
     }
-}
-
-public enum EnemyType
-{
-    Player,
-    Ninja,
-    CarnivorousPlant,
-    Pet,
-    Bee,
-    Trunk,
 }

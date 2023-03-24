@@ -1,7 +1,8 @@
 using System;
+using Script.GamePlay;
 using UnityEngine;
 
-namespace Game.GamePlay
+namespace Script.Player
 {
     public class AudioManager : FastSingleton<AudioManager>
     {

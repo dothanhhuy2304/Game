@@ -1,7 +1,8 @@
 using DG.Tweening;
 using UnityEngine;
+using Script.Core;
 
-namespace Game.Enemy
+namespace Script.Enemy
 {
     public class Bee : EnemyController
     {

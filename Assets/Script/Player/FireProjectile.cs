@@ -1,8 +1,8 @@
 using DG.Tweening;
-using Game.Enemy;
-using Game.GamePlay;
-using Game.Player;
+using Script.Enemy;
+using Script.Player;
 using UnityEngine;
+using Script.Core;
 
 public class FireProjectile : MonoBehaviour
 {

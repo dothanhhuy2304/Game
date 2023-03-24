@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   body: {fileID: 1639750129781316136}
-  colliders: {fileID: 1639750129781316139}
+  col: {fileID: 1639750129781316139}
   timeFalling: 1
 --- !u!1 &1639750130415945145
 GameObject:

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Enemy
+namespace Script.Enemy
 {
     public class EnemyHealthBar : MonoBehaviour
     {
@@ -13,6 +13,7 @@ namespace Game.Enemy
         {
             fill.fillAmount = currentHealth / maxHealth;
             fill.color = Color.Lerp(colorB.color, colorA.color, fill.fillAmount);
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
             canvas.gameObject.SetActive(fill.fillAmount != currentHealth / maxHealth);
         }
 

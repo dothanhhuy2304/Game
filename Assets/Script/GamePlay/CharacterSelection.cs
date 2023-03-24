@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.GamePlay
+namespace Script.GamePlay
 {
     public class CharacterSelection : MonoBehaviour
     {

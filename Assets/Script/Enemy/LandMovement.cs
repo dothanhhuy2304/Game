@@ -1,8 +1,9 @@
 using UnityEngine;
-using Game.Player;
+using Script.Player;
+using Script.Core;
 
 //Improver
-namespace Game.Enemy
+namespace Script.Enemy
 {
     public class LandMovement : MoveLandController
     {

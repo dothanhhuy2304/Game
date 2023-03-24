@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.GamePlay
+namespace Script.GamePlay
 {
     public class TargetFramerate : FastSingleton<TargetFramerate>
     {

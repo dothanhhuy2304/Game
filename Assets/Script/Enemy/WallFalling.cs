@@ -1,55 +1,59 @@
 using DG.Tweening;
 using UnityEngine;
+using Script.Core;
 
-[RequireComponent(typeof(Rigidbody2D))]
-public class WallFalling : MonoBehaviour
+namespace Script.Enemy
 {
-    [SerializeField] private Rigidbody2D body;
-    [SerializeField] private Collider2D colliders;
-    [Range(0, 10)] [SerializeField] private int timeFalling;
-    private Vector2 startPos;
-
-    private void Start()
+    [RequireComponent(typeof(Rigidbody2D))]
+    public class WallFalling : MonoBehaviour
     {
-        startPos = transform.position;
-    }
+        [SerializeField] private Rigidbody2D body;
+        [SerializeField] private Collider2D col;
+        [Range(0, 10)] [SerializeField] private int timeFalling;
+        private Vector2 startPos;
 
-    private void FixedUpdate()
-    {
-        if (HuyManager.PlayerIsDeath())
+        private void Start()
         {
-            WaitToReset();
+            startPos = transform.position;
         }
-    }
 
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if (other.collider.CompareTag("Player"))
+        private void FixedUpdate()
         {
-            WaitToFalling(timeFalling);
+            if (HuyManager.PlayerIsDeath())
+            {
+                WaitToReset();
+            }
         }
-    }
 
-    private void WaitToFalling(int delay)
-    {
-        DOTween.Sequence()
-            .AppendInterval(delay)
-            .AppendCallback(() =>
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (other.collider.CompareTag("Player"))
             {
-                body.bodyType = RigidbodyType2D.Dynamic;
-                colliders.isTrigger = true;
-            }).Play();
-    }
+                WaitToFalling(timeFalling);
+            }
+        }
 
-    private void WaitToReset()
-    {
-        DOTween.Sequence()
-            .AppendInterval(3.5f)
-            .AppendCallback(() =>
-            {
-                body.bodyType = RigidbodyType2D.Static;
-                body.transform.position = startPos;
-                colliders.isTrigger = false;
-            }).Play();
+        private void WaitToFalling(int delay)
+        {
+            DOTween.Sequence()
+                .AppendInterval(delay)
+                .AppendCallback(() =>
+                {
+                    body.bodyType = RigidbodyType2D.Dynamic;
+                    col.isTrigger = true;
+                }).Play();
+        }
+
+        private void WaitToReset()
+        {
+            DOTween.Sequence()
+                .AppendInterval(3.5f)
+                .AppendCallback(() =>
+                {
+                    body.bodyType = RigidbodyType2D.Static;
+                    body.transform.position = startPos;
+                    col.isTrigger = false;
+                }).Play();
+        }
     }
 }

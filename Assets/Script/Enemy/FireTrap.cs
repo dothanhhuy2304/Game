@@ -1,58 +1,62 @@
 using System.Collections;
-using Game.Player;
+using Script.Player;
 using UnityEngine;
+using Script.Core;
 
-public class FireTrap : MonoBehaviour
+namespace Script.Enemy
 {
-    [SerializeField] private Animator animator;
-    private PlayerHealth playerHealth;
-    private bool isFirst;
-    private Coroutine currentCoroutine;
-
-    private void Start()
+    public class FireTrap : MonoBehaviour
     {
-        playerHealth = PlayerHealth.instance;
-    }
+        [SerializeField] private Animator animator;
+        private PlayerHealth playerHealth;
+        private bool isFirst;
+        private Coroutine currentCoroutine;
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
+        private void Start()
         {
-            currentCoroutine = StartCoroutine(IeFireOn(1f));
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            animator.Play("Idle");
-            isFirst = true;
-            StopCoroutine(currentCoroutine);
-        }
-    }
-
-    private IEnumerator IeFireOn(float delay)
-    {
-        if (HuyManager.PlayerIsDeath() || HuyManager.GetPlayerIsHurt()) yield break;
-        if (isFirst)
-        {
-            animator.Play("Begin");
-            yield return new WaitForSeconds(0.6f);
+            playerHealth = PlayerHealth.instance;
         }
 
-        animator.Play("On");
-        if (isFirst)
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            yield return new WaitForSeconds(0.1f);
-        }
-        else
-        {
-            yield return new WaitForSeconds(delay);
+            if (other.CompareTag("Player"))
+            {
+                currentCoroutine = StartCoroutine(IeFireOn(1f));
+            }
         }
 
-        playerHealth.GetDamage(1f);
-        isFirst = false;
-        currentCoroutine = StartCoroutine(IeFireOn(delay));
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.CompareTag("Player"))
+            {
+                animator.Play("Idle");
+                isFirst = true;
+                StopCoroutine(currentCoroutine);
+            }
+        }
+
+        private IEnumerator IeFireOn(float delay)
+        {
+            if (HuyManager.PlayerIsDeath() || HuyManager.GetPlayerIsHurt()) yield break;
+            if (isFirst)
+            {
+                animator.Play("Begin");
+                yield return new WaitForSeconds(0.6f);
+            }
+
+            animator.Play("On");
+            if (isFirst)
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+            else
+            {
+                yield return new WaitForSeconds(delay);
+            }
+
+            playerHealth.GetDamage(1f);
+            isFirst = false;
+            currentCoroutine = StartCoroutine(IeFireOn(delay));
+        }
     }
 }

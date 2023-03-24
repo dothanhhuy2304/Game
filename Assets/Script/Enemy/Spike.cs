@@ -1,42 +1,46 @@
 using UnityEngine;
-using Game.Player;
+using Script.Player;
+using Script.Core;
 
-public class Spike : MonoBehaviour
+namespace Script.Enemy
 {
-    private float timeAttack;
-    [SerializeField] private float maxTimeAttack = 1f;
-    private bool isHurts;
-
-    private void OnTriggerStay2D(Collider2D other)
+    public class Spike : MonoBehaviour
     {
-        if (other.CompareTag("Player"))
+        private float timeAttack;
+        [SerializeField] private float maxTimeAttack = 1f;
+        private bool isHurts;
+
+        private void OnTriggerStay2D(Collider2D other)
         {
-            if (HuyManager.PlayerIsDeath() || HuyManager.GetPlayerIsHurt()) return;
-            HuyManager.SetTimeAttack(ref timeAttack);
-            if (isHurts)
+            if (other.CompareTag("Player"))
             {
-                if (timeAttack <= 0f)
+                if (HuyManager.PlayerIsDeath() || HuyManager.GetPlayerIsHurt()) return;
+                HuyManager.SetTimeAttack(ref timeAttack);
+                if (isHurts)
                 {
-                    PlayerHealth.instance.GetDamage(20f);
-                    timeAttack = maxTimeAttack;
+                    if (timeAttack <= 0f)
+                    {
+                        PlayerHealth.instance.GetDamage(20f);
+                        timeAttack = maxTimeAttack;
+                    }
                 }
             }
         }
-    }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            isHurts = true;
+            if (other.CompareTag("Player"))
+            {
+                isHurts = true;
+            }
         }
-    }
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
+        private void OnTriggerExit2D(Collider2D other)
         {
-            isHurts = false;
+            if (other.CompareTag("Player"))
+            {
+                isHurts = false;
+            }
         }
     }
 }

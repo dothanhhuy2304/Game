@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Game.Player;
+using Script.Player;
 using UnityEngine;
 
 public class Test3 : MonoBehaviour

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Game.GamePlay;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Script.Core;
 
-namespace Game.Player
+namespace Script.Player
 {
     public class Weapon : MonoBehaviour
     {

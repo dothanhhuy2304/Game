@@ -1,7 +1,8 @@
-using Game.GamePlay;
 using UnityEngine;
+using Script.Core;
+using Script.ScriptTable;
 
-namespace Game.Player
+namespace Script.Player
 {
     public class CharacterController2D : FastSingleton<CharacterController2D>
     {

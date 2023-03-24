@@ -1,7 +1,7 @@
 using System.Globalization;
 using UnityEngine;
 
-namespace Game.Player
+namespace Script.Player
 {
     public class PlayerHealthBar : FastSingleton<PlayerHealthBar>
     {

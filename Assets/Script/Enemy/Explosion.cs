@@ -1,58 +1,57 @@
-using System;
 using DG.Tweening;
-using Game.GamePlay;
-using Game.Player;
+using Script.Player;
 using UnityEngine;
 using UnityEngine.Events;
+using Script.Core;
 
-public class Explosion : MonoBehaviour
+namespace Script.Enemy
 {
-    [SerializeField] private Collider2D col;
-    [SerializeField] private GameObject parentObject;
-    public UnityEvent eventTriggerEnter;
-    private Camera cam;
-
-    private void Start()
+    public class Explosion : MonoBehaviour
     {
-        cam = Camera.main;
-    }
+        [SerializeField] private Collider2D col;
+        [SerializeField] private GameObject parentObject;
+        public UnityEvent eventTriggerEnter;
+        private Camera cam;
 
-    private void OnEnable()
-    {
-        eventTriggerEnter?.Invoke();
-    }
-
-    public void EventExplosion()
-    {
-        StartExplosion();
-    }
-
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
+        private void Start()
         {
-            PlayerHealth.instance.GetDamage(20f);
-            col.enabled = false;
+            cam = Camera.main;
         }
-    }
 
-    private void StartExplosion()
-    {
-        DOTween.Sequence()
-            .AppendCallback(() =>
+        private void OnEnable()
+        {
+            eventTriggerEnter?.Invoke();
+        }
+
+        public void EventExplosion()
+        {
+            StartExplosion();
+        }
+
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            if (other.CompareTag("Player"))
             {
-                AudioManager.instance.Play("Boom_Explosion");
-                HuyManager.CameraShake(cam, 1f, new Vector3(0.5f, 0.5f, 0.5f), 10, 90f, true);
-            }).AppendInterval(0.2f)
-            .AppendCallback(() =>
-            {
+                PlayerHealth.instance.GetDamage(20f);
                 col.enabled = false;
-            }).AppendInterval(0.5f)
-            .AppendCallback(() =>
-            {
-                parentObject.SetActive(false);
-                col.enabled = true;
-                gameObject.SetActive(false);
-            }).Play();
+            }
+        }
+
+        private void StartExplosion()
+        {
+            DOTween.Sequence()
+                .AppendCallback(() =>
+                {
+                    AudioManager.instance.Play("Boom_Explosion");
+                    HuyManager.CameraShake(cam, 1f, new Vector3(0.5f, 0.5f, 0.5f), 10, 90f, true);
+                }).AppendInterval(0.2f)
+                .AppendCallback(() => { col.enabled = false; }).AppendInterval(0.5f)
+                .AppendCallback(() =>
+                {
+                    parentObject.SetActive(false);
+                    col.enabled = true;
+                    gameObject.SetActive(false);
+                }).Play();
+        }
     }
 }
