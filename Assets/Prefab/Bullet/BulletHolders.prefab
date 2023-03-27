@@ -341,21 +341,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 5849103868259468125}
   explosionSpriteFxObj: {fileID: 0}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5375810957972577979}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &5125996030131441668
 GameObject:
   m_ObjectHideFlags: 0
@@ -627,21 +612,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 6047787407023206766}
   explosionSpriteFxObj: {fileID: 0}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3201802501191177994}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!50 &1649815637804993545
 Rigidbody2D:
   serializedVersion: 4
@@ -34170,7 +34140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6052377117780465634
 Transform:
   m_ObjectHideFlags: 0
@@ -43670,21 +43640,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787407103722417}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787406458285746}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &6047787406458683591
 GameObject:
   m_ObjectHideFlags: 0
@@ -48588,21 +48543,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 5849103866374196226}
   explosionSpriteFxObj: {fileID: 0}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787406466015328}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &6047787406486071918
 GameObject:
   m_ObjectHideFlags: 0
@@ -53901,21 +53841,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 5849103866707155282}
   explosionSpriteFxObj: {fileID: 0}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787406618790740}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &6047787406621575154
 GameObject:
   m_ObjectHideFlags: 0
@@ -54194,21 +54119,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787406521946794}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787406651451944}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &6047787406743724272
 GameObject:
   m_ObjectHideFlags: 0
@@ -54427,21 +54337,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787406764726179}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787406744946470}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!50 &6047787406744946468
 Rigidbody2D:
   serializedVersion: 4
@@ -54717,21 +54612,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787406527871907}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787406785231434}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!50 &6047787406785231429
 Rigidbody2D:
   serializedVersion: 4
@@ -60326,21 +60206,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787408024743956}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787407054871325}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!50 &6047787407054871331
 Rigidbody2D:
   serializedVersion: 4
@@ -60709,21 +60574,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787406878294186}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787407122323556}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &6047787407178451132
 GameObject:
   m_ObjectHideFlags: 0
@@ -60798,21 +60648,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787407326973784}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787407178451010}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &6047787407247100907
 GameObject:
   m_ObjectHideFlags: 0
@@ -60887,21 +60722,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787406920877862}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787407247100905}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &6047787407248285638
 GameObject:
   m_ObjectHideFlags: 0
@@ -60976,21 +60796,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787407045358906}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787407248285636}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &6047787407271772660
 GameObject:
   m_ObjectHideFlags: 0
@@ -70995,21 +70800,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787406956250047}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787407384419987}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!50 &6047787407384419986
 Rigidbody2D:
   serializedVersion: 4
@@ -71371,21 +71161,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787406968783666}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787407548553033}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!50 &6047787407548553039
 Rigidbody2D:
   serializedVersion: 4
@@ -76424,21 +76199,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 6047787408034419564}
   explosionSpriteFxObj: {fileID: 0}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787407706012469}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!50 &6047787407706012468
 Rigidbody2D:
   serializedVersion: 4
@@ -81436,21 +81196,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 6047787407962288647}
   explosionSpriteFxObj: {fileID: 0}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787408002542299}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!50 &6047787408002542298
 Rigidbody2D:
   serializedVersion: 4
@@ -91347,21 +91092,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787407587871290}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787408237136073}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &6047787408240414272
 GameObject:
   m_ObjectHideFlags: 0
@@ -91613,21 +91343,6 @@ MonoBehaviour:
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787406601956236}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6047787408439465090}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!50 &6047787408439465213
 Rigidbody2D:
   serializedVersion: 4
@@ -91723,18 +91438,3 @@ MonoBehaviour:
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 2221474118685677085}
   arcHeight: 1
-  eventShoot:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8973579711040051941}
-        m_TargetAssemblyTypeName: FireProjectile, Assembly-CSharp
-        m_MethodName: Shoot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
