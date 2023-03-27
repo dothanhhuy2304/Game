@@ -11,15 +11,15 @@ namespace Script.GamePlay
         [SerializeField] private GameObject settingUI;
         [SerializeField] private Button btnShowAndHiddenUI;
         [Header("UI Volume")]
-        [SerializeField] private Button btnShowVolumeUI;
+        [SerializeField] private Button btnShowVolume;
         [SerializeField] private AudioSource audioMusic;
         [SerializeField] private Slider sliderMusic;
         [SerializeField] private Slider sliderEffect;
-        public Button btnHiddenUIVolume;
+        public Button btnHiddenUiVolume;
         //public GameObject healthUI;
         public GameObject scoreUI;
         public GameObject uiVolume;
-        public Button btnBackToMenuUI;
+        public Button btnBackToMenu;
         public Button btnRestart;
         private LoadingScreenManager loadingScreenManager;
         private bool isShowUISetting;
@@ -29,12 +29,12 @@ namespace Script.GamePlay
         {
             loadingScreenManager = LoadingScreenManager.instance;
             btnShowAndHiddenUI.onClick.AddListener(() => { ShowAndHiddenUiSetting(ref isShowUISetting); });
-            btnBackToMenuUI.onClick.AddListener(BackToMenu);
+            btnBackToMenu.onClick.AddListener(BackToMenu);
             btnRestart.onClick.AddListener(RestartLevel);
-            btnShowVolumeUI.onClick.AddListener(() => { ShowVolumeUi(ref isShowUIVolume); });
+            //btnShowVolume.onClick.AddListener(() => { ShowVolumeUi(ref isShowUIVolume); });
             sliderMusic.onValueChanged.AddListener(ChangeVolumeMusic);
             sliderEffect.onValueChanged.AddListener(ChangeVolumeEffect);
-            btnHiddenUIVolume.onClick.AddListener(HiddenVolumeUi);
+            //btnHiddenUiVolume.onClick.AddListener(HiddenVolumeUi);
             if (string.IsNullOrEmpty(UserPref.userId))
             {
                 sliderMusic.value = 1f;
@@ -59,7 +59,7 @@ namespace Script.GamePlay
                 }
             }
 
-            btnBackToMenuUI.gameObject.SetActive(false);
+            btnBackToMenu.gameObject.SetActive(false);
             btnRestart.gameObject.SetActive(false);
         }
 
@@ -80,14 +80,13 @@ namespace Script.GamePlay
             Time.timeScale = isShow ? 0f : 1f;
         }
 
-        private void ShowVolumeUi(ref bool isShow)
+        public void ShowVolumeUi()
         {
-            isShow = !isShow;
             btnShowAndHiddenUI.gameObject.SetActive(false);
-            uiVolume.gameObject.SetActive(isShow);
+            uiVolume.gameObject.SetActive(true);
         }
 
-        private void HiddenVolumeUi()
+        public void HiddenVolumeUi()
         {
             isShowUIVolume = false;
             btnShowAndHiddenUI.gameObject.SetActive(true);
@@ -116,27 +115,27 @@ namespace Script.GamePlay
             }
         }
 
-        private void BackToMenu()
+        public void BackToMenu()
         {
             isShowUISetting = false;
             isShowUISetting = false;
             Time.timeScale = 1f;
             settingUI.SetActive(false);
             scoreUI.SetActive(false);
-            btnBackToMenuUI.gameObject.SetActive(false);
+            btnBackToMenu.gameObject.SetActive(false);
             btnRestart.gameObject.SetActive(false);
             AudioManager.instance.Plays_Music("Music_Menu");
             loadingScreenManager.FadeLoadingScene(0);
         }
 
-        private void RestartLevel()
+        public void RestartLevel()
         {
             isShowUISetting = false;
             isShowUISetting = false;
             Time.timeScale = 1f;
             settingUI.SetActive(false);
             scoreUI.SetActive(false);
-            btnBackToMenuUI.gameObject.SetActive(false);
+            btnBackToMenu.gameObject.SetActive(false);
             btnRestart.gameObject.SetActive(false);
             AudioManager.instance.Plays_Music("Music_Menu");
             loadingScreenManager.FadeLoadingScene(loadingScreenManager.RestartLevel());
