@@ -13,7 +13,6 @@ namespace Script.Enemy
         [SerializeField] private Collider2D chickenCol;
         [SerializeField] private Explosion explosionObj;
         [SerializeField] private SpriteRenderer spriteRenderer;
-        [Range(0f, 100f)] [SerializeField] protected float rangeAttack = 3f;
         [SerializeField] private bool isHitGround;
         private static readonly int IsRun = Animator.StringToHash("is_Run");
         private Sequence sequence;
@@ -77,7 +76,7 @@ namespace Script.Enemy
             {
                 if (!enemySetting.canAttack)
                 {
-                    if ((playerCharacter.transform.position - transform.position).magnitude < rangeAttack)
+                    if ((playerCharacter.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
                     {
                         enemySetting.canAttack = true;
                         body.bodyType = RigidbodyType2D.Kinematic;

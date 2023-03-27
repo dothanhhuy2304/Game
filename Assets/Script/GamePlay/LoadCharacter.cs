@@ -9,7 +9,7 @@ namespace Script.GamePlay
 
         private void Awake()
         {
-            if (!GameManager.instance)
+            if (GameManager.instance == null)
             {
                 Instantiate(Resources.Load<GameObject>("GameManager"));
             }

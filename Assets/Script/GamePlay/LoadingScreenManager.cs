@@ -39,8 +39,8 @@ namespace Script.GamePlay
 
         private void LoadScene(int sceneIndex)
         {
-            //StartCoroutine(IeFadeIn());
-            StartCoroutine(IeFadeLoadingScreen(sceneIndex));
+            StartCoroutine(IeFadeIn(sceneIndex));
+            //StartCoroutine(IeFadeLoadingScreen(sceneIndex));
         }
 
         #region OldVersion

@@ -50,7 +50,6 @@ namespace Script.Enemy
         private void FixedUpdate()
         {
             RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, mask);
-            Debug.DrawLine(transform.position, playerCharacter.transform.position);
             if (hit)
             {
                 if (hit.collider.CompareTag("Player"))
