@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 375374063482205970}
   - component: {fileID: 8815751004113870464}
+  - component: {fileID: 1932177573386121973}
   m_Layer: 0
   m_Name: SawModel
   m_TagString: Untagged
@@ -82,6 +83,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &1932177573386121973
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4360592679625122517}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3121987811467c54cb374fceb9a0d654, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6338563805322062972
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,7 +111,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6338563805322062969}
-  - component: {fileID: 6338563805322062971}
   - component: {fileID: 6338563805322062968}
   - component: {fileID: 6338563805322062967}
   - component: {fileID: 6338563805322062965}
@@ -117,25 +136,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &6338563805322062971
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6338563805322062972}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3121987811467c54cb374fceb9a0d654, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!58 &6338563805322062968
 CircleCollider2D:
   m_ObjectHideFlags: 0

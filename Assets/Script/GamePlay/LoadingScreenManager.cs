@@ -70,7 +70,8 @@ namespace Script.GamePlay
                 }
             }
 
-            yield return new WaitForSeconds(0.5f);
+            //yield return new WaitForSeconds(0.5f);
+            yield return new WaitWhile(() => !async.isDone);
             uiLoading.SetActive(false);
             yield return null;
         }
