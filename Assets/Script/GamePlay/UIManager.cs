@@ -7,17 +7,16 @@ namespace Script.GamePlay
 {
     public class UIManager : FastSingleton<UIManager>
     {
-        [Header("UI Setting")]
-        [SerializeField] private GameObject settingUI;
-        [SerializeField] private Button btnShowAndHiddenUI;
-        [Header("UI Volume")]
-        [SerializeField] private Button btnShowVolume;
+        [Header("UI Setting")] 
+        [SerializeField] private GameObject settingUi;
+        [SerializeField] private Button btnShowAndHiddenUi;
+        [Header("UI Volume")] 
         [SerializeField] private AudioSource audioMusic;
         [SerializeField] private Slider sliderMusic;
         [SerializeField] private Slider sliderEffect;
-        public Button btnHiddenUiVolume;
+
         //public GameObject healthUI;
-        public GameObject scoreUI;
+        public GameObject scoreUi;
         public GameObject uiVolume;
         public Button btnBackToMenu;
         public Button btnRestart;
@@ -27,13 +26,9 @@ namespace Script.GamePlay
         private void Start()
         {
             loadingScreenManager = LoadingScreenManager.instance;
-            btnShowAndHiddenUI.onClick.AddListener(() => { ShowAndHiddenUiSetting(ref isShowUiSetting); });
-            btnBackToMenu.onClick.AddListener(BackToMenu);
-            btnRestart.onClick.AddListener(RestartLevel);
-            //btnShowVolume.onClick.AddListener(() => { ShowVolumeUi(ref isShowUIVolume); });
+            btnShowAndHiddenUi.onClick.AddListener(() => { ShowAndHiddenUiSetting(ref isShowUiSetting); });
             sliderMusic.onValueChanged.AddListener(ChangeVolumeMusic);
             sliderEffect.onValueChanged.AddListener(ChangeVolumeEffect);
-            //btnHiddenUiVolume.onClick.AddListener(HiddenVolumeUi);
             if (string.IsNullOrEmpty(UserPref.userId))
             {
                 sliderMusic.value = 1f;
@@ -68,27 +63,8 @@ namespace Script.GamePlay
             if (Input.GetKey(KeyCode.Escape))
             {
                 Time.timeScale = 0f;
-                settingUI.SetActive(true);
+                settingUi.SetActive(true);
             }
-        }
-
-        private void ShowAndHiddenUiSetting(ref bool isShow)
-        {
-            isShow = !isShow;
-            settingUI.SetActive(isShow);
-            Time.timeScale = isShow ? 0f : 1f;
-        }
-
-        public void ShowVolumeUi()
-        {
-            btnShowAndHiddenUI.gameObject.SetActive(false);
-            uiVolume.gameObject.SetActive(true);
-        }
-
-        public void HiddenVolumeUi()
-        {
-            btnShowAndHiddenUI.gameObject.SetActive(true);
-            uiVolume.gameObject.SetActive(false);
         }
 
         private void ChangeVolumeMusic(float sliderValue)
@@ -96,7 +72,8 @@ namespace Script.GamePlay
             audioMusic.volume = sliderValue;
             if (DataService.GetConnection().Table<DataService.PlayerSetting>().Any())
             {
-                DataService.GetConnection().Execute($"update PlayerSetting set soundMusic = '{sliderValue}' where PlayerId = '{UserPref.userId}'");
+                DataService.GetConnection()
+                    .Execute($"update PlayerSetting set soundMusic = '{sliderValue}' where PlayerId = '{UserPref.userId}'");
             }
         }
 
@@ -109,16 +86,36 @@ namespace Script.GamePlay
 
             if (DataService.GetConnection().Table<DataService.PlayerSetting>().Any())
             {
-                DataService.GetConnection().Execute($"update PlayerSetting set soundEffect = '{sliderValue}' where PlayerId = '{UserPref.userId}'");
+                DataService.GetConnection()
+                    .Execute($"update PlayerSetting set soundEffect = '{sliderValue}' where PlayerId = '{UserPref.userId}'");
             }
+        }
+
+        private void ShowAndHiddenUiSetting(ref bool isShow)
+        {
+            isShow = !isShow;
+            settingUi.SetActive(isShow);
+            Time.timeScale = isShow ? 0f : 1f;
+        }
+
+        public void ShowVolumeUi()
+        {
+            btnShowAndHiddenUi.gameObject.SetActive(false);
+            uiVolume.gameObject.SetActive(true);
+        }
+
+        public void HiddenVolumeUi()
+        {
+            btnShowAndHiddenUi.gameObject.SetActive(true);
+            uiVolume.gameObject.SetActive(false);
         }
 
         public void BackToMenu()
         {
             isShowUiSetting = false;
             Time.timeScale = 1f;
-            settingUI.SetActive(false);
-            scoreUI.SetActive(false);
+            settingUi.SetActive(false);
+            scoreUi.SetActive(false);
             btnBackToMenu.gameObject.SetActive(false);
             btnRestart.gameObject.SetActive(false);
             AudioManager.instance.Plays_Music("Music_Menu");
@@ -129,8 +126,8 @@ namespace Script.GamePlay
         {
             isShowUiSetting = false;
             Time.timeScale = 1f;
-            settingUI.SetActive(false);
-            scoreUI.SetActive(false);
+            settingUi.SetActive(false);
+            scoreUi.SetActive(false);
             btnBackToMenu.gameObject.SetActive(false);
             btnRestart.gameObject.SetActive(false);
             AudioManager.instance.Plays_Music("Music_Menu");
@@ -150,7 +147,7 @@ namespace Script.GamePlay
 
         public void ButtonHover()
         {
-            AudioManager.instance.Play("Hover_Effect");
+            if (AudioManager.instance != null) AudioManager.instance.Play("Hover_Effect");
         }
     }
 }

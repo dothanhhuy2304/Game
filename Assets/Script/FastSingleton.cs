@@ -40,7 +40,7 @@ public abstract class FastSingleton<T> : MonoBehaviour where T : FastSingleton<T
         }
         // If there is an instance already in the same scene, destroy this script.
         else if (instance != this) {
-            Debug.LogWarning("Singleton " + typeof(T) + " is already exists.");
+            Debug.Log("Singleton " + typeof(T) + " is already exists.");
             Destroy(gameObject);
         }
     }

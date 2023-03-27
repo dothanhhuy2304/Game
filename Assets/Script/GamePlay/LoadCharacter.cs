@@ -18,9 +18,9 @@ namespace Script.GamePlay
 
             AudioManager.instance.Plays_Music("Music_Game");
 
-            if (!UIManager.instance.scoreUI.activeSelf)
+            if (!UIManager.instance.scoreUi.activeSelf)
             {
-                UIManager.instance.scoreUI.SetActive(true);
+                UIManager.instance.scoreUi.SetActive(true);
                 UIManager.instance.btnBackToMenu.gameObject.SetActive(true);
                 UIManager.instance.btnRestart.gameObject.SetActive(true);
             }

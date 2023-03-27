@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Script.Player;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -48,6 +49,11 @@ namespace Script.GamePlay
                     ? loadingScreenManager.NextScreen(1)
                     : loadingScreenManager.LoadCurrentScreen());
             //loadingScreenManager.FadeLoadingScene(gameManager.playerData.playerDataObj.currentScenes == 0 ? loadingScreenManager.NextScreen(1) : LoadingScreenManager.LoadCurrentScreen());
+        }
+
+        public void PlayEffectClick()
+        {
+            if (AudioManager.instance != null) AudioManager.instance.Play("Hover_Effect");
         }
     }
 }
