@@ -15,7 +15,7 @@ namespace Script.GamePlay
     
     public class GameManager : FastSingleton<GameManager>
     {
-        [SerializeField] private UiManager uiManager;
+        [SerializeField] private UIManager uiManager;
         [SerializeField] private TextMeshProUGUI txtScore;
         [SerializeField] private TextMeshProUGUI txtDiamond;
         [SerializeField] private TextMeshProUGUI txtMoney;

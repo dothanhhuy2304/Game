@@ -86,7 +86,6 @@ namespace Script.Player
                     playerCharacter.body.bodyType = RigidbodyType2D.Static;
                     playerCharacter.col.enabled = false;
                     playerCharacter.animator.SetLayerWeight(1, 1f);
-                    AudioManager.instance.Play("Enemy_Death");
                 }).AppendInterval(3)
                 .AppendCallback(() =>
                 {

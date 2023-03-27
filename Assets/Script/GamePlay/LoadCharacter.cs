@@ -18,11 +18,11 @@ namespace Script.GamePlay
 
             AudioManager.instance.Plays_Music("Music_Game");
 
-            if (!UiManager.instance.scoreUI.activeSelf)
+            if (!UIManager.instance.scoreUI.activeSelf)
             {
-                UiManager.instance.scoreUI.SetActive(true);
-                UiManager.instance.btnBackToMenu.gameObject.SetActive(true);
-                UiManager.instance.btnRestart.gameObject.SetActive(true);
+                UIManager.instance.scoreUI.SetActive(true);
+                UIManager.instance.btnBackToMenu.gameObject.SetActive(true);
+                UIManager.instance.btnRestart.gameObject.SetActive(true);
             }
         }
     }

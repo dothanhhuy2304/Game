@@ -87,13 +87,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78a9207b57b6c2344a0460272dc8e8b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canRespawn: 1
+  canReSpawn: 1
   heathDefault: 100
   currentHealth: 0
   maxHealth: 139
   hpIc: 39
   enemyHealthBar: {fileID: 3443694513160801483}
-  timeRespawn: 5
+  timeReSpawn: 3
   enemyCollider: {fileID: 3443694513160801485}
   spriteRenderer: {fileID: 4250643410912739063}
   uIDamageEnemy: {fileID: 898911466340090346, guid: 60b1aed8d968ce9499c3afcb26e22f95, type: 3}

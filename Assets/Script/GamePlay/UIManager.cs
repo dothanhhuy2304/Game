@@ -5,7 +5,7 @@ using Script.Player;
 
 namespace Script.GamePlay
 {
-    public class UiManager : FastSingleton<UiManager>
+    public class UIManager : FastSingleton<UIManager>
     {
         [Header("UI Setting")]
         [SerializeField] private GameObject settingUI;
@@ -22,13 +22,12 @@ namespace Script.GamePlay
         public Button btnBackToMenu;
         public Button btnRestart;
         private LoadingScreenManager loadingScreenManager;
-        private bool isShowUISetting;
-        private bool isShowUIVolume;
+        private bool isShowUiSetting;
 
         private void Start()
         {
             loadingScreenManager = LoadingScreenManager.instance;
-            btnShowAndHiddenUI.onClick.AddListener(() => { ShowAndHiddenUiSetting(ref isShowUISetting); });
+            btnShowAndHiddenUI.onClick.AddListener(() => { ShowAndHiddenUiSetting(ref isShowUiSetting); });
             btnBackToMenu.onClick.AddListener(BackToMenu);
             btnRestart.onClick.AddListener(RestartLevel);
             //btnShowVolume.onClick.AddListener(() => { ShowVolumeUi(ref isShowUIVolume); });
@@ -88,7 +87,6 @@ namespace Script.GamePlay
 
         public void HiddenVolumeUi()
         {
-            isShowUIVolume = false;
             btnShowAndHiddenUI.gameObject.SetActive(true);
             uiVolume.gameObject.SetActive(false);
         }
@@ -117,8 +115,7 @@ namespace Script.GamePlay
 
         public void BackToMenu()
         {
-            isShowUISetting = false;
-            isShowUISetting = false;
+            isShowUiSetting = false;
             Time.timeScale = 1f;
             settingUI.SetActive(false);
             scoreUI.SetActive(false);
@@ -130,8 +127,7 @@ namespace Script.GamePlay
 
         public void RestartLevel()
         {
-            isShowUISetting = false;
-            isShowUISetting = false;
+            isShowUiSetting = false;
             Time.timeScale = 1f;
             settingUI.SetActive(false);
             scoreUI.SetActive(false);

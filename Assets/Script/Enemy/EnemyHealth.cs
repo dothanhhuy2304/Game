@@ -8,13 +8,13 @@ namespace Script.Enemy
 {
     public class EnemyHealth : MonoBehaviour, IHealthSystem
     {
-        [SerializeField] private bool canRespawn;
+        [SerializeField] private bool canReSpawn;
         [SerializeField] private float heathDefault;
         [SerializeField] private float currentHealth;
         [SerializeField] private float maxHealth;
         [SerializeField] private float hpIc;
         [SerializeField] private EnemyHealthBar enemyHealthBar;
-        [SerializeField] private float timeRespawn;
+        [SerializeField] private float timeReSpawn;
         [SerializeField] private Collider2D enemyCollider;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private GameObject uIDamageEnemy;
@@ -54,6 +54,12 @@ namespace Script.Enemy
         {
             return currentHealth <= 0f;
         }
+        
+        public void ResetHeathDefault()
+        {
+            currentHealth = maxHealth;
+            enemyHealthBar.SetHealth(currentHealth, maxHealth);
+        }
 
         public void Die()
         {
@@ -61,23 +67,9 @@ namespace Script.Enemy
             spriteRenderer.enabled = false;
             enemyCollider.enabled = false;
             AudioManager.instance.Play("Enemy_Death");
-            if (canRespawn)
+            if (canReSpawn)
             {
-                ReSpawn(timeRespawn);
-            }
-        }
-
-        public void ResetHeathDefault()
-        {
-            currentHealth = maxHealth;
-            enemyHealthBar.SetHealth(currentHealth, maxHealth);
-        }
-
-        public void EnemyReSpawn()
-        {
-            if (canRespawn)
-            {
-                ReSpawn(timeRespawn);
+                ReSpawn(timeReSpawn);
             }
         }
 
