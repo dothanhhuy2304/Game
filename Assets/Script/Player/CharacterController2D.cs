@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using Script.Core;
 using Script.ScriptTable;
@@ -15,6 +16,7 @@ namespace Script.Player
 
         [Space] [Header("Flip")] private bool mFacingRight = true;
         private bool isDashing;
+        private float timeNextDash = 1.5f;
         [SerializeField] private bool mGrounded;
         [SerializeField] private bool isJump;
         private bool mDBJump;
@@ -35,17 +37,16 @@ namespace Script.Player
 
         private void Update()
         {
-            if (!HuyManager.PlayerIsDeath())
+            if (!HuyManager.PlayerIsDeath() && !HuyManager.GetPlayerIsHurt())
             {
-                if (!HuyManager.GetPlayerIsHurt())
+                GetInput();
+                HuyManager.SetTimeAttack(ref timeNextDash);
+                if (timeNextDash <= 0)
                 {
-                    GetInput();
-                    if (!mGrounded || mDBJump == false)
+                    if ((Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) && isDashing)
                     {
-                        if (Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1) && isDashing)
-                        {
-                            Dash(playerInput);
-                        }
+                        Dash(playerInput);
+                        timeNextDash = 1.5f;
                     }
                 }
             }
@@ -68,7 +69,6 @@ namespace Script.Player
             {
                 if (!HuyManager.GetPlayerIsHurt())
                 {
-                    //Move(playerInput * playerData.movingSpeed * Time.fixedDeltaTime);
                     Move(playerInput * (startSpeed * Time.fixedDeltaTime));
 
                     if (isJump)
@@ -77,12 +77,13 @@ namespace Script.Player
                         Jumps();
                     }
 
-                    animator.SetFloat("y_velocity", body.velocity.y);
                     if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
                     {
                         jumpCount = 0;
                         AnimPlayerJump();
                     }
+
+                    animator.SetFloat("y_velocity", body.velocity.y);
                 }
             }
         }
@@ -110,6 +111,11 @@ namespace Script.Player
                 Flip();
             }
 
+            LockPlayerPositionOnMap();
+        }
+
+        private void LockPlayerPositionOnMap()
+        {
             Vector3 pos = transform.position;
             pos = new Vector3(Mathf.Clamp(pos.x, clampMinX, clampMaxX), pos.y, pos.z);
             body.transform.position = pos;
@@ -126,15 +132,14 @@ namespace Script.Player
             {
                 Jump();
                 mDBJump = true;
-                isDashing = true;
             }
             else if (mDBJump)
             {
                 Jump();
                 mDBJump = false;
-                isDashing = true;
             }
 
+            isDashing = true;
             AnimPlayerJump();
         }
 
