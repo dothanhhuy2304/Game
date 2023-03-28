@@ -140,11 +140,9 @@ namespace Script.Enemy
                         chickenCol.enabled = true;
                         animator.enabled = true;
                         transform.position = enemySetting.startPosition;
-                        transform.Rotate(startRotation);
+                        transform.Rotate(new Vector3(0, rotations[0], 0));
                         gameObject.SetActive(true);
-                        DOTween.Sequence()
-                            .AppendInterval(0.5f)
-                            .AppendCallback(ChickenMoving).Play();
+                        ChickenMoving();
                     }).Play();
             }
         }
