@@ -1,7 +1,7 @@
 using DG.Tweening;
 using Script.Player;
 using UnityEngine;
-using  Script.Core;
+using Script.Core;
 
 namespace Script.Enemy
 {
@@ -25,15 +25,6 @@ namespace Script.Enemy
                 isReSpawn = true;
             }
         }
-
-        // private void Update()
-        // {
-        //     if (HuyManager.PlayerIsDeath() && !isReSpawn)
-        //     {
-        //         ReSpawnObject(timeRespawn);
-        //         isReSpawn = true;
-        //     }
-        // }
 
         private void OnCollisionEnter2D(Collision2D other)
         {

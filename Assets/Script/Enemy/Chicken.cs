@@ -13,7 +13,6 @@ namespace Script.Enemy
         [SerializeField] private Explosion explosionObj;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private bool isHitGround;
-        private Vector3 startRotation;
         private static readonly int IsRun = Animator.StringToHash("is_Run");
         private Sequence sequence;
 
@@ -27,7 +26,6 @@ namespace Script.Enemy
             base.Start();
             currentTime = maxTimeAttack;
             transform.position = enemySetting.startPosition;
-            startRotation = new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z);
             ChickenMoving();
         }
 

@@ -35,22 +35,6 @@ namespace Script.Enemy
 
         private void FixedUpdate()
         {
-            // if (HuyManager.PlayerIsDeath())
-            // {
-            //     if (enemySetting.enemyHeal.EnemyDeath())
-            //     {
-            //         enemySetting.enemyHeal.ResetHeathDefault();
-            //         enemySetting.enemyHeal.ReSpawn(2);
-            //     }
-            //     else
-            //     {
-            //         DOTween.Sequence()
-            //             .AppendInterval(2f)
-            //             .AppendCallback(enemySetting.enemyHeal.ResetHeathDefault)
-            //             .Play();
-            //     }
-            // }
-
             if (!HuyManager.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
             {
                 HuyManager.SetTimeAttack(ref currentTime);
