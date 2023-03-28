@@ -12,17 +12,22 @@ namespace Script.Enemy
         [Range(0, 10)] [SerializeField] private int timeFalling;
         private Vector2 startPos;
 
-        private void Start()
+        private void Awake()
         {
             startPos = transform.position;
+            HuyManager.eventResetWhenPlayerDeath += WaitToReset;
         }
 
-        private void FixedUpdate()
+        private void WaitToReset()
         {
-            if (HuyManager.PlayerIsDeath())
-            {
-                WaitToReset();
-            }
+            DOTween.Sequence()
+                .AppendInterval(3.5f)
+                .AppendCallback(() =>
+                {
+                    body.bodyType = RigidbodyType2D.Static;
+                    body.transform.position = startPos;
+                    col.isTrigger = false;
+                }).Play();
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -41,18 +46,6 @@ namespace Script.Enemy
                 {
                     body.bodyType = RigidbodyType2D.Dynamic;
                     col.isTrigger = true;
-                }).Play();
-        }
-
-        private void WaitToReset()
-        {
-            DOTween.Sequence()
-                .AppendInterval(3.5f)
-                .AppendCallback(() =>
-                {
-                    body.bodyType = RigidbodyType2D.Static;
-                    body.transform.position = startPos;
-                    col.isTrigger = false;
                 }).Play();
         }
     }

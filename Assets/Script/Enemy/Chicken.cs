@@ -1,5 +1,4 @@
 using DG.Tweening;
-using Script.Player;
 using UnityEngine;
 using Script.Core;
 
@@ -14,13 +13,21 @@ namespace Script.Enemy
         [SerializeField] private Explosion explosionObj;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private bool isHitGround;
+        private Vector3 startRotation;
         private static readonly int IsRun = Animator.StringToHash("is_Run");
         private Sequence sequence;
+
+        private void Awake()
+        {
+            HuyManager.eventResetWhenPlayerDeath += WaitToReset;
+        }
+
         protected override void Start()
         {
+            base.Start();
             currentTime = maxTimeAttack;
             transform.position = enemySetting.startPosition;
-            playerCharacter = CharacterController2D.instance;
+            startRotation = new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z);
             ChickenMoving();
         }
 
@@ -68,43 +75,36 @@ namespace Script.Enemy
 
         private void FixedUpdate()
         {
-            if (HuyManager.PlayerIsDeath())
+            if (!enemySetting.canAttack)
             {
-                WaitToSpawn();
-            }
-            else
-            {
-                if (!enemySetting.canAttack)
+                if ((playerCharacter.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
-                    if ((playerCharacter.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
-                    {
-                        enemySetting.canAttack = true;
-                        body.bodyType = RigidbodyType2D.Kinematic;
-                    }
+                    enemySetting.canAttack = true;
+                    body.bodyType = RigidbodyType2D.Kinematic;
+                }
+            }
+
+            if (enemySetting.canAttack)
+            {
+                if ((playerCharacter.transform.position - transform.position).magnitude > 0.5f && isHitGround)
+                {
+                    MoveToTarget(isHitGround);
+                }
+                else
+                {
+                    MoveToTarget(false);
                 }
 
-                if (enemySetting.canAttack)
+                if (currentTime <= 0f)
                 {
-                    if ((playerCharacter.transform.position - transform.position).magnitude > 0.5f && isHitGround)
-                    {
-                        MoveToTarget(isHitGround);
-                    }
-                    else
-                    {
-                        MoveToTarget(false);
-                    }
-
-                    if (currentTime <= 0f)
-                    {
-                        enemySetting.canAttack = false;
-                        MoveToTarget(false);
-                        spriteRenderer.enabled = false;
-                        chickenCol.enabled = false;
-                        animator.enabled = false;
-                        explosionObj.transform.position = offsetAttack.position;
-                        explosionObj.gameObject.SetActive(true);
-                        currentTime = maxTimeAttack;
-                    }
+                    enemySetting.canAttack = false;
+                    MoveToTarget(false);
+                    spriteRenderer.enabled = false;
+                    chickenCol.enabled = false;
+                    animator.enabled = false;
+                    explosionObj.transform.position = offsetAttack.position;
+                    explosionObj.gameObject.SetActive(true);
+                    currentTime = maxTimeAttack;
                 }
             }
         }
@@ -127,18 +127,26 @@ namespace Script.Enemy
             animator.SetBool(IsRun, canMove);
         }
 
-        private void WaitToSpawn()
+        private void WaitToReset()
         {
-            DOTween.Sequence()
-                .AppendCallback(() => { body.MovePosition(body.transform.position); }).AppendInterval(4f)
-                .AppendCallback(() =>
-                {
-                    spriteRenderer.enabled = true;
-                    chickenCol.enabled = true;
-                    animator.enabled = true;
-                    transform.position = enemySetting.startPosition;
-                    MoveToTarget(false);
-                }).Play();
+            if (HuyManager.PlayerIsDeath())
+            {
+                DOTween.Sequence()
+                    .AppendCallback(() => { body.MovePosition(body.transform.position); }).AppendInterval(4f)
+                    .AppendCallback(() =>
+                    {
+                        enemySetting.canAttack = false;
+                        spriteRenderer.enabled = true;
+                        chickenCol.enabled = true;
+                        animator.enabled = true;
+                        transform.position = enemySetting.startPosition;
+                        transform.Rotate(startRotation);
+                        gameObject.SetActive(true);
+                        DOTween.Sequence()
+                            .AppendInterval(0.5f)
+                            .AppendCallback(ChickenMoving).Play();
+                    }).Play();
+            }
         }
 
         private void OnTriggerStay2D(Collider2D other)

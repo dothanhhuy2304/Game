@@ -12,7 +12,12 @@ namespace Script.Enemy
         [SerializeField] private float timeRespawn;
         private bool isReSpawn;
 
-        private void Update()
+        private void Awake()
+        {
+            HuyManager.eventResetWhenPlayerDeath += WaitToRest;
+        }
+
+        private void WaitToRest()
         {
             if (HuyManager.PlayerIsDeath() && !isReSpawn)
             {
@@ -20,6 +25,15 @@ namespace Script.Enemy
                 isReSpawn = true;
             }
         }
+
+        // private void Update()
+        // {
+        //     if (HuyManager.PlayerIsDeath() && !isReSpawn)
+        //     {
+        //         ReSpawnObject(timeRespawn);
+        //         isReSpawn = true;
+        //     }
+        // }
 
         private void OnCollisionEnter2D(Collision2D other)
         {

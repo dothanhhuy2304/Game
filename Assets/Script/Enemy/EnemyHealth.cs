@@ -13,6 +13,7 @@ namespace Script.Enemy
         [SerializeField] private float currentHealth;
         [SerializeField] private float maxHealth;
         [SerializeField] private float hpIc;
+        public float damageFix;
         [SerializeField] private EnemyHealthBar enemyHealthBar;
         [SerializeField] private float timeReSpawn;
         [SerializeField] private Collider2D enemyCollider;

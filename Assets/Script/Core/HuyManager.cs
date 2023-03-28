@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ namespace Script.Core
 {
     public static class HuyManager
     {
+        public static Action eventResetWhenPlayerDeath;
 
         public static void SetPlayerIsDeath(int state)
         {

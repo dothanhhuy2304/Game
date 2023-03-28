@@ -188,7 +188,8 @@ public class FireProjectile : MonoBehaviour
 
                 if (other.CompareTag("Enemy"))
                 {
-                    other.GetComponent<EnemyHealth>().GetDamage(playerCharacter.playerData.damageAttack);
+                    EnemyHealth eHealth = other.GetComponent<EnemyHealth>();
+                    eHealth.GetDamage(playerCharacter.playerData.damageAttack + eHealth.damageFix);
                     BulletExplosions();
                 }
 
@@ -210,7 +211,8 @@ public class FireProjectile : MonoBehaviour
             case EnemyType.Pet:
                 if (other.CompareTag("Enemy"))
                 {
-                    other.GetComponent<EnemyHealth>().GetDamage(petAI.petData.damageAttack);
+                    EnemyHealth eHealth = other.GetComponent<EnemyHealth>();
+                    eHealth.GetDamage(petAI.petData.damageAttack + eHealth.damageFix);
                     BulletExplosions();
                 }
 

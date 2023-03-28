@@ -86,6 +86,7 @@ namespace Script.Player
                     playerCharacter.body.bodyType = RigidbodyType2D.Static;
                     playerCharacter.col.enabled = false;
                     playerCharacter.animator.SetLayerWeight(1, 1f);
+                    HuyManager.eventResetWhenPlayerDeath?.Invoke();
                 }).AppendInterval(3)
                 .AppendCallback(() =>
                 {
@@ -111,6 +112,7 @@ namespace Script.Player
                     HuyManager.SetPlayerIsDeath(1);
                     gameManager.numberScore = 0;
                     gameManager.SetScore(0);
+                    HuyManager.eventResetWhenPlayerDeath?.Invoke();
                 }).AppendInterval(3)
                 .AppendCallback(() =>
                 {

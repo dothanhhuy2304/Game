@@ -9,7 +9,12 @@ namespace Script.Enemy
         [SerializeField] private float rangeAttack = 10f;
         [SerializeField] private LayerMask mask;
 
-        private void Update()
+        private void Awake()
+        {
+            HuyManager.eventResetWhenPlayerDeath += WaitToReset;
+        }
+
+        private void WaitToReset()
         {
             if (HuyManager.PlayerIsDeath())
             {
@@ -26,6 +31,25 @@ namespace Script.Enemy
                         .Play();
                 }
             }
+        }
+
+        private void Update()
+        {
+            // if (HuyManager.PlayerIsDeath())
+            // {
+            //     if (enemySetting.enemyHeal.EnemyDeath())
+            //     {
+            //         enemySetting.enemyHeal.ResetHeathDefault();
+            //         enemySetting.enemyHeal.ReSpawn(2);
+            //     }
+            //     else
+            //     {
+            //         DOTween.Sequence()
+            //             .AppendInterval(2f)
+            //             .AppendCallback(enemySetting.enemyHeal.ResetHeathDefault)
+            //             .Play();
+            //     }
+            // }
 
             if (!HuyManager.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
             {
