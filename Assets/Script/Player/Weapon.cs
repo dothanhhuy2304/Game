@@ -45,7 +45,11 @@ namespace Script.Player
             }
 
             tempIndex++;
-            if (!projectiles[tempIndex].gameObject.activeSelf)
+            if (projectiles[tempIndex].gameObject.activeSelf)
+            {
+                FindBullet();
+            }
+            else
             {
                 return tempIndex;
             }

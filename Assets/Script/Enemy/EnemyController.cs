@@ -75,7 +75,11 @@ namespace Script.Enemy
             }
 
             tempIndex++;
-            if (!projectiles[tempIndex].gameObject.activeSelf)
+            if (projectiles[tempIndex].gameObject.activeSelf)
+            {
+                FindBullet();
+            }
+            else
             {
                 return tempIndex;
             }
