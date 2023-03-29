@@ -1,4 +1,3 @@
-using DG.Tweening;
 using UnityEngine;
 using Script.Core;
 using Script.ScriptTable;
@@ -19,14 +18,13 @@ namespace Script.Player
         private float timeNextDash = 1.5f;
         [SerializeField] private bool mGrounded;
         [SerializeField] private bool isJump;
-        private bool mDBJump;
+        private bool mDbJump;
         public Animator animator;
         [SerializeField] private float clampMinX, clampMaxX;
         [HideInInspector] public PlayerHealth playerHealth;
         private bool isOnCar;
         private float startSpeed;
         private int jumpCount;
-        private int maxJumpCount = 2;
         private bool onWall;
 
         private void Start()
@@ -69,12 +67,25 @@ namespace Script.Player
             {
                 if (!HuyManager.GetPlayerIsHurt())
                 {
+                    RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f, 1 << LayerMask.NameToLayer("ground"));
+                    if (hit)
+                    {
+                        if (!hit.collider.CompareTag("ground"))
+                        {
+                            mGrounded = false;
+                        }
+                        else
+                        {
+                            mGrounded = true;
+                        }
+                    }
+
                     Move(playerInput * (startSpeed * Time.fixedDeltaTime));
 
                     if (isJump)
                     {
                         isJump = false;
-                        Jumps();
+                        Jump();
                     }
 
                     if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
@@ -91,15 +102,16 @@ namespace Script.Player
         private void Move(float move)
         {
             Vector3 position = body.velocity;
-            body.velocity = Vector2.SmoothDamp(position, new Vector2(move * 10f, position.y), ref velocity, MovementSmoothing);
+            body.velocity = Vector2.SmoothDamp(position, new Vector2(move * 10f, position.y), ref velocity,
+                MovementSmoothing);
 
             if (isOnCar || onWall)
             {
-                PlayerRun(0f);
+                AnimPlayerRun(0f);
             }
             else
             {
-                PlayerRun(Mathf.Abs(move));
+                AnimPlayerRun(Mathf.Abs(move));
             }
 
             if (move > 0f && !mFacingRight)
@@ -126,33 +138,31 @@ namespace Script.Player
             playerInput = move;
         }
 
-        private void Jumps()
+        private void Jump()
         {
             if (mGrounded)
             {
-                Jump();
-                mDBJump = true;
+                SetUpJump();
+                mDbJump = true;
             }
-            else if (mDBJump)
+            else if (mDbJump)
             {
-                Jump();
-                mDBJump = false;
+                SetUpJump();
+                mDbJump = false;
             }
 
+            mGrounded = false;
             isDashing = true;
             AnimPlayerJump();
         }
 
 
-        private void Jump()
+        private void SetUpJump()
         {
-            if (mGrounded || jumpCount < maxJumpCount)
-            {
-                body.velocity = new Vector2(body.velocity.x, 0f);
-                body.AddForce(Vector2.up * playerData.jumpForce, ForceMode2D.Impulse);
-                AudioManager.instance.Play("Player_Jump");
-                jumpCount++;
-            }
+            body.velocity = new Vector2(body.velocity.x, 0f);
+            body.AddForce(Vector2.up * playerData.jumpForce, ForceMode2D.Impulse);
+            AudioManager.instance.Play("Player_Jump");
+            jumpCount++;
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -160,15 +170,19 @@ namespace Script.Player
             EvaluateCollision(other);
         }
 
-        private void OnCollisionStay2D(Collision2D other)
-        {
-            EvaluateCollision(other);
-        }
+        #region If the player stands on the ground, We can use this function
 
-        private void OnCollisionExit2D(Collision2D other)
-        {
-            mGrounded = false;
-        }
+        //private void OnCollisionStay2D(Collision2D other)
+        //{
+        //EvaluateCollision(other);
+        //}
+
+        //private void OnCollisionExit2D(Collision2D other)
+        //{
+        //mGrounded = false;
+        //}
+
+        #endregion
 
         private void EvaluateCollision(Collision2D collision2D)
         {
@@ -188,6 +202,7 @@ namespace Script.Player
 
         private void Dash(float horizontal)
         {
+            body.velocity = new Vector2(body.velocity.x, 0);
             body.AddForce(Vector2.right * (horizontal * playerData.dashSpeed), ForceMode2D.Impulse);
             isDashing = false;
         }
@@ -202,7 +217,7 @@ namespace Script.Player
             transform.Rotate(0f, 180f, 0f);
         }
 
-        private void PlayerRun(float speed)
+        private void AnimPlayerRun(float speed)
         {
             animator.SetFloat("m_Run", speed);
         }
