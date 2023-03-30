@@ -46,7 +46,7 @@ namespace Script.Enemy
 
         private void FixedUpdate()
         {
-            HuyManager.SetTimeAttack(ref currentTime);
+            HuyManager.SetUpTime(ref currentTime);
             RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, mask);
             if (hit)
             {

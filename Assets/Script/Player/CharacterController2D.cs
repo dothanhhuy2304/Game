@@ -37,8 +37,8 @@ namespace Script.Player
         {
             if (!HuyManager.PlayerIsDeath() && !HuyManager.GetPlayerIsHurt())
             {
-                GetInput();
-                HuyManager.SetTimeAttack(ref timeNextDash);
+                PlayerInput();
+                HuyManager.SetUpTime(ref timeNextDash);
                 if (timeNextDash <= 0)
                 {
                     if ((Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) && isDashing)
@@ -50,7 +50,7 @@ namespace Script.Player
             }
         }
 
-        private void GetInput()
+        private void PlayerInput()
         {
 #if UNITY_EDITOR || UNITY_STANDALONE
             playerInput = Input.GetAxisRaw("Horizontal");

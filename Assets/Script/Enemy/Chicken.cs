@@ -66,7 +66,7 @@ namespace Script.Enemy
             if (enemySetting.canAttack)
             {
                 sequence.Kill();
-                HuyManager.SetTimeAttack(ref currentTime);
+                HuyManager.SetUpTime(ref currentTime);
             }
             
         }

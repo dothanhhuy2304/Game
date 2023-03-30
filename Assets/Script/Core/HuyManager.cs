@@ -28,7 +28,7 @@ namespace Script.Core
             return PlayerPrefs.GetInt("PlayerHurt") == 1;
         }
 
-        public static void SetTimeAttack(ref float currentTime)
+        public static void SetUpTime(ref float currentTime)
         {
             if (currentTime > 0f)
             {

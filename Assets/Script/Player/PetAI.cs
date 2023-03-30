@@ -35,7 +35,7 @@ namespace Script.Player
 
         private void Update()
         {
-            HuyManager.SetTimeAttack(ref currentTimeAttack);
+            HuyManager.SetUpTime(ref currentTimeAttack);
         }
 
         private void FixedUpdate()

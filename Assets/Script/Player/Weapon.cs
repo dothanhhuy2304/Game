@@ -14,7 +14,7 @@ namespace Script.Player
 
         private void LateUpdate()
         {
-            HuyManager.SetTimeAttack(ref timeAttack);
+            HuyManager.SetUpTime(ref timeAttack);
             if (HuyManager.PlayerIsDeath() || HuyManager.GetPlayerIsHurt() || EventSystem.current.IsPointerOverGameObject()) return;
             if (timeAttack <= 0)
             {

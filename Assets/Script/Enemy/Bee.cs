@@ -37,7 +37,7 @@ namespace Script.Enemy
         {
             if (!HuyManager.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
             {
-                HuyManager.SetTimeAttack(ref currentTime);
+                HuyManager.SetUpTime(ref currentTime);
                 if ((playerCharacter.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
                     RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, mask);

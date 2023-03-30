@@ -29,7 +29,7 @@ namespace Script.Enemy
             {
                 if (other.CompareTag("Player"))
                 {
-                    HuyManager.SetTimeAttack(ref timeAttack);
+                    HuyManager.SetUpTime(ref timeAttack);
                     if (timeAttack <= 0f)
                     {
                         PlayerHealth.instance.GetDamage(20f);
