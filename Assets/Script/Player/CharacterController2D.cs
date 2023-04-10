@@ -67,7 +67,8 @@ namespace Script.Player
             {
                 if (!HuyManager.GetPlayerIsHurt())
                 {
-                    RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f, 1 << LayerMask.NameToLayer("ground"));
+                    RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f,
+                        1 << LayerMask.NameToLayer("ground"));
                     if (hit)
                     {
                         if (!hit.collider.CompareTag("ground"))
@@ -170,7 +171,7 @@ namespace Script.Player
             EvaluateCollision(other);
         }
 
-        #region If the player stands on the ground, We can use this function
+        #region If the player stands on the ground and no raycast, We can use this function
 
         //private void OnCollisionStay2D(Collision2D other)
         //{
@@ -210,11 +211,11 @@ namespace Script.Player
         private void Flip()
         {
             mFacingRight = !mFacingRight;
+            transform.Rotate(0f, 180f, 0f);
             // var position = transform;
             // var theScale = position.localScale;
             // theScale.x *= -1;
             // position.localScale = theScale;
-            transform.Rotate(0f, 180f, 0f);
         }
 
         private void AnimPlayerRun(float speed)
