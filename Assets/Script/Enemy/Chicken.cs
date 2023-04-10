@@ -13,12 +13,15 @@ namespace Script.Enemy
         [SerializeField] private Explosion explosionObj;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private bool isHitGround;
+        private Quaternion startRotation;
+        private bool isDeath;
         private static readonly int IsRun = Animator.StringToHash("is_Run");
         private Sequence sequence;
 
         private void Awake()
         {
             HuyManager.eventResetWhenPlayerDeath += WaitToReset;
+            startRotation = transform.rotation;
         }
 
         protected override void Start()
@@ -27,6 +30,36 @@ namespace Script.Enemy
             currentTime = maxTimeAttack;
             transform.position = enemySetting.startPosition;
             ChickenMoving();
+        }
+        
+        private void WaitToReset()
+        {
+            if (HuyManager.PlayerIsDeath())
+            {
+                if(isDeath)
+                {
+                    
+                    DOTween.Sequence()
+                        .AppendCallback(() =>
+                        {
+                            isDeath = false;
+                            body.MovePosition(body.transform.position);
+                        })
+                        .AppendInterval(4f)
+                        .AppendCallback(() =>
+                        {
+                            enemySetting.canAttack = false;
+                            spriteRenderer.enabled = true;
+                            chickenCol.enabled = true;
+                            Transform trans = transform;
+                            trans.rotation = startRotation;
+                            trans.position = enemySetting.startPosition;
+                            transform.Rotate(new Vector3(0, rotations[1], 0));
+                            gameObject.SetActive(true);
+                            ChickenMoving();
+                        }).Play();
+                }
+            }
         }
 
         private void ChickenMoving()
@@ -95,11 +128,11 @@ namespace Script.Enemy
 
                 if (currentTime <= 0f)
                 {
+                    isDeath = true;
                     enemySetting.canAttack = false;
                     MoveToTarget(false);
                     spriteRenderer.enabled = false;
                     chickenCol.enabled = false;
-                    animator.enabled = false;
                     explosionObj.transform.position = offsetAttack.position;
                     explosionObj.gameObject.SetActive(true);
                     currentTime = maxTimeAttack;
@@ -123,26 +156,6 @@ namespace Script.Enemy
 
             Flip();
             animator.SetBool(IsRun, canMove);
-        }
-
-        private void WaitToReset()
-        {
-            if (HuyManager.PlayerIsDeath())
-            {
-                DOTween.Sequence()
-                    .AppendCallback(() => { body.MovePosition(body.transform.position); }).AppendInterval(4f)
-                    .AppendCallback(() =>
-                    {
-                        enemySetting.canAttack = false;
-                        spriteRenderer.enabled = true;
-                        chickenCol.enabled = true;
-                        animator.enabled = true;
-                        transform.position = enemySetting.startPosition;
-                        transform.Rotate(new Vector3(0, rotations[0], 0));
-                        gameObject.SetActive(true);
-                        ChickenMoving();
-                    }).Play();
-            }
         }
 
         private void OnTriggerStay2D(Collider2D other)
