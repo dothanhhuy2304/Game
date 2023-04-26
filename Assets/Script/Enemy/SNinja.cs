@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Photon.Pun;
 using Script.Player;
 using UnityEngine;
 using Script.Core;
@@ -46,6 +47,12 @@ namespace Script.Enemy
 
         private void FixedUpdate()
         {
+            Container();
+        }
+        
+        [PunRPC]
+        private void Container()
+        {
             HuyManager.SetUpTime(ref currentTime);
             RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, mask);
             if (hit)
@@ -83,7 +90,8 @@ namespace Script.Enemy
                             {
                                 DOTween.Sequence()
                                     .AppendInterval(0.5f)
-                                    .AppendCallback(MoveToPosition).Play();
+                                    .AppendCallback(() => { photonView.RPC(nameof(MoveToPosition), RpcTarget.All); })
+                                    .Play();
                             }
                         }
                     }
@@ -94,7 +102,8 @@ namespace Script.Enemy
                     {
                         DOTween.Sequence()
                             .AppendInterval(0.5f)
-                            .AppendCallback(MoveToPosition).Play();
+                            .AppendCallback(() => { photonView.RPC(nameof(MoveToPosition), RpcTarget.All); })
+                            .Play();
                     }
                 }
             }
@@ -104,11 +113,12 @@ namespace Script.Enemy
                 {
                     DOTween.Sequence()
                         .AppendInterval(0.3f)
-                        .AppendCallback(MoveToPosition).Play();
+                        .AppendCallback(() => { photonView.RPC(nameof(MoveToPosition), RpcTarget.All); }).Play();
                 }
             }
         }
 
+        [PunRPC]
         private void MoveToPosition()
         {
             if (transform.position != target)
@@ -123,15 +133,18 @@ namespace Script.Enemy
             {
                 if (target == enemySetting.startPosition)
                 {
-                    SetUpTargetToMove(enemySetting.endPosition, timeDurationMoving);
+                    //SetUpTargetToMove(enemySetting.endPosition, timeDurationMoving);
+                    photonView.RPC(nameof(SetUpTargetToMove), RpcTarget.All, enemySetting.endPosition, timeDurationMoving);
                 }
                 else
                 {
-                    SetUpTargetToMove(enemySetting.startPosition, timeDurationMoving);
+                    //SetUpTargetToMove(enemySetting.startPosition, timeDurationMoving);
+                    photonView.RPC(nameof(SetUpTargetToMove), RpcTarget.All, enemySetting.startPosition, timeDurationMoving);
                 }
             }
         }
 
+        [PunRPC]
         private void SetUpTargetToMove(Vector3 pos, float timeSleep)
         {
             DOTween.Sequence()
@@ -144,7 +157,8 @@ namespace Script.Enemy
                     target = pos;
                 }).Play();
         }
-
+        
+        [PunRPC]
         private void FaceToWards(Vector3 direction)
         {
             if (direction.x < 0f)
@@ -157,6 +171,7 @@ namespace Script.Enemy
             }
         }
 
+        [PunRPC]
         private void SNinjaAttack()
         {
             if ((playerCharacter.transform.position - transform.position).magnitude < 3f)
@@ -171,7 +186,7 @@ namespace Script.Enemy
             {
                 if (enemySetting.canMoving)
                 {
-                    MoveToPosition();
+                    photonView.RPC(nameof(MoveToPosition), RpcTarget.All);
                 }
             }
         }

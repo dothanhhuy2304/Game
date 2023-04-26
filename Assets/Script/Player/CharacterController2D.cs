@@ -1,11 +1,13 @@
+using Photon.Pun;
 using UnityEngine;
 using Script.Core;
 using Script.ScriptTable;
 
 namespace Script.Player
 {
-    public class CharacterController2D : FastSingleton<CharacterController2D>
+    public class CharacterController2D : MonoBehaviourPunCallbacks,IPunObservable
     {
+        public static CharacterController2D instance;
         public Rigidbody2D body;
         public Collider2D col;
         public Data playerData;
@@ -21,11 +23,26 @@ namespace Script.Player
         private bool mDbJump;
         public Animator animator;
         [SerializeField] private float clampMinX, clampMaxX;
-        [HideInInspector] public PlayerHealth playerHealth;
+        public PlayerHealth playerHealth;
         private bool isOnCar;
         private float startSpeed;
         private int jumpCount;
         private bool onWall;
+
+        private void Awake()
+        {
+            if (photonView.IsMine)
+            {
+                if (instance == null)
+                {
+                    instance = this;
+                }
+                else
+                {
+                    Destroy(gameObject);
+                }
+            }
+        }
 
         private void Start()
         {
@@ -35,16 +52,19 @@ namespace Script.Player
 
         private void Update()
         {
-            if (!HuyManager.PlayerIsDeath() && !HuyManager.GetPlayerIsHurt())
+            if (photonView.IsMine)
             {
-                PlayerInput();
-                HuyManager.SetUpTime(ref timeNextDash);
-                if (timeNextDash <= 0)
+                if (!HuyManager.PlayerIsDeath() && !HuyManager.GetPlayerIsHurt())
                 {
-                    if ((Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) && isDashing)
+                    PlayerInput();
+                    HuyManager.SetUpTime(ref timeNextDash);
+                    if (timeNextDash <= 0)
                     {
-                        Dash(playerInput);
-                        timeNextDash = 1.5f;
+                        if ((Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) && isDashing)
+                        {
+                            Dash(playerInput);
+                            timeNextDash = 1.5f;
+                        }
                     }
                 }
             }
@@ -52,50 +72,56 @@ namespace Script.Player
 
         private void PlayerInput()
         {
+            if (photonView.IsMine)
+            {
 #if UNITY_EDITOR || UNITY_STANDALONE
-            playerInput = Input.GetAxisRaw("Horizontal");
-            isJump |= Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow);
+                playerInput = Input.GetAxisRaw("Horizontal");
+                isJump |= Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow);
 #elif !UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
              playerInput = Input.GetAxisRaw("Vertical");
              isJump |= Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow);
 #endif
+            }
         }
 
         private void FixedUpdate()
         {
-            if (!HuyManager.PlayerIsDeath())
+            if (photonView.IsMine)
             {
-                if (!HuyManager.GetPlayerIsHurt())
+                if (!HuyManager.PlayerIsDeath())
                 {
-                    RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f,
-                        1 << LayerMask.NameToLayer("ground"));
-                    if (hit)
+                    if (!HuyManager.GetPlayerIsHurt())
                     {
-                        if (!hit.collider.CompareTag("ground"))
+                        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f,
+                            1 << LayerMask.NameToLayer("ground"));
+                        if (hit)
                         {
-                            mGrounded = false;
+                            if (!hit.collider.CompareTag("ground"))
+                            {
+                                mGrounded = false;
+                            }
+                            else
+                            {
+                                mGrounded = true;
+                            }
                         }
-                        else
+
+                        Move(playerInput * (startSpeed * Time.fixedDeltaTime));
+
+                        if (isJump)
                         {
-                            mGrounded = true;
+                            isJump = false;
+                            Jump();
                         }
+
+                        if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
+                        {
+                            jumpCount = 0;
+                            AnimPlayerJump();
+                        }
+
+                        animator.SetFloat("y_velocity", body.velocity.y);
                     }
-
-                    Move(playerInput * (startSpeed * Time.fixedDeltaTime));
-
-                    if (isJump)
-                    {
-                        isJump = false;
-                        Jump();
-                    }
-
-                    if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
-                    {
-                        jumpCount = 0;
-                        AnimPlayerJump();
-                    }
-
-                    animator.SetFloat("y_velocity", body.velocity.y);
                 }
             }
         }
@@ -243,7 +269,7 @@ namespace Script.Player
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("Grass"))
+            if (other.CompareTag("Grass") && photonView.IsMine)
             {
                 startSpeed -= 10f;
             }
@@ -251,7 +277,7 @@ namespace Script.Player
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (other.CompareTag("Car"))
+            if (other.CompareTag("Car") && photonView.IsMine)
             {
                 isOnCar = true;
             }
@@ -259,15 +285,38 @@ namespace Script.Player
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (other.CompareTag("Car"))
+            if (other.CompareTag("Car") && photonView.IsMine)
             {
                 isOnCar = false;
             }
 
-            if (other.CompareTag("Grass"))
+            if (other.CompareTag("Grass") && photonView.IsMine)
             {
                 startSpeed = playerData.movingSpeed;
             }
+        }
+
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                stream.SendNext(body.velocity);
+                stream.SendNext(body.rotation);
+                stream.SendNext(body.position);
+            }
+            else
+            {
+                body.velocity = (Vector3) stream.ReceiveNext();
+                body.SetRotation((Quaternion) stream.ReceiveNext());
+                body.position = (Vector3) stream.ReceiveNext();
+                float lag = Mathf.Abs((float) (PhotonNetwork.Time - info.SentServerTime));
+                body.position += body.velocity * lag;
+            }
+        }
+
+        public override void OnLeftRoom()
+        {
+            PhotonNetwork.Destroy(gameObject);
         }
     }
 }

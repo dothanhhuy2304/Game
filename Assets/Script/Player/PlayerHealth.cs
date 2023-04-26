@@ -1,5 +1,6 @@
 using System.Globalization;
 using DG.Tweening;
+using Photon.Pun;
 using Script.Core;
 using Script.GamePlay;
 using TMPro;
@@ -7,8 +8,9 @@ using UnityEngine;
 using Script.Enemy;
 namespace Script.Player
 {
-    public class PlayerHealth : FastSingleton<PlayerHealth>, IHealthSystem
+    public class PlayerHealth : MonoBehaviourPunCallbacks
     {
+        public static PlayerHealth instance;
         private GameManager gameManager;
         [SerializeField] private CharacterController2D playerCharacter;
         [SerializeField] private PlayerHealthBar playerHealthBar;
@@ -16,7 +18,28 @@ namespace Script.Player
         [SerializeField] private GameObject uIDamagePlayer;
         private TextMeshProUGUI txtDamage;
 
+        private void Awake()
+        {
+            if (photonView.IsMine)
+            {
+                if (instance==null)
+                {
+                    instance = this;
+                }
+                else
+                {
+                    Destroy(this);
+                }
+            }
+        }
+
         private void Start()
+        {
+            photonView.RPC(nameof(InitPlayerHealth), RpcTarget.All);
+        }
+
+        [PunRPC]
+        private void InitPlayerHealth()
         {
             gameManager = GameManager.instance;
             txtDamage = uIDamagePlayer.GetComponentInChildren<TextMeshProUGUI>();
@@ -43,34 +66,46 @@ namespace Script.Player
         {
             playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
         }
-
+        
+        [PunRPC]
         public void GetDamage(float damage)
         {
-            playerCharacter.playerData.currentHealth = Mathf.Clamp(playerCharacter.playerData.currentHealth - damage, 0, playerCharacter.playerData.maxHealth);
-            if (playerCharacter.playerData.currentHealth > 0)
-            { 
-                PlayerHurt();
-            }
-            else
+            if (photonView.IsMine)
             {
-                Die();
-            }
+                playerCharacter.playerData.currentHealth = Mathf.Clamp(
+                    playerCharacter.playerData.currentHealth - damage, 0, playerCharacter.playerData.maxHealth);
+                if (playerCharacter.playerData.currentHealth > 0)
+                {
+                    PlayerHurt();
+                }
+                else
+                {
+                    Die();
+                }
 
-            txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
-            playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
-            var uIDamageInstance = Instantiate(uIDamagePlayer, transform.position + Vector3.up, Quaternion.identity);
-            Destroy(uIDamageInstance, 0.5f);
+                txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
+                playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth,
+                    playerCharacter.playerData.maxHealth);
+                var uIDamageInstance =
+                    Instantiate(uIDamagePlayer, transform.position + Vector3.up, Quaternion.identity);
+                Destroy(uIDamageInstance, 0.5f);
+            }
         }
 
         public void Heal(float value)
         {
-            playerCharacter.playerData.currentHealth = Mathf.Clamp(playerCharacter.playerData.currentHealth + value, 0f, playerCharacter.playerData.maxHealth);
-            if (playerCharacter.playerData.currentHealth > playerCharacter.playerData.maxHealth)
-                playerCharacter.playerData.currentHealth = playerCharacter.playerData.maxHealth;
-            playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
+            if (photonView.IsMine)
+            {
+                playerCharacter.playerData.currentHealth = Mathf.Clamp(playerCharacter.playerData.currentHealth + value,
+                    0f, playerCharacter.playerData.maxHealth);
+                if (playerCharacter.playerData.currentHealth > playerCharacter.playerData.maxHealth)
+                    playerCharacter.playerData.currentHealth = playerCharacter.playerData.maxHealth;
+                playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth,
+                    playerCharacter.playerData.maxHealth);
+            }
         }
 
-        public void Die()
+        private void Die()
         {
             DOTween.Sequence()
 
@@ -101,7 +136,8 @@ namespace Script.Player
                     Car.instance.eventResetCar?.Invoke();
                 }).Play();
         }
-
+        
+        [PunRPC]
         public void DieByFalling()
         {
             DOTween.Sequence()
@@ -125,37 +161,50 @@ namespace Script.Player
                 }).Play();
         }
 
+        [PunRPC]
         private void PlayerHurt()
         {
-            DOTween.Sequence()
-                .AppendCallback(() =>
-                {
-                    playerCharacter.body.bodyType = RigidbodyType2D.Static;
-                    PlayerHurtAnim(playerCharacter.animator);
-                    HuyManager.SetPlayerIsHurt(1);
-                }).AppendInterval(0.5f)
-                .AppendCallback(() =>
-                {
-                    playerCharacter.body.bodyType = RigidbodyType2D.Dynamic;
-                    HuyManager.SetPlayerIsHurt(0);
-                }).Play();
+            if (photonView.IsMine)
+            {
+                DOTween.Sequence()
+                    .AppendCallback(() =>
+                    {
+                        playerCharacter.body.bodyType = RigidbodyType2D.Static;
+                        PlayerHurtAnim(playerCharacter.animator);
+                        HuyManager.SetPlayerIsHurt(1);
+                    }).AppendInterval(0.5f)
+                    .AppendCallback(() =>
+                    {
+                        playerCharacter.body.bodyType = RigidbodyType2D.Dynamic;
+                        HuyManager.SetPlayerIsHurt(0);
+                    }).Play();
+            }
         }
 
-        private static void PlayerDeathAnim(Animator animator)
+        private void PlayerDeathAnim(Animator animator)
         {
-            animator.SetTrigger("is_Death");
-            AudioManager.instance.Play("Enemy_Death");
+            if (photonView.IsMine)
+            {
+                animator.SetTrigger("is_Death");
+                AudioManager.instance.Play("Enemy_Death");
+            }
         }
 
-        private static void PlayerHurtAnim(Animator animator)
+        private void PlayerHurtAnim(Animator animator)
         {
-            animator.SetTrigger("is_Hurt");
-            AudioManager.instance.Play("Player_Hurt");
+            if (photonView.IsMine)
+            {
+                animator.SetTrigger("is_Hurt");
+                AudioManager.instance.Play("Player_Hurt");
+            }
         }
 
         private void OnApplicationQuit()
         {
-            playerCharacter.playerData.currentHealth = 0f;
+            if (photonView.IsMine)
+            {
+                playerCharacter.playerData.currentHealth = 0f;
+            }
         }
     }
 }

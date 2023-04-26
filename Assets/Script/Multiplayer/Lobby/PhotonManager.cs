@@ -216,26 +216,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel(loadingUiAnim.levelGame[currentScene]);
         loadingUiAnim.StopAnimationLoading();
     }
-    
-    // using for movement
-    // public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    // {
-    //     if (stream.IsWriting)
-    //     {
-    //         stream.SendNext(rigidbody.position);
-    //         stream.SendNext(rigidbody.position);
-    //         stream.SendNext(rigidbody.position);
-    //     }
-    //     else
-    //     {
-    //         rigidbody.position = (Vector3) stream.ReceiveNext();
-    //         rigidbody.rotation = (Quaternion) stream.ReceiveNext();
-    //         rigidbody.velocity = (Vector3) stream.ReceiveNext();
-    //
-    //         float lag = Mathf.Abs((float) (PhotonNetwork.Time - info.timestamp));
-    //         rigidbody.position += rigidbody.velocity * lag;
-    //     }
-    // }
 
     private void LogFeedback(string message)
     {

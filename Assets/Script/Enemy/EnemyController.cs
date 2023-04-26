@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Photon.Pun;
 using Script.Player;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ namespace Script.Enemy
         public bool canMoving;
     }
 
-    public abstract class EnemyController : MonoBehaviour
+    public abstract class EnemyController : MonoBehaviourPunCallbacks,IPunObservable
     {
         public EnemySetting enemySetting;
         [Header("Types")] [SerializeField] protected Rigidbody2D body;
@@ -87,5 +88,22 @@ namespace Script.Enemy
             return 0;
         }
 
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                stream.SendNext(body.velocity);
+                stream.SendNext(body.rotation);
+                stream.SendNext(body.position);
+            }
+            else
+            {
+                body.velocity = (Vector3) stream.ReceiveNext();
+                body.SetRotation((Quaternion) stream.ReceiveNext());
+                body.position = (Vector3) stream.ReceiveNext();
+                float lag = Mathf.Abs((float) (PhotonNetwork.Time - info.SentServerTime));
+                body.position += body.velocity * lag;
+            }
+        }
     }
 }

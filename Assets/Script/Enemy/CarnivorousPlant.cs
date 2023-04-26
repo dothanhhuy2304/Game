@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Photon.Pun;
 using UnityEngine;
 using Script.Core;
 
@@ -34,6 +35,12 @@ namespace Script.Enemy
         }
 
         private void FixedUpdate()
+        {
+            Container();
+        }
+
+        [PunRPC]
+        private void Container()
         {
             if (!HuyManager.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
             {
