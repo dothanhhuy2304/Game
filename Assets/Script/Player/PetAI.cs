@@ -35,12 +35,12 @@ namespace Script.Player
 
         private void Update()
         {
-            HuyManager.SetUpTime(ref currentTimeAttack);
+            HuyManager.Instance.SetUpTime(ref currentTimeAttack);
         }
 
         private void FixedUpdate()
         {
-            if (!HuyManager.PlayerIsDeath())
+            if (!HuyManager.Instance.PlayerIsDeath())
             {
                 if ((player.transform.position - transform.position).magnitude > distancePlayer)
                 {

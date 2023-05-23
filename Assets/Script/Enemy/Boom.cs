@@ -14,12 +14,12 @@ namespace Script.Enemy
 
         private void Awake()
         {
-            HuyManager.eventResetWhenPlayerDeath += WaitToRest;
+            HuyManager.Instance.eventResetWhenPlayerDeath += WaitToRest;
         }
 
         private void WaitToRest()
         {
-            if (HuyManager.PlayerIsDeath() && !isReSpawn)
+            if (HuyManager.Instance.PlayerIsDeath() && !isReSpawn)
             {
                 ReSpawnObject(timeRespawn);
                 isReSpawn = true;

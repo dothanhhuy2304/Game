@@ -24,7 +24,7 @@ namespace Script.Item
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (!HuyManager.PlayerIsDeath())
+            if (!HuyManager.Instance.PlayerIsDeath())
             {
                 if (other.CompareTag("Player"))
                 {

@@ -35,10 +35,10 @@ namespace Script.Player
 
         private void Update()
         {
-            if (!HuyManager.PlayerIsDeath() && !HuyManager.GetPlayerIsHurt())
+            if (!HuyManager.Instance.PlayerIsDeath() && !HuyManager.Instance.GetPlayerIsHurt())
             {
                 PlayerInput();
-                HuyManager.SetUpTime(ref timeNextDash);
+                HuyManager.Instance.SetUpTime(ref timeNextDash);
                 if (timeNextDash <= 0)
                 {
                     if ((Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) && isDashing)
@@ -63,9 +63,9 @@ namespace Script.Player
 
         private void FixedUpdate()
         {
-            if (!HuyManager.PlayerIsDeath())
+            if (!HuyManager.Instance.PlayerIsDeath())
             {
-                if (!HuyManager.GetPlayerIsHurt())
+                if (!HuyManager.Instance.GetPlayerIsHurt())
                 {
                     RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f,
                         1 << LayerMask.NameToLayer("ground"));
@@ -103,8 +103,7 @@ namespace Script.Player
         private void Move(float move)
         {
             Vector3 position = body.velocity;
-            body.velocity = Vector2.SmoothDamp(position, new Vector2(move * 10f, position.y), ref velocity,
-                MovementSmoothing);
+            body.velocity = Vector2.SmoothDamp(position, new Vector2(move * 10f, position.y), ref velocity, MovementSmoothing);
 
             if (isOnCar || onWall)
             {

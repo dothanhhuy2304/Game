@@ -37,7 +37,7 @@ namespace Script.Enemy
 
         private IEnumerator IeFireOn(float delay)
         {
-            if (HuyManager.PlayerIsDeath() || HuyManager.GetPlayerIsHurt()) yield break;
+            if (HuyManager.Instance.PlayerIsDeath() || HuyManager.Instance.GetPlayerIsHurt()) yield break;
             if (isFirst)
             {
                 animator.Play("Begin");

@@ -20,7 +20,7 @@ namespace Script.Enemy
 
         private void Awake()
         {
-            HuyManager.eventResetWhenPlayerDeath += WaitToReset;
+            HuyManager.Instance.eventResetWhenPlayerDeath += WaitToReset;
             startRotation = transform.rotation;
         }
 
@@ -34,7 +34,7 @@ namespace Script.Enemy
         
         private void WaitToReset()
         {
-            if (HuyManager.PlayerIsDeath())
+            if (HuyManager.Instance.PlayerIsDeath())
             {
                 if(isDeath)
                 {
@@ -99,7 +99,7 @@ namespace Script.Enemy
             if (enemySetting.canAttack)
             {
                 sequence.Kill();
-                HuyManager.SetUpTime(ref currentTime);
+                HuyManager.Instance.SetUpTime(ref currentTime);
             }
             
         }

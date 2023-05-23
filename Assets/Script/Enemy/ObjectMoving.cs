@@ -25,11 +25,11 @@ namespace Script.Enemy
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (!HuyManager.PlayerIsDeath())
+            if (!HuyManager.Instance.PlayerIsDeath())
             {
                 if (other.CompareTag("Player"))
                 {
-                    HuyManager.SetUpTime(ref timeAttack);
+                    HuyManager.Instance.SetUpTime(ref timeAttack);
                     if (timeAttack <= 0f)
                     {
                         PlayerHealth.instance.GetDamage(20f);

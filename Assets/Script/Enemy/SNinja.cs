@@ -22,12 +22,12 @@ namespace Script.Enemy
         private void Awake()
         {
             currentTime = 0;
-            HuyManager.eventResetWhenPlayerDeath += WaitToReset;
+            HuyManager.Instance.eventResetWhenPlayerDeath += WaitToReset;
         }
 
         private void WaitToReset()
         {
-            if (HuyManager.PlayerIsDeath())
+            if (HuyManager.Instance.PlayerIsDeath())
             {
                 if (enemySetting.enemyHeal.EnemyDeath())
                 {
@@ -46,7 +46,7 @@ namespace Script.Enemy
 
         private void FixedUpdate()
         {
-            HuyManager.SetUpTime(ref currentTime);
+            HuyManager.Instance.SetUpTime(ref currentTime);
             RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, mask);
             if (hit)
             {
@@ -62,7 +62,7 @@ namespace Script.Enemy
 
             if (canAttack)
             {
-                if (!HuyManager.PlayerIsDeath())
+                if (!HuyManager.Instance.PlayerIsDeath())
                 {
                     if (enemySetting.enemyHeal.EnemyDeath())
                     {
@@ -73,7 +73,7 @@ namespace Script.Enemy
                     }
                     else
                     {
-                        if (!HuyManager.PlayerIsDeath())
+                        if (!HuyManager.Instance.PlayerIsDeath())
                         {
                             SNinjaAttack();
                         }
@@ -191,7 +191,7 @@ namespace Script.Enemy
 
                 if ((playerCharacter.transform.position - transform.position).magnitude < 2f)
                 {
-                    if (HuyManager.PlayerIsDeath())
+                    if (HuyManager.Instance.PlayerIsDeath())
                         return;
                     DOTween.Sequence()
                         .AppendCallback(() =>
@@ -231,7 +231,7 @@ namespace Script.Enemy
             body.MovePosition(body.transform.position);
             if (currentTime <= 0f)
             {
-                if (!HuyManager.PlayerIsDeath())
+                if (!HuyManager.Instance.PlayerIsDeath())
                 {
                     if (!enemySetting.enemyHeal.EnemyDeath())
                     {

@@ -11,12 +11,12 @@ namespace Script.Enemy
 
         private void Awake()
         {
-            HuyManager.eventResetWhenPlayerDeath += WaitToReset;
+            HuyManager.Instance.eventResetWhenPlayerDeath += WaitToReset;
         }
 
         private void WaitToReset()
         {
-            if (HuyManager.PlayerIsDeath())
+            if (HuyManager.Instance.PlayerIsDeath())
             {
                 if (enemySetting.enemyHeal.EnemyDeath())
                 {
@@ -35,9 +35,9 @@ namespace Script.Enemy
 
         private void FixedUpdate()
         {
-            if (!HuyManager.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
+            if (!HuyManager.Instance.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
             {
-                HuyManager.SetUpTime(ref currentTime);
+                HuyManager.Instance.SetUpTime(ref currentTime);
                 if ((playerCharacter.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
                     RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, mask);

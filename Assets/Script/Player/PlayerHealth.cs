@@ -28,8 +28,8 @@ namespace Script.Player
             {
                 LoadCurrentHealth();
             }
-            HuyManager.SetPlayerIsDeath(0);
-            HuyManager.SetPlayerIsHurt(0);
+            HuyManager.Instance.SetPlayerIsDeath(0);
+            HuyManager.Instance.SetPlayerIsHurt(0);
         }
 
         private void SetMaxHealth(float maxHealth, float hpIc)
@@ -82,11 +82,11 @@ namespace Script.Player
                     gameManager.numberScore = 0;
                     gameManager.SetScore(0);
                     //end set score
-                    HuyManager.SetPlayerIsDeath(1);
+                    HuyManager.Instance.SetPlayerIsDeath(1);
                     playerCharacter.body.bodyType = RigidbodyType2D.Static;
                     playerCharacter.col.enabled = false;
                     playerCharacter.animator.SetLayerWeight(1, 1f);
-                    HuyManager.eventResetWhenPlayerDeath?.Invoke();
+                    HuyManager.Instance.eventResetWhenPlayerDeath?.Invoke();
                 }).AppendInterval(3)
                 .AppendCallback(() =>
                 {
@@ -97,7 +97,7 @@ namespace Script.Player
                     playerCharacter.animator.SetLayerWeight(1, 0);
                     playerCharacter.body.bodyType = RigidbodyType2D.Dynamic;
                     playerCharacter.col.enabled = true;
-                    HuyManager.SetPlayerIsDeath(0);
+                    HuyManager.Instance.SetPlayerIsDeath(0);
                     Car.instance.eventResetCar?.Invoke();
                 }).Play();
         }
@@ -109,10 +109,10 @@ namespace Script.Player
                 {
                     playerCharacter.playerData.currentHealth = 0f;
                     AudioManager.instance.Play("Enemy_Death");
-                    HuyManager.SetPlayerIsDeath(1);
+                    HuyManager.Instance.SetPlayerIsDeath(1);
                     gameManager.numberScore = 0;
                     gameManager.SetScore(0);
-                    HuyManager.eventResetWhenPlayerDeath?.Invoke();
+                    HuyManager.Instance.eventResetWhenPlayerDeath?.Invoke();
                 }).AppendInterval(3)
                 .AppendCallback(() =>
                 {
@@ -120,7 +120,7 @@ namespace Script.Player
                     Transform position = transform;
                     position.position = new Vector3(UserPref.currentPosition[0], UserPref.currentPosition[1], UserPref.currentPosition[2]);
                     petAi.transform.position = position.up;
-                    HuyManager.SetPlayerIsDeath(0);
+                    HuyManager.Instance.SetPlayerIsDeath(0);
                     Car.instance.eventResetCar?.Invoke();
                 }).Play();
         }
@@ -132,12 +132,12 @@ namespace Script.Player
                 {
                     playerCharacter.body.bodyType = RigidbodyType2D.Static;
                     PlayerHurtAnim(playerCharacter.animator);
-                    HuyManager.SetPlayerIsHurt(1);
+                    HuyManager.Instance.SetPlayerIsHurt(1);
                 }).AppendInterval(0.5f)
                 .AppendCallback(() =>
                 {
                     playerCharacter.body.bodyType = RigidbodyType2D.Dynamic;
-                    HuyManager.SetPlayerIsHurt(0);
+                    HuyManager.Instance.SetPlayerIsHurt(0);
                 }).Play();
         }
 

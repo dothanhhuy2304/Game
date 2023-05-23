@@ -14,8 +14,8 @@ namespace Script.Enemy
         {
             if (other.CompareTag("Player"))
             {
-                if (HuyManager.PlayerIsDeath() || HuyManager.GetPlayerIsHurt()) return;
-                HuyManager.SetUpTime(ref timeAttack);
+                if (HuyManager.Instance.PlayerIsDeath() || HuyManager.Instance.GetPlayerIsHurt()) return;
+                HuyManager.Instance.SetUpTime(ref timeAttack);
                 if (isHurts)
                 {
                     if (timeAttack <= 0f)

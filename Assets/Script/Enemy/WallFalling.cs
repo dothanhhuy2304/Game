@@ -15,7 +15,7 @@ namespace Script.Enemy
         private void Awake()
         {
             startPos = transform.position;
-            HuyManager.eventResetWhenPlayerDeath += WaitToReset;
+            HuyManager.Instance.eventResetWhenPlayerDeath += WaitToReset;
         }
 
         private void WaitToReset()

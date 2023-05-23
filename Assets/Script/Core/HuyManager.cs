@@ -4,31 +4,37 @@ using UnityEngine;
 
 namespace Script.Core
 {
-    public static class HuyManager
+    public class HuyManager : Singleton<HuyManager>
     {
-        public static Action eventResetWhenPlayerDeath;
+        public Action eventResetWhenPlayerDeath;
 
-        public static void SetPlayerIsDeath(int state)
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void InitOnLoad()
+        {
+            Init();
+        }
+        
+        public void SetPlayerIsDeath(int state)
         {
             PlayerPrefs.SetInt("PlayerIsDeath", state);
         }
 
-        public static bool PlayerIsDeath()
+        public bool PlayerIsDeath()
         {
             return PlayerPrefs.GetInt("PlayerIsDeath") == 1;
         }
 
-        public static void SetPlayerIsHurt(int state)
+        public void SetPlayerIsHurt(int state)
         {
             PlayerPrefs.SetInt("PlayerHurt", state);
         }
 
-        public static bool GetPlayerIsHurt()
+        public bool GetPlayerIsHurt()
         {
             return PlayerPrefs.GetInt("PlayerHurt") == 1;
         }
 
-        public static void SetUpTime(ref float currentTime)
+        public void SetUpTime(ref float currentTime)
         {
             if (currentTime > 0f)
             {
@@ -40,10 +46,19 @@ namespace Script.Core
             }
         }
 
-        public static void CameraShake(Camera camera, float duration, Vector3 strength, int vibrato, float randomness,
-            bool fadeOut)
+        public void CameraShake(Camera cam, float duration, Vector3 strength, int vibrato, float randomness, bool fadeOut)
         {
-            camera.DOShakePosition(duration, strength, vibrato, randomness, fadeOut);
+            cam.DOShakePosition(duration, strength, vibrato, randomness, fadeOut);
+        }
+
+        public Action RegisterEventPlayerDeath()
+        {
+            return eventResetWhenPlayerDeath;
+        }
+
+        public void EventPlayerDeath()
+        {
+            eventResetWhenPlayerDeath?.Invoke();
         }
     }
 
