@@ -85,35 +85,6 @@ namespace Script.GamePlay
             txtMoney.text = numberGold + " $";
         }
 
-        // private static void SaveData<T>(T obj, string key)
-        // {
-        //     BinaryFormatter formatter = new BinaryFormatter();
-        //     string path = Application.persistentDataPath + "/saveData/";
-        //     Directory.CreateDirectory(path);
-        //     FileStream fileStream = new FileStream(path + key, FileMode.OpenOrCreate);
-        //     formatter.Serialize(fileStream, obj);
-        //     fileStream.Close();
-        // }
-
-        // private static T LoadData<T>(string key)
-        // {
-        //     T data = default;
-        //     BinaryFormatter formatter = new BinaryFormatter();
-        //     string path = Application.persistentDataPath + "/saveData/";
-        //     if (File.Exists(path + key))
-        //     {
-        //         FileStream fileStream = new FileStream(path + key, FileMode.OpenOrCreate);
-        //         data = (T) formatter.Deserialize(fileStream);
-        //         fileStream.Close();
-        //     }
-        //     else
-        //     {
-        //         return data;
-        //     }
-        //
-        //     return data;
-        // }
-
         private void OnApplicationQuit()
         {
             DataService.GameData gameData = new DataService.GameData();

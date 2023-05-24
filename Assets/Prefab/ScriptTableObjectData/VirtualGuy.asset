@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: VirtualGuy
   m_EditorClassIdentifier: 
   movingSpeed: 40
-  jumpForce: 10
+  jumpForce: 11
   dashSpeed: 70
   heathDefault: 100
   currentHealth: 0
