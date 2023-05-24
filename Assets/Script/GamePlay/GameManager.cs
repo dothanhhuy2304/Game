@@ -39,20 +39,17 @@ namespace Script.GamePlay
 
             if (!string.IsNullOrEmpty(UserPref.userId))
             {
-                var listPlayerData = DataService.GetConnection().Table<DataService.GameData>().ToList();
-                foreach (var player in listPlayerData)
+                var playerData = DataService.GetConnection().Table<DataService.GameData>().FirstOrDefault();
+                if (playerData.PlayerId.Equals(UserPref.userId))
                 {
-                    if (player.PlayerId.Equals(UserPref.userId))
-                    {
-                        SetScore(player.score);
-                        SetMoney(player.gold);
-                        SetDiamond(player.diamond);
-                        UserPref.characterSelected = player.characterSelect;
-                        UserPref.currentScreen = player.levelId;
-                        UserPref.currentPosition[0] = player.positionX;
-                        UserPref.currentPosition[1] = player.positionY;
-                        UserPref.currentPosition[2] = player.positionZ;
-                    }
+                    SetScore(playerData.score);
+                    SetMoney(playerData.gold);
+                    SetDiamond(playerData.diamond);
+                    UserPref.characterSelected = playerData.characterSelect;
+                    UserPref.currentScreen = playerData.levelId;
+                    UserPref.currentPosition[0] = playerData.positionX;
+                    UserPref.currentPosition[1] = playerData.positionY;
+                    UserPref.currentPosition[2] = playerData.positionZ;
                 }
             }
             else
