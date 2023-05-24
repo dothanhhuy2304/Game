@@ -13,7 +13,7 @@ namespace Script.Core
         {
             Init();
         }
-        
+
         public void SetPlayerIsDeath(int state)
         {
             PlayerPrefs.SetInt("PlayerIsDeath", state);
@@ -46,7 +46,8 @@ namespace Script.Core
             }
         }
 
-        public void CameraShake(Camera cam, float duration, Vector3 strength, int vibrato, float randomness, bool fadeOut)
+        public void CameraShake(Camera cam, float duration, Vector3 strength, int vibrato, float randomness,
+            bool fadeOut)
         {
             cam.DOShakePosition(duration, strength, vibrato, randomness, fadeOut);
         }
@@ -59,6 +60,29 @@ namespace Script.Core
         public void EventPlayerDeath()
         {
             eventResetWhenPlayerDeath?.Invoke();
+        }
+
+        public DataService.GameData GetCurrentUseData()
+        {
+            return DataService.GetConnection().Table<DataService.GameData>().FirstOrDefault();
+        }
+
+        public void UpdateUserData(DataService.GameData pf)
+        {
+            DataService.GameData gameData = new DataService.GameData()
+            {
+                PlayerId = pf.PlayerId,
+                characterSelect = pf.characterSelect,
+                levelId = pf.levelId,
+                positionX = pf.positionX,
+                positionY = pf.positionY,
+                positionZ = pf.positionZ,
+                score = pf.score,
+                gold = pf.gold,
+                diamond = pf.diamond,
+                health = pf.health
+            };
+            DataService.GetConnection().Table<DataService.GameData>().Connection.InsertOrReplace(gameData);
         }
     }
 

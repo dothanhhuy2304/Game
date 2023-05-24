@@ -70,7 +70,7 @@ public class UserRegister : MonoBehaviour
                     soundMusic = 1f,
                     soundEffect = 1f
                 };
-                DataService.GetConnection().Table<DataService.GameData>().Connection.InsertOrReplace(playerSetting);
+                DataService.GetConnection().Table<DataService.PlayerSetting>().Connection.InsertOrReplace(playerSetting);
 
                 DataService.Item item = new DataService.Item {name = "tEst", value = 2};
                 DataService.GetConnection().Table<DataService.Item>().Connection.Insert(item);
