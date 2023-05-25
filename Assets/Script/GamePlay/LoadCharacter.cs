@@ -1,3 +1,4 @@
+using Script.Core;
 using Script.Player;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace Script.GamePlay
                 Instantiate(Resources.Load<GameObject>("GameManager"));
             }
 
-            characters[UserPref.characterSelected].SetActive(true);
+            characters[HuyManager.Instance.characterSelected].SetActive(true);
 
             AudioManager.instance.Plays_Music("Music_Game");
 

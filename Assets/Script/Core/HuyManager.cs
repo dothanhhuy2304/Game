@@ -13,6 +13,12 @@ namespace Script.Core
         {
             Init();
         }
+        
+        public string userId;
+        public int characterSelected;
+        public int currentScreen;
+        public int saveScreenPass;
+        public float[] currentPosition = new float[3];
 
         public void SetPlayerIsDeath(int state)
         {
@@ -62,9 +68,14 @@ namespace Script.Core
             eventResetWhenPlayerDeath?.Invoke();
         }
 
-        public DataService.GameData GetCurrentUseData()
+        public DataService.GameData GetCurrentPlayerData()
         {
             return DataService.GetConnection().Table<DataService.GameData>().FirstOrDefault();
+        }
+
+        public DataService.PlayerProfileData GetCurrentPlayerProfile()
+        {
+            return DataService.GetConnection().Table<DataService.PlayerProfileData>().FirstOrDefault();
         }
 
         public void UpdateUserData(DataService.GameData pf)

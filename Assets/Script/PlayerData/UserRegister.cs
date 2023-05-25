@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using Script.Core;
 using Script.GamePlay;
 using TMPro;
 using UnityEngine;
@@ -49,10 +50,10 @@ public class UserRegister : MonoBehaviour
 
                 DataService.GetConnection().Table<DataService.PlayerProfileData>().Connection
                     .InsertOrReplace(playerProfileData);
-                UserPref.userId = playerProfileData.Id;
+                HuyManager.Instance.userId = playerProfileData.Id;
                 DataService.GameData gameData = new DataService.GameData
                 {
-                    PlayerId = UserPref.userId,
+                    PlayerId = HuyManager.Instance.userId,
                     characterSelect = 0,
                     levelId = 0,
                     gold = 0,
@@ -66,7 +67,7 @@ public class UserRegister : MonoBehaviour
 
                 DataService.PlayerSetting playerSetting = new DataService.PlayerSetting
                 {
-                    PlayerId = UserPref.userId,
+                    PlayerId = HuyManager.Instance.userId,
                     soundMusic = 1f,
                     soundEffect = 1f
                 };
@@ -75,9 +76,9 @@ public class UserRegister : MonoBehaviour
                 DataService.Item item = new DataService.Item {name = "tEst", value = 2};
                 DataService.GetConnection().Table<DataService.Item>().Connection.Insert(item);
                 //Load Data
-                UserPref.currentPosition[0] = gameData.positionX;
-                UserPref.currentPosition[1] = gameData.positionY;
-                UserPref.currentPosition[2] = gameData.positionZ;
+                HuyManager.Instance.currentPosition[0] = gameData.positionX;
+                HuyManager.Instance.currentPosition[1] = gameData.positionY;
+                HuyManager.Instance.currentPosition[2] = gameData.positionZ;
                 var data = DataService.GetConnection().Table<DataService.GameData>().FirstOrDefault();
                 gameManager.SetScore(data.score);
                 gameManager.SetMoney(data.gold);

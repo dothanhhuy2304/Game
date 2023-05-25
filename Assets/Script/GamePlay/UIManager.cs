@@ -1,4 +1,5 @@
 using System.Linq;
+using Script.Core;
 using UnityEngine;
 using UnityEngine.UI;
 using Script.Player;
@@ -29,7 +30,7 @@ namespace Script.GamePlay
             btnShowAndHiddenUi.onClick.AddListener(() => { ShowAndHiddenUiSetting(ref isShowUiSetting); });
             sliderMusic.onValueChanged.AddListener(ChangeVolumeMusic);
             sliderEffect.onValueChanged.AddListener(ChangeVolumeEffect);
-            if (string.IsNullOrEmpty(UserPref.userId))
+            if (string.IsNullOrEmpty(HuyManager.Instance.userId))
             {
                 sliderMusic.value = 1f;
                 sliderEffect.value = 1f;
@@ -41,7 +42,7 @@ namespace Script.GamePlay
 
             foreach (var player in playerSetting)
             {
-                if (player.PlayerId.Equals(UserPref.userId))
+                if (player.PlayerId.Equals(HuyManager.Instance.userId))
                 {
                     sliderMusic.value = player.soundMusic;
                     sliderEffect.value = player.soundEffect;
@@ -73,7 +74,7 @@ namespace Script.GamePlay
             if (DataService.GetConnection().Table<DataService.PlayerSetting>().Any())
             {
                 DataService.GetConnection()
-                    .Execute($"update PlayerSetting set soundMusic = '{sliderValue}' where PlayerId = '{UserPref.userId}'");
+                    .Execute($"update PlayerSetting set soundMusic = '{sliderValue}' where PlayerId = '{HuyManager.Instance.userId}'");
             }
         }
 
@@ -87,7 +88,7 @@ namespace Script.GamePlay
             if (DataService.GetConnection().Table<DataService.PlayerSetting>().Any())
             {
                 DataService.GetConnection()
-                    .Execute($"update PlayerSetting set soundEffect = '{sliderValue}' where PlayerId = '{UserPref.userId}'");
+                    .Execute($"update PlayerSetting set soundEffect = '{sliderValue}' where PlayerId = '{HuyManager.Instance.userId}'");
             }
         }
 

@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -50,6 +51,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
                         // Make instance persistent.
                         DontDestroyOnLoad(singletonObject);
+                        
                     }
                 }
 
@@ -58,10 +60,10 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         }
     }
 
-    private void OnApplicationQuit()
-    {
-        m_ShuttingDown = true;
-    }
+    // private void OnApplicationQuit()
+    // {
+    //     m_ShuttingDown = true;
+    // }
 
     private void OnDestroy()
     {

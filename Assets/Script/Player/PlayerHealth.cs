@@ -92,7 +92,7 @@ namespace Script.Player
                 {
                     SetMaxHealth(playerCharacter.playerData.heathDefault, playerCharacter.playerData.hpIc);
                     Transform position = transform;
-                    position.position = new Vector3(UserPref.currentPosition[0], UserPref.currentPosition[1], UserPref.currentPosition[2]);
+                    position.position = new Vector3(HuyManager.Instance.currentPosition[0], HuyManager.Instance.currentPosition[1], HuyManager.Instance.currentPosition[2]);
                     petAi.transform.position = position.up;
                     playerCharacter.animator.SetLayerWeight(1, 0);
                     playerCharacter.body.bodyType = RigidbodyType2D.Dynamic;
@@ -118,7 +118,7 @@ namespace Script.Player
                 {
                     SetMaxHealth(playerCharacter.playerData.heathDefault, playerCharacter.playerData.hpIc);
                     Transform position = transform;
-                    position.position = new Vector3(UserPref.currentPosition[0], UserPref.currentPosition[1], UserPref.currentPosition[2]);
+                    position.position = new Vector3(HuyManager.Instance.currentPosition[0], HuyManager.Instance.currentPosition[1], HuyManager.Instance.currentPosition[2]);
                     petAi.transform.position = position.up;
                     HuyManager.Instance.SetPlayerIsDeath(0);
                     Car.instance.eventResetCar?.Invoke();

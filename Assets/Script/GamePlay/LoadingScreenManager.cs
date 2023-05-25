@@ -1,4 +1,5 @@
 using System.Collections;
+using Script.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -13,20 +14,20 @@ namespace Script.GamePlay
 
         public int LoadCurrentScreen()
         {
-            return UserPref.currentScreen;
+            return HuyManager.Instance.currentScreen;
         }
 
         public int RestartLevel()
         {
-            return UserPref.currentScreen = 0;
+            return HuyManager.Instance.currentScreen = 0;
         }
 
         public int NextScreen(int i)
         {
             DataService.GetConnection()
                 .Execute(
-                    $"update GameData set levelId = '{UserPref.saveScreenPass}' where PlayerId = '{UserPref.userId}'");
-            return UserPref.currentScreen = SceneManager.GetActiveScene().buildIndex + i;
+                    $"update GameData set levelId = '{HuyManager.Instance.saveScreenPass}' where PlayerId = '{HuyManager.Instance.userId}'");
+            return HuyManager.Instance.currentScreen = SceneManager.GetActiveScene().buildIndex + i;
         }
 
         public void FadeLoadingScene(int sceneIndex)

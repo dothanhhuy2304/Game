@@ -1,17 +1,18 @@
 using System.Linq;
+using Script.Core;
 using TMPro;
 using UnityEngine;
 
 namespace Script.GamePlay
 {
-    public class UserPref
-    {
-        public static string userId;
-        public static int characterSelected;
-        public static int currentScreen;
-        public static int saveScreenPass;
-        public static float[] currentPosition = new float[3];
-    }
+    // public class UserPref
+    // {
+    //     public static string userId;
+    //     public static int characterSelected;
+    //     public static int currentScreen;
+    //     public static int saveScreenPass;
+    //     public static float[] currentPosition = new float[3];
+    // }
     
     public class GameManager : FastSingleton<GameManager>
     {
@@ -33,23 +34,23 @@ namespace Script.GamePlay
             }
             else
             {
-                UserPref.userId = DataService.GetConnection().Table<DataService.PlayerProfileData>().FirstOrDefault().Id;
+                HuyManager.Instance.userId = HuyManager.Instance.GetCurrentPlayerProfile().Id;
                 Debug.LogError("Exit data");
             }
 
-            if (!string.IsNullOrEmpty(UserPref.userId))
+            if (!string.IsNullOrEmpty(HuyManager.Instance.userId))
             {
-                var playerData = DataService.GetConnection().Table<DataService.GameData>().FirstOrDefault();
-                if (playerData.PlayerId.Equals(UserPref.userId))
+                var playerData = HuyManager.Instance.GetCurrentPlayerData();
+                if (playerData.PlayerId.Equals(HuyManager.Instance.userId))
                 {
                     SetScore(playerData.score);
                     SetMoney(playerData.gold);
                     SetDiamond(playerData.diamond);
-                    UserPref.characterSelected = playerData.characterSelect;
-                    UserPref.currentScreen = playerData.levelId;
-                    UserPref.currentPosition[0] = playerData.positionX;
-                    UserPref.currentPosition[1] = playerData.positionY;
-                    UserPref.currentPosition[2] = playerData.positionZ;
+                    HuyManager.Instance.characterSelected = playerData.characterSelect;
+                    HuyManager.Instance.currentScreen = playerData.levelId;
+                    HuyManager.Instance.currentPosition[0] = playerData.positionX;
+                    HuyManager.Instance.currentPosition[1] = playerData.positionY;
+                    HuyManager.Instance.currentPosition[2] = playerData.positionZ;
                 }
             }
             else
@@ -57,8 +58,8 @@ namespace Script.GamePlay
                 SetScore(0);
                 SetMoney(0);
                 SetDiamond(0);
-                UserPref.characterSelected = 0;
-                UserPref.currentScreen = 0;
+                HuyManager.Instance.characterSelected = 0;
+                HuyManager.Instance.currentScreen = 0;
             }
 
             DontDestroyOnLoad(this);
@@ -85,17 +86,17 @@ namespace Script.GamePlay
         private void OnApplicationQuit()
         {
             DataService.GameData gameData = new DataService.GameData();
-            gameData.PlayerId = UserPref.userId;
-            gameData.characterSelect = UserPref.characterSelected;
-            gameData.levelId = UserPref.currentScreen;
-            gameData.positionX = UserPref.currentPosition[0];
-            gameData.positionY = UserPref.currentPosition[1];
-            gameData.positionZ = UserPref.currentPosition[2];
+            gameData.PlayerId = HuyManager.Instance.userId;
+            gameData.characterSelect = HuyManager.Instance.characterSelected;
+            gameData.levelId = HuyManager.Instance.currentScreen;
+            gameData.positionX = HuyManager.Instance.currentPosition[0];
+            gameData.positionY = HuyManager.Instance.currentPosition[1];
+            gameData.positionZ = HuyManager.Instance.currentPosition[2];
             gameData.score = numberScore;
             gameData.gold = numberGold;
             gameData.diamond = numberDiamond;
             gameData.health = gameData.health;
-            DataService.GetConnection().Table<DataService.GameData>().Connection.Update(gameData);
+            HuyManager.Instance.UpdateUserData(gameData);
         }
 
         private void OnDisable()

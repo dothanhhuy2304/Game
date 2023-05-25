@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Script.Core;
 using Script.Player;
 using UnityEngine;
 using UnityEngine.UI;
@@ -43,9 +44,9 @@ namespace Script.GamePlay
 
         public void LoadCharacter()
         {
-            UserPref.characterSelected = currentCharacter;
+            HuyManager.Instance.characterSelected = currentCharacter;
             loadingScreenManager.FadeLoadingScene(
-                UserPref.currentScreen == 0
+                HuyManager.Instance.currentScreen == 0
                     ? loadingScreenManager.NextScreen(1)
                     : loadingScreenManager.LoadCurrentScreen());
             //loadingScreenManager.FadeLoadingScene(gameManager.playerData.playerDataObj.currentScenes == 0 ? loadingScreenManager.NextScreen(1) : LoadingScreenManager.LoadCurrentScreen());
