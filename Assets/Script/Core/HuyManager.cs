@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using DG.Tweening;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Script.Core
@@ -94,6 +96,59 @@ namespace Script.Core
                 health = pf.health
             };
             DataService.GetConnection().Table<DataService.GameData>().Connection.InsertOrReplace(gameData);
+        }
+
+        public void UpdatePlayerProfile(DataService.PlayerProfileData profileData)
+        {
+            DataService.PlayerProfileData playerProfileData = new DataService.PlayerProfileData
+            {
+                Id = profileData.Id,
+                userName = profileData.userName,
+                createdDate = profileData.createdDate,
+                age = profileData.age,
+                gender = profileData.gender,
+                deviceId = profileData.deviceId,
+                deviceName = profileData.deviceName,
+                os = profileData.os,
+                appVersion = profileData.appVersion,
+                osVer = profileData.osVer,
+                status = profileData.status,
+                avatarId = profileData.avatarId
+            };
+            DataService.GetConnection().Table<DataService.PlayerProfileData>().Connection.InsertOrReplace(playerProfileData);
+        }
+
+        public void UpdatePlayerSetting(DataService.PlayerSetting setting)
+        {
+            DataService.PlayerSetting playerSetting=new DataService.PlayerSetting();
+            playerSetting.PlayerId = userId;
+            playerSetting.soundMusic = setting.soundMusic;
+            playerSetting.soundEffect = setting.soundEffect;
+            DataService.GetConnection().Table<DataService.PlayerSetting>().Connection.InsertOrReplace(playerSetting);
+        }
+
+        public void ChangeSettingSoundMusic(float value)
+        {
+            if (DataService.GetConnection().Table<DataService.PlayerSetting>().Any())
+            {
+                DataService.GetConnection().Execute($"update PlayerSetting set soundMusic = '{value}' where PlayerId = '{userId}'");
+            }
+            else
+            {
+                Debug.Log("player setting is null");
+            }
+        }
+
+        public void ChangeSettingSoundEffect(float value)
+        {
+            if (DataService.GetConnection().Table<DataService.PlayerSetting>().Any())
+            {
+                DataService.GetConnection().Execute($"update PlayerSetting set soundEffect = '{value}' where PlayerId = '{HuyManager.Instance.userId}'");
+            }
+            else
+            {
+                Debug.Log("player setting is null");
+            }
         }
     }
 

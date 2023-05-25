@@ -48,8 +48,9 @@ public class UserRegister : MonoBehaviour
                     avatarId = 0
                 };
 
-                DataService.GetConnection().Table<DataService.PlayerProfileData>().Connection
-                    .InsertOrReplace(playerProfileData);
+                //DataService.GetConnection().Table<DataService.PlayerProfileData>().Connection.InsertOrReplace(playerProfileData);
+                HuyManager.Instance.UpdatePlayerProfile(playerProfileData);
+                
                 HuyManager.Instance.userId = playerProfileData.Id;
                 DataService.GameData gameData = new DataService.GameData
                 {
@@ -63,23 +64,25 @@ public class UserRegister : MonoBehaviour
                     positionZ = 0f,
                     health = 100
                 };
-                DataService.GetConnection().Table<DataService.GameData>().Connection.InsertOrReplace(gameData);
-
+                //DataService.GetConnection().Table<DataService.GameData>().Connection.InsertOrReplace(gameData);
+                HuyManager.Instance.UpdateUserData(gameData);
+                
                 DataService.PlayerSetting playerSetting = new DataService.PlayerSetting
                 {
                     PlayerId = HuyManager.Instance.userId,
                     soundMusic = 1f,
                     soundEffect = 1f
                 };
-                DataService.GetConnection().Table<DataService.PlayerSetting>().Connection.InsertOrReplace(playerSetting);
-
+                //DataService.GetConnection().Table<DataService.PlayerSetting>().Connection.InsertOrReplace(playerSetting);
+                HuyManager.Instance.UpdatePlayerSetting(playerSetting);
+                
                 DataService.Item item = new DataService.Item {name = "tEst", value = 2};
                 DataService.GetConnection().Table<DataService.Item>().Connection.Insert(item);
                 //Load Data
                 HuyManager.Instance.currentPosition[0] = gameData.positionX;
                 HuyManager.Instance.currentPosition[1] = gameData.positionY;
                 HuyManager.Instance.currentPosition[2] = gameData.positionZ;
-                var data = DataService.GetConnection().Table<DataService.GameData>().FirstOrDefault();
+                var data = HuyManager.Instance.GetCurrentPlayerData();
                 gameManager.SetScore(data.score);
                 gameManager.SetMoney(data.gold);
                 gameManager.SetDiamond(data.diamond);

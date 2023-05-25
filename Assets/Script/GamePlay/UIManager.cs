@@ -71,11 +71,7 @@ namespace Script.GamePlay
         private void ChangeVolumeMusic(float sliderValue)
         {
             audioMusic.volume = sliderValue;
-            if (DataService.GetConnection().Table<DataService.PlayerSetting>().Any())
-            {
-                DataService.GetConnection()
-                    .Execute($"update PlayerSetting set soundMusic = '{sliderValue}' where PlayerId = '{HuyManager.Instance.userId}'");
-            }
+            HuyManager.Instance.ChangeSettingSoundMusic(sliderValue);
         }
 
         private void ChangeVolumeEffect(float sliderValue)
@@ -85,11 +81,7 @@ namespace Script.GamePlay
                 source.audioFX.volume = sliderValue;
             }
 
-            if (DataService.GetConnection().Table<DataService.PlayerSetting>().Any())
-            {
-                DataService.GetConnection()
-                    .Execute($"update PlayerSetting set soundEffect = '{sliderValue}' where PlayerId = '{HuyManager.Instance.userId}'");
-            }
+            HuyManager.Instance.ChangeSettingSoundEffect(sliderValue);
         }
 
         private void ShowAndHiddenUiSetting(ref bool isShow)
