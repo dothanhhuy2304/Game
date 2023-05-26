@@ -44,7 +44,7 @@ namespace Script.Enemy
             Destroy(uIDamageInstance, 0.5f);
         }
 
-        public void Heal(float value)
+        public void Healing(float value)
         {
             currentHealth = Mathf.Clamp(currentHealth + value, 0f, maxHealth);
             if (currentHealth > maxHealth) currentHealth = maxHealth;

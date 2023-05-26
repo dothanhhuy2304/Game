@@ -165,6 +165,11 @@ namespace Script.Player
             jumpCount++;
         }
 
+        private void ModifyPhysics()
+        {
+            
+        }
+
         private void OnCollisionEnter2D(Collision2D other)
         {
             EvaluateCollision(other);

@@ -71,7 +71,7 @@ namespace Script.Item
         private void HealItems(float value)
         {
             animator.SetLayerWeight(1, 1);
-            playerHealth.Heal(value);
+            playerHealth.Healing(value);
             AudioManager.instance.Play("Item_Heal");
             itemCollider.enabled = false;
             TemporarilyDeactivate(0.8f);

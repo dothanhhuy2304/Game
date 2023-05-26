@@ -9,7 +9,6 @@ namespace Script.Player
 {
     public class PlayerHealth : FastSingleton<PlayerHealth>, IHealthSystem
     {
-        private GameManager gameManager;
         [SerializeField] private CharacterController2D playerCharacter;
         [SerializeField] private PlayerHealthBar playerHealthBar;
         [SerializeField] private PetAI petAi;
@@ -18,11 +17,10 @@ namespace Script.Player
 
         private void Start()
         {
-            gameManager = GameManager.instance;
             txtDamage = uIDamagePlayer.GetComponentInChildren<TextMeshProUGUI>();
             if (playerCharacter.playerData.currentHealth <= 0)
             {
-                SetMaxHealth(playerCharacter.playerData.heathDefault, playerCharacter.playerData.hpIc);
+                LoadHeath();
             }
             else
             {
@@ -32,9 +30,9 @@ namespace Script.Player
             HuyManager.Instance.SetPlayerIsHurt(0);
         }
 
-        private void SetMaxHealth(float maxHealth, float hpIc)
+        private void LoadHeath()
         {
-            playerCharacter.playerData.maxHealth = maxHealth + hpIc;
+            playerCharacter.playerData.maxHealth = playerCharacter.playerData.heathDefault + playerCharacter.playerData.hpIc;
             playerCharacter.playerData.currentHealth = playerCharacter.playerData.maxHealth;
             playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
         }
@@ -62,7 +60,7 @@ namespace Script.Player
             Destroy(uIDamageInstance, 0.5f);
         }
 
-        public void Heal(float value)
+        public void Healing(float value)
         {
             playerCharacter.playerData.currentHealth = Mathf.Clamp(playerCharacter.playerData.currentHealth + value, 0f, playerCharacter.playerData.maxHealth);
             if (playerCharacter.playerData.currentHealth > playerCharacter.playerData.maxHealth)
@@ -73,16 +71,13 @@ namespace Script.Player
         public void Die()
         {
             DOTween.Sequence()
-
                 .AppendCallback(() =>
                 {
-                    //set score
-                    playerCharacter.playerData.currentHealth = 0f;
-                    PlayerDeathAnim(playerCharacter.animator);
-                    gameManager.numberScore = 0;
-                    gameManager.SetScore(0);
-                    //end set score
                     HuyManager.Instance.SetPlayerIsDeath(1);
+                    playerCharacter.playerData.currentHealth = 0;
+                    PlayerDeathAnim(playerCharacter.animator);
+                    GameManager.instance.numberScore = 0;
+                    GameManager.instance.SetScore(0);
                     playerCharacter.body.bodyType = RigidbodyType2D.Static;
                     playerCharacter.col.enabled = false;
                     playerCharacter.animator.SetLayerWeight(1, 1f);
@@ -90,7 +85,7 @@ namespace Script.Player
                 }).AppendInterval(3)
                 .AppendCallback(() =>
                 {
-                    SetMaxHealth(playerCharacter.playerData.heathDefault, playerCharacter.playerData.hpIc);
+                    LoadHeath();
                     Transform position = transform;
                     position.position = new Vector3(HuyManager.Instance.currentPosition[0], HuyManager.Instance.currentPosition[1], HuyManager.Instance.currentPosition[2]);
                     petAi.transform.position = position.up;
@@ -107,16 +102,16 @@ namespace Script.Player
             DOTween.Sequence()
                 .AppendCallback(() =>
                 {
+                    HuyManager.Instance.SetPlayerIsDeath(1);
                     playerCharacter.playerData.currentHealth = 0f;
                     AudioManager.instance.Play("Enemy_Death");
-                    HuyManager.Instance.SetPlayerIsDeath(1);
-                    gameManager.numberScore = 0;
-                    gameManager.SetScore(0);
+                    GameManager.instance.numberScore = 0;
+                    GameManager.instance.SetScore(0);
                     HuyManager.Instance.eventResetWhenPlayerDeath?.Invoke();
                 }).AppendInterval(3)
                 .AppendCallback(() =>
                 {
-                    SetMaxHealth(playerCharacter.playerData.heathDefault, playerCharacter.playerData.hpIc);
+                    LoadHeath();
                     Transform position = transform;
                     position.position = new Vector3(HuyManager.Instance.currentPosition[0], HuyManager.Instance.currentPosition[1], HuyManager.Instance.currentPosition[2]);
                     petAi.transform.position = position.up;
@@ -130,9 +125,9 @@ namespace Script.Player
             DOTween.Sequence()
                 .AppendCallback(() =>
                 {
-                    playerCharacter.body.bodyType = RigidbodyType2D.Static;
-                    PlayerHurtAnim(playerCharacter.animator);
                     HuyManager.Instance.SetPlayerIsHurt(1);
+                    PlayerHurtAnim(playerCharacter.animator);
+                    playerCharacter.body.bodyType = RigidbodyType2D.Static;
                 }).AppendInterval(0.5f)
                 .AppendCallback(() =>
                 {
