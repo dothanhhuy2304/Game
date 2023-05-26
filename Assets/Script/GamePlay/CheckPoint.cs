@@ -26,7 +26,7 @@ namespace Script.GamePlay
             {
                 if (Input.GetKey(KeyCode.F))
                 {
-                    loadingScreenManager.FadeLoadingScene(loadingScreenManager.NextScreen(1));
+                    loadingScreenManager.FadeLoadingScene(loadingScreenManager.NextScreen());
                 }
             }
         }

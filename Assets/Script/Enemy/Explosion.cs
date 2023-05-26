@@ -1,16 +1,12 @@
 using DG.Tweening;
 using Script.Player;
 using UnityEngine;
-using UnityEngine.Events;
 using Script.Core;
 
 namespace Script.Enemy
 {
     public class Explosion : MonoBehaviour
     {
-        [SerializeField] private Collider2D col;
-        [SerializeField] private GameObject parentObject;
-        public UnityEvent eventTriggerEnter;
         private Camera cam;
 
         private void Start()
@@ -20,11 +16,6 @@ namespace Script.Enemy
 
         private void OnEnable()
         {
-            eventTriggerEnter?.Invoke();
-        }
-
-        public void EventExplosion()
-        {
             StartExplosion();
         }
 
@@ -33,7 +24,7 @@ namespace Script.Enemy
             if (other.CompareTag("Player"))
             {
                 PlayerHealth.instance.GetDamage(20f);
-                col.enabled = false;
+                GetComponent<Collider2D>().enabled = false;
             }
         }
 
@@ -45,13 +36,12 @@ namespace Script.Enemy
                     AudioManager.instance.Play("Boom_Explosion");
                     HuyManager.Instance.CameraShake(cam, 1f, new Vector3(0.5f, 0.5f, 0.5f), 10, 90f, true);
                 }).AppendInterval(0.2f)
-                .AppendCallback(() => { col.enabled = false; }).AppendInterval(0.5f)
                 .AppendCallback(() =>
                 {
-                    parentObject.SetActive(false);
-                    col.enabled = true;
-                    gameObject.SetActive(false);
-                }).Play();
+                    GetComponent<Collider2D>().enabled = false;
+                })
+                .AppendInterval(0.5f)
+                .AppendCallback(() => { gameObject.SetActive(false); }).Play();
         }
     }
 }

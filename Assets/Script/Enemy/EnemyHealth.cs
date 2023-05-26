@@ -23,13 +23,13 @@ namespace Script.Enemy
 
         private void Start()
         {
-            SetMaxHealth(heathDefault, hpIc);
+            LoadHealth();
             txtDamage = uIDamageEnemy.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         }
 
-        private void SetMaxHealth(float maxHealths, float hpIcs)
+        private void LoadHealth()
         {
-            maxHealth = maxHealths + hpIcs;
+            maxHealth = heathDefault + hpIc;
             currentHealth = maxHealth;
             enemyHealthBar.SetHealth(currentHealth, maxHealth);
         }
@@ -79,7 +79,7 @@ namespace Script.Enemy
             DOTween.Sequence().AppendInterval(timeDelay)
                 .AppendCallback(() =>
                 {
-                    SetMaxHealth(heathDefault, hpIc);
+                    LoadHealth();
                     spriteRenderer.enabled = true;
                     enemyCollider.enabled = true;
                 }).Play();

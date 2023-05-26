@@ -1,6 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 using Script.Core;
+using Script.Player;
 
 namespace Script.Enemy
 {
@@ -14,7 +15,6 @@ namespace Script.Enemy
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private bool isHitGround;
         private Quaternion startRotation;
-        private bool isDeath;
         private static readonly int IsRun = Animator.StringToHash("is_Run");
         private Sequence sequence;
 
@@ -31,34 +31,27 @@ namespace Script.Enemy
             transform.position = enemySetting.startPosition;
             ChickenMoving();
         }
-        
+
         private void WaitToReset()
         {
-            if (HuyManager.Instance.PlayerIsDeath())
+            if (!spriteRenderer.enabled)
             {
-                if(isDeath)
-                {
-                    
-                    DOTween.Sequence()
-                        .AppendCallback(() =>
-                        {
-                            isDeath = false;
-                            body.MovePosition(body.transform.position);
-                        })
-                        .AppendInterval(4f)
-                        .AppendCallback(() =>
-                        {
-                            enemySetting.canAttack = false;
-                            spriteRenderer.enabled = true;
-                            chickenCol.enabled = true;
-                            Transform trans = transform;
-                            trans.rotation = startRotation;
-                            trans.position = enemySetting.startPosition;
-                            transform.Rotate(new Vector3(0, rotations[1], 0));
-                            gameObject.SetActive(true);
-                            ChickenMoving();
-                        }).Play();
-                }
+                DOTween.Sequence()
+                    .AppendCallback(() => { body.MovePosition(body.transform.position); })
+                    .AppendInterval(3f)
+                    .AppendCallback(() =>
+                    {
+                        currentTime = maxTimeAttack;
+                        enemySetting.canAttack = false;
+                        spriteRenderer.enabled = true;
+                        chickenCol.enabled = true;
+                        Transform trans = transform;
+                        trans.rotation = startRotation;
+                        trans.position = enemySetting.startPosition;
+                        transform.Rotate(new Vector3(0, rotations[1], 0));
+                        gameObject.SetActive(true);
+                        ChickenMoving();
+                    }).Play();
             }
         }
 
@@ -76,7 +69,10 @@ namespace Script.Enemy
                 }).AppendInterval(moveWaitingTime)
                 .AppendCallback(() =>
                 {
-                    body.transform.DORotate(new Vector3(0, rotations[0], 0), 0);
+                    //body.transform.DORotate(new Vector3(0, rotations[0], 0), 0);
+                    Vector2 target = (enemySetting.endPosition - enemySetting.startPosition).normalized;
+                    float angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
+                    body.transform.rotation = Quaternion.Euler(new Vector3(0, angle + -45, 0));
                 })
                 .AppendCallback(() =>
                 {
@@ -89,7 +85,10 @@ namespace Script.Enemy
                 }).AppendInterval(moveWaitingTime)
                 .AppendCallback(() =>
                 {
-                    body.transform.DORotate(new Vector3(0, rotations[1], 0), 0);
+                    //body.transform.DORotate(new Vector3(0, rotations[1], 0), 0);
+                    Vector2 target = (enemySetting.startPosition - enemySetting.endPosition).normalized;
+                    float angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
+                    body.transform.rotation = Quaternion.Euler(new Vector3(0, angle + -45, 0));
                 })
                 .SetLoops(int.MaxValue).Play();
         }
@@ -115,7 +114,7 @@ namespace Script.Enemy
                 }
             }
 
-            if (enemySetting.canAttack)
+            if (enemySetting.canAttack && spriteRenderer.enabled)
             {
                 if ((playerCharacter.transform.position - transform.position).magnitude > 0.5f && isHitGround)
                 {
@@ -128,14 +127,35 @@ namespace Script.Enemy
 
                 if (currentTime <= 0f)
                 {
-                    isDeath = true;
-                    enemySetting.canAttack = false;
-                    MoveToTarget(false);
-                    spriteRenderer.enabled = false;
-                    chickenCol.enabled = false;
-                    explosionObj.transform.position = offsetAttack.position;
-                    explosionObj.gameObject.SetActive(true);
-                    currentTime = maxTimeAttack;
+                    if (HuyManager.Instance.PlayerIsDeath())
+                    {
+                        if ((transform.position - enemySetting.startPosition).magnitude > (transform.position - enemySetting.endPosition).magnitude)
+                        {
+                            Vector2 target = (enemySetting.endPosition - enemySetting.startPosition).normalized;
+                            float angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
+                            body.transform.rotation = Quaternion.Euler(new Vector3(0, angle + -45, 0));
+                        }
+                        else
+                        {
+                            Vector2 target = (enemySetting.startPosition - enemySetting.endPosition).normalized;
+                            float angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
+                            body.transform.rotation = Quaternion.Euler(new Vector3(0, angle + -45, 0));
+                        }
+
+                        enemySetting.canAttack = false;
+                        currentTime = maxTimeAttack;
+                        ChickenMoving();
+                    }
+                    else
+                    {
+                        enemySetting.canAttack = false;
+                        MoveToTarget(false);
+                        spriteRenderer.enabled = false;
+                        chickenCol.enabled = false;
+                        explosionObj.transform.position = offsetAttack.position;
+                        explosionObj.gameObject.SetActive(true);
+                        currentTime = maxTimeAttack;
+                    }
                 }
             }
         }

@@ -47,7 +47,7 @@ namespace Script.GamePlay
             HuyManager.Instance.characterSelected = currentCharacter;
             loadingScreenManager.FadeLoadingScene(
                 HuyManager.Instance.currentScreen == 0
-                    ? loadingScreenManager.NextScreen(1)
+                    ? loadingScreenManager.NextScreen()
                     : loadingScreenManager.LoadCurrentScreen());
             //loadingScreenManager.FadeLoadingScene(gameManager.playerData.playerDataObj.currentScenes == 0 ? loadingScreenManager.NextScreen(1) : LoadingScreenManager.LoadCurrentScreen());
         }

@@ -17,6 +17,6 @@ MonoBehaviour:
   dashSpeed: 60
   heathDefault: 100
   currentHealth: 0
-  maxHealth: 130
+  maxHealth: 0
   hpIc: 30
   damageAttack: 30

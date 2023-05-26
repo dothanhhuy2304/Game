@@ -19,15 +19,18 @@ namespace Script.GamePlay
 
         public int RestartLevel()
         {
+            DataService.GetConnection()
+                .Execute($"update GameData set levelId = '{0}' where PlayerId = '{HuyManager.Instance.userId}'");
             return HuyManager.Instance.currentScreen = 0;
         }
 
-        public int NextScreen(int i)
+        public int NextScreen()
         {
+            HuyManager.Instance.currentScreen = SceneManager.GetActiveScene().buildIndex + 1;
             DataService.GetConnection()
                 .Execute(
-                    $"update GameData set levelId = '{HuyManager.Instance.saveScreenPass}' where PlayerId = '{HuyManager.Instance.userId}'");
-            return HuyManager.Instance.currentScreen = SceneManager.GetActiveScene().buildIndex + i;
+                    $"update GameData set levelId = '{HuyManager.Instance.currentScreen}' where PlayerId = '{HuyManager.Instance.userId}'");
+            return HuyManager.Instance.currentScreen;
         }
 
         public void FadeLoadingScene(int sceneIndex)

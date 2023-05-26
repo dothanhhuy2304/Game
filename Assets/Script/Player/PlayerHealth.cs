@@ -70,6 +70,7 @@ namespace Script.Player
 
         public void Die()
         {
+            HuyManager.Instance.eventResetWhenPlayerDeath?.Invoke();
             DOTween.Sequence()
                 .AppendCallback(() =>
                 {
@@ -81,7 +82,6 @@ namespace Script.Player
                     playerCharacter.body.bodyType = RigidbodyType2D.Static;
                     playerCharacter.col.enabled = false;
                     playerCharacter.animator.SetLayerWeight(1, 1f);
-                    HuyManager.Instance.eventResetWhenPlayerDeath?.Invoke();
                 }).AppendInterval(3)
                 .AppendCallback(() =>
                 {
@@ -99,6 +99,7 @@ namespace Script.Player
 
         public void DieByFalling()
         {
+            HuyManager.Instance.eventResetWhenPlayerDeath?.Invoke();
             DOTween.Sequence()
                 .AppendCallback(() =>
                 {
@@ -107,7 +108,6 @@ namespace Script.Player
                     AudioManager.instance.Play("Enemy_Death");
                     GameManager.instance.numberScore = 0;
                     GameManager.instance.SetScore(0);
-                    HuyManager.Instance.eventResetWhenPlayerDeath?.Invoke();
                 }).AppendInterval(3)
                 .AppendCallback(() =>
                 {

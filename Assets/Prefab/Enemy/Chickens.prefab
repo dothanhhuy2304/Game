@@ -345,23 +345,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce78a20e56ed9b343b56c006bd4be5c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  col: {fileID: 4549498311450808672}
-  parentObject: {fileID: 4549498312341209815}
-  eventTriggerEnter:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4549498311450808673}
-        m_TargetAssemblyTypeName: Explosion, Assembly-CSharp
-        m_MethodName: EventExplosion
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!58 &4549498311450808672
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -631,7 +614,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.69650537, y: -0.24217057}
+  m_Offset: {x: -0.8496492, y: -0.24217057}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -642,7 +625,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.0162736, y: 1.6239963}
+  m_Size: {x: 0.07188648, y: 1.6239963}
   m_EdgeRadius: 0
 --- !u!114 &8736459600110473510
 MonoBehaviour:
@@ -678,5 +661,4 @@ MonoBehaviour:
   chickenCol: {fileID: 8924637331163455981}
   explosionObj: {fileID: 4549498311450808673}
   spriteRenderer: {fileID: 4549498311706445917}
-  rangeAttack: 3
   isHitGround: 0

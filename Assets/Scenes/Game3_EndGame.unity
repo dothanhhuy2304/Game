@@ -2599,7 +2599,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 8151
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -2655,7 +2655,8 @@ MonoBehaviour:
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
-  m_Cameras: []
+  m_Cameras:
+  - {fileID: 664958508}
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
@@ -3193,7 +3194,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 32
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -7634,7 +7635,11 @@ PrefabInstance:
     - target: {fileID: 1765978405838901230, guid: c9caffc8506398a4cbc1b8a3c20a79bd, type: 3}
       propertyPath: m_Camera
       value: 
-      objectReference: {fileID: 664958508}
+      objectReference: {fileID: 0}
+    - target: {fileID: 1765978405838901230, guid: c9caffc8506398a4cbc1b8a3c20a79bd, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c9caffc8506398a4cbc1b8a3c20a79bd, type: 3}
 --- !u!114 &1463261382 stripped

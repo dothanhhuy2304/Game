@@ -5,14 +5,6 @@ using UnityEngine;
 
 namespace Script.GamePlay
 {
-    // public class UserPref
-    // {
-    //     public static string userId;
-    //     public static int characterSelected;
-    //     public static int currentScreen;
-    //     public static int saveScreenPass;
-    //     public static float[] currentPosition = new float[3];
-    // }
     
     public class GameManager : FastSingleton<GameManager>
     {

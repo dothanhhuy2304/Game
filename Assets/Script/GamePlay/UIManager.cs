@@ -38,19 +38,16 @@ namespace Script.GamePlay
                 return;
             }
 
-            var playerSetting = DataService.GetConnection().Table<DataService.PlayerSetting>().ToList();
+            var playerSetting = DataService.GetConnection().Table<DataService.PlayerSetting>().FirstOrDefault();
 
-            foreach (var player in playerSetting)
+            if (playerSetting.PlayerId.Equals(HuyManager.Instance.userId))
             {
-                if (player.PlayerId.Equals(HuyManager.Instance.userId))
+                sliderMusic.value = playerSetting.soundMusic;
+                sliderEffect.value = playerSetting.soundEffect;
+                audioMusic.volume = playerSetting.soundMusic;
+                foreach (var source in AudioManager.instance.sounds)
                 {
-                    sliderMusic.value = player.soundMusic;
-                    sliderEffect.value = player.soundEffect;
-                    audioMusic.volume = player.soundMusic;
-                    foreach (var source in AudioManager.instance.sounds)
-                    {
-                        source.audioFX.volume = player.soundEffect;
-                    }
+                    source.audioFX.volume = playerSetting.soundEffect;
                 }
             }
 
