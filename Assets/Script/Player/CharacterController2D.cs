@@ -1,11 +1,15 @@
+using System;
+using Photon.Pun;
 using UnityEngine;
 using Script.Core;
 using Script.ScriptTable;
+using Unity.Mathematics;
 
 namespace Script.Player
 {
-    public class CharacterController2D : FastSingleton<CharacterController2D>
+    public class CharacterController2D : MonoBehaviourPunCallbacks, IPunObservable
     {
+        //public static CharacterController2D instance;
         public Rigidbody2D body;
         public Collider2D col;
         public Data playerData;
@@ -26,25 +30,50 @@ namespace Script.Player
         private float startSpeed;
         private int jumpCount;
         private bool onWall;
+        [SerializeField] private PhotonView pv;
+
+        private void Awake()
+        {
+            //if (photonView.IsMine)
+            //{
+                // if (instance == null)
+                // {
+                //     instance = this;
+                // }
+                // else
+                // {
+                //     if (photonView.IsMine)
+                //     {
+                //         Destroy(gameObject);
+                //     }
+                // }
+            //}
+        }
 
         private void Start()
         {
-            playerHealth = PlayerHealth.instance;
-            startSpeed = playerData.movingSpeed;
+            if (photonView.IsMine)
+            {
+                playerHealth = PlayerHealth.instance;
+                startSpeed = playerData.movingSpeed;
+            }
         }
 
         private void Update()
         {
-            if (!HuyManager.Instance.PlayerIsDeath() && !HuyManager.Instance.GetPlayerIsHurt())
+            if (photonView.IsMine)
             {
-                PlayerInput();
-                HuyManager.Instance.SetUpTime(ref timeNextDash);
-                if (timeNextDash <= 0)
+                //if (!HuyManager.Instance.PlayerIsDeath() && !HuyManager.Instance.GetPlayerIsHurt())
                 {
-                    if ((Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) && isDashing)
+                    PlayerInput();
+                    HuyManager.Instance.SetUpTime(ref timeNextDash);
+                    if (timeNextDash <= 0)
                     {
-                        Dash(playerInput);
-                        timeNextDash = 1.5f;
+                        if ((Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) && isDashing)
+                        {
+                            photonView.RPC(nameof(Dash), RpcTarget.All, playerInput);
+                            timeNextDash = 1.5f;
+                        }
                     }
                 }
             }
@@ -63,55 +92,65 @@ namespace Script.Player
 
         private void FixedUpdate()
         {
-            if (!HuyManager.Instance.PlayerIsDeath())
+            if (photonView.IsMine)
             {
-                if (!HuyManager.Instance.GetPlayerIsHurt())
+                //if (!HuyManager.Instance.PlayerIsDeath())
                 {
-                    RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f,
-                        1 << LayerMask.NameToLayer("ground"));
-                    if (hit)
+                    //if (!HuyManager.Instance.GetPlayerIsHurt())
                     {
-                        if (!hit.collider.CompareTag("ground"))
+                        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f,
+                            1 << LayerMask.NameToLayer("ground"));
+                        if (hit)
                         {
-                            mGrounded = false;
+                            if (!hit.collider.CompareTag("ground"))
+                            {
+                                mGrounded = false;
+                            }
+                            else
+                            {
+                                mGrounded = true;
+                            }
                         }
-                        else
+
+                        photonView.RPC(nameof(Move), RpcTarget.All, playerInput * (startSpeed * Time.fixedDeltaTime));
+                        
+                        if (isJump)
                         {
-                            mGrounded = true;
+                            isJump = false;
+                            photonView.RPC(nameof(Jump), RpcTarget.All);
                         }
+
+                        if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
+                        {
+                            jumpCount = 0;
+                            photonView.RPC(nameof(AnimPlayerJump), RpcTarget.All);
+                        }
+
+                        photonView.RPC(nameof(YVelocity), RpcTarget.All);
                     }
-
-                    Move(playerInput * (startSpeed * Time.fixedDeltaTime));
-
-                    if (isJump)
-                    {
-                        isJump = false;
-                        Jump();
-                    }
-
-                    if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
-                    {
-                        jumpCount = 0;
-                        AnimPlayerJump();
-                    }
-
-                    animator.SetFloat("y_velocity", body.velocity.y);
                 }
             }
         }
 
+        [PunRPC]
+        private void YVelocity()
+        {
+            animator.SetFloat("y_velocity", body.velocity.y);
+        }
+
+        [PunRPC]
         private void Move(float move)
         {
             Vector3 position = body.velocity;
-            body.velocity = Vector2.SmoothDamp(position, new Vector2(move * 10f, position.y), ref velocity, MovementSmoothing);
+            body.velocity = Vector2.SmoothDamp(position, new Vector2(move * 10f, position.y) , ref velocity, MovementSmoothing);
 
             if (isOnCar || onWall)
             {
-                AnimPlayerRun(0f);
+                photonView.RPC(nameof(AnimPlayerRun), RpcTarget.All, 0f);
             }
             else
             {
-                AnimPlayerRun(Mathf.Abs(move));
+                photonView.RPC(nameof(AnimPlayerRun), RpcTarget.All, Mathf.Abs(move));
             }
 
             if (move > 0f && !mFacingRight)
@@ -138,6 +177,7 @@ namespace Script.Player
             playerInput = move;
         }
 
+        [PunRPC]
         private void Jump()
         {
             if (mGrounded)
@@ -205,6 +245,7 @@ namespace Script.Player
             onWall = isWall;
         }
 
+        [PunRPC]
         private void Dash(float horizontal)
         {
             body.velocity = new Vector2(body.velocity.x, 0);
@@ -215,18 +256,41 @@ namespace Script.Player
         private void Flip()
         {
             mFacingRight = !mFacingRight;
-            transform.Rotate(0f, 180f, 0f);
+            Vector3 dir = new Vector3(0, 180f, 0);
+            transform.Rotate(dir);
             // var position = transform;
             // var theScale = position.localScale;
             // theScale.x *= -1;
             // position.localScale = theScale;
         }
 
+        [PunRPC]
         private void AnimPlayerRun(float speed)
         {
             animator.SetFloat("m_Run", speed);
         }
 
+
+        // [PunRPC]
+        // private void UpdateAnimJump()
+        // {
+        //     switch (jumpCount)
+        //     {
+        //         case 0:
+        //             animator.SetBool("is_Jump", false);
+        //             animator.SetBool("is_DBJump", false);
+        //             break;
+        //         case 1:
+        //             animator.SetBool("is_Jump", true);
+        //             break;
+        //         case 2:
+        //             animator.SetBool("is_Jump", false);
+        //             animator.SetBool("is_DBJump", true);
+        //             break;
+        //     }
+        // }
+        
+        [PunRPC]
         private void AnimPlayerJump()
         {
             switch (jumpCount)
@@ -272,6 +336,33 @@ namespace Script.Player
             {
                 startSpeed = playerData.movingSpeed;
             }
+        }
+
+        // private bool m_SynchronizeVelocity = true;
+        // private bool m_SynchronizeAngularVelocity = true;
+        //
+        //
+        // private Vector2 networkPosition;
+        // private Quaternion networkRotation;
+        
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            // if (stream.IsWriting)
+            // {
+            //     stream.SendNext((Vector3) body.position);
+            //     stream.SendNext((float) body.rotation);
+            //     stream.SendNext((Vector3) body.velocity);
+            // }
+            // else
+            // {
+            //     networkPosition = (Vector3) stream.ReceiveNext();
+            //     body.rotation = (float) stream.ReceiveNext();
+            //     body.velocity = (Vector3) stream.ReceiveNext();
+            //
+            //
+            //     float lag = Mathf.Abs((float) (PhotonNetwork.Time - info.SentServerTime));
+            //     networkPosition += (body.velocity * lag);
+            // }
         }
     }
 }

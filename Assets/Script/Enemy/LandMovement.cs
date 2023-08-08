@@ -12,7 +12,7 @@ namespace Script.Enemy
 
         private void Start()
         {
-            character = CharacterController2D.instance;
+            character = FindObjectOfType<CharacterController2D>();
             numberLoop = int.MaxValue;
             MoveLandNormal(transform, endPos, timeEndAction, numberLoop);
         }

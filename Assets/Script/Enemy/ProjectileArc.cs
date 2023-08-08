@@ -17,7 +17,7 @@ namespace Script.Enemy
 
         private void Awake()
         {
-            playerPos = CharacterController2D.instance;
+            playerPos = FindObjectOfType<CharacterController2D>();
             body = GetComponent<Rigidbody2D>();
         }
 

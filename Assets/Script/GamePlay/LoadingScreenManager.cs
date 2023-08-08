@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using Photon.Pun;
 using Script.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -6,11 +8,24 @@ using UnityEngine.UI;
 
 namespace Script.GamePlay
 {
-    public class LoadingScreenManager : FastSingleton<LoadingScreenManager>
+    public class LoadingScreenManager : MonoBehaviourPunCallbacks
     {
+        public static LoadingScreenManager instance;
         [SerializeField] private GameObject uiLoading;
         [SerializeField] private Image fillLoading;
         private AsyncOperation async;
+
+        private void Awake()
+        {
+            if (instance == null)
+            {
+                instance = this;
+            }
+            else
+            {
+                Destroy(this);
+            }
+        }
 
         public int LoadCurrentScreen()
         {
@@ -33,12 +48,13 @@ namespace Script.GamePlay
             return HuyManager.Instance.currentScreen;
         }
 
+        [PunRPC]
         public void FadeLoadingScene(int sceneIndex)
         {
-            uiLoading.SetActive(true);
-            fillLoading.fillAmount = 0f;
-            LoadScene(sceneIndex);
-
+            //uiLoading.SetActive(true);
+            //fillLoading.fillAmount = 0f;
+            //LoadScene(sceneIndex);
+            PhotonNetwork.LoadLevel(sceneIndex + 1);
         }
 
         private void LoadScene(int sceneIndex)

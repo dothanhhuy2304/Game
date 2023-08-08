@@ -35,7 +35,7 @@ namespace Script.Enemy
 
         protected virtual void Start()
         {
-            playerCharacter = CharacterController2D.instance;
+            playerCharacter = FindObjectOfType<CharacterController2D>();
         }
 
         protected void Flip()

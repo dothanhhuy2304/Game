@@ -11,7 +11,7 @@ namespace Script.Player
 
         private void Start()
         {
-            playerPosition = CharacterController2D.instance;
+            playerPosition = FindObjectOfType<CharacterController2D>();
         }
 
         private void LateUpdate()

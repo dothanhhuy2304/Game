@@ -23,7 +23,7 @@ public class FireProjectile : MonoBehaviour
     
     private void Awake()
     {
-        playerCharacter = CharacterController2D.instance;
+        playerCharacter = FindObjectOfType<CharacterController2D>();
         playerHealth = PlayerHealth.instance;
         petAI = PetAI.instance;
     }

@@ -28,7 +28,7 @@ namespace Script.Player
 
         private void Start()
         {
-            player = CharacterController2D.instance;
+            player = FindObjectOfType<CharacterController2D>();
             listEnemyInMap = GameObject.FindGameObjectsWithTag("Enemy").ToList();
         }
 

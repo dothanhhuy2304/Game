@@ -1,10 +1,11 @@
+using Photon.Pun;
 using Script.Core;
 using Script.Player;
 using UnityEngine;
 
 namespace Script.GamePlay
 {
-    public class LoadCharacter : MonoBehaviour
+    public class LoadCharacter : MonoBehaviourPunCallbacks,IPunObservable
     {
         [SerializeField] private GameObject[] characters;
 
@@ -15,7 +16,11 @@ namespace Script.GamePlay
                 Instantiate(Resources.Load<GameObject>("GameManager"));
             }
 
-            characters[HuyManager.Instance.characterSelected].SetActive(true);
+            //if (PlayerNetwokControl.IsLocalPlayer)
+            //{
+                //characters[HuyManager.Instance.characterSelected].SetActive(true);
+                SpawnPlayer();
+            //}
 
             AudioManager.instance.Plays_Music("Music_Game");
 
@@ -25,6 +30,20 @@ namespace Script.GamePlay
                 UIManager.instance.btnBackToMenu.gameObject.SetActive(true);
                 UIManager.instance.btnRestart.gameObject.SetActive(true);
             }
+        }
+
+        [PunRPC]
+        private void SpawnPlayer()
+        {
+            PhotonNetwork.Instantiate(characters[HuyManager.Instance.characterSelected].name,
+                characters[HuyManager.Instance.characterSelected].transform.position, Quaternion.identity);
+            //player.SetActive(true);
+            //photonView.gameObject.SetActive(true);
+        }
+
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Globalization;
 using DG.Tweening;
+using Photon.Pun;
 using Script.Core;
 using Script.GamePlay;
 using TMPro;
@@ -7,8 +8,9 @@ using UnityEngine;
 using Script.Enemy;
 namespace Script.Player
 {
-    public class PlayerHealth : FastSingleton<PlayerHealth>, IHealthSystem
+    public class PlayerHealth :MonoBehaviourPunCallbacks, IHealthSystem
     {
+        public static PlayerHealth instance;
         [SerializeField] private CharacterController2D playerCharacter;
         [SerializeField] private PlayerHealthBar playerHealthBar;
         [SerializeField] private PetAI petAi;
@@ -17,6 +19,14 @@ namespace Script.Player
 
         private void Start()
         {
+            if (playerCharacter.photonView.IsMine)
+            {
+                if (instance == null)
+                {
+                    instance = this;
+                }
+            }
+
             txtDamage = uIDamagePlayer.GetComponentInChildren<TextMeshProUGUI>();
             if (playerCharacter.playerData.currentHealth <= 0)
             {
