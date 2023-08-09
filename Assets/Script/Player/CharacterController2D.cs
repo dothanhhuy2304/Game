@@ -30,7 +30,6 @@ namespace Script.Player
         private float startSpeed;
         private int jumpCount;
         private bool onWall;
-        [SerializeField] private PhotonView pv;
 
         private void Awake()
         {
@@ -65,7 +64,7 @@ namespace Script.Player
             {
                 //if (!HuyManager.Instance.PlayerIsDeath() && !HuyManager.Instance.GetPlayerIsHurt())
                 {
-                    PlayerInput();
+                    photonView.RPC(nameof(PlayerInput), RpcTarget.All);
                     HuyManager.Instance.SetUpTime(ref timeNextDash);
                     if (timeNextDash <= 0)
                     {
@@ -79,6 +78,7 @@ namespace Script.Player
             }
         }
 
+        [PunRPC]
         private void PlayerInput()
         {
 #if UNITY_EDITOR || UNITY_STANDALONE
@@ -98,19 +98,7 @@ namespace Script.Player
                 {
                     //if (!HuyManager.Instance.GetPlayerIsHurt())
                     {
-                        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f,
-                            1 << LayerMask.NameToLayer("ground"));
-                        if (hit)
-                        {
-                            if (!hit.collider.CompareTag("ground"))
-                            {
-                                mGrounded = false;
-                            }
-                            else
-                            {
-                                mGrounded = true;
-                            }
-                        }
+                        photonView.RPC(nameof(RpcCheckGround), RpcTarget.All);
 
                         photonView.RPC(nameof(Move), RpcTarget.All, playerInput * (startSpeed * Time.fixedDeltaTime));
                         
@@ -120,14 +108,38 @@ namespace Script.Player
                             photonView.RPC(nameof(Jump), RpcTarget.All);
                         }
 
-                        if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
-                        {
-                            jumpCount = 0;
-                            photonView.RPC(nameof(AnimPlayerJump), RpcTarget.All);
-                        }
+                        photonView.RPC(nameof(RpcJumpAnim), RpcTarget.All);
 
                         photonView.RPC(nameof(YVelocity), RpcTarget.All);
                     }
+                }
+            }
+        }
+
+        [PunRPC]
+        private void RpcJumpAnim()
+        {
+            if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
+            {
+                jumpCount = 0;
+                RpcResetAnimJump();
+            }
+        }
+
+        [PunRPC]
+        private void RpcCheckGround()
+        {
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f,
+                1 << LayerMask.NameToLayer("ground"));
+            if (hit)
+            {
+                if (!hit.collider.CompareTag("ground"))
+                {
+                    mGrounded = false;
+                }
+                else
+                {
+                    mGrounded = true;
                 }
             }
         }
@@ -146,11 +158,11 @@ namespace Script.Player
 
             if (isOnCar || onWall)
             {
-                photonView.RPC(nameof(AnimPlayerRun), RpcTarget.All, 0f);
+                AnimPlayerRun(0f);
             }
             else
             {
-                photonView.RPC(nameof(AnimPlayerRun), RpcTarget.All, Mathf.Abs(move));
+                AnimPlayerRun(Mathf.Abs(move));
             }
 
             if (move > 0f && !mFacingRight)
@@ -212,7 +224,10 @@ namespace Script.Player
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            EvaluateCollision(other);
+            if (photonView.IsMine)
+            {
+                EvaluateCollision(other);
+            }
         }
 
         #region If the player stands on the ground and no raycast, We can use this function
@@ -229,6 +244,7 @@ namespace Script.Player
 
         #endregion
 
+        [PunRPC]
         private void EvaluateCollision(Collision2D collision2D)
         {
             bool isWall = false;
@@ -270,27 +286,14 @@ namespace Script.Player
             animator.SetFloat("m_Run", speed);
         }
 
-
-        // [PunRPC]
-        // private void UpdateAnimJump()
-        // {
-        //     switch (jumpCount)
-        //     {
-        //         case 0:
-        //             animator.SetBool("is_Jump", false);
-        //             animator.SetBool("is_DBJump", false);
-        //             break;
-        //         case 1:
-        //             animator.SetBool("is_Jump", true);
-        //             break;
-        //         case 2:
-        //             animator.SetBool("is_Jump", false);
-        //             animator.SetBool("is_DBJump", true);
-        //             break;
-        //     }
-        // }
-        
         [PunRPC]
+        private void RpcResetAnimJump()
+        {
+            animator.SetBool("is_Jump", false);
+            animator.SetBool("is_DBJump", false);
+        }
+
+
         private void AnimPlayerJump()
         {
             switch (jumpCount)
@@ -311,30 +314,39 @@ namespace Script.Player
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("Grass"))
+            if (photonView.IsMine)
             {
-                startSpeed -= 10f;
+                if (other.CompareTag("Grass"))
+                {
+                    startSpeed -= 10f;
+                }
             }
         }
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (other.CompareTag("Car"))
+            if (photonView.IsMine)
             {
-                isOnCar = true;
+                if (other.CompareTag("Car"))
+                {
+                    isOnCar = true;
+                }
             }
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (other.CompareTag("Car"))
+            if (photonView.IsMine)
             {
-                isOnCar = false;
-            }
+                if (other.CompareTag("Car"))
+                {
+                    isOnCar = false;
+                }
 
-            if (other.CompareTag("Grass"))
-            {
-                startSpeed = playerData.movingSpeed;
+                if (other.CompareTag("Grass"))
+                {
+                    startSpeed = playerData.movingSpeed;
+                }
             }
         }
 
@@ -344,7 +356,6 @@ namespace Script.Player
         //
         // private Vector2 networkPosition;
         // private Quaternion networkRotation;
-        
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             // if (stream.IsWriting)

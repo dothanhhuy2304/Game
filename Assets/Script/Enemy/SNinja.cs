@@ -47,16 +47,19 @@ namespace Script.Enemy
         private void FixedUpdate()
         {
             HuyManager.Instance.SetUpTime(ref currentTime);
-            RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, mask);
-            if (hit)
+            foreach (var player in playerCharacter)
             {
-                if (hit.collider.CompareTag("Player"))
+                RaycastHit2D hit = Physics2D.Linecast(transform.position, player.transform.position, mask);
+                if (hit)
                 {
-                    canAttack = true;
-                }
-                else if (hit.collider.CompareTag("ground"))
-                {
-                    canAttack = false;
+                    if (hit.collider.CompareTag("Player"))
+                    {
+                        canAttack = true;
+                    }
+                    else if (hit.collider.CompareTag("ground"))
+                    {
+                        canAttack = false;
+                    }
                 }
             }
 
@@ -159,19 +162,22 @@ namespace Script.Enemy
 
         private void SNinjaAttack()
         {
-            if ((playerCharacter.transform.position - transform.position).magnitude < 3f)
+            foreach (var player in playerCharacter)
             {
-                AttackSword();
-            }
-            else if ((playerCharacter.transform.position - transform.position).magnitude <= 8)
-            {
-                SetUpAttackBullet();
-            }
-            else
-            {
-                if (enemySetting.canMoving)
+                if ((player.transform.position - transform.position).magnitude < 3f)
                 {
-                    MoveToPosition();
+                    AttackSword();
+                }
+                else if ((player.transform.position - transform.position).magnitude <= 8)
+                {
+                    SetUpAttackBullet();
+                }
+                else
+                {
+                    if (enemySetting.canMoving)
+                    {
+                        MoveToPosition();
+                    }
                 }
             }
         }
@@ -181,45 +187,50 @@ namespace Script.Enemy
             Flip();
             if (isHitGrounds)
             {
-                if ((playerCharacter.transform.position - transform.position).magnitude > 2f)
+                foreach (var player in playerCharacter)
                 {
-                    Vector3 currentPosition = body.transform.position;
-                    Vector3 targetPosition = new Vector3(playerCharacter.transform.position.x - currentPosition.x, 0f, 0f);
-                    body.MovePosition(currentPosition + targetPosition * Time.fixedDeltaTime);
-                    animator.SetBool(IsRun, true);
-                }
+                    if ((player.transform.position - transform.position).magnitude > 2f)
+                    {
+                        Vector3 currentPosition = body.transform.position;
+                        Vector3 targetPosition = new Vector3(player.transform.position.x - currentPosition.x,
+                            0f, 0f);
+                        body.MovePosition(currentPosition + targetPosition * Time.fixedDeltaTime);
+                        animator.SetBool(IsRun, true);
+                    }
 
-                if ((playerCharacter.transform.position - transform.position).magnitude < 2f)
-                {
-                    if (HuyManager.Instance.PlayerIsDeath())
-                        return;
-                    DOTween.Sequence()
-                        .AppendCallback(() =>
-                        {
-                            body.MovePosition(body.transform.position);
-                            animator.SetBool(IsRun, false);
-                            if (currentTime <= 0f)
+                    if ((player.transform.position - transform.position).magnitude < 2f)
+                    {
+                        if (HuyManager.Instance.PlayerIsDeath())
+                            return;
+                        DOTween.Sequence()
+                            .AppendCallback(() =>
                             {
-                                wasAttackSword = true;
-                                animator.SetTrigger(IsAttackSword);
-                                AudioManager.instance.Play("Enemy_Attack_Sword");
-                                currentTime = 1.5f;
-                            }
-                        })
-                        .AppendInterval(1f)
-                        .AppendCallback(() =>
-                        {
-                            if (wasAttackSword)
-                            {
-                                bool hits = Physics2D.OverlapCircle(transform.position, radiusAttack, 1 << LayerMask.NameToLayer("Player"));
-                                if (hits)
+                                body.MovePosition(body.transform.position);
+                                animator.SetBool(IsRun, false);
+                                if (currentTime <= 0f)
                                 {
-                                    playerCharacter.playerHealth.GetDamage(21f);
+                                    wasAttackSword = true;
+                                    animator.SetTrigger(IsAttackSword);
+                                    AudioManager.instance.Play("Enemy_Attack_Sword");
+                                    currentTime = 1.5f;
                                 }
+                            })
+                            .AppendInterval(1f)
+                            .AppendCallback(() =>
+                            {
+                                if (wasAttackSword)
+                                {
+                                    bool hits = Physics2D.OverlapCircle(transform.position, radiusAttack,
+                                        1 << LayerMask.NameToLayer("Player"));
+                                    if (hits)
+                                    {
+                                        player.playerHealth.GetDamage(21f);
+                                    }
 
-                                wasAttackSword = false;
-                            }
-                        }).Play();
+                                    wasAttackSword = false;
+                                }
+                            }).Play();
+                    }
                 }
             }
         }

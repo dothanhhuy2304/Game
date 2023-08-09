@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Photon.Pun;
 using Script.Core;
 using Script.Player;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Script.GamePlay
 {
-    public class CharacterSelection : MonoBehaviour
+    public class CharacterSelection : MonoBehaviourPunCallbacks
     {
         [SerializeField] private List<GameObject> characters;
         private int currentCharacter;
@@ -44,12 +45,18 @@ namespace Script.GamePlay
 
         public void LoadCharacter()
         {
-            HuyManager.Instance.characterSelected = currentCharacter;
+            photonView.RPC(nameof(RpcCharacter), RpcTarget.All);
             loadingScreenManager.FadeLoadingScene(
                 HuyManager.Instance.currentScreen == 0
                     ? loadingScreenManager.NextScreen()
                     : loadingScreenManager.LoadCurrentScreen());
             //loadingScreenManager.FadeLoadingScene(gameManager.playerData.playerDataObj.currentScenes == 0 ? loadingScreenManager.NextScreen(1) : LoadingScreenManager.LoadCurrentScreen());
+        }
+
+        [PunRPC]
+        private void RpcCharacter()
+        {
+            HuyManager.Instance.characterSelected = currentCharacter;
         }
 
         public void PlayEffectClick()

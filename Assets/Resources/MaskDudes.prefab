@@ -241,9 +241,9 @@ MonoBehaviour:
     SynchronizeType: 0
     Name: y_velocity
   m_SynchronizeLayers:
-  - SynchronizeType: 0
+  - SynchronizeType: 1
     LayerIndex: 0
-  - SynchronizeType: 0
+  - SynchronizeType: 1
     LayerIndex: 1
 --- !u!1 &8953777265638131197
 GameObject:
@@ -263,7 +263,7 @@ GameObject:
   - component: {fileID: 199058553}
   - component: {fileID: 6864512265907490839}
   - component: {fileID: 408137768317262334}
-  m_Layer: 6
+  m_Layer: 14
   m_Name: MaskDudes
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -353,7 +353,6 @@ MonoBehaviour:
   clampMinX: -6.46
   clampMaxX: 227
   playerHealth: {fileID: 0}
-  pv: {fileID: 0}
 --- !u!114 &8953777265638131186
 MonoBehaviour:
   m_ObjectHideFlags: 0

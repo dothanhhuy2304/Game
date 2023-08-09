@@ -156,7 +156,7 @@ GameObject:
   - component: {fileID: 1737868661}
   - component: {fileID: 117252721417711184}
   - component: {fileID: 1137378791756213755}
-  m_Layer: 6
+  m_Layer: 13
   m_Name: VirtualGuys
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -199,7 +199,6 @@ MonoBehaviour:
   clampMinX: -6.46
   clampMaxX: 227
   playerHealth: {fileID: 0}
-  pv: {fileID: 0}
 --- !u!114 &772435844488864097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -492,9 +491,9 @@ MonoBehaviour:
     SynchronizeType: 0
     Name: y_velocity
   m_SynchronizeLayers:
-  - SynchronizeType: 0
+  - SynchronizeType: 1
     LayerIndex: 0
-  - SynchronizeType: 0
+  - SynchronizeType: 1
     LayerIndex: 1
 --- !u!1 &5621145496202273162
 GameObject:

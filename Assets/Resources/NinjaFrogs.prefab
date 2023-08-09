@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 235679750}
   - component: {fileID: 4558337873839590095}
   - component: {fileID: 8295686726465452768}
-  m_Layer: 6
+  m_Layer: 15
   m_Name: NinjaFrogs
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -108,7 +108,6 @@ MonoBehaviour:
   clampMinX: -6.46
   clampMaxX: 227
   playerHealth: {fileID: 0}
-  pv: {fileID: 0}
 --- !u!114 &377494481518129212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,7 +226,7 @@ GameObject:
   - component: {fileID: 377494481715831528}
   - component: {fileID: 377494481715831535}
   - component: {fileID: 3659893538475826515}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: NinjaFrog
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -354,9 +353,9 @@ MonoBehaviour:
     SynchronizeType: 0
     Name: y_velocity
   m_SynchronizeLayers:
-  - SynchronizeType: 0
+  - SynchronizeType: 1
     LayerIndex: 0
-  - SynchronizeType: 0
+  - SynchronizeType: 1
     LayerIndex: 1
 --- !u!1 &377494482417265898
 GameObject:

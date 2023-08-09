@@ -19,17 +19,17 @@ TagManager:
   - 
   - Water
   - UI
-  - Player
+  - 
   - ground
   - Enemy
   - background
   - Item
   - BulletPlayer
   - BulletEnemy
-  - 
-  - 
-  - 
-  - 
+  - Player1
+  - Player2
+  - Player3
+  - Player4
   - 
   - 
   - 

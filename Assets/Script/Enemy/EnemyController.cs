@@ -25,7 +25,7 @@ namespace Script.Enemy
         [SerializeField] protected Animator animator;
         [SerializeField] private List<FireProjectile> projectiles;
         [SerializeField] protected float movingSpeed;
-        protected CharacterController2D playerCharacter;
+        protected CharacterController2D[] playerCharacter;
         [SerializeField] private float offsetFlip;
         [Space] [Header("Time")] protected float currentTime;
         [SerializeField] protected float maxTimeAttack;
@@ -35,25 +35,31 @@ namespace Script.Enemy
 
         protected virtual void Start()
         {
-            playerCharacter = FindObjectOfType<CharacterController2D>();
+            playerCharacter = FindObjectsOfType<CharacterController2D>();
         }
 
         protected void Flip()
         {
-            Vector2 target = (playerCharacter.transform.position - transform.position).normalized;
-            float angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(new Vector3(0, angle + offsetFlip, 0));
+            foreach (var player in playerCharacter)
+            {
+                Vector2 target = (player.transform.position - transform.position).normalized;
+                float angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(new Vector3(0, angle + offsetFlip, 0));
+            }
         }
         
         protected void AttackBulletDirection()
         {
-            int index = FindBullet();
-            projectiles[index].transform.position = transform.TransformPoint(positionAttack);
-            Vector2 direction = (playerCharacter.transform.position - transform.position).normalized;
-            projectiles[index].transform.rotation = Quaternion.Euler(0f, 0f, 
-                Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-            projectiles[index].Shoot(transform);
-            AudioManager.instance.Play("Enemy_Attack_Shoot");
+            foreach (var player in playerCharacter)
+            {
+                int index = FindBullet();
+                projectiles[index].transform.position = transform.TransformPoint(positionAttack);
+                Vector2 direction = (player.transform.position - transform.position).normalized;
+                projectiles[index].transform.rotation = Quaternion.Euler(0f, 0f,
+                    Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+                projectiles[index].Shoot(transform);
+                AudioManager.instance.Play("Enemy_Attack_Shoot");
+            }
         }
 
         protected void AttackBullet()

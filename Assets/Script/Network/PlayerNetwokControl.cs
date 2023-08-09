@@ -6,18 +6,16 @@ using UnityEngine;
 
 public class PlayerNetwokControl : MonoBehaviourPunCallbacks
 {
-    // public static GameObject IsLocalPlayer;
-    //
-    // private void Awake()
-    // {
-    //     if (photonView.IsMine)
-    //     {
-    //         if (photonView.IsMine)
-    //         {
-    //             IsLocalPlayer = gameObject;
-    //         }
-    //
-    //         DontDestroyOnLoad(gameObject);
-    //     }
-    // }
+    public static GameObject IsLocalPlayer;
+    public static PhotonView view;
+
+    private void Awake()
+    {
+        if (photonView.IsMine)
+        {
+                IsLocalPlayer = gameObject;
+                view = photonView;
+            DontDestroyOnLoad(gameObject);
+        }
+    }
 }

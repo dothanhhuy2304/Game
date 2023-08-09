@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,47 +11,47 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class LaunchManager : MonoBehaviourPunCallbacks
 {
-   public static LaunchManager instance;
-   [SerializeField] private LoadingSceneAnim loadingAnim;
-   private List<MyRoomInfo> cachedRoomList = new List<MyRoomInfo>();
-   [SerializeField] private GameObject mainPanel;
-   [SerializeField] private GameObject panelIntro;
-   [SerializeField] private GameObject panelRoom;
-   [SerializeField] private TMP_InputField roomName;
-   [SerializeField] private byte maxPlayerInRoom;
-   private bool _isShowListRoom;
-   [SerializeField] private GameObject parentSpawnListRoom;
-   [SerializeField] private MyRoomInfo myRoomInfoPrefab;
-   [SerializeField] private GameObject startGame;
-   [SerializeField] private int currentScreen = 1;
-   [SerializeField] private GameObject listRoom;
-   [SerializeField] private TMP_Text txtRoomName;
-   
-   private void Awake()
-   {
-      if (instance == null)
-      {
-         instance = this;
-      }
-      else
-      {
-         LaunchManager[] currentInstanceExit = FindObjectsOfType<LaunchManager>();
-         foreach (var cInstance in currentInstanceExit)
-         {
-            if (cInstance == instance)
+    public static LaunchManager instance;
+    [SerializeField] private LoadingSceneAnim loadingAnim;
+    private List<MyRoomInfo> cachedRoomList = new List<MyRoomInfo>();
+    [SerializeField] private GameObject panelIntro;
+    [SerializeField] private GameObject panelRoom;
+    [SerializeField] private GameObject inRoom;
+    [SerializeField] private TMP_InputField roomName;
+    [SerializeField] private byte maxPlayerInRoom;
+    private bool _isShowListRoom;
+    [SerializeField] private GameObject parentSpawnListRoom;
+    [SerializeField] private MyRoomInfo myRoomInfoPrefab;
+    [SerializeField] private GameObject startGame;
+    [SerializeField] private int currentScreen = 1;
+    [SerializeField] private GameObject listRoom;
+    [SerializeField] private TMP_Text txtRoomName;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            LaunchManager[] currentInstanceExit = FindObjectsOfType<LaunchManager>();
+            foreach (var cInstance in currentInstanceExit)
             {
-               Destroy(cInstance);
+                if (cInstance == instance)
+                {
+                    Destroy(cInstance);
+                }
             }
-         }
-      }
+        }
 
-      DontDestroyOnLoad(gameObject);
-      PhotonNetwork.AutomaticallySyncScene = true;
-      PhotonNetwork.GameVersion = Application.version;
-      PhotonNetwork.ConnectUsingSettings();
-   }
+        DontDestroyOnLoad(gameObject);
+        PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.GameVersion = Application.version;
+        PhotonNetwork.ConnectUsingSettings();
+    }
 
-/// <summary>
+    /// <summary>
     /// Photon will calling this function when application is ready
     /// </summary>
     public override void OnConnectedToMaster()
@@ -70,15 +71,15 @@ public class LaunchManager : MonoBehaviourPunCallbacks
             loadingAnim.LogFeedback("Something Wrong...", true);
             loadingAnim.StartAnimationLoading();
             string roomNames = System.Guid.NewGuid().ToString().Substring(0, 10);
-            PhotonNetwork.JoinRandomOrCreateRoom(null, maxPlayerInRoom, MatchmakingMode.FillRoom, null, null, roomNames);
-            txtRoomName.text = roomNames;
-            txtRoomName.gameObject.SetActive(true);
+            PhotonNetwork.JoinRandomOrCreateRoom(null, maxPlayerInRoom, MatchmakingMode.FillRoom, null, null,
+                roomNames);
         }
         else
         {
             loadingAnim.LogFeedback("<Color=Red>Room name can't be blank!</Color>", true);
         }
     }
+
     /// <summary>
     /// Join a room by name
     /// If not exit create new room
@@ -91,14 +92,14 @@ public class LaunchManager : MonoBehaviourPunCallbacks
             loadingAnim.LogFeedback("Something Wrong...", true);
             loadingAnim.StartAnimationLoading();
             PhotonNetwork.JoinRoom(roomName.text);
-            txtRoomName.text = roomName.text;
-            txtRoomName.gameObject.SetActive(true);
+            inRoom.SetActive(true);
         }
         else
         {
             loadingAnim.LogFeedback("<Color=Red>Room name can't be blank!</Color>", true);
         }
     }
+
     /// <summary>
     /// Create a room by roomName
     /// If room name had exit create new room
@@ -111,9 +112,9 @@ public class LaunchManager : MonoBehaviourPunCallbacks
             panelIntro.SetActive(false);
             loadingAnim.LogFeedback("CreateRoom...", true);
             loadingAnim.StartAnimationLoading();
-            PhotonNetwork.JoinOrCreateRoom(roomName.text, new RoomOptions {IsOpen = true, MaxPlayers = maxPlayerInRoom}, TypedLobby.Default);
-            txtRoomName.text = roomName.text;
-            txtRoomName.gameObject.SetActive(true);
+            PhotonNetwork.JoinOrCreateRoom(roomName.text, new RoomOptions {IsOpen = true, MaxPlayers = maxPlayerInRoom},
+                TypedLobby.Default);
+            inRoom.SetActive(true);
         }
         else
         {
@@ -136,46 +137,34 @@ public class LaunchManager : MonoBehaviourPunCallbacks
     /// <param name="roomList">List current room exits</param>
     private void UpdateCurrentRoomList(List<RoomInfo> roomList)
     {
-            Debug.LogError("Number room exits " + roomList.Count);
-            foreach (var info in roomList)
+        Debug.LogError("Number room exits " + roomList.Count);
+        foreach (var info in roomList)
+        {
+            if (info.RemovedFromList || info.PlayerCount == info.MaxPlayers)
             {
-                if (info.RemovedFromList || info.PlayerCount == info.MaxPlayers)
+                for (int i = 0; i < cachedRoomList.Count; i++)
                 {
-                    for (int i = 0; i < cachedRoomList.Count; i++)
+                    if (cachedRoomList[i].info.Equals(info))
                     {
-                        if (cachedRoomList[i].info.Equals(info))
-                        {
-                            Destroy(cachedRoomList[i].gameObject);
-                            cachedRoomList.Remove(cachedRoomList[i]);
-                        }
+                        Destroy(cachedRoomList[i].gameObject);
+                        cachedRoomList.Remove(cachedRoomList[i]);
                     }
                 }
-                else
+            }
+            else
+            {
+                if (cachedRoomList.Count > 0)
                 {
-                    if (cachedRoomList.Count > 0)
+                    int exit = cachedRoomList.FindIndex(t => t.info.Equals(info));
+                    if (exit >= 0)
                     {
-                        int exit = cachedRoomList.FindIndex(t => t.info.Equals(info));
-                        if (exit >= 0)
-                        {
-                            cachedRoomList[exit].roomName.text = info.Name;
-                            cachedRoomList[exit].currentPlayer.text = $"{info.PlayerCount}/{info.MaxPlayers}";
-                        }
-                        else
-                        {
-                            MyRoomInfo btnJoin = Instantiate(myRoomInfoPrefab, parentSpawnListRoom.transform);
-                            btnJoin.name = btnJoin.info.Name;
-                            btnJoin.buttonJoinRoom.onClick.AddListener(() => { JoinRoom(info.Name); });
-                            btnJoin.roomName.text = info.Name;
-                            btnJoin.currentPlayer.text = $"{info.PlayerCount}/{info.MaxPlayers}";
-                            btnJoin.gameObject.SetActive(true);
-                            btnJoin.info = info;
-                            cachedRoomList.Add(btnJoin);
-                        }
+                        cachedRoomList[exit].roomName.text = info.Name;
+                        cachedRoomList[exit].currentPlayer.text = $"{info.PlayerCount}/{info.MaxPlayers}";
                     }
                     else
                     {
                         MyRoomInfo btnJoin = Instantiate(myRoomInfoPrefab, parentSpawnListRoom.transform);
-                        btnJoin.name = HuyManager.Instance.userId;
+                        btnJoin.name = btnJoin.info.Name;
                         btnJoin.buttonJoinRoom.onClick.AddListener(() => { JoinRoom(info.Name); });
                         btnJoin.roomName.text = info.Name;
                         btnJoin.currentPlayer.text = $"{info.PlayerCount}/{info.MaxPlayers}";
@@ -184,7 +173,19 @@ public class LaunchManager : MonoBehaviourPunCallbacks
                         cachedRoomList.Add(btnJoin);
                     }
                 }
+                else
+                {
+                    MyRoomInfo btnJoin = Instantiate(myRoomInfoPrefab, parentSpawnListRoom.transform);
+                    btnJoin.name = HuyManager.Instance.userId;
+                    btnJoin.buttonJoinRoom.onClick.AddListener(() => { JoinRoom(info.Name); });
+                    btnJoin.roomName.text = info.Name;
+                    btnJoin.currentPlayer.text = $"{info.PlayerCount}/{info.MaxPlayers}";
+                    btnJoin.gameObject.SetActive(true);
+                    btnJoin.info = info;
+                    cachedRoomList.Add(btnJoin);
+                }
             }
+        }
     }
 
     private void JoinRoom(string roomNames)
@@ -192,8 +193,7 @@ public class LaunchManager : MonoBehaviourPunCallbacks
         panelIntro.SetActive(false);
         PhotonNetwork.JoinRoom(roomNames);
         loadingAnim.StartAnimationLoading();
-        txtRoomName.text = roomNames;
-        txtRoomName.gameObject.SetActive(true);
+        inRoom.SetActive(true);
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -205,6 +205,12 @@ public class LaunchManager : MonoBehaviourPunCallbacks
     {
         loadingAnim.LogFeedback("Joined to lobby...", true);
         loadingAnim.StopAnimationLoading();
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        startGame.SetActive(PhotonNetwork.IsMasterClient);
+        txtRoomName.text = PhotonNetwork.CurrentRoom.Name + " " + PhotonNetwork.CurrentRoom.PlayerCount + "/" + maxPlayerInRoom;
     }
 
     public override void OnLeftLobby()
@@ -222,7 +228,7 @@ public class LaunchManager : MonoBehaviourPunCallbacks
             PhotonNetwork.LeaveRoom();
         }
     }
-    
+
 
     public override void OnDisconnected(DisconnectCause cause)
     {
@@ -233,7 +239,7 @@ public class LaunchManager : MonoBehaviourPunCallbacks
             loadingAnim.StopAnimationLoading();
         }
     }
-    
+
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
@@ -247,20 +253,14 @@ public class LaunchManager : MonoBehaviourPunCallbacks
     {
         loadingAnim.LogFeedback($"<Color=Green>{PhotonNetwork.CurrentRoom.Name}</Color>", true);
         loadingAnim.LogFeedback($"{PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}");
-        //startGame.gameObject.SetActive(PhotonNetwork.IsMasterClient && CheckPlayersReady());
-        CheckStartGame();
+        startGame.gameObject.SetActive(PhotonNetwork.IsMasterClient);
         loadingAnim.StopAnimationLoading();
+        txtRoomName.text = PhotonNetwork.CurrentRoom.Name + " " + PhotonNetwork.CurrentRoom.PlayerCount + "/" + maxPlayerInRoom;
     }
 
     public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
     {
         //CheckStartGame();
-    }
-
-    [PunRPC]
-    private void CheckStartGame()
-    {
-        startGame.gameObject.SetActive(PhotonNetwork.IsMasterClient || PhotonNetwork.CurrentRoom.PlayerCount > 1);
     }
 
     private bool CheckPlayersReady()
@@ -287,14 +287,14 @@ public class LaunchManager : MonoBehaviourPunCallbacks
 
         return true;
     }
-    
+
 
     //Beta need fix soon
     //Should leaveRoom and keep lobby
     //If disconnect lobby will connect again onConnectToMaster
     //Change scene will not work if loading not correct
     private Coroutine _currentCoroutine;
-    
+
     public void LeaveRoom()
     {
         if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom)
@@ -336,8 +336,7 @@ public class LaunchManager : MonoBehaviourPunCallbacks
 
     public void ButtonStartGame()
     {
-        mainPanel.SetActive(false);
-        PhotonNetwork.LoadLevel(loadingAnim.levelGame[currentScreen]);
         loadingAnim.StopAnimationLoading();
+        PhotonNetwork.LoadLevel(loadingAnim.levelGame[currentScreen]);
     }
 }

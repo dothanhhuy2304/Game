@@ -55,6 +55,17 @@ MonoBehaviour:
   - YVelocity
   - AnimPlayerJump
   - AnimPlayerRun
+  - PlayerInput
+  - RpcCheckGround
+  - RpcJumpAnim
+  - RpcJump
+  - RpcResetAnimJump
+  - LoadCharacter
+  - ButtonStartGame
+  - RpcStartGame
+  - RpcVariable
+  - RpcCharacter
+  - RpcActorNumber
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

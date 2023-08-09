@@ -54,7 +54,7 @@ namespace Script.GamePlay
             //uiLoading.SetActive(true);
             //fillLoading.fillAmount = 0f;
             //LoadScene(sceneIndex);
-            PhotonNetwork.LoadLevel(sceneIndex + 1);
+            PhotonNetwork.LoadLevel(sceneIndex);
         }
 
         private void LoadScene(int sceneIndex)

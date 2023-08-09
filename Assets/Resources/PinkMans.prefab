@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 929771796}
   - component: {fileID: 4282258128844528452}
   - component: {fileID: 4692590620285954023}
-  m_Layer: 6
+  m_Layer: 16
   m_Name: PinkMans
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -210,7 +210,6 @@ MonoBehaviour:
   clampMinX: -6.46
   clampMaxX: 227
   playerHealth: {fileID: 0}
-  pv: {fileID: 0}
 --- !u!114 &6529767382540131346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -329,7 +328,7 @@ GameObject:
   - component: {fileID: 6529767383066599553}
   - component: {fileID: 6529767383066599554}
   - component: {fileID: 5807118253259131025}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: PinkMan
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -456,9 +455,9 @@ MonoBehaviour:
     SynchronizeType: 0
     Name: y_velocity
   m_SynchronizeLayers:
-  - SynchronizeType: 0
+  - SynchronizeType: 1
     LayerIndex: 0
-  - SynchronizeType: 0
+  - SynchronizeType: 1
     LayerIndex: 1
 --- !u!1 &6529767384173654119
 GameObject:

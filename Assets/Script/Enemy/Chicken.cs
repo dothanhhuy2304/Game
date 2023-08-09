@@ -107,22 +107,28 @@ namespace Script.Enemy
         {
             if (!enemySetting.canAttack)
             {
-                if ((playerCharacter.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
+                foreach (var player in playerCharacter)
                 {
-                    enemySetting.canAttack = true;
-                    body.bodyType = RigidbodyType2D.Kinematic;
+                    if ((player.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
+                    {
+                        enemySetting.canAttack = true;
+                        body.bodyType = RigidbodyType2D.Kinematic;
+                    }
                 }
             }
 
             if (enemySetting.canAttack && spriteRenderer.enabled)
             {
-                if ((playerCharacter.transform.position - transform.position).magnitude > 0.5f && isHitGround)
+                foreach (var player in playerCharacter)
                 {
-                    MoveToTarget(isHitGround);
-                }
-                else
-                {
-                    MoveToTarget(false);
+                    if ((player.transform.position - transform.position).magnitude > 0.5f && isHitGround)
+                    {
+                        MoveToTarget(isHitGround);
+                    }
+                    else
+                    {
+                        MoveToTarget(false);
+                    }
                 }
 
                 if (currentTime <= 0f)
@@ -164,10 +170,13 @@ namespace Script.Enemy
         {
             if (canMove)
             {
-                Vector3 trans = offsetAttack.transform.position;
-                Vector3 movingTarget = (playerCharacter.transform.position - trans).normalized;
-                Vector3 fixMove = new Vector3(movingTarget.x, 0);
-                body.MovePosition(trans + fixMove * (Time.fixedDeltaTime * movingSpeed));
+                foreach (var player in playerCharacter)
+                {
+                    Vector3 trans = offsetAttack.transform.position;
+                    Vector3 movingTarget = (player.transform.position - trans).normalized;
+                    Vector3 fixMove = new Vector3(movingTarget.x, 0);
+                    body.MovePosition(trans + fixMove * (Time.fixedDeltaTime * movingSpeed));
+                }
             }
             else
             {

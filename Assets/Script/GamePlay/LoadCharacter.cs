@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Script.GamePlay
 {
-    public class LoadCharacter : MonoBehaviourPunCallbacks,IPunObservable
+    public class LoadCharacter : MonoBehaviourPunCallbacks, IPunObservable
     {
         [SerializeField] private GameObject[] characters;
 
@@ -16,11 +16,13 @@ namespace Script.GamePlay
                 Instantiate(Resources.Load<GameObject>("GameManager"));
             }
 
-            //if (PlayerNetwokControl.IsLocalPlayer)
-            //{
+            GameManager.instance.lobbyPanel.SetActive(false);
+
+            if (photonView.IsMine)
+            {
                 //characters[HuyManager.Instance.characterSelected].SetActive(true);
-                SpawnPlayer();
-            //}
+                photonView.RPC(nameof(SpawnPlayer), RpcTarget.All);
+            }
 
             AudioManager.instance.Plays_Music("Music_Game");
 
@@ -31,6 +33,7 @@ namespace Script.GamePlay
                 UIManager.instance.btnRestart.gameObject.SetActive(true);
             }
         }
+
 
         [PunRPC]
         private void SpawnPlayer()

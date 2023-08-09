@@ -38,19 +38,23 @@ namespace Script.Enemy
             if (!HuyManager.Instance.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
             {
                 HuyManager.Instance.SetUpTime(ref currentTime);
-                if ((playerCharacter.transform.position - transform.position).magnitude < rangeAttack)
+                foreach (var player in playerCharacter)
                 {
-                    RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, mask);
-                    if (hit)
+                    if ((player.transform.position - transform.position).magnitude < rangeAttack)
                     {
-                        if (hit.collider.CompareTag("Player"))
+                        RaycastHit2D hit = Physics2D.Linecast(transform.position, player.transform.position,
+                            mask);
+                        if (hit)
                         {
-                            Flip();
-                            if (currentTime <= 0)
+                            if (hit.collider.CompareTag("Player"))
                             {
-                                DurationAttack(0.5f);
-                                animator.SetTrigger("isAttack");
-                                currentTime = maxTimeAttack;
+                                Flip();
+                                if (currentTime <= 0)
+                                {
+                                    DurationAttack(0.5f);
+                                    animator.SetTrigger("isAttack");
+                                    currentTime = maxTimeAttack;
+                                }
                             }
                         }
                     }
