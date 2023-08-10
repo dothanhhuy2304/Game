@@ -62,7 +62,7 @@ namespace Script.Enemy
         {
             if (other.CompareTag("Player"))
             {
-                PlayerHealth.instance.GetDamage(20f);
+                FindObjectOfType<PlayerHealth>().GetDamage(20f);
                 AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
                 Explosion();
             }

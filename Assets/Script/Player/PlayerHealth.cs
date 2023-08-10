@@ -10,7 +10,6 @@ namespace Script.Player
 {
     public class PlayerHealth :MonoBehaviourPunCallbacks, IHealthSystem
     {
-        public static PlayerHealth instance;
         [SerializeField] private CharacterController2D playerCharacter;
         [SerializeField] private PlayerHealthBar playerHealthBar;
         [SerializeField] private PetAI petAi;
@@ -19,14 +18,6 @@ namespace Script.Player
 
         private void Start()
         {
-            if (playerCharacter.photonView.IsMine)
-            {
-                if (instance == null)
-                {
-                    instance = this;
-                }
-            }
-
             txtDamage = uIDamagePlayer.GetComponentInChildren<TextMeshProUGUI>();
             if (playerCharacter.playerData.currentHealth <= 0)
             {

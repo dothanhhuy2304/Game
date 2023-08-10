@@ -44,7 +44,7 @@ namespace Script.GamePlay
                         }
                         else
                         {
-                            PlayerHealth.instance.GetDamage(20f);
+                            FindObjectOfType<PlayerHealth>().GetDamage(20f);
                         }
 
                         isOpen = true;

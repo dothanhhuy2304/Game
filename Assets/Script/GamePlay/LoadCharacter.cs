@@ -8,6 +8,7 @@ namespace Script.GamePlay
     public class LoadCharacter : MonoBehaviourPunCallbacks, IPunObservable
     {
         [SerializeField] private GameObject[] characters;
+        [SerializeField] private GameObject pet;
 
         private void Awake()
         {
@@ -41,6 +42,8 @@ namespace Script.GamePlay
             GameObject player = PhotonNetwork.Instantiate(characters[HuyManager.Instance.characterSelected].name,
                 characters[HuyManager.Instance.characterSelected].transform.position, Quaternion.identity);
             HuyManager.IsLocalPlayer = player.GetComponent<CharacterController2D>();
+            GameObject myPet = PhotonNetwork.Instantiate(pet.name, pet.transform.position, Quaternion.identity);
+            HuyManager.IsLocalPet = myPet.GetComponent<PetAI>();
             //player.SetActive(true);
             //photonView.gameObject.SetActive(true);
         }

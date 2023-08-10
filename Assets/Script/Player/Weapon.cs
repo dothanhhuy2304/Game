@@ -1,31 +1,43 @@
+using System;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Script.Core;
 
 namespace Script.Player
 {
-    public class Weapon : MonoBehaviour
+    public class Weapon : MonoBehaviourPunCallbacks
     {
         [SerializeField] private List<FireProjectile> projectiles;
         [SerializeField] private Vector2 offset;
         private float timeAttack;
         [SerializeField] private float resetTimeAttack;
+        private int _tempIndex;
+
+        private void Awake()
+        {
+            projectiles = FindObjectOfType<BulletController>().bulletPlayer;
+        }
 
         private void LateUpdate()
         {
-            HuyManager.Instance.SetUpTime(ref timeAttack);
-            if (HuyManager.Instance.PlayerIsDeath() || HuyManager.Instance.GetPlayerIsHurt() || EventSystem.current.IsPointerOverGameObject()) return;
-            if (timeAttack <= 0)
+            if (photonView.IsMine)
             {
-                if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.L))
+                HuyManager.Instance.SetUpTime(ref timeAttack);
+                //if (HuyManager.Instance.PlayerIsDeath() || HuyManager.Instance.GetPlayerIsHurt() || EventSystem.current.IsPointerOverGameObject()) return;
+                if (timeAttack <= 0)
                 {
-                    BulletAttack();
-                    timeAttack = resetTimeAttack;
+                    if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.L))
+                    {
+                        photonView.RPC(nameof(BulletAttack), RpcTarget.All);
+                        timeAttack = resetTimeAttack;
+                    }
                 }
             }
         }
 
+        [PunRPC]
         private void BulletAttack()
         {
             int index = FindBullet();
@@ -35,23 +47,22 @@ namespace Script.Player
             AudioManager.instance.Play("Player_Bullet_Shoot");
         }
 
-        private int tempIndex;
 
         private int FindBullet()
         {
-            if (tempIndex >= projectiles.Count - 1)
+            if (_tempIndex >= projectiles.Count - 1)
             {
-                return tempIndex = 0;
+                return _tempIndex = 0;
             }
 
-            tempIndex++;
-            if (projectiles[tempIndex].gameObject.activeSelf)
+            _tempIndex++;
+            if (projectiles[_tempIndex].gameObject.activeSelf)
             {
                 FindBullet();
             }
             else
             {
-                return tempIndex;
+                return _tempIndex;
             }
 
             return 0;

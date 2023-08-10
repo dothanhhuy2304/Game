@@ -50,7 +50,7 @@ namespace Script.Player
         {
             if (photonView.IsMine)
             {
-                playerHealth = PlayerHealth.instance;
+                playerHealth = FindObjectOfType<PlayerHealth>();
                 startSpeed = playerData.movingSpeed;
             }
         }

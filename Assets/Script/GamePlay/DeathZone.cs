@@ -9,7 +9,7 @@ namespace Script.GamePlay
         {
             if (other.CompareTag("Player"))
             {
-                PlayerHealth.instance.DieByFalling();
+                FindObjectOfType<PlayerHealth>().DieByFalling();
             }
         }
     }

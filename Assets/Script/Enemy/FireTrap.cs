@@ -14,7 +14,7 @@ namespace Script.Enemy
 
         private void Start()
         {
-            playerHealth = PlayerHealth.instance;
+            playerHealth = FindObjectOfType<PlayerHealth>();
         }
 
         private void OnTriggerEnter2D(Collider2D other)

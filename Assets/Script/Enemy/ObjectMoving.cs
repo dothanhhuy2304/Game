@@ -32,7 +32,7 @@ namespace Script.Enemy
                     HuyManager.Instance.SetUpTime(ref timeAttack);
                     if (timeAttack <= 0f)
                     {
-                        PlayerHealth.instance.GetDamage(20f);
+                        FindObjectOfType<PlayerHealth>().GetDamage(20f);
                         timeAttack = resetTimeAttack;
                     }
                 }

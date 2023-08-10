@@ -56,7 +56,7 @@ namespace Script.Enemy
                     explosionObj.SetActive(true);
                     colObj.enabled = false;
                     AudioManager.instance.Play("Boom_Explosion");
-                    PlayerHealth.instance.GetDamage(30f);
+                    FindObjectOfType<PlayerHealth>().GetDamage(30f);
                 }).AppendInterval(delay)
                 .AppendCallback(() =>
                 {

@@ -25,6 +25,8 @@ namespace Script.Core
 
         public static CharacterController2D IsLocalPlayer;
 
+        public static PetAI IsLocalPet;
+
         public void SetPlayerIsDeath(int state)
         {
             PlayerPrefs.SetInt("PlayerIsDeath", state);

@@ -23,7 +23,7 @@ namespace Script.Enemy
         {
             if (other.CompareTag("Player"))
             {
-                PlayerHealth.instance.GetDamage(20f);
+                FindObjectOfType<PlayerHealth>().GetDamage(20f);
                 GetComponent<Collider2D>().enabled = false;
             }
         }

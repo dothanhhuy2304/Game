@@ -19,7 +19,7 @@ namespace Script.Item
         private void Start()
         {
             gameManager = GameManager.instance;
-            playerHealth = PlayerHealth.instance;
+            playerHealth = FindObjectOfType<PlayerHealth>();
         }
 
         private void OnTriggerEnter2D(Collider2D other)

@@ -23,9 +23,9 @@ public class FireProjectile : MonoBehaviour
     
     private void Awake()
     {
-        playerCharacter = FindObjectOfType<CharacterController2D>();
-        playerHealth = PlayerHealth.instance;
-        petAI = PetAI.instance;
+        playerCharacter = HuyManager.IsLocalPlayer;
+        playerHealth = FindObjectOfType<PlayerHealth>();
+        petAI = HuyManager.IsLocalPet;
     }
 
     private void OnEnable()
@@ -73,10 +73,10 @@ public class FireProjectile : MonoBehaviour
 
     private void BulletDirection(Transform trans)
     {
-        if (petAI)
-        {
-            targetPetEnemy = (petAI.closestEnemy.position - transform.position).normalized;
-        }
+        // if (petAI)
+        // {
+        //     targetPetEnemy = (petAI.closestEnemy.position - transform.position).normalized;
+        // }
 
         TemporarilyDeactivate(1.7f);
         if (body.isKinematic)
@@ -100,6 +100,12 @@ public class FireProjectile : MonoBehaviour
                 }
                 case EnemyType.Pet:
                 {
+                    //Todo need check
+                    if (petAI)
+                    {
+                        targetPetEnemy = (petAI.closestEnemy.position - transform.position).normalized;
+                    }
+                    
                     body.velocity = targetPetEnemy * bulletSpeed;
                     break;
                 }
@@ -234,7 +240,7 @@ public class FireProjectile : MonoBehaviour
             case EnemyType.Trunk:
                 if (other.CompareTag("Player"))
                 {
-                    PlayerHealth.instance.GetDamage(20f);
+                    playerHealth.GetDamage(20f);
                     BulletExplosions();
                     AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
                 }

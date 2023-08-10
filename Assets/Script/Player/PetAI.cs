@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using Photon.Pun;
 using UnityEngine;
 using Script.Core;
 using Script.ScriptTable;
@@ -8,31 +9,32 @@ using Script.ScriptTable;
 namespace Script.Player
 {
 
-    public class PetAI : FastSingleton<PetAI>
+    public class PetAI : MonoBehaviourPunCallbacks, IPunObservable
     {
         public Data petData;
         [SerializeField] private Rigidbody2D body;
-        private CharacterController2D player;
+        private CharacterController2D _player;
         //private Vector2 velocity = Vector2.zero;
         [SerializeField] private List<FireProjectile> projectiles;
-        private List<GameObject> listEnemyInMap;
+        private List<GameObject> _listEnemyInMap;
         [HideInInspector] public Transform closestEnemy;
-        private bool enemyContact;
+        private bool _enemyContact;
         [SerializeField] private float distancePlayer;
         [SerializeField] private float rangeAttack;
         private float currentTimeAttack = 3f;
         private const float TimeAttack = 3f;
         [SerializeField] private Animator animator;
         private static readonly int IsRun = Animator.StringToHash("isRun");
-        private bool checkHitGround;
+        private bool _checkHitGround;
+        private int _tempIndex;
 
         private void Start()
         {
-            player = FindObjectOfType<CharacterController2D>();
-            listEnemyInMap = GameObject.FindGameObjectsWithTag("Enemy").ToList();
+            _player = HuyManager.IsLocalPlayer;
+            projectiles = FindObjectOfType<BulletController>().petAi;
+            _listEnemyInMap = GameObject.FindGameObjectsWithTag("Enemy").ToList();
         }
-
-
+        
         private void Update()
         {
             HuyManager.Instance.SetUpTime(ref currentTimeAttack);
@@ -40,22 +42,27 @@ namespace Script.Player
 
         private void FixedUpdate()
         {
-            if (!HuyManager.Instance.PlayerIsDeath())
+            if (photonView.IsMine)
             {
-                if ((player.transform.position - transform.position).magnitude > distancePlayer)
+                //if (!HuyManager.Instance.PlayerIsDeath())
+                //{
+                if ((_player.transform.position - transform.position).magnitude > distancePlayer)
                 {
-                    MoveToPlayer();
+                    photonView.RPC(nameof(MoveToPlayer), RpcTarget.All);
                     animator.SetBool(IsRun, true);
-                    CheckAttack();
+                    photonView.RPC(nameof(CheckAttack), RpcTarget.All);
                 }
                 else
                 {
-                    CheckAttack();
+                    photonView.RPC(nameof(CheckAttack), RpcTarget.All);
                     body.velocity = Vector2.zero;
                 }
+
+                //}
             }
         }
 
+        [PunRPC]
         private void CheckAttack()
         {
             closestEnemy = FindClosestEnemy();
@@ -64,13 +71,13 @@ namespace Script.Player
             {
                 if (hit.collider.CompareTag("ground"))
                 {
-                    checkHitGround = true;
+                    _checkHitGround = true;
                     return;
                 }
             }
 
-            checkHitGround = false;
-            if (enemyContact)
+            _checkHitGround = false;
+            if (_enemyContact)
             {
                 if (Vector2.Distance(transform.position, closestEnemy.position) < rangeAttack)
                 {
@@ -88,15 +95,15 @@ namespace Script.Player
         {
             if (other.CompareTag("Enemy"))
             {
-                if (!checkHitGround)
+                if (!_checkHitGround)
                 {
                     closestEnemy.GetComponentInChildren<SpriteRenderer>().DOColor(new Color(1f, 0.6f, 0.5f),0.3f);
-                    enemyContact = true;
+                    _enemyContact = true;
                 }
                 else
                 {
                     closestEnemy.GetComponentInChildren<SpriteRenderer>().DOColor(Color.white, 0.3f);
-                    enemyContact = false;
+                    _enemyContact = false;
                 }
             }
         }
@@ -107,15 +114,16 @@ namespace Script.Player
             if (other.CompareTag("Enemy"))
             {
                 other.GetComponentInChildren<SpriteRenderer>().DOColor(Color.white, 0.3f);
-                enemyContact = false;
+                _enemyContact = false;
             }
         }
 
+        [PunRPC]
         private void MoveToPlayer()
         {
             //Vector2 angle = (player.transform.position - transform.position).normalized;
             //body.velocity = Vector2.SmoothDamp(body.velocity, angle * petData.movingSpeed, ref velocity, .05f);
-            Vector2 playerPos = player.transform.position;
+            Vector2 playerPos = _player.transform.position;
             body.transform.DOMove(new Vector3(playerPos.x + Random.Range(- 2f , 2f), playerPos.y + 1), 0.5f).SetEase(Ease.Linear);
         }
 
@@ -131,7 +139,7 @@ namespace Script.Player
         {
             float closestDistance = Mathf.Infinity;
             Transform trans = null;
-            foreach (var go in listEnemyInMap)
+            foreach (var go in _listEnemyInMap)
             {
                 if (!go) continue;
                 float currentDistance = (transform.position - go.transform.position).magnitude;
@@ -145,26 +153,43 @@ namespace Script.Player
             return trans;
         }
 
-        private int tempIndex;
 
         private int FindBullet()
         {
-            if (tempIndex >= projectiles.Count - 1)
+            if (_tempIndex >= projectiles.Count - 1)
             {
-                return tempIndex = 0;
+                return _tempIndex = 0;
             }
 
-            tempIndex++;
-            if (projectiles[tempIndex].gameObject.activeSelf)
+            _tempIndex++;
+            if (projectiles[_tempIndex].gameObject.activeSelf)
             {
                 FindBullet();
             }
             else
             {
-                return tempIndex;
+                return _tempIndex;
             }
 
             return 0;
+        }
+
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                stream.SendNext((Vector3) body.velocity);
+                stream.SendNext((float) body.rotation);
+                stream.SendNext((Vector3) transform.position);
+                stream.SendNext((Quaternion) transform.rotation);
+            }
+            else
+            {
+                body.velocity = (Vector3) stream.ReceiveNext();
+                body.rotation = (float) stream.ReceiveNext();
+                transform.position = (Vector3) stream.ReceiveNext();
+                transform.rotation = (Quaternion) stream.ReceiveNext();
+            }
         }
     }
 }
