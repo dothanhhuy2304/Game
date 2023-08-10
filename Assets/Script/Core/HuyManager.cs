@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using DG.Tweening;
 using Script.Player;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Script.Core
@@ -23,9 +22,9 @@ namespace Script.Core
         public int saveScreenPass;
         public float[] currentPosition = new float[3];
 
-        public static CharacterController2D IsLocalPlayer;
+        public CharacterController2D IsLocalPlayer;
 
-        public static PetAI IsLocalPet;
+        public PetAI IsLocalPet;
 
         public void SetPlayerIsDeath(int state)
         {
@@ -148,7 +147,7 @@ namespace Script.Core
         {
             if (DataService.GetConnection().Table<DataService.PlayerSetting>().Any())
             {
-                DataService.GetConnection().Execute($"update PlayerSetting set soundEffect = '{value}' where PlayerId = '{HuyManager.Instance.userId}'");
+                DataService.GetConnection().Execute($"update PlayerSetting set soundEffect = '{value}' where PlayerId = '{userId}'");
             }
             else
             {

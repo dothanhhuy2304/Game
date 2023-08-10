@@ -92,6 +92,7 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 139
   hpIc: 39
+  damageFix: 0
   enemyHealthBar: {fileID: 3443694513160801483}
   timeReSpawn: 3
   enemyCollider: {fileID: 3443694513160801485}
@@ -147,7 +148,10 @@ MonoBehaviour:
   timeDurationMoving: 0
   mask:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 254080
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 253952
 --- !u!1 &7307979241942103034
 GameObject:
   m_ObjectHideFlags: 0

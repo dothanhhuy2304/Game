@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using Script.Player;
 using UnityEngine;
@@ -18,9 +19,11 @@ namespace Script.Enemy
         private bool wasAttackSword;
         private bool canAttack;
         [SerializeField] private LayerMask mask;
+        [SerializeField] private LayerMask playerMask;
 
-        private void Awake()
+        protected override void Start()
         {
+            base.Start();
             currentTime = 0;
             HuyManager.Instance.eventResetWhenPlayerDeath += WaitToReset;
         }
@@ -47,19 +50,17 @@ namespace Script.Enemy
         private void FixedUpdate()
         {
             HuyManager.Instance.SetUpTime(ref currentTime);
-            foreach (var player in playerCharacter)
+            RaycastHit2D hit =
+                Physics2D.Linecast(transform.position, playerCharacter.transform.position, mask);
+            if (hit)
             {
-                RaycastHit2D hit = Physics2D.Linecast(transform.position, player.transform.position, mask);
-                if (hit)
+                if (hit.collider.CompareTag("Player"))
                 {
-                    if (hit.collider.CompareTag("Player"))
-                    {
-                        canAttack = true;
-                    }
-                    else if (hit.collider.CompareTag("ground"))
-                    {
-                        canAttack = false;
-                    }
+                    canAttack = true;
+                }
+                else if (hit.collider.CompareTag("ground"))
+                {
+                    canAttack = false;
                 }
             }
 
@@ -162,22 +163,19 @@ namespace Script.Enemy
 
         private void SNinjaAttack()
         {
-            foreach (var player in playerCharacter)
+            if ((playerCharacter.transform.position - transform.position).magnitude < 3f)
             {
-                if ((player.transform.position - transform.position).magnitude < 3f)
+                AttackSword();
+            }
+            else if ((playerCharacter.transform.position - transform.position).magnitude <= 8)
+            {
+                SetUpAttackBullet();
+            }
+            else
+            {
+                if (enemySetting.canMoving)
                 {
-                    AttackSword();
-                }
-                else if ((player.transform.position - transform.position).magnitude <= 8)
-                {
-                    SetUpAttackBullet();
-                }
-                else
-                {
-                    if (enemySetting.canMoving)
-                    {
-                        MoveToPosition();
-                    }
+                    MoveToPosition();
                 }
             }
         }
@@ -187,50 +185,46 @@ namespace Script.Enemy
             Flip();
             if (isHitGrounds)
             {
-                foreach (var player in playerCharacter)
+                if ((playerCharacter.transform.position - transform.position).magnitude > 2f)
                 {
-                    if ((player.transform.position - transform.position).magnitude > 2f)
-                    {
-                        Vector3 currentPosition = body.transform.position;
-                        Vector3 targetPosition = new Vector3(player.transform.position.x - currentPosition.x,
-                            0f, 0f);
-                        body.MovePosition(currentPosition + targetPosition * Time.fixedDeltaTime);
-                        animator.SetBool(IsRun, true);
-                    }
+                    Vector3 currentPosition = body.transform.position;
+                    Vector3 targetPosition = new Vector3(playerCharacter.transform.position.x - currentPosition.x,
+                        0f, 0f);
+                    body.MovePosition(currentPosition + targetPosition * Time.fixedDeltaTime);
+                    animator.SetBool(IsRun, true);
+                }
 
-                    if ((player.transform.position - transform.position).magnitude < 2f)
-                    {
-                        if (HuyManager.Instance.PlayerIsDeath())
-                            return;
-                        DOTween.Sequence()
-                            .AppendCallback(() =>
+                if ((playerCharacter.transform.position - transform.position).magnitude < 2f)
+                {
+                    if (HuyManager.Instance.PlayerIsDeath())
+                        return;
+                    DOTween.Sequence()
+                        .AppendCallback(() =>
+                        {
+                            body.MovePosition(body.transform.position);
+                            animator.SetBool(IsRun, false);
+                            if (currentTime <= 0f)
                             {
-                                body.MovePosition(body.transform.position);
-                                animator.SetBool(IsRun, false);
-                                if (currentTime <= 0f)
+                                wasAttackSword = true;
+                                animator.SetTrigger(IsAttackSword);
+                                AudioManager.instance.Play("Enemy_Attack_Sword");
+                                currentTime = 1.5f;
+                            }
+                        })
+                        .AppendInterval(1f)
+                        .AppendCallback(() =>
+                        {
+                            if (wasAttackSword)
+                            {
+                                bool hits = Physics2D.OverlapCircle(transform.position, radiusAttack, playerMask);
+                                if (hits)
                                 {
-                                    wasAttackSword = true;
-                                    animator.SetTrigger(IsAttackSword);
-                                    AudioManager.instance.Play("Enemy_Attack_Sword");
-                                    currentTime = 1.5f;
+                                    playerCharacter.playerHealth.GetDamage(21f);
                                 }
-                            })
-                            .AppendInterval(1f)
-                            .AppendCallback(() =>
-                            {
-                                if (wasAttackSword)
-                                {
-                                    bool hits = Physics2D.OverlapCircle(transform.position, radiusAttack,
-                                        1 << LayerMask.NameToLayer("Player"));
-                                    if (hits)
-                                    {
-                                        player.playerHealth.GetDamage(21f);
-                                    }
 
-                                    wasAttackSword = false;
-                                }
-                            }).Play();
-                    }
+                                wasAttackSword = false;
+                            }
+                        }).Play();
                 }
             }
         }
@@ -277,6 +271,6 @@ namespace Script.Enemy
                 isHitGrounds = false;
             }
         }
-
+        
     }
 }

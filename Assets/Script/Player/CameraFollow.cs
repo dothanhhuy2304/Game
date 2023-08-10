@@ -10,12 +10,13 @@ namespace Script.Player
 
         private void LateUpdate()
         {
-            //if (!HuyManager.Instance.PlayerIsDeath())
-            //{
-            Vector3 target = HuyManager.IsLocalPlayer.transform.position;
-            Vector3 desiredPosition = new Vector3(target.x + offset.x, target.y + offset.y, -10f);
-            transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothValue * Time.deltaTime);
-            //}
+            Debug.Log(HuyManager.Instance.IsLocalPlayer);
+            if (!HuyManager.Instance.PlayerIsDeath())
+            {
+                Vector3 target = HuyManager.Instance.IsLocalPlayer.transform.position;
+                Vector3 desiredPosition = new Vector3(target.x + offset.x, target.y + offset.y, -10f);
+                transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothValue * Time.deltaTime);
+            }
         }
     }
 }

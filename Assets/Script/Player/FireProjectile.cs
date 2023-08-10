@@ -12,28 +12,28 @@ public class FireProjectile : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private ParticleSystem explosionFxObj;
     [SerializeField] private GameObject explosionSpriteFxObj;
-    private CharacterController2D playerCharacter;
-    private Vector2 targetPetEnemy = Vector2.zero;
-    private PlayerHealth playerHealth;
-    private PetAI petAI;
+    private CharacterController2D _playerCharacter;
+    private Vector2 _targetPetEnemy = Vector2.zero;
+    private PlayerHealth _playerHealth;
+    private PetAI _petAi;
     [Header("Arc")]
     [SerializeField] private float arcHeight = 1;
-    private Vector3 startPos = Vector3.zero;
-    private Vector3 targetPos = Vector3.zero;
+    private Vector3 _startPos = Vector3.zero;
+    private Vector3 _targetPos = Vector3.zero;
     
     private void Awake()
     {
-        playerCharacter = HuyManager.IsLocalPlayer;
-        playerHealth = FindObjectOfType<PlayerHealth>();
-        petAI = HuyManager.IsLocalPet;
+        _playerCharacter = HuyManager.Instance.IsLocalPlayer;
+        _playerHealth = FindObjectOfType<PlayerHealth>();
+        _petAi = HuyManager.Instance.IsLocalPet;
     }
 
     private void OnEnable()
     {
         if (enemyType == EnemyType.Trunk)
         {
-            startPos = transform.position;
-            targetPos = playerCharacter.transform.position;
+            _startPos = transform.position;
+            _targetPos = _playerCharacter.transform.position;
         }
     }
 
@@ -42,17 +42,17 @@ public class FireProjectile : MonoBehaviour
     {
         if (enemyType == EnemyType.Trunk)
         {
-            float x0 = startPos.x;
-            float x1 = targetPos.x;
+            float x0 = _startPos.x;
+            float x1 = _targetPos.x;
             float dist = x1 - x0;
             float nextX = Mathf.MoveTowards(transform.position.x, x1, bulletSpeed * Time.deltaTime);
-            float baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - x0) / dist);
+            float baseY = Mathf.Lerp(_startPos.y, _targetPos.y, (nextX - x0) / dist);
             float arc = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
             Vector3 nextPos = new Vector3(nextX, baseY + arc, transform.position.z);
             // Rotate to face the next position, and then move there
             transform.rotation = LookAt2D(nextPos - transform.position);
             transform.position = nextPos;
-            if (nextPos == targetPos)
+            if (nextPos == _targetPos)
             {
                 Arrived();
             }
@@ -101,12 +101,12 @@ public class FireProjectile : MonoBehaviour
                 case EnemyType.Pet:
                 {
                     //Todo need check
-                    if (petAI)
+                    if (_petAi)
                     {
-                        targetPetEnemy = (petAI.closestEnemy.position - transform.position).normalized;
+                        _targetPetEnemy = (_petAi.closestEnemy.position - transform.position).normalized;
                     }
                     
-                    body.velocity = targetPetEnemy * bulletSpeed;
+                    body.velocity = _targetPetEnemy * bulletSpeed;
                     break;
                 }
                 case EnemyType.Bee:
@@ -128,7 +128,7 @@ public class FireProjectile : MonoBehaviour
 
                 if (other.CompareTag("Player"))
                 {
-                    playerHealth.GetDamage(20f);
+                    _playerHealth.GetDamage(20f);
                     BulletExplosions();
                 }
 
@@ -150,7 +150,7 @@ public class FireProjectile : MonoBehaviour
 
                 if (other.CompareTag("Player"))
                 {
-                    playerHealth.GetDamage(14f);
+                    _playerHealth.GetDamage(14f);
                     BulletExplosions();
                 }
 
@@ -172,7 +172,7 @@ public class FireProjectile : MonoBehaviour
 
                 if (other.CompareTag("Player"))
                 {
-                    playerHealth.GetDamage(18f);
+                    _playerHealth.GetDamage(18f);
                     BulletExplosions();
                 }
 
@@ -195,7 +195,7 @@ public class FireProjectile : MonoBehaviour
                 if (other.CompareTag("Enemy"))
                 {
                     EnemyHealth eHealth = other.GetComponent<EnemyHealth>();
-                    eHealth.GetDamage(playerCharacter.playerData.damageAttack + eHealth.damageFix);
+                    eHealth.GetDamage(_playerCharacter.playerData.damageAttack + eHealth.damageFix);
                     BulletExplosions();
                 }
 
@@ -218,7 +218,7 @@ public class FireProjectile : MonoBehaviour
                 if (other.CompareTag("Enemy"))
                 {
                     EnemyHealth eHealth = other.GetComponent<EnemyHealth>();
-                    eHealth.GetDamage(petAI.petData.damageAttack + eHealth.damageFix);
+                    eHealth.GetDamage(_petAi.petData.damageAttack + eHealth.damageFix);
                     BulletExplosions();
                 }
 
@@ -240,7 +240,7 @@ public class FireProjectile : MonoBehaviour
             case EnemyType.Trunk:
                 if (other.CompareTag("Player"))
                 {
-                    playerHealth.GetDamage(20f);
+                    _playerHealth.GetDamage(20f);
                     BulletExplosions();
                     AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
                 }
@@ -266,7 +266,7 @@ public class FireProjectile : MonoBehaviour
 
     private Vector2 GetDistanceObjectToPlayer(Transform trans)
     {
-        return (playerCharacter.transform.position - trans.position).normalized;
+        return (_playerCharacter.transform.position - trans.position).normalized;
     }
 
     private void BulletExplosions()

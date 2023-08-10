@@ -9,8 +9,9 @@ namespace Script.Enemy
         [SerializeField] private float rangeAttack = 10f;
         [SerializeField] private LayerMask mask;
 
-        private void Awake()
+        protected override void Start()
         {
+            base.Start();
             HuyManager.Instance.eventResetWhenPlayerDeath += WaitToReset;
         }
 
@@ -38,23 +39,20 @@ namespace Script.Enemy
             if (!HuyManager.Instance.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
             {
                 HuyManager.Instance.SetUpTime(ref currentTime);
-                foreach (var player in playerCharacter)
+                if ((playerCharacter.transform.position - transform.position).magnitude < rangeAttack)
                 {
-                    if ((player.transform.position - transform.position).magnitude < rangeAttack)
+                    RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position,
+                        mask);
+                    if (hit)
                     {
-                        RaycastHit2D hit = Physics2D.Linecast(transform.position, player.transform.position,
-                            mask);
-                        if (hit)
+                        if (hit.collider.CompareTag("Player"))
                         {
-                            if (hit.collider.CompareTag("Player"))
+                            Flip();
+                            if (currentTime <= 0)
                             {
-                                Flip();
-                                if (currentTime <= 0)
-                                {
-                                    DurationAttack(0.5f);
-                                    animator.SetTrigger("isAttack");
-                                    currentTime = maxTimeAttack;
-                                }
+                                DurationAttack(0.5f);
+                                animator.SetTrigger("isAttack");
+                                currentTime = maxTimeAttack;
                             }
                         }
                     }

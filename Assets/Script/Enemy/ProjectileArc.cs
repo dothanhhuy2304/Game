@@ -1,3 +1,4 @@
+using Script.Core;
 using Script.Player;
 using UnityEngine;
 
@@ -5,7 +6,7 @@ namespace Script.Enemy
 {
     public class ProjectileArc : MonoBehaviour
     {
-        private CharacterController2D playerPos;
+        private CharacterController2D player;
         private Rigidbody2D body;
         [SerializeField] private float speed = 10;
         [SerializeField] private float arcHeight = 1;
@@ -17,14 +18,14 @@ namespace Script.Enemy
 
         private void Awake()
         {
-            playerPos = FindObjectOfType<CharacterController2D>();
+            player = HuyManager.Instance.IsLocalPlayer;
             body = GetComponent<Rigidbody2D>();
         }
 
         private void OnEnable()
         {
             startPos = transform.position;
-            targetPos = playerPos.transform.position;
+            targetPos = player.transform.position;
         }
 
         private void Update()

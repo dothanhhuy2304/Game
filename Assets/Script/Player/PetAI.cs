@@ -27,10 +27,11 @@ namespace Script.Player
         private static readonly int IsRun = Animator.StringToHash("isRun");
         private bool _checkHitGround;
         private int _tempIndex;
+        private float distanceToPlay;
 
         private void Start()
         {
-            _player = HuyManager.IsLocalPlayer;
+            _player = HuyManager.Instance.IsLocalPlayer;
             projectiles = FindObjectOfType<BulletController>().petAi;
             _listEnemyInMap = GameObject.FindGameObjectsWithTag("Enemy").ToList();
         }
@@ -44,24 +45,25 @@ namespace Script.Player
         {
             if (photonView.IsMine)
             {
-                //if (!HuyManager.Instance.PlayerIsDeath())
-                //{
-                if ((_player.transform.position - transform.position).magnitude > distancePlayer)
+                if (!HuyManager.Instance.PlayerIsDeath())
                 {
-                    photonView.RPC(nameof(MoveToPlayer), RpcTarget.All);
-                    animator.SetBool(IsRun, true);
-                    photonView.RPC(nameof(CheckAttack), RpcTarget.All);
-                }
-                else
-                {
-                    photonView.RPC(nameof(CheckAttack), RpcTarget.All);
-                    body.velocity = Vector2.zero;
-                }
+                    if ((_player.transform.position - transform.position).magnitude > distancePlayer)
+                    {
+                        photonView.RPC(nameof(MoveToPlayer), RpcTarget.All);
+                        //animator.SetBool(IsRun, true);
+                        photonView.RPC(nameof(AnimationRun), RpcTarget.All, true);
+                        photonView.RPC(nameof(CheckAttack), RpcTarget.All);
+                    }
+                    else
+                    {
+                        photonView.RPC(nameof(CheckAttack), RpcTarget.All);
+                        body.velocity = Vector2.zero;
+                    }
 
-                //}
+                }
             }
         }
-
+        
         [PunRPC]
         private void CheckAttack()
         {
@@ -83,12 +85,19 @@ namespace Script.Player
                 {
                     if (currentTimeAttack <= 0f)
                     {
-                        BulletAttack();
-                        animator.SetBool(IsRun, false);
+                        photonView.RPC(nameof(BulletAttack), RpcTarget.All);
+                        //animator.SetBool(IsRun, false);
+                        photonView.RPC(nameof(AnimationRun), RpcTarget.All, false);
                         currentTimeAttack = TimeAttack;
                     }
                 }
             }
+        }
+
+        [PunRPC]
+        private void AnimationRun(bool value)
+        {
+            animator.SetBool(IsRun, value);
         }
 
         private void OnTriggerStay2D(Collider2D other)
@@ -117,16 +126,20 @@ namespace Script.Player
                 _enemyContact = false;
             }
         }
-
+        
         [PunRPC]
         private void MoveToPlayer()
         {
-            //Vector2 angle = (player.transform.position - transform.position).normalized;
-            //body.velocity = Vector2.SmoothDamp(body.velocity, angle * petData.movingSpeed, ref velocity, .05f);
+            //Vector2 angle = (_player.transform.position - transform.position).normalized;
+            //body.velocity = Vector2.SmoothDamp(body.velocity, angle * petData.movingSpeed, ref _velocity, .05f);
             Vector2 playerPos = _player.transform.position;
-            body.transform.DOMove(new Vector3(playerPos.x + Random.Range(- 2f , 2f), playerPos.y + 1), 0.5f).SetEase(Ease.Linear);
+            //transform.DOMove(new Vector3(playerPos.x + Random.Range(- 2f , 2f), playerPos.y + 1), 0.5f).SetEase(Ease.Linear);
+            //Vector2 target = (_player.transform.position - transform.position).normalized;
+            transform.position = Vector2.MoveTowards(transform.position,
+                new Vector2(playerPos.x + Random.Range(-2f, 2f), playerPos.y + 1), 10 * Time.deltaTime);
         }
 
+        [PunRPC]
         private void BulletAttack()
         {
             int index = FindBullet();

@@ -18,7 +18,7 @@ namespace Script.Enemy
         private static readonly int IsRun = Animator.StringToHash("is_Run");
         private Sequence sequence;
 
-        private void Awake()
+        protected void Awake()
         {
             HuyManager.Instance.eventResetWhenPlayerDeath += WaitToReset;
             startRotation = transform.rotation;
@@ -107,28 +107,22 @@ namespace Script.Enemy
         {
             if (!enemySetting.canAttack)
             {
-                foreach (var player in playerCharacter)
+                if ((playerCharacter.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
-                    if ((player.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
-                    {
-                        enemySetting.canAttack = true;
-                        body.bodyType = RigidbodyType2D.Kinematic;
-                    }
+                    enemySetting.canAttack = true;
+                    body.bodyType = RigidbodyType2D.Kinematic;
                 }
             }
 
             if (enemySetting.canAttack && spriteRenderer.enabled)
             {
-                foreach (var player in playerCharacter)
+                if ((playerCharacter.transform.position - transform.position).magnitude > 0.5f && isHitGround)
                 {
-                    if ((player.transform.position - transform.position).magnitude > 0.5f && isHitGround)
-                    {
-                        MoveToTarget(isHitGround);
-                    }
-                    else
-                    {
-                        MoveToTarget(false);
-                    }
+                    MoveToTarget(isHitGround);
+                }
+                else
+                {
+                    MoveToTarget(false);
                 }
 
                 if (currentTime <= 0f)
@@ -170,13 +164,10 @@ namespace Script.Enemy
         {
             if (canMove)
             {
-                foreach (var player in playerCharacter)
-                {
-                    Vector3 trans = offsetAttack.transform.position;
-                    Vector3 movingTarget = (player.transform.position - trans).normalized;
-                    Vector3 fixMove = new Vector3(movingTarget.x, 0);
-                    body.MovePosition(trans + fixMove * (Time.fixedDeltaTime * movingSpeed));
-                }
+                Vector3 trans = offsetAttack.transform.position;
+                Vector3 movingTarget = (playerCharacter.transform.position - trans).normalized;
+                Vector3 fixMove = new Vector3(movingTarget.x, 0);
+                body.MovePosition(trans + fixMove * (Time.fixedDeltaTime * movingSpeed));
             }
             else
             {
