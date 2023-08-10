@@ -1,21 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Photon.Pun;
-using UnityEngine;
+using Script.Player;
 
 public class PlayerNetwokControl : MonoBehaviourPunCallbacks
 {
-    public static GameObject IsLocalPlayer;
-    public static PhotonView view;
-
-    private void Awake()
-    {
-        if (photonView.IsMine)
-        {
-                IsLocalPlayer = gameObject;
-                view = photonView;
-            DontDestroyOnLoad(gameObject);
-        }
-    }
+    //public static CharacterController2D IsLocalPlayer;
 }

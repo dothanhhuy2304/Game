@@ -38,8 +38,9 @@ namespace Script.GamePlay
         [PunRPC]
         private void SpawnPlayer()
         {
-            PhotonNetwork.Instantiate(characters[HuyManager.Instance.characterSelected].name,
+            GameObject player = PhotonNetwork.Instantiate(characters[HuyManager.Instance.characterSelected].name,
                 characters[HuyManager.Instance.characterSelected].transform.position, Quaternion.identity);
+            HuyManager.IsLocalPlayer = player.GetComponent<CharacterController2D>();
             //player.SetActive(true);
             //photonView.gameObject.SetActive(true);
         }

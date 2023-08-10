@@ -9,7 +9,7 @@ namespace Script.Player
 {
     public class CharacterController2D : MonoBehaviourPunCallbacks, IPunObservable
     {
-        //public static CharacterController2D instance;
+        public static CharacterController2D instance;
         public Rigidbody2D body;
         public Collider2D col;
         public Data playerData;
@@ -33,22 +33,19 @@ namespace Script.Player
 
         private void Awake()
         {
-            //if (photonView.IsMine)
-            //{
-                // if (instance == null)
-                // {
-                //     instance = this;
-                // }
-                // else
-                // {
-                //     if (photonView.IsMine)
-                //     {
-                //         Destroy(gameObject);
-                //     }
-                // }
-            //}
+            if (photonView.IsMine)
+            {
+                if (instance == null)
+                {
+                    instance = this;
+                }
+                else
+                {
+                    Destroy(gameObject);
+                }
+            }
         }
-
+        
         private void Start()
         {
             if (photonView.IsMine)
@@ -350,30 +347,24 @@ namespace Script.Player
             }
         }
 
-        // private bool m_SynchronizeVelocity = true;
-        // private bool m_SynchronizeAngularVelocity = true;
-        //
-        //
-        // private Vector2 networkPosition;
-        // private Quaternion networkRotation;
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
-            // if (stream.IsWriting)
-            // {
-            //     stream.SendNext((Vector3) body.position);
-            //     stream.SendNext((float) body.rotation);
-            //     stream.SendNext((Vector3) body.velocity);
-            // }
-            // else
-            // {
-            //     networkPosition = (Vector3) stream.ReceiveNext();
-            //     body.rotation = (float) stream.ReceiveNext();
-            //     body.velocity = (Vector3) stream.ReceiveNext();
-            //
-            //
-            //     float lag = Mathf.Abs((float) (PhotonNetwork.Time - info.SentServerTime));
-            //     networkPosition += (body.velocity * lag);
-            // }
+            if (stream.IsWriting)
+            {
+                stream.SendNext((float) body.rotation);
+                stream.SendNext((Vector3) body.velocity);
+                stream.SendNext((Vector3) transform.position);
+                stream.SendNext((Quaternion) transform.rotation);
+            }
+            else
+            {
+                body.rotation = (float) stream.ReceiveNext();
+                body.velocity = (Vector3) stream.ReceiveNext();
+                transform.position = (Vector3) stream.ReceiveNext();
+                transform.rotation = (Quaternion) stream.ReceiveNext();
+                //float lag = Mathf.Abs((float) (PhotonNetwork.Time - info.SentServerTime));
+                //networkPosition += (body.velocity * lag);
+            }
         }
     }
 }

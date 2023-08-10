@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using DG.Tweening;
+using Script.Player;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -21,6 +22,8 @@ namespace Script.Core
         public int currentScreen;
         public int saveScreenPass;
         public float[] currentPosition = new float[3];
+
+        public static CharacterController2D IsLocalPlayer;
 
         public void SetPlayerIsDeath(int state)
         {
