@@ -38,7 +38,7 @@ namespace Script.Enemy
         
         protected virtual void Start()
         {
-            playerCharacter = HuyManager.Instance.IsLocalPlayer;
+            playerCharacter = CharacterController2D.IsLocalPlayer;
         }
 
         protected void Flip()

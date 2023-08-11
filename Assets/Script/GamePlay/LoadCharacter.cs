@@ -2,6 +2,7 @@ using Photon.Pun;
 using Script.Core;
 using Script.Player;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Script.GamePlay
 {
@@ -9,18 +10,36 @@ namespace Script.GamePlay
     {
         [SerializeField] private GameObject[] characters;
         [SerializeField] private GameObject pet;
-        private GameObject character;
-        private GameObject myPet;
 
         private void Awake()
         {
+            if (!PhotonNetwork.IsConnected)
+            {
+                SceneManager.LoadScene("Client");
+            }
+            
             GameManager.instance.lobbyPanel.SetActive(false);
 
-            if (photonView.IsMine)
+            if (characters == null || pet == null)
             {
-                //characters[HuyManager.Instance.characterSelected].SetActive(true);
-                photonView.RPC(nameof(SpawnPlayer), RpcTarget.All);
-                photonView.RPC(nameof(GetComponent), RpcTarget.All);
+                SceneManager.LoadScene("Client");
+            }
+            else
+            {
+                // if (photonView.IsMine)
+                // {
+                //     //characters[HuyManager.Instance.characterSelected].SetActive(true);
+                //     photonView.RPC(nameof(SpawnPlayer), RpcTarget.All);
+                // }
+                if (CharacterController2D.IsLocalPlayer == null)
+                {
+                    photonView.RPC(nameof(SpawnPlayer), RpcTarget.All);
+                }
+
+                if (PetAI.IsLocalPet == null)
+                {
+                    PhotonNetwork.Instantiate(pet.name, pet.transform.position, Quaternion.identity);
+                }
             }
 
             if (GameManager.instance == null)
@@ -41,34 +60,13 @@ namespace Script.GamePlay
         [PunRPC]
         private void SpawnPlayer()
         {
-            character = PhotonNetwork.Instantiate(characters[HuyManager.Instance.characterSelected].name,
+            PhotonNetwork.Instantiate(characters[HuyManager.Instance.characterSelected].name,
                 characters[HuyManager.Instance.characterSelected].transform.position, Quaternion.identity);
-            //HuyManager.Instance.IsLocalPlayer = character.GetComponent<CharacterController2D>();
-            myPet = PhotonNetwork.Instantiate(pet.name, pet.transform.position, Quaternion.identity);
-            //HuyManager.Instance.IsLocalPet = myPet.GetComponent<PetAI>();
-        }
-
-        [PunRPC]
-        private void GetComponent()
-        {
-            HuyManager.Instance.IsLocalPlayer = character.GetComponent<CharacterController2D>();
-            HuyManager.Instance.IsLocalPet = myPet.GetComponent<PetAI>();
         }
 
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
-            // if (stream.IsWriting)
-            // {
-            //     stream.SendNext((GameObject) character);
-            //     stream.SendNext((GameObject) myPet);
-            // }
-            // else
-            // {
-            //     character = (GameObject)stream.ReceiveNext();
-            //     myPet = (GameObject) stream.ReceiveNext();
-            //     HuyManager.Instance.IsLocalPlayer = character.GetComponent<CharacterController2D>();
-            //     HuyManager.Instance.IsLocalPet = myPet.GetComponent<PetAI>();
-            // }
+            
         }
     }
 }

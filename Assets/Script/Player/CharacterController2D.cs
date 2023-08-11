@@ -9,7 +9,7 @@ namespace Script.Player
 {
     public class CharacterController2D : MonoBehaviourPunCallbacks, IPunObservable
     {
-        public static CharacterController2D instance;
+        public static CharacterController2D IsLocalPlayer;
         public Rigidbody2D body;
         public Collider2D col;
         public Data playerData;
@@ -35,14 +35,7 @@ namespace Script.Player
         {
             if (photonView.IsMine)
             {
-                if (instance == null)
-                {
-                    instance = this;
-                }
-                else
-                {
-                    Destroy(gameObject);
-                }
+                IsLocalPlayer = GetComponent<CharacterController2D>();
             }
         }
         
@@ -59,7 +52,7 @@ namespace Script.Player
         {
             if (photonView.IsMine)
             {
-                //if (!HuyManager.Instance.PlayerIsDeath() && !HuyManager.Instance.GetPlayerIsHurt())
+                if (!HuyManager.Instance.PlayerIsDeath() && !HuyManager.Instance.GetPlayerIsHurt())
                 {
                     photonView.RPC(nameof(PlayerInput), RpcTarget.All);
                     HuyManager.Instance.SetUpTime(ref timeNextDash);
@@ -91,14 +84,14 @@ namespace Script.Player
         {
             if (photonView.IsMine)
             {
-                //if (!HuyManager.Instance.PlayerIsDeath())
+                if (!HuyManager.Instance.PlayerIsDeath())
                 {
-                    //if (!HuyManager.Instance.GetPlayerIsHurt())
+                    if (!HuyManager.Instance.GetPlayerIsHurt())
                     {
                         photonView.RPC(nameof(RpcCheckGround), RpcTarget.All);
 
                         photonView.RPC(nameof(Move), RpcTarget.All, playerInput * (startSpeed * Time.fixedDeltaTime));
-                        
+
                         if (isJump)
                         {
                             isJump = false;
@@ -226,21 +219,7 @@ namespace Script.Player
                 EvaluateCollision(other);
             }
         }
-
-        #region If the player stands on the ground and no raycast, We can use this function
-
-        //private void OnCollisionStay2D(Collision2D other)
-        //{
-        //EvaluateCollision(other);
-        //}
-
-        //private void OnCollisionExit2D(Collision2D other)
-        //{
-        //mGrounded = false;
-        //}
-
-        #endregion
-
+        
         [PunRPC]
         private void EvaluateCollision(Collision2D collision2D)
         {
@@ -355,6 +334,7 @@ namespace Script.Player
                 stream.SendNext((Vector3) body.velocity);
                 stream.SendNext((Vector3) transform.position);
                 stream.SendNext((Quaternion) transform.rotation);
+                stream.SendNext((float) playerData.movingSpeed);
             }
             else
             {
@@ -362,6 +342,7 @@ namespace Script.Player
                 body.velocity = (Vector3) stream.ReceiveNext();
                 transform.position = (Vector3) stream.ReceiveNext();
                 transform.rotation = (Quaternion) stream.ReceiveNext();
+                playerData.movingSpeed = (float) stream.ReceiveNext();
                 //float lag = Mathf.Abs((float) (PhotonNetwork.Time - info.SentServerTime));
                 //networkPosition += (body.velocity * lag);
             }

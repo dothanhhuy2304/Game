@@ -18,7 +18,7 @@ namespace Script.Enemy
 
         private void Awake()
         {
-            player = HuyManager.Instance.IsLocalPlayer;
+            player = CharacterController2D.IsLocalPlayer;
             body = GetComponent<Rigidbody2D>();
         }
 

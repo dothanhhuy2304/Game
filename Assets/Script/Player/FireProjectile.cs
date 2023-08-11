@@ -23,9 +23,9 @@ public class FireProjectile : MonoBehaviour
     
     private void Awake()
     {
-        _playerCharacter = HuyManager.Instance.IsLocalPlayer;
+        _playerCharacter = CharacterController2D.IsLocalPlayer;
         _playerHealth = FindObjectOfType<PlayerHealth>();
-        _petAi = HuyManager.Instance.IsLocalPet;
+        _petAi = PetAI.IsLocalPet;
     }
 
     private void OnEnable()

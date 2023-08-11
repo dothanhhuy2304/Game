@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
@@ -5,15 +6,16 @@ using Photon.Pun;
 using UnityEngine;
 using Script.Core;
 using Script.ScriptTable;
+using Random = UnityEngine.Random;
 
 namespace Script.Player
 {
 
     public class PetAI : MonoBehaviourPunCallbacks, IPunObservable
     {
+        public static PetAI IsLocalPet;
         public Data petData;
         [SerializeField] private Rigidbody2D body;
-        private CharacterController2D _player;
         //private Vector2 velocity = Vector2.zero;
         [SerializeField] private List<FireProjectile> projectiles;
         private List<GameObject> _listEnemyInMap;
@@ -29,10 +31,18 @@ namespace Script.Player
         private int _tempIndex;
         private float distanceToPlay;
 
+        private void Awake()
+        {
+            if (photonView.IsMine)
+            {
+                IsLocalPet = GetComponent<PetAI>();
+            }
+
+            projectiles = FindObjectOfType<BulletController>().petAi;
+        }
+
         private void Start()
         {
-            _player = HuyManager.Instance.IsLocalPlayer;
-            projectiles = FindObjectOfType<BulletController>().petAi;
             _listEnemyInMap = GameObject.FindGameObjectsWithTag("Enemy").ToList();
         }
         
@@ -47,16 +57,14 @@ namespace Script.Player
             {
                 if (!HuyManager.Instance.PlayerIsDeath())
                 {
-                    if ((_player.transform.position - transform.position).magnitude > distancePlayer)
+                    if ((CharacterController2D.IsLocalPlayer.transform.position - transform.position).magnitude > distancePlayer)
                     {
                         photonView.RPC(nameof(MoveToPlayer), RpcTarget.All);
-                        //animator.SetBool(IsRun, true);
-                        photonView.RPC(nameof(AnimationRun), RpcTarget.All, true);
-                        photonView.RPC(nameof(CheckAttack), RpcTarget.All);
+                        CheckAttack();
                     }
                     else
                     {
-                        photonView.RPC(nameof(CheckAttack), RpcTarget.All);
+                        CheckAttack();
                         body.velocity = Vector2.zero;
                     }
 
@@ -64,7 +72,6 @@ namespace Script.Player
             }
         }
         
-        [PunRPC]
         private void CheckAttack()
         {
             closestEnemy = FindClosestEnemy();
@@ -86,18 +93,10 @@ namespace Script.Player
                     if (currentTimeAttack <= 0f)
                     {
                         photonView.RPC(nameof(BulletAttack), RpcTarget.All);
-                        //animator.SetBool(IsRun, false);
-                        photonView.RPC(nameof(AnimationRun), RpcTarget.All, false);
                         currentTimeAttack = TimeAttack;
                     }
                 }
             }
-        }
-
-        [PunRPC]
-        private void AnimationRun(bool value)
-        {
-            animator.SetBool(IsRun, value);
         }
 
         private void OnTriggerStay2D(Collider2D other)
@@ -132,11 +131,13 @@ namespace Script.Player
         {
             //Vector2 angle = (_player.transform.position - transform.position).normalized;
             //body.velocity = Vector2.SmoothDamp(body.velocity, angle * petData.movingSpeed, ref _velocity, .05f);
-            Vector2 playerPos = _player.transform.position;
+            Vector2 playerPos = CharacterController2D.IsLocalPlayer.transform.position;
             //transform.DOMove(new Vector3(playerPos.x + Random.Range(- 2f , 2f), playerPos.y + 1), 0.5f).SetEase(Ease.Linear);
             //Vector2 target = (_player.transform.position - transform.position).normalized;
             transform.position = Vector2.MoveTowards(transform.position,
-                new Vector2(playerPos.x + Random.Range(-2f, 2f), playerPos.y + 1), 10 * Time.deltaTime);
+                new Vector2(playerPos.x + 1, playerPos.y + 1), 10 * Time.deltaTime);
+            animator.SetBool(IsRun, true);
+
         }
 
         [PunRPC]
@@ -146,6 +147,7 @@ namespace Script.Player
             projectiles[index].transform.position = transform.position;
             projectiles[index].transform.rotation = transform.rotation;
             projectiles[index].Shoot(transform);
+            animator.SetBool(IsRun, false);
         }
 
         private Transform FindClosestEnemy()

@@ -119,7 +119,6 @@ GameObject:
   - component: {fileID: 929771794}
   - component: {fileID: 929771796}
   - component: {fileID: 4282258128844528452}
-  - component: {fileID: 4692590620285954023}
   m_Layer: 16
   m_Name: PinkMans
   m_TagString: Player
@@ -304,18 +303,6 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &4692590620285954023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6529767382540131351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91dc0448242a49e48a201d85c12fe84d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6529767383066599555
 GameObject:
   m_ObjectHideFlags: 0

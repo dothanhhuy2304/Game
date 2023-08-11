@@ -19,7 +19,7 @@ namespace Script.Player
         private void Start()
         {
             playerHealthBar = FindObjectOfType<PlayerHealthBar>();
-            petAi = HuyManager.Instance.IsLocalPet;
+            petAi = PetAI.IsLocalPet;
             txtDamage = uIDamagePlayer.GetComponentInChildren<TextMeshProUGUI>();
             if (playerCharacter.playerData.currentHealth <= 0)
             {

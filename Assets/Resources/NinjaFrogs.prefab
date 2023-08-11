@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 235679748}
   - component: {fileID: 235679750}
   - component: {fileID: 4558337873839590095}
-  - component: {fileID: 8295686726465452768}
   m_Layer: 15
   m_Name: NinjaFrogs
   m_TagString: Player
@@ -202,18 +201,6 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &8295686726465452768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 377494481518129206}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91dc0448242a49e48a201d85c12fe84d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &377494481715831534
 GameObject:
   m_ObjectHideFlags: 0

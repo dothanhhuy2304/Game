@@ -22,10 +22,6 @@ namespace Script.Core
         public int saveScreenPass;
         public float[] currentPosition = new float[3];
 
-        public CharacterController2D IsLocalPlayer;
-
-        public PetAI IsLocalPet;
-
         public void SetPlayerIsDeath(int state)
         {
             PlayerPrefs.SetInt("PlayerIsDeath", state);
