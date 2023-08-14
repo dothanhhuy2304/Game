@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Photon.Pun;
 using UnityEngine;
 using Script.Core;
 using Script.Player;
@@ -16,7 +17,6 @@ namespace Script.Enemy
         [SerializeField] private bool isHitGround;
         private Quaternion startRotation;
         private static readonly int IsRun = Animator.StringToHash("is_Run");
-        private Sequence sequence;
 
         protected void Awake()
         {
@@ -57,7 +57,7 @@ namespace Script.Enemy
 
         private void ChickenMoving()
         {
-            sequence = DOTween.Sequence()
+            DOTween.Sequence()
                 .AppendCallback(() =>
                 {
                     animator.SetBool(IsRun, true);
@@ -95,19 +95,15 @@ namespace Script.Enemy
 
         private void Update()
         {
-            if (enemySetting.canAttack)
-            {
-                sequence.Kill();
-                HuyManager.Instance.SetUpTime(ref currentTime);
-            }
-            
+            photonView.RPC(nameof(RpcUpdate), RpcTarget.All);
         }
 
         private void FixedUpdate()
         {
+            photonView.RPC(nameof(RpcPosition), RpcTarget.All);
             if (!enemySetting.canAttack)
             {
-                if ((playerCharacter.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
+                if ((currentCharacterPos.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
                     enemySetting.canAttack = true;
                     body.bodyType = RigidbodyType2D.Kinematic;
@@ -116,7 +112,7 @@ namespace Script.Enemy
 
             if (enemySetting.canAttack && spriteRenderer.enabled)
             {
-                if ((playerCharacter.transform.position - transform.position).magnitude > 0.5f && isHitGround)
+                if ((currentCharacterPos.position - transform.position).magnitude > 0.5f && isHitGround)
                 {
                     MoveToTarget(isHitGround);
                 }
@@ -129,7 +125,8 @@ namespace Script.Enemy
                 {
                     if (HuyManager.Instance.PlayerIsDeath())
                     {
-                        if ((transform.position - enemySetting.startPosition).magnitude > (transform.position - enemySetting.endPosition).magnitude)
+                        if ((transform.position - enemySetting.startPosition).magnitude >
+                            (transform.position - enemySetting.endPosition).magnitude)
                         {
                             Vector2 target = (enemySetting.endPosition - enemySetting.startPosition).normalized;
                             float angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
@@ -160,12 +157,35 @@ namespace Script.Enemy
             }
         }
 
+        [PunRPC]
+        private void RpcPosition()
+        {
+            currentCharacterPos = FindClosetPlayerWithoutPhysic();
+        }
+
+        [PunRPC]
+        private void RpcUpdate()
+        {
+            if (enemySetting.canAttack)
+            {
+                HuyManager.Instance.SetUpTime(ref currentTime);
+            }
+        }
+        
+
+        [PunRPC]
+        private void Rpc()
+        {
+            
+        }
+        
+
         private void MoveToTarget(bool canMove)
         {
             if (canMove)
             {
                 Vector3 trans = offsetAttack.transform.position;
-                Vector3 movingTarget = (playerCharacter.transform.position - trans).normalized;
+                Vector3 movingTarget = (currentCharacterPos.position - trans).normalized;
                 Vector3 fixMove = new Vector3(movingTarget.x, 0);
                 body.MovePosition(trans + fixMove * (Time.fixedDeltaTime * movingSpeed));
             }

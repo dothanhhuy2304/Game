@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using Script.Core;
+using Script.GamePlay;
 using Script.Player;
 using UnityEngine;
 
@@ -21,7 +22,7 @@ namespace Script.Enemy
         public bool canMoving;
     }
 
-    public abstract class EnemyController : MonoBehaviourPunCallbacks
+    public abstract class EnemyController : MonoBehaviourPunCallbacks,IPunObservable
     {
         public EnemySetting enemySetting;
         [Header("Types")] [SerializeField] protected Rigidbody2D body;
@@ -34,8 +35,10 @@ namespace Script.Enemy
         [SerializeField] protected float maxTimeAttack;
         [SerializeField] protected Transform offsetAttack;
         [SerializeField] protected Vector2 positionAttack;
+        [SerializeField] protected Transform currentCharacterPos;
         protected bool isHitGrounds;
-        
+
+
         protected virtual void Start()
         {
             playerCharacter = CharacterController2D.IsLocalPlayer;
@@ -43,7 +46,7 @@ namespace Script.Enemy
 
         protected void Flip()
         {
-            Vector2 target = (playerCharacter.transform.position - transform.position).normalized;
+            Vector2 target = (currentCharacterPos.position - transform.position).normalized;
             float angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(new Vector3(0, angle + offsetFlip, 0));
         }
@@ -52,7 +55,7 @@ namespace Script.Enemy
         {
             int index = FindBullet();
             projectiles[index].transform.position = transform.TransformPoint(positionAttack);
-            Vector2 direction = (playerCharacter.transform.position - transform.position).normalized;
+            Vector2 direction = (currentCharacterPos.position - transform.position).normalized;
             projectiles[index].transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
             projectiles[index].Shoot(transform);
             AudioManager.instance.Play("Enemy_Attack_Shoot");
@@ -67,27 +70,85 @@ namespace Script.Enemy
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
 
-        private int tempIndex;
+        protected Transform FindClosestPlayer()
+        {
+            float closestDistance = Mathf.Infinity;
+            Transform trans = null;
+            foreach (var go in HuyManager.Instance.listPlayerInGame)
+            {
+                if (!go) continue;
+                var position = transform.position;
+                var gos = go.transform.position;
+                float currentDistance = (position - gos).magnitude;
+                RaycastHit2D hit = Physics2D.Linecast(position, gos, GameManager.instance.playerMask);
+                if (currentDistance < closestDistance && hit.collider.CompareTag("Player"))
+                {
+                    closestDistance = currentDistance;
+                    trans = go.transform;
+                }
+            }
+
+            return trans;
+        }
+
+        protected Transform FindClosetPlayerWithoutPhysic()
+        {
+            float closestDistance = Mathf.Infinity;
+            Transform trans = null;
+            foreach (var go in HuyManager.Instance.listPlayerInGame)
+            {
+                if (!go) continue;
+                var position = transform.position;
+                var gos = go.transform.position;
+                float currentDistance = (position - gos).magnitude;
+                if (currentDistance < closestDistance)
+                {
+                    closestDistance = currentDistance;
+                    trans = go.transform;
+                }
+            }
+
+            return trans;
+        }
+
+        private int _tempIndex;
 
         private int FindBullet()
         {
-            if (tempIndex >= projectiles.Count - 1)
+            if (_tempIndex >= projectiles.Count - 1)
             {
-                return tempIndex = 0;
+                return _tempIndex = 0;
             }
 
-            tempIndex++;
-            if (projectiles[tempIndex].gameObject.activeSelf)
+            _tempIndex++;
+            if (projectiles[_tempIndex].gameObject.activeSelf)
             {
                 FindBullet();
             }
             else
             {
-                return tempIndex;
+                return _tempIndex;
             }
 
             return 0;
         }
 
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                stream.SendNext((Vector3) body.velocity);
+                stream.SendNext((float) body.rotation);
+                stream.SendNext((Vector3) transform.position);
+                stream.SendNext((Quaternion) transform.rotation);
+            }
+            else
+            {
+                body.velocity = (Vector3) stream.ReceiveNext();
+                body.rotation = (float) stream.ReceiveNext();
+                transform.position = (Vector3) stream.ReceiveNext();
+                transform.rotation = (Quaternion) stream.ReceiveNext();
+            }
+        }
     }
 }

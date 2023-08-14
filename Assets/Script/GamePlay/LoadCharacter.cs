@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace Script.GamePlay
 {
-    public class LoadCharacter : MonoBehaviourPunCallbacks, IPunObservable
+    public class LoadCharacter : MonoBehaviourPunCallbacks
     {
         [SerializeField] private GameObject[] characters;
         [SerializeField] private GameObject pet;
@@ -33,7 +33,9 @@ namespace Script.GamePlay
                 // }
                 if (CharacterController2D.IsLocalPlayer == null)
                 {
-                    photonView.RPC(nameof(SpawnPlayer), RpcTarget.All);
+                    //photonView.RPC(nameof(SpawnPlayer), RpcTarget.All);
+                    PhotonNetwork.Instantiate(characters[HuyManager.Instance.characterSelected].name,
+                        characters[HuyManager.Instance.characterSelected].transform.position, Quaternion.identity);
                 }
 
                 if (PetAI.IsLocalPet == null)
@@ -57,16 +59,11 @@ namespace Script.GamePlay
             }
         }
 
-        [PunRPC]
-        private void SpawnPlayer()
-        {
-            PhotonNetwork.Instantiate(characters[HuyManager.Instance.characterSelected].name,
-                characters[HuyManager.Instance.characterSelected].transform.position, Quaternion.identity);
-        }
-
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            
-        }
+        // [PunRPC]
+        // private void SpawnPlayer()
+        // {
+        //     PhotonNetwork.Instantiate(characters[HuyManager.Instance.characterSelected].name,
+        //         characters[HuyManager.Instance.characterSelected].transform.position, Quaternion.identity);
+        // }
     }
 }

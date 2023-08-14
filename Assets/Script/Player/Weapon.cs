@@ -25,7 +25,9 @@ namespace Script.Player
             if (photonView.IsMine)
             {
                 HuyManager.Instance.SetUpTime(ref timeAttack);
-                //if (HuyManager.Instance.PlayerIsDeath() || HuyManager.Instance.GetPlayerIsHurt() || EventSystem.current.IsPointerOverGameObject()) return;
+                if (HuyManager.Instance.PlayerIsDeath() || HuyManager.Instance.GetPlayerIsHurt() ||
+                    EventSystem.current.IsPointerOverGameObject())
+                    return;
                 if (timeAttack <= 0)
                 {
                     if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.L))

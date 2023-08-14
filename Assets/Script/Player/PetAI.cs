@@ -71,7 +71,7 @@ namespace Script.Player
                 }
             }
         }
-        
+
         private void CheckAttack()
         {
             closestEnemy = FindClosestEnemy();
@@ -105,12 +105,12 @@ namespace Script.Player
             {
                 if (!_checkHitGround)
                 {
-                    closestEnemy.GetComponentInChildren<SpriteRenderer>().DOColor(new Color(1f, 0.6f, 0.5f),0.3f);
+                    closestEnemy.GetComponentInChildren<SpriteRenderer>()?.DOColor(new Color(1f, 0.6f, 0.5f),0.3f);
                     _enemyContact = true;
                 }
                 else
                 {
-                    closestEnemy.GetComponentInChildren<SpriteRenderer>().DOColor(Color.white, 0.3f);
+                    closestEnemy.GetComponentInChildren<SpriteRenderer>()?.DOColor(Color.white, 0.3f);
                     _enemyContact = false;
                 }
             }
@@ -121,7 +121,7 @@ namespace Script.Player
         {
             if (other.CompareTag("Enemy"))
             {
-                other.GetComponentInChildren<SpriteRenderer>().DOColor(Color.white, 0.3f);
+                other.GetComponentInChildren<SpriteRenderer>()?.DOColor(Color.white, 0.3f);
                 _enemyContact = false;
             }
         }

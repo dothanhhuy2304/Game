@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Script.Player;
@@ -22,6 +23,7 @@ namespace Script.Core
         public int saveScreenPass;
         public float[] currentPosition = new float[3];
 
+        public CharacterController2D[] listPlayerInGame;
         public void SetPlayerIsDeath(int state)
         {
             PlayerPrefs.SetInt("PlayerIsDeath", state);

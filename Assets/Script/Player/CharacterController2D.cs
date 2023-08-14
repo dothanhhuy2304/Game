@@ -37,6 +37,8 @@ namespace Script.Player
             {
                 IsLocalPlayer = GetComponent<CharacterController2D>();
             }
+
+            HuyManager.Instance.listPlayerInGame = FindObjectsOfType<CharacterController2D>();
         }
         
         private void Start()

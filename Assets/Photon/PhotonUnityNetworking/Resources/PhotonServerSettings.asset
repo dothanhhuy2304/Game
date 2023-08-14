@@ -73,6 +73,18 @@ MonoBehaviour:
   - AnimationRun
   - SpawnPet
   - GetComponent
+  - AttackSword
+  - MoveToPosition
+  - SetUpAttackBullet
+  - StopMoving
+  - RpcPlayer
+  - RpcPositionPlayer
+  - ShootAttack
+  - ChickenMoving
+  - MoveToTarget
+  - StopAttack
+  - RpcGround
+  - RpcPosition
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

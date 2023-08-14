@@ -17,6 +17,7 @@ namespace Script.GamePlay
         [HideInInspector ]public int numberGold;
         [HideInInspector] public int numberDiamond;
         public GameObject lobbyPanel;
+        public LayerMask playerMask;
 
         private void Start()
         {
