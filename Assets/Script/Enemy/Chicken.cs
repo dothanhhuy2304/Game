@@ -1,8 +1,7 @@
 using DG.Tweening;
 using Photon.Pun;
-using UnityEngine;
 using Script.Core;
-using Script.Player;
+using UnityEngine;
 
 namespace Script.Enemy
 {
@@ -36,70 +35,37 @@ namespace Script.Enemy
         {
             if (!spriteRenderer.enabled)
             {
-                DOTween.Sequence()
-                    .AppendCallback(() => { body.MovePosition(body.transform.position); })
-                    .AppendInterval(3f)
-                    .AppendCallback(() =>
-                    {
-                        currentTime = maxTimeAttack;
-                        enemySetting.canAttack = false;
-                        spriteRenderer.enabled = true;
-                        chickenCol.enabled = true;
-                        Transform trans = transform;
-                        trans.rotation = startRotation;
-                        trans.position = enemySetting.startPosition;
-                        transform.Rotate(new Vector3(0, rotations[1], 0));
-                        gameObject.SetActive(true);
-                        ChickenMoving();
-                    }).Play();
+                photonView.RPC(nameof(RpcEnemyReSpawn), RpcTarget.All);
             }
         }
 
-        private void ChickenMoving()
+        private void RpcEnemyReSpawn()
         {
             DOTween.Sequence()
+                .AppendCallback(() => { body.MovePosition(body.transform.position); })
+                .AppendInterval(3f)
                 .AppendCallback(() =>
                 {
-                    animator.SetBool(IsRun, true);
-                    body.DOMove(enemySetting.endPosition, moveTime).SetEase(Ease.Linear)
-                        .OnComplete(() =>
-                        {
-                            animator.SetBool(IsRun, false);
-                        });
-                }).AppendInterval(moveWaitingTime)
-                .AppendCallback(() =>
-                {
-                    //body.transform.DORotate(new Vector3(0, rotations[0], 0), 0);
-                    Vector2 target = (enemySetting.endPosition - enemySetting.startPosition).normalized;
-                    float angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
-                    body.transform.rotation = Quaternion.Euler(new Vector3(0, angle + -45, 0));
-                })
-                .AppendCallback(() =>
-                {
-                    animator.SetBool(IsRun, true);
-                    body.DOMove(enemySetting.startPosition, moveTime).SetEase(Ease.Linear)
-                        .OnComplete(() =>
-                        {
-                            animator.SetBool(IsRun, false);
-                        });
-                }).AppendInterval(moveWaitingTime)
-                .AppendCallback(() =>
-                {
-                    //body.transform.DORotate(new Vector3(0, rotations[1], 0), 0);
-                    Vector2 target = (enemySetting.startPosition - enemySetting.endPosition).normalized;
-                    float angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
-                    body.transform.rotation = Quaternion.Euler(new Vector3(0, angle + -45, 0));
-                })
-                .SetLoops(int.MaxValue).Play();
-        }
-
-        private void Update()
-        {
-            photonView.RPC(nameof(RpcUpdate), RpcTarget.All);
+                    currentTime = maxTimeAttack;
+                    enemySetting.canAttack = false;
+                    spriteRenderer.enabled = true;
+                    chickenCol.enabled = true;
+                    Transform trans = transform;
+                    trans.rotation = startRotation;
+                    trans.position = enemySetting.startPosition;
+                    transform.Rotate(new Vector3(0, rotations[1], 0));
+                    gameObject.SetActive(true);
+                    ChickenMoving();
+                }).Play();
         }
 
         private void FixedUpdate()
         {
+            if (enemySetting.canAttack)
+            {
+                HuyManager.Instance.SetUpTime(ref currentTime);
+            }
+
             photonView.RPC(nameof(RpcPosition), RpcTarget.All);
             if (!enemySetting.canAttack)
             {
@@ -114,11 +80,11 @@ namespace Script.Enemy
             {
                 if ((currentCharacterPos.position - transform.position).magnitude > 0.5f && isHitGround)
                 {
-                    MoveToTarget(isHitGround);
+                    photonView.RPC(nameof(MoveToTarget), RpcTarget.All, isHitGround);
                 }
                 else
                 {
-                    MoveToTarget(false);
+                    photonView.RPC(nameof(MoveToTarget), RpcTarget.All, false);
                 }
 
                 if (currentTime <= 0f)
@@ -128,25 +94,22 @@ namespace Script.Enemy
                         if ((transform.position - enemySetting.startPosition).magnitude >
                             (transform.position - enemySetting.endPosition).magnitude)
                         {
-                            Vector2 target = (enemySetting.endPosition - enemySetting.startPosition).normalized;
-                            float angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
-                            body.transform.rotation = Quaternion.Euler(new Vector3(0, angle + -45, 0));
+
+                            photonView.RPC(nameof(RpcFlip), RpcTarget.All, enemySetting.endPosition, enemySetting.startPosition);
                         }
                         else
                         {
-                            Vector2 target = (enemySetting.startPosition - enemySetting.endPosition).normalized;
-                            float angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
-                            body.transform.rotation = Quaternion.Euler(new Vector3(0, angle + -45, 0));
+                            photonView.RPC(nameof(RpcFlip), RpcTarget.All, enemySetting.startPosition, enemySetting.endPosition);
                         }
 
                         enemySetting.canAttack = false;
                         currentTime = maxTimeAttack;
-                        ChickenMoving();
+                        //ChickenMoving();
                     }
                     else
                     {
                         enemySetting.canAttack = false;
-                        MoveToTarget(false);
+                        photonView.RPC(nameof(MoveToTarget), RpcTarget.All, false);
                         spriteRenderer.enabled = false;
                         chickenCol.enabled = false;
                         explosionObj.transform.position = offsetAttack.position;
@@ -164,22 +127,53 @@ namespace Script.Enemy
         }
 
         [PunRPC]
-        private void RpcUpdate()
+        private void RpcFlip(Vector3 start, Vector3 end)
         {
-            if (enemySetting.canAttack)
-            {
-                HuyManager.Instance.SetUpTime(ref currentTime);
-            }
+            Vector3 target = (start - end).normalized;
+            float angle = Mathf.Atan2(target.x, target.x) * Mathf.Rad2Deg;
+            body.transform.rotation = Quaternion.Euler(new Vector3(0, angle + -45, 0));
         }
-        
 
         [PunRPC]
-        private void Rpc()
+        private void ChickenMoving()
         {
-            
+            DOTween.Sequence()
+                .AppendCallback(() =>
+                {
+                    photonView.RPC(nameof(MoveToTarget), RpcTarget.All, enemySetting.endPosition);
+                })
+                .AppendInterval(moveWaitingTime)
+                .AppendCallback(() =>
+                {
+                    photonView.RPC(nameof(RpcFlip), RpcTarget.All, enemySetting.endPosition,
+                        enemySetting.startPosition);
+                })
+                .AppendCallback(() =>
+                {
+                    photonView.RPC(nameof(MoveToTarget), RpcTarget.All, enemySetting.startPosition);
+                })
+                .AppendInterval(moveWaitingTime)
+                .AppendCallback(() =>
+                {
+                    photonView.RPC(nameof(RpcFlip), RpcTarget.All, enemySetting.startPosition,
+                        enemySetting.endPosition);
+                })
+                .SetLoops(int.MaxValue).Play();
         }
-        
 
+        [PunRPC]
+        private void MoveToTarget(Vector3 target)
+        {
+            animator.SetBool(IsRun, true);
+            body.DOMove(target, moveTime).SetEase(Ease.Linear)
+                .OnComplete(() =>
+                {
+                    animator.SetBool(IsRun, false);
+                });
+        }
+
+
+        [PunRPC]
         private void MoveToTarget(bool canMove)
         {
             if (canMove)
