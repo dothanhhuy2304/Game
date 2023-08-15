@@ -1,11 +1,13 @@
+using System;
 using DG.Tweening;
+using Photon.Pun;
 using Script.Player;
 using UnityEngine;
 using Script.Core;
 
 namespace Script.Enemy
 {
-    public class Boom : MonoBehaviour
+    public class Boom : MonoBehaviourPunCallbacks
     {
         [SerializeField] private GameObject boomObj, explosionObj;
         [SerializeField] private Collider2D colObj;
@@ -21,48 +23,39 @@ namespace Script.Enemy
         {
             if (HuyManager.Instance.PlayerIsDeath() && !isReSpawn)
             {
-                ReSpawnObject(timeRespawn);
-                isReSpawn = true;
+                DOTween.Sequence()
+                    .AppendInterval(timeRespawn)
+                    .AppendCallback(() =>
+                    {
+                        isReSpawn = true;
+                        boomObj.SetActive(true);
+                        explosionObj.SetActive(false);
+                        colObj.enabled = true;
+                    });
             }
         }
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-
             if (other.collider.CompareTag("Player"))
             {
-                PlayExplosion(1);
+                //PlayExplosion(1, other.collider.GetComponent<CharacterController2D>());
+                DOTween.Sequence()
+                    .AppendCallback(() =>
+                    {
+                        boomObj.SetActive(false);
+                        explosionObj.SetActive(true);
+                        colObj.enabled = false;
+                        AudioManager.instance.Play("Boom_Explosion");
+                        other.collider.GetComponent<CharacterController2D>().playerHealth.GetDamage(30f);
+                    }).AppendInterval(1)
+                    .AppendCallback(() =>
+                    {
+                        explosionObj.SetActive(false);
+                        isReSpawn = false;
+                    }).Play();
             }
         }
 
-        private void ReSpawnObject(float delay)
-        {
-            DOTween.Sequence()
-                .AppendInterval(delay)
-                .AppendCallback(() =>
-                {
-                    boomObj.SetActive(true);
-                    explosionObj.SetActive(false);
-                    colObj.enabled = true;
-                }).Play();
-        }
-
-        private void PlayExplosion(float delay)
-        {
-            DOTween.Sequence()
-                .AppendCallback(() =>
-                {
-                    boomObj.SetActive(false);
-                    explosionObj.SetActive(true);
-                    colObj.enabled = false;
-                    AudioManager.instance.Play("Boom_Explosion");
-                    FindObjectOfType<PlayerHealth>().GetDamage(30f);
-                }).AppendInterval(delay)
-                .AppendCallback(() =>
-                {
-                    explosionObj.SetActive(false);
-                    isReSpawn = false;
-                }).Play();
-        }
     }
 }

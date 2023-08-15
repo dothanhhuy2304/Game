@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5430441285361542491}
   - component: {fileID: 2509518318234597953}
   - component: {fileID: 5430441285361542488}
+  - component: {fileID: 6001220432443025036}
   m_Layer: 10
   m_Name: Bananas
   m_TagString: Untagged
@@ -65,6 +66,28 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.4375
+--- !u!114 &6001220432443025036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5430441285361542489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &7504055726810617679
 GameObject:
   m_ObjectHideFlags: 0

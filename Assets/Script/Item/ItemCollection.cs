@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Photon.Pun;
 using Script.GamePlay;
 using Script.Player;
 using UnityEngine;
@@ -7,19 +8,17 @@ using Script.ScriptTable;
 
 namespace Script.Item
 {
-    public class ItemCollection : MonoBehaviour
+    public class ItemCollection : MonoBehaviourPunCallbacks
     {
         [SerializeField] private ItemType itemType;
         [SerializeField] private ItemData itemData;
         [SerializeField] private Collider2D itemCollider;
         [SerializeField] private Animator animator;
-        private PlayerHealth playerHealth;
-        private GameManager gameManager;
+        private GameManager _gameManager;
 
         private void Start()
         {
-            gameManager = GameManager.instance;
-            playerHealth = FindObjectOfType<PlayerHealth>();
+            _gameManager = GameManager.instance;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -32,69 +31,71 @@ namespace Script.Item
                     {
                         case ItemType.Money:
                         {
-                            gameManager.SetScore(itemData.scoreReceive);
-                            gameManager.SetMoney(itemData.moneyReceive);
-                            ScoreAndDiamondItems();
+                            _gameManager.SetScore(itemData.scoreReceive);
+                            _gameManager.SetMoney(itemData.moneyReceive);
+                            animator.SetLayerWeight(1, 1);
+                            AudioManager.instance.Play("Item_Heal");
+                            itemCollider.enabled = false;
+                            DOTween.Sequence()
+                                .AppendInterval(0.8f)
+                                .AppendCallback(() =>
+                                {
+                                    animator.SetLayerWeight(0, 1);
+                                    gameObject.SetActive(false);
+                                }).Play();
                             break;
                         }
                         case ItemType.Diamond:
                         {
-                            gameManager.SetScore(itemData.scoreReceive);
-                            gameManager.SetDiamond(itemData.diamondReceive);
-                            ScoreAndDiamondItems();
+                            _gameManager.SetScore(itemData.scoreReceive);
+                            _gameManager.SetDiamond(itemData.diamondReceive);
+                            animator.SetLayerWeight(1, 1);
+                            AudioManager.instance.Play("Item_Heal");
+                            itemCollider.enabled = false;
+                            DOTween.Sequence()
+                                .AppendInterval(0.8f)
+                                .AppendCallback(() =>
+                                {
+                                    animator.SetLayerWeight(0, 1);
+                                    gameObject.SetActive(false);
+                                }).Play();
                             break;
                         }
                         case ItemType.Heal:
                         {
-                            HealItems(itemData.valueReceive);
+                            animator.SetLayerWeight(1, 1);
+                            other.GetComponent<CharacterController2D>().playerHealth.Healing(itemData.valueReceive);
+                            AudioManager.instance.Play("Item_Heal");
+                            itemCollider.enabled = false;
+                            DOTween.Sequence()
+                                .AppendInterval(0.8f)
+                                .AppendCallback(() =>
+                                {
+                                    animator.SetLayerWeight(0, 1);
+                                    gameObject.SetActive(false);
+                                }).Play();
                             break;
                         }
                         case ItemType.Hurt:
                         {
-                            HurtItems(itemData.valueReceive);
+                            animator.SetLayerWeight(1, 1);
+                            other.GetComponent<CharacterController2D>().playerHealth.GetDamage(itemData.valueReceive);
+                            AudioManager.instance.Play("Item_Hurt");
+                            itemCollider.enabled = false;
+                            DOTween.Sequence()
+                                .AppendInterval(0.8f)
+                                .AppendCallback(() =>
+                                {
+                                    animator.SetLayerWeight(0, 1);
+                                    gameObject.SetActive(false);
+                                }).Play();
                             break;
                         }
                     }
                 }
             }
         }
-
-        private void HurtItems(float value)
-        {
-            animator.SetLayerWeight(1, 1);
-            playerHealth.GetDamage(value);
-            AudioManager.instance.Play("Item_Hurt");
-            itemCollider.enabled = false;
-            TemporarilyDeactivate(0.8f);
-        }
-
-        private void HealItems(float value)
-        {
-            animator.SetLayerWeight(1, 1);
-            playerHealth.Healing(value);
-            AudioManager.instance.Play("Item_Heal");
-            itemCollider.enabled = false;
-            TemporarilyDeactivate(0.8f);
-        }
-
-        private void ScoreAndDiamondItems()
-        {
-            animator.SetLayerWeight(1, 1);
-            AudioManager.instance.Play("Item_Heal");
-            itemCollider.enabled = false;
-            TemporarilyDeactivate(0.8f);
-        }
-
-        private void TemporarilyDeactivate(float delay)
-        {
-            DOTween.Sequence()
-                .AppendInterval(delay)
-                .AppendCallback(() =>
-                {
-                    animator.SetLayerWeight(0, 1);
-                    gameObject.SetActive(false);
-                }).Play();
-        }
+        
     }
 
     public enum ItemType

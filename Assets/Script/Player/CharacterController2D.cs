@@ -30,6 +30,10 @@ namespace Script.Player
         private float startSpeed;
         private int jumpCount;
         private bool onWall;
+        private static readonly int Velocity = Animator.StringToHash("y_velocity");
+        private static readonly int MRun = Animator.StringToHash("m_Run");
+        private static readonly int IsJump = Animator.StringToHash("is_Jump");
+        private static readonly int IsDbJump = Animator.StringToHash("is_DBJump");
 
         private void Awake()
         {
@@ -63,7 +67,6 @@ namespace Script.Player
                         if ((Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) && isDashing)
                         {
                             photonView.RPC(nameof(Dash), RpcTarget.All, playerInput);
-                            timeNextDash = 1.5f;
                         }
                     }
                 }
@@ -86,43 +89,30 @@ namespace Script.Player
         {
             if (photonView.IsMine)
             {
-                if (!HuyManager.Instance.PlayerIsDeath())
+                if (!HuyManager.Instance.PlayerIsDeath() && !HuyManager.Instance.GetPlayerIsHurt())
                 {
-                    if (!HuyManager.Instance.GetPlayerIsHurt())
+                    photonView.RPC(nameof(RpcCheckGround), RpcTarget.All);
+                    ControlPc(playerInput * (startSpeed * Time.fixedDeltaTime));
+
+                    if (isJump)
                     {
-                        photonView.RPC(nameof(RpcCheckGround), RpcTarget.All);
-
-                        photonView.RPC(nameof(Move), RpcTarget.All, playerInput * (startSpeed * Time.fixedDeltaTime));
-
-                        if (isJump)
-                        {
-                            isJump = false;
-                            photonView.RPC(nameof(Jump), RpcTarget.All);
-                        }
-
-                        photonView.RPC(nameof(RpcJumpAnim), RpcTarget.All);
-
-                        photonView.RPC(nameof(YVelocity), RpcTarget.All);
+                        Jump();
                     }
-                }
-            }
-        }
 
-        [PunRPC]
-        private void RpcJumpAnim()
-        {
-            if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
-            {
-                jumpCount = 0;
-                RpcResetAnimJump();
+                    if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
+                    {
+                        photonView.RPC(nameof(RpcResetAnimJump), RpcTarget.All);
+                    }
+
+                    photonView.RPC(nameof(YVelocity), RpcTarget.All);
+                }
             }
         }
 
         [PunRPC]
         private void RpcCheckGround()
         {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f,
-                1 << LayerMask.NameToLayer("ground"));
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f, 1 << LayerMask.NameToLayer("ground"));
             if (hit)
             {
                 if (!hit.collider.CompareTag("ground"))
@@ -139,37 +129,47 @@ namespace Script.Player
         [PunRPC]
         private void YVelocity()
         {
-            animator.SetFloat("y_velocity", body.velocity.y);
+            animator.SetFloat(Velocity, body.velocity.y);
+        }
+
+        private void ControlPc(float input)
+        {
+            photonView.RPC(nameof(Moving), RpcTarget.All, input);
+
+            if (input > 0f && !mFacingRight)
+            {
+                Flip();
+            }
+            else if (input < 0f && mFacingRight)
+            {
+                Flip();
+            }
+
+            MovementLimit();
         }
 
         [PunRPC]
-        private void Move(float move)
+        private void Moving(float @fixed)
         {
             Vector3 position = body.velocity;
-            body.velocity = Vector2.SmoothDamp(position, new Vector2(move * 10f, position.y) , ref velocity, MovementSmoothing);
+            body.velocity = Vector2.SmoothDamp(position, new Vector2(@fixed * 10f, position.y), ref velocity, MovementSmoothing);
 
             if (isOnCar || onWall)
             {
-                AnimPlayerRun(0f);
+                RunAnimation(0f);
             }
             else
             {
-                AnimPlayerRun(Mathf.Abs(move));
+                RunAnimation(Mathf.Abs(@fixed));
             }
-
-            if (move > 0f && !mFacingRight)
-            {
-                Flip();
-            }
-            else if (move < 0f && mFacingRight)
-            {
-                Flip();
-            }
-
-            LockPlayerPositionOnMap();
         }
 
-        private void LockPlayerPositionOnMap()
+        private void RunAnimation(float value)
+        {
+            animator.SetFloat(MRun, value);
+        }
+
+        private void MovementLimit()
         {
             Vector3 pos = transform.position;
             pos = new Vector3(Mathf.Clamp(pos.x, clampMinX, clampMaxX), pos.y, pos.z);
@@ -181,27 +181,27 @@ namespace Script.Player
             playerInput = move;
         }
 
-        [PunRPC]
         private void Jump()
         {
+            isJump = false;
             if (mGrounded)
             {
-                SetUpJump();
+                photonView.RPC(nameof(JumpForce), RpcTarget.All);
                 mDbJump = true;
             }
             else if (mDbJump)
             {
-                SetUpJump();
+                photonView.RPC(nameof(JumpForce), RpcTarget.All);
                 mDbJump = false;
             }
 
+            photonView.RPC(nameof(JumpAnimation), RpcTarget.All);
             mGrounded = false;
             isDashing = true;
-            AnimPlayerJump();
         }
 
-
-        private void SetUpJump()
+        [PunRPC]
+        private void JumpForce()
         {
             body.velocity = new Vector2(body.velocity.x, 0f);
             body.AddForce(Vector2.up * playerData.jumpForce, ForceMode2D.Impulse);
@@ -209,9 +209,23 @@ namespace Script.Player
             jumpCount++;
         }
 
-        private void ModifyPhysics()
+        [PunRPC]
+        private void JumpAnimation()
         {
-            
+            switch (jumpCount)
+            {
+                case 0:
+                    animator.SetBool(IsJump, false);
+                    animator.SetBool(IsDbJump, false);
+                    break;
+                case 1:
+                    animator.SetBool(IsJump, true);
+                    break;
+                case 2:
+                    animator.SetBool(IsJump, false);
+                    animator.SetBool(IsDbJump, true);
+                    break;
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -222,7 +236,6 @@ namespace Script.Player
             }
         }
         
-        [PunRPC]
         private void EvaluateCollision(Collision2D collision2D)
         {
             bool isWall = false;
@@ -245,6 +258,7 @@ namespace Script.Player
             body.velocity = new Vector2(body.velocity.x, 0);
             body.AddForce(Vector2.right * (horizontal * playerData.dashSpeed), ForceMode2D.Impulse);
             isDashing = false;
+            timeNextDash = 1.5f;
         }
 
         private void Flip()
@@ -259,35 +273,11 @@ namespace Script.Player
         }
 
         [PunRPC]
-        private void AnimPlayerRun(float speed)
-        {
-            animator.SetFloat("m_Run", speed);
-        }
-
-        [PunRPC]
         private void RpcResetAnimJump()
         {
-            animator.SetBool("is_Jump", false);
-            animator.SetBool("is_DBJump", false);
-        }
-
-
-        private void AnimPlayerJump()
-        {
-            switch (jumpCount)
-            {
-                case 0:
-                    animator.SetBool("is_Jump", false);
-                    animator.SetBool("is_DBJump", false);
-                    break;
-                case 1:
-                    animator.SetBool("is_Jump", true);
-                    break;
-                case 2:
-                    animator.SetBool("is_Jump", false);
-                    animator.SetBool("is_DBJump", true);
-                    break;
-            }
+            jumpCount = 0;
+            animator.SetBool(IsJump, false);
+            animator.SetBool(IsDbJump, false);
         }
 
         private void OnTriggerEnter2D(Collider2D other)
