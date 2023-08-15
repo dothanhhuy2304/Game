@@ -111,6 +111,39 @@ namespace Script.Enemy
             return trans;
         }
 
+        protected Transform FindClosetPlayerWithForwardPhysic()
+        {
+            float closestDistance = Mathf.Infinity;
+            Transform trans = null;
+            foreach (var go in HuyManager.Instance.listPlayerInGame)
+            {
+                if (!go) continue;
+                var position = transform.position;
+                var gos = go.transform.position;
+                float currentDistance = (position - gos).magnitude;
+                RaycastHit2D hit = Physics2D.Linecast(position, transform.TransformPoint(Vector2.right * 100f), GameManager.instance.playerMask);
+                RaycastHit2D hit2 = Physics2D.Linecast(position, transform.TransformPoint(-Vector2.right * 100f), GameManager.instance.playerMask);
+                if (currentDistance < closestDistance)
+                {
+                    if (hit.collider!=null && hit.collider.CompareTag("Player"))
+                    {
+                        closestDistance = currentDistance;
+                        trans = go.transform;
+                    }else if (hit2.collider!=null && hit2.collider.gameObject.CompareTag("Player"))
+                    {
+                        closestDistance = currentDistance;
+                        trans = go.transform;   
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+
+            return trans;
+        }
+
         private int _tempIndex;
 
         private int FindBullet()
@@ -149,6 +182,11 @@ namespace Script.Enemy
                 transform.position = (Vector3) stream.ReceiveNext();
                 transform.rotation = (Quaternion) stream.ReceiveNext();
             }
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawLine(transform.TransformPoint(new Vector2(playerCharacter.transform.position.x,0)), transform.TransformPoint(Vector2.right * 100f));
         }
     }
 }

@@ -1,13 +1,16 @@
 using DG.Tweening;
+using Photon.Pun;
 using UnityEngine;
 using Script.Core;
+using Script.GamePlay;
 
 namespace Script.Enemy
 {
     public class CarnivorousPlant : EnemyController
     {
         [SerializeField] private bool canFlip;
-        [SerializeField] private LayerMask mask;
+        private static readonly int IsAttack = Animator.StringToHash("isAttack");
+        private bool canAttack;
 
         protected override void Start()
         {
@@ -17,59 +20,77 @@ namespace Script.Enemy
 
         private void WaitToReset()
         {
-            if (HuyManager.Instance.PlayerIsDeath())
-            {
-                if (enemySetting.enemyHeal.EnemyDeath())
+                if (HuyManager.Instance.PlayerIsDeath())
                 {
-                    enemySetting.enemyHeal.ResetHeathDefault();
-                    enemySetting.enemyHeal.ReSpawn(2);
+                    if (enemySetting.enemyHeal.EnemyDeath())
+                    {
+                        enemySetting.enemyHeal.ResetHeathDefault();
+                        enemySetting.enemyHeal.ReSpawn(2);
+                    }
+                    else
+                    {
+                        DOTween.Sequence()
+                            .AppendInterval(2f)
+                            .AppendCallback(enemySetting.enemyHeal.ResetHeathDefault)
+                            .Play();
+                    }
                 }
-                else
-                {
-                    DOTween.Sequence()
-                        .AppendInterval(2f)
-                        .AppendCallback(enemySetting.enemyHeal.ResetHeathDefault)
-                        .Play();
-                }
-            }
         }
 
         private void FixedUpdate()
         {
-            if (!HuyManager.Instance.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
+            HuyManager.Instance.SetUpTime(ref currentTime);
+            photonView.RPC(nameof(RpcFindPlayerClosets), RpcTarget.All);
+            if (canAttack)
             {
-                HuyManager.Instance.SetUpTime(ref currentTime);
-                if ((playerCharacter.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
+                if (!HuyManager.Instance.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
                 {
-                    RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position,
-                        mask);
-                    if (hit)
+                    if ((currentCharacterPos.position - transform.position).magnitude < enemySetting.rangeAttack)
                     {
-                        if (hit.collider.CompareTag("Player"))
+                        if (canFlip)
                         {
-                            if (canFlip)
-                            {
-                                Flip();
-                            }
+                            Flip();
+                        }
 
-                            if (currentTime <= 0f)
-                            {
-                                BulletAttack();
-                                animator.SetTrigger("isAttack");
-                                currentTime = maxTimeAttack;
-                            }
+                        if (currentTime <= 0f)
+                        {
+                            photonView.RPC(nameof(RpcAnimationAttack), RpcTarget.All);
+                            DOTween.Sequence()
+                                .AppendInterval(0.5f)
+                                .AppendCallback(() => { photonView.RPC(nameof(RpcPlanetBulletAttack), RpcTarget.All); })
+                                .Play();
+                            currentTime = maxTimeAttack;
                         }
                     }
                 }
             }
         }
 
-        private void BulletAttack()
+
+        [PunRPC]
+        private void RpcFindPlayerClosets()
         {
-            DOTween.Sequence()
-                .AppendInterval(0.5f)
-                .AppendCallback(AttackBullet)
-                .Play();
+            currentCharacterPos = FindClosetPlayerWithForwardPhysic();
+            if (currentCharacterPos != null)
+            {
+                canAttack = true;
+            }
+            else
+            {
+                canAttack = false;
+            }
+        }
+        
+        [PunRPC]
+        private void RpcPlanetBulletAttack()
+        {
+            AttackBullet();
+        }
+
+        [PunRPC]
+        private void RpcAnimationAttack()
+        {
+            animator.SetTrigger(IsAttack);
         }
     }
 }

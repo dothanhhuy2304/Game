@@ -41,6 +41,7 @@ GameObject:
   - component: {fileID: 3867580215264503811}
   - component: {fileID: 1239008688057342940}
   - component: {fileID: 2809867020894082271}
+  - component: {fileID: 1095958872183563499}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -132,6 +133,27 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1095958872183563499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2875357941565350112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 9
+    SynchronizeType: 0
+    Name: isAttack
+  m_SynchronizeLayers:
+  - SynchronizeType: 1
+    LayerIndex: 0
 --- !u!1 &5142780678492179413
 GameObject:
   m_ObjectHideFlags: 0
@@ -146,6 +168,9 @@ GameObject:
   - component: {fileID: 31679828}
   - component: {fileID: 2077946374}
   - component: {fileID: 3137032912317739878}
+  - component: {fileID: 8417440207982495214}
+  - component: {fileID: 2051742732817384214}
+  - component: {fileID: 3722837735959168600}
   m_Layer: 8
   m_Name: CarnivorousPlant
   m_TagString: Enemy
@@ -198,13 +223,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78a9207b57b6c2344a0460272dc8e8b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canRespawn: 0
+  canReSpawn: 0
   heathDefault: 100
   currentHealth: 0
   maxHealth: 434
   hpIc: 334
+  damageFix: 0
   enemyHealthBar: {fileID: 31679828}
-  timeRespawn: 10
+  timeReSpawn: 0
   enemyCollider: {fileID: 5142780678492179408}
   spriteRenderer: {fileID: 1239008688057342940}
   uIDamageEnemy: {fileID: 898911466340090346, guid: 60b1aed8d968ce9499c3afcb26e22f95, type: 3}
@@ -252,6 +278,7 @@ MonoBehaviour:
   maxTimeAttack: 4
   offsetAttack: {fileID: 1778465740}
   positionAttack: {x: -1, y: 0}
+  currentCharacterPos: {fileID: 0}
   canFlip: 0
   mask:
     serializedVersion: 2
@@ -277,6 +304,63 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
+--- !u!114 &8417440207982495214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5142780678492179413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 2077946374}
+  - {fileID: 2051742732817384214}
+  - {fileID: 3722837735959168600}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &2051742732817384214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5142780678492179413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e7cb724808c322458aa4d15f5035fa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizeVelocity: 1
+  m_SynchronizeAngularVelocity: 1
+  m_TeleportEnabled: 1
+  m_TeleportIfDistanceGreaterThan: 3
+--- !u!114 &3722837735959168600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5142780678492179413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 1
+  m_UseLocal: 1
 --- !u!1001 &5142780679409045956
 PrefabInstance:
   m_ObjectHideFlags: 0

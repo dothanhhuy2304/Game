@@ -145,16 +145,17 @@ MonoBehaviour:
   maxTimeAttack: 3
   offsetAttack: {fileID: 5214105555703601346}
   positionAttack: {x: 0.45, y: 0}
+  currentCharacterPos: {fileID: 0}
   radiusAttack: 2
   target: {x: 0, y: 0, z: 0}
   currentTrans: {fileID: 3443694513160801486}
   timeDurationMoving: 0
+  playerMasks:
+    serializedVersion: 2
+    m_Bits: 253952
   mask:
     serializedVersion: 2
     m_Bits: 254080
-  playerMask:
-    serializedVersion: 2
-    m_Bits: 253952
 --- !u!114 &200322106688377554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,8 +175,10 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
+  - {fileID: 526003783}
   - {fileID: 3652942308830686057}
   - {fileID: 439091683920354183}
+  - {fileID: 6832686341570931079}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

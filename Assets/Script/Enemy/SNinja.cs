@@ -20,7 +20,7 @@ namespace Script.Enemy
         private static readonly int IsAttackSword = Animator.StringToHash("isAttack1");
         private bool wasAttackSword;
         private bool canAttack;
-        [SerializeField] private LayerMask playerMask;
+        [SerializeField] private LayerMask playerMasks;
         [SerializeField] private LayerMask mask;
 
         protected override void Start()
@@ -226,7 +226,7 @@ namespace Script.Enemy
                         {
                             if (wasAttackSword)
                             {
-                                bool hits = Physics2D.OverlapCircle(transform.position, radiusAttack, playerMask);
+                                bool hits = Physics2D.OverlapCircle(transform.position, radiusAttack, playerMasks);
                                 if (hits)
                                 {
                                     currentCharacterPos.GetComponent<CharacterController2D>().playerHealth.GetDamage(21f);
