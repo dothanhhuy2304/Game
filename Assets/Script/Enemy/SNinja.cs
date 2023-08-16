@@ -8,7 +8,7 @@ using Script.Core;
 
 namespace Script.Enemy
 {
-    public class SNinja : EnemyController
+    public class SNinja : EnemyController , IPunObservable
     {
         [SerializeField] private float radiusAttack;
         [Header("SetUp Patrol")]
@@ -276,6 +276,24 @@ namespace Script.Enemy
             if (other.CompareTag("ground"))
             {
                 isHitGrounds = false;
+            }
+        }
+        
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                stream.SendNext((Vector3) body.velocity);
+                stream.SendNext((float) body.rotation);
+                stream.SendNext((Vector3) transform.position);
+                stream.SendNext((Quaternion) transform.rotation);
+            }
+            else
+            {
+                body.velocity = (Vector3) stream.ReceiveNext();
+                body.rotation = (float) stream.ReceiveNext();
+                transform.position = (Vector3) stream.ReceiveNext();
+                transform.rotation = (Quaternion) stream.ReceiveNext();
             }
         }
         

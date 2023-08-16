@@ -21,7 +21,7 @@ namespace Script.Enemy
         public bool canMoving;
     }
 
-    public abstract class EnemyController : MonoBehaviourPunCallbacks, IPunObservable
+    public abstract class EnemyController : MonoBehaviourPunCallbacks
     {
         public EnemySetting enemySetting;
         [Header("Types")] [SerializeField] protected Rigidbody2D body;
@@ -184,23 +184,23 @@ namespace Script.Enemy
             return 0;
         }
 
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (stream.IsWriting)
-            {
-                stream.SendNext((Vector3) body.velocity);
-                stream.SendNext((float) body.rotation);
-                stream.SendNext((Vector3) transform.position);
-                stream.SendNext((Quaternion) transform.rotation);
-            }
-            else
-            {
-                body.velocity = (Vector3) stream.ReceiveNext();
-                body.rotation = (float) stream.ReceiveNext();
-                transform.position = (Vector3) stream.ReceiveNext();
-                transform.rotation = (Quaternion) stream.ReceiveNext();
-            }
-        }
+        // public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        // {
+        //     if (stream.IsWriting)
+        //     {
+        //         stream.SendNext((Vector3) body.velocity);
+        //         stream.SendNext((float) body.rotation);
+        //         stream.SendNext((Vector3) transform.position);
+        //         stream.SendNext((Quaternion) transform.rotation);
+        //     }
+        //     else
+        //     {
+        //         body.velocity = (Vector3) stream.ReceiveNext();
+        //         body.rotation = (float) stream.ReceiveNext();
+        //         transform.position = (Vector3) stream.ReceiveNext();
+        //         transform.rotation = (Quaternion) stream.ReceiveNext();
+        //     }
+        // }
 
         private void OnDrawGizmos()
         {
