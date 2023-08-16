@@ -13,26 +13,28 @@ namespace Script.Player
         [SerializeField] private CharacterController2D playerCharacter;
         [SerializeField] private PlayerHealthBar playerHealthBar;
         [SerializeField] private PetAI petAi;
-        [SerializeField] private GameObject uIDamagePlayer;
-        private TextMeshProUGUI txtDamage;
+        [SerializeField] private string prefabDamagePlayer;
+        //private TextMeshProUGUI _txtDamage;
 
         private void Start()
         {
-            playerHealthBar = FindObjectOfType<PlayerHealthBar>();
-            petAi = PetAI.IsLocalPet;
-            txtDamage = uIDamagePlayer.GetComponentInChildren<TextMeshProUGUI>();
-            if (playerCharacter.playerData.currentHealth <= 0)
+            if (photonView.IsMine)
             {
-                LoadHeath();
+                petAi = PetAI.IsLocalPet;
+                if (playerCharacter.playerData.currentHealth <= 0)
+                {
+                    photonView.RPC(nameof(LoadHeath), RpcTarget.AllBuffered);
+                }
+                else
+                {
+                    photonView.RPC(nameof(LoadCurrentHealth), RpcTarget.AllBuffered);
+                }
+
+                photonView.RPC(nameof(RpcPlayerDeath), RpcTarget.AllBuffered);
             }
-            else
-            {
-                LoadCurrentHealth();
-            }
-            HuyManager.Instance.SetPlayerIsDeath(0);
-            HuyManager.Instance.SetPlayerIsHurt(0);
         }
 
+        [PunRPC]
         private void LoadHeath()
         {
             playerCharacter.playerData.maxHealth = playerCharacter.playerData.heathDefault + playerCharacter.playerData.hpIc;
@@ -40,16 +42,31 @@ namespace Script.Player
             playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
         }
 
+        [PunRPC]
         private void LoadCurrentHealth()
         {
             playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
         }
 
+        [PunRPC]
+        private void RpcPlayerDeath()
+        {
+            HuyManager.Instance.SetPlayerIsDeath(0);
+            HuyManager.Instance.SetPlayerIsHurt(0);
+        }
+
+        public void RpcGetDamage(float damage)
+        {
+            photonView.RPC(nameof(GetDamage), RpcTarget.AllBuffered, damage);
+        }
+
+        [PunRPC]
         public void GetDamage(float damage)
         {
-            playerCharacter.playerData.currentHealth = Mathf.Clamp(playerCharacter.playerData.currentHealth - damage, 0, playerCharacter.playerData.maxHealth);
+            playerCharacter.playerData.currentHealth = Mathf.Clamp(playerCharacter.playerData.currentHealth - damage, 0,
+                playerCharacter.playerData.maxHealth);
             if (playerCharacter.playerData.currentHealth > 0)
-            { 
+            {
                 PlayerHurt();
             }
             else
@@ -57,18 +74,30 @@ namespace Script.Player
                 Die();
             }
 
-            txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
             playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
-            var uIDamageInstance = Instantiate(uIDamagePlayer, transform.position + Vector3.up, Quaternion.identity);
-            Destroy(uIDamageInstance, 0.5f);
+
+            var objectDamage = PhotonNetwork.Instantiate(prefabDamagePlayer, transform.position + Vector3.up, Quaternion.identity);
+            TMP_Text txtDamage = objectDamage.GetComponentInChildren<TMP_Text>();
+            txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
+            DOTween.Sequence()
+                .AppendInterval(0.5f)
+                .AppendCallback(() => { PhotonNetwork.Destroy(objectDamage); });
         }
 
+        public void RpcHealing(float value)
+        {
+            photonView.RPC(nameof(Healing), RpcTarget.AllBuffered, value);
+        }
+
+        [PunRPC]
         public void Healing(float value)
         {
-            playerCharacter.playerData.currentHealth = Mathf.Clamp(playerCharacter.playerData.currentHealth + value, 0f, playerCharacter.playerData.maxHealth);
+            playerCharacter.playerData.currentHealth = Mathf.Clamp(playerCharacter.playerData.currentHealth + value, 0f,
+                playerCharacter.playerData.maxHealth);
             if (playerCharacter.playerData.currentHealth > playerCharacter.playerData.maxHealth)
                 playerCharacter.playerData.currentHealth = playerCharacter.playerData.maxHealth;
-            playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
+            playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth,
+                playerCharacter.playerData.maxHealth);
         }
 
         public void Die()
@@ -90,7 +119,8 @@ namespace Script.Player
                 {
                     LoadHeath();
                     Transform position = transform;
-                    position.position = new Vector3(HuyManager.Instance.currentPosition[0], HuyManager.Instance.currentPosition[1], HuyManager.Instance.currentPosition[2]);
+                    position.position = new Vector3(HuyManager.Instance.currentPosition[0],
+                        HuyManager.Instance.currentPosition[1], HuyManager.Instance.currentPosition[2]);
                     petAi.transform.position = position.up;
                     playerCharacter.animator.SetLayerWeight(1, 0);
                     playerCharacter.body.bodyType = RigidbodyType2D.Dynamic;
@@ -100,6 +130,12 @@ namespace Script.Player
                 }).Play();
         }
 
+        public void RpcDieByFalling()
+        {
+            photonView.RPC(nameof(DieByFalling), RpcTarget.AllBuffered);
+        }
+
+        [PunRPC]
         public void DieByFalling()
         {
             HuyManager.Instance.eventResetWhenPlayerDeath?.Invoke();
@@ -116,7 +152,8 @@ namespace Script.Player
                 {
                     LoadHeath();
                     Transform position = transform;
-                    position.position = new Vector3(HuyManager.Instance.currentPosition[0], HuyManager.Instance.currentPosition[1], HuyManager.Instance.currentPosition[2]);
+                    position.position = new Vector3(HuyManager.Instance.currentPosition[0],
+                        HuyManager.Instance.currentPosition[1], HuyManager.Instance.currentPosition[2]);
                     petAi.transform.position = position.up;
                     HuyManager.Instance.SetPlayerIsDeath(0);
                     Car.instance.eventResetCar?.Invoke();

@@ -17,7 +17,7 @@ namespace Script.GamePlay
             {
                 SceneManager.LoadScene("Client");
             }
-            
+
             GameManager.instance.lobbyPanel.SetActive(false);
 
             if (characters == null || pet == null)
@@ -26,14 +26,8 @@ namespace Script.GamePlay
             }
             else
             {
-                // if (photonView.IsMine)
-                // {
-                //     //characters[HuyManager.Instance.characterSelected].SetActive(true);
-                //     photonView.RPC(nameof(SpawnPlayer), RpcTarget.All);
-                // }
                 if (CharacterController2D.IsLocalPlayer == null)
                 {
-                    //photonView.RPC(nameof(SpawnPlayer), RpcTarget.All);
                     PhotonNetwork.Instantiate(characters[HuyManager.Instance.characterSelected].name,
                         characters[HuyManager.Instance.characterSelected].transform.position, Quaternion.identity);
                 }
@@ -58,12 +52,5 @@ namespace Script.GamePlay
                 UIManager.instance.btnRestart.gameObject.SetActive(true);
             }
         }
-
-        // [PunRPC]
-        // private void SpawnPlayer()
-        // {
-        //     PhotonNetwork.Instantiate(characters[HuyManager.Instance.characterSelected].name,
-        //         characters[HuyManager.Instance.characterSelected].transform.position, Quaternion.identity);
-        // }
     }
 }

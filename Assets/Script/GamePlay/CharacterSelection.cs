@@ -45,7 +45,7 @@ namespace Script.GamePlay
 
         public void LoadCharacter()
         {
-            photonView.RPC(nameof(RpcCharacter), RpcTarget.All);
+            photonView.RPC(nameof(RpcCharacter), RpcTarget.AllBuffered);
             loadingScreenManager.FadeLoadingScene(
                 HuyManager.Instance.currentScreen == 0
                     ? loadingScreenManager.NextScreen()

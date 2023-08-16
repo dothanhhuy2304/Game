@@ -35,28 +35,43 @@ namespace Script.Enemy
         {
             if (!spriteRenderer.enabled)
             {
-                photonView.RPC(nameof(RpcEnemyReSpawn), RpcTarget.All);
+                EnemyReSpawn();
             }
         }
-
-        private void RpcEnemyReSpawn()
+        
+        private void EnemyReSpawn()
         {
             DOTween.Sequence()
-                .AppendCallback(() => { body.MovePosition(body.transform.position); })
+                .AppendCallback(() =>
+                {
+                    photonView.RPC(nameof(RpcLockPosition), RpcTarget.AllBuffered);
+                })
                 .AppendInterval(3f)
                 .AppendCallback(() =>
                 {
-                    currentTime = maxTimeAttack;
-                    enemySetting.canAttack = false;
-                    spriteRenderer.enabled = true;
-                    chickenCol.enabled = true;
-                    Transform trans = transform;
-                    trans.rotation = startRotation;
-                    trans.position = enemySetting.startPosition;
-                    transform.Rotate(new Vector3(0, rotations[1], 0));
-                    gameObject.SetActive(true);
-                    ChickenMoving();
+                    photonView.RPC(nameof(RpcEnemyReSpawn), RpcTarget.AllBuffered);
                 }).Play();
+        }
+
+        [PunRPC]
+        private void RpcLockPosition()
+        {
+            body.MovePosition(body.transform.position);
+        }
+
+        [PunRPC]
+        private void RpcEnemyReSpawn()
+        {
+            currentTime = maxTimeAttack;
+            enemySetting.canAttack = false;
+            spriteRenderer.enabled = true;
+            chickenCol.enabled = true;
+            Transform trans = transform;
+            trans.rotation = startRotation;
+            trans.position = enemySetting.startPosition;
+            transform.Rotate(new Vector3(0, rotations[1], 0));
+            gameObject.SetActive(true);
+            ChickenMoving();
         }
 
         private void FixedUpdate()
@@ -66,7 +81,7 @@ namespace Script.Enemy
                 HuyManager.Instance.SetUpTime(ref currentTime);
             }
 
-            photonView.RPC(nameof(RpcPosition), RpcTarget.All);
+            photonView.RPC(nameof(RpcPosition), RpcTarget.AllBuffered);
             if (!enemySetting.canAttack)
             {
                 if ((currentCharacterPos.position - transform.position).magnitude < enemySetting.rangeAttack)
@@ -80,11 +95,11 @@ namespace Script.Enemy
             {
                 if ((currentCharacterPos.position - transform.position).magnitude > 0.5f && isHitGround)
                 {
-                    photonView.RPC(nameof(MoveToTarget), RpcTarget.All, isHitGround);
+                    photonView.RPC(nameof(MoveToTarget), RpcTarget.AllBuffered, isHitGround);
                 }
                 else
                 {
-                    photonView.RPC(nameof(MoveToTarget), RpcTarget.All, false);
+                    photonView.RPC(nameof(MoveToTarget), RpcTarget.AllBuffered, false);
                 }
 
                 if (currentTime <= 0f)
@@ -95,11 +110,11 @@ namespace Script.Enemy
                             (transform.position - enemySetting.endPosition).magnitude)
                         {
 
-                            photonView.RPC(nameof(RpcFlip), RpcTarget.All, enemySetting.endPosition, enemySetting.startPosition);
+                            photonView.RPC(nameof(RpcFlip), RpcTarget.AllBuffered, enemySetting.endPosition, enemySetting.startPosition);
                         }
                         else
                         {
-                            photonView.RPC(nameof(RpcFlip), RpcTarget.All, enemySetting.startPosition, enemySetting.endPosition);
+                            photonView.RPC(nameof(RpcFlip), RpcTarget.AllBuffered, enemySetting.startPosition, enemySetting.endPosition);
                         }
 
                         enemySetting.canAttack = false;
@@ -109,7 +124,7 @@ namespace Script.Enemy
                     else
                     {
                         enemySetting.canAttack = false;
-                        photonView.RPC(nameof(MoveToTarget), RpcTarget.All, false);
+                        photonView.RPC(nameof(MoveToTarget), RpcTarget.AllBuffered, false);
                         spriteRenderer.enabled = false;
                         chickenCol.enabled = false;
                         explosionObj.transform.position = offsetAttack.position;
@@ -140,22 +155,22 @@ namespace Script.Enemy
             DOTween.Sequence()
                 .AppendCallback(() =>
                 {
-                    photonView.RPC(nameof(MoveToTarget), RpcTarget.All, enemySetting.endPosition);
+                    photonView.RPC(nameof(MoveToTarget), RpcTarget.AllBuffered, enemySetting.endPosition);
                 })
                 .AppendInterval(moveWaitingTime)
                 .AppendCallback(() =>
                 {
-                    photonView.RPC(nameof(RpcFlip), RpcTarget.All, enemySetting.endPosition,
+                    photonView.RPC(nameof(RpcFlip), RpcTarget.AllBuffered, enemySetting.endPosition,
                         enemySetting.startPosition);
                 })
                 .AppendCallback(() =>
                 {
-                    photonView.RPC(nameof(MoveToTarget), RpcTarget.All, enemySetting.startPosition);
+                    photonView.RPC(nameof(MoveToTarget), RpcTarget.AllBuffered, enemySetting.startPosition);
                 })
                 .AppendInterval(moveWaitingTime)
                 .AppendCallback(() =>
                 {
-                    photonView.RPC(nameof(RpcFlip), RpcTarget.All, enemySetting.startPosition,
+                    photonView.RPC(nameof(RpcFlip), RpcTarget.AllBuffered, enemySetting.startPosition,
                         enemySetting.endPosition);
                 })
                 .SetLoops(int.MaxValue).Play();

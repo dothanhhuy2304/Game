@@ -60,13 +60,13 @@ namespace Script.Player
             {
                 if (!HuyManager.Instance.PlayerIsDeath() && !HuyManager.Instance.GetPlayerIsHurt())
                 {
-                    photonView.RPC(nameof(PlayerInput), RpcTarget.All);
+                    photonView.RPC(nameof(PlayerInput), RpcTarget.AllBuffered);
                     HuyManager.Instance.SetUpTime(ref timeNextDash);
                     if (timeNextDash <= 0)
                     {
                         if ((Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) && isDashing)
                         {
-                            photonView.RPC(nameof(Dash), RpcTarget.All, playerInput);
+                            photonView.RPC(nameof(Dash), RpcTarget.AllBuffered, playerInput);
                         }
                     }
                 }
@@ -91,20 +91,20 @@ namespace Script.Player
             {
                 if (!HuyManager.Instance.PlayerIsDeath() && !HuyManager.Instance.GetPlayerIsHurt())
                 {
-                    photonView.RPC(nameof(RpcCheckGround), RpcTarget.All);
+                    photonView.RPC(nameof(RpcCheckGround), RpcTarget.AllBuffered);
                     ControlPc(playerInput * (startSpeed * Time.fixedDeltaTime));
 
                     if (isJump)
                     {
-                        Jump();
+                        photonView.RPC(nameof(Jump), RpcTarget.AllBuffered);
                     }
 
                     if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
                     {
-                        photonView.RPC(nameof(RpcResetAnimJump), RpcTarget.All);
+                        photonView.RPC(nameof(RpcResetAnimJump), RpcTarget.AllBuffered);
                     }
 
-                    photonView.RPC(nameof(YVelocity), RpcTarget.All);
+                    photonView.RPC(nameof(YVelocity), RpcTarget.AllBuffered);
                 }
             }
         }
@@ -134,7 +134,7 @@ namespace Script.Player
 
         private void ControlPc(float input)
         {
-            photonView.RPC(nameof(Moving), RpcTarget.All, input);
+            photonView.RPC(nameof(Moving), RpcTarget.AllBuffered, input);
 
             if (input > 0f && !mFacingRight)
             {
@@ -181,26 +181,26 @@ namespace Script.Player
             playerInput = move;
         }
 
+        [PunRPC]
         private void Jump()
         {
             isJump = false;
             if (mGrounded)
             {
-                photonView.RPC(nameof(JumpForce), RpcTarget.All);
+                JumpForce();
                 mDbJump = true;
             }
             else if (mDbJump)
             {
-                photonView.RPC(nameof(JumpForce), RpcTarget.All);
+                JumpForce();
                 mDbJump = false;
             }
 
-            photonView.RPC(nameof(JumpAnimation), RpcTarget.All);
+            JumpAnimation();
             mGrounded = false;
             isDashing = true;
         }
 
-        [PunRPC]
         private void JumpForce()
         {
             body.velocity = new Vector2(body.velocity.x, 0f);
@@ -209,7 +209,6 @@ namespace Script.Player
             jumpCount++;
         }
 
-        [PunRPC]
         private void JumpAnimation()
         {
             switch (jumpCount)

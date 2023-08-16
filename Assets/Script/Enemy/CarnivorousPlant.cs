@@ -2,15 +2,13 @@ using DG.Tweening;
 using Photon.Pun;
 using UnityEngine;
 using Script.Core;
-using Script.GamePlay;
 
 namespace Script.Enemy
 {
     public class CarnivorousPlant : EnemyController
     {
         [SerializeField] private bool canFlip;
-        private static readonly int IsAttack = Animator.StringToHash("isAttack");
-        private bool canAttack;
+        private bool _canAttack;
 
         protected override void Start()
         {
@@ -20,28 +18,39 @@ namespace Script.Enemy
 
         private void WaitToReset()
         {
-                if (HuyManager.Instance.PlayerIsDeath())
+
+            if (HuyManager.Instance.PlayerIsDeath())
+            {
+                if (enemySetting.enemyHeal.EnemyDeath())
                 {
-                    if (enemySetting.enemyHeal.EnemyDeath())
-                    {
-                        enemySetting.enemyHeal.ResetHeathDefault();
-                        enemySetting.enemyHeal.ReSpawn(2);
-                    }
-                    else
-                    {
-                        DOTween.Sequence()
-                            .AppendInterval(2f)
-                            .AppendCallback(enemySetting.enemyHeal.ResetHeathDefault)
-                            .Play();
-                    }
+                    RpcReSpawnCarEnemy();
                 }
+                else
+                {
+                    DOTween.Sequence()
+                        .AppendInterval(2f)
+                        .AppendCallback(RpcResetHeath);
+                }
+            }
+        }
+
+        private void RpcReSpawnCarEnemy()
+        {
+            enemySetting.enemyHeal.ResetHeathDefault();
+            enemySetting.enemyHeal.ReSpawn(2);
+        }
+
+        private void RpcResetHeath()
+        {
+            enemySetting.enemyHeal.ResetHeathDefault();
         }
 
         private void FixedUpdate()
         {
+            RpcFindPlayerClosets();
             HuyManager.Instance.SetUpTime(ref currentTime);
-            photonView.RPC(nameof(RpcFindPlayerClosets), RpcTarget.All);
-            if (canAttack)
+
+            if (_canAttack)
             {
                 if (!HuyManager.Instance.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
                 {
@@ -54,11 +63,7 @@ namespace Script.Enemy
 
                         if (currentTime <= 0f)
                         {
-                            photonView.RPC(nameof(RpcAnimationAttack), RpcTarget.All);
-                            DOTween.Sequence()
-                                .AppendInterval(0.5f)
-                                .AppendCallback(() => { photonView.RPC(nameof(RpcPlanetBulletAttack), RpcTarget.All); })
-                                .Play();
+                            RpcCarnivorousAttack(0.5f);
                             currentTime = maxTimeAttack;
                         }
                     }
@@ -66,31 +71,26 @@ namespace Script.Enemy
             }
         }
 
-
-        [PunRPC]
         private void RpcFindPlayerClosets()
         {
             currentCharacterPos = FindClosetPlayerWithForwardPhysic();
-            if (currentCharacterPos != null)
+            if (currentCharacterPos)
             {
-                canAttack = true;
+                _canAttack = true;
             }
             else
             {
-                canAttack = false;
+                _canAttack = false;
             }
         }
-        
-        [PunRPC]
-        private void RpcPlanetBulletAttack()
-        {
-            AttackBullet();
-        }
 
-        [PunRPC]
-        private void RpcAnimationAttack()
+        private void RpcCarnivorousAttack(float duration)
         {
-            animator.SetTrigger(IsAttack);
+            animator.SetTrigger("isAttack");
+            DOTween.Sequence()
+                .AppendInterval(duration)
+                .AppendCallback(AttackBullet)
+                .Play();
         }
     }
 }

@@ -5,6 +5,7 @@ using DG.Tweening;
 using Photon.Pun;
 using UnityEngine;
 using Script.Core;
+using Script.Enemy;
 using Script.ScriptTable;
 using Random = UnityEngine.Random;
 
@@ -29,7 +30,7 @@ namespace Script.Player
         private static readonly int IsRun = Animator.StringToHash("isRun");
         private bool _checkHitGround;
         private int _tempIndex;
-        private float distanceToPlay;
+        private bool canAttack;
 
         private void Awake()
         {
@@ -39,13 +40,9 @@ namespace Script.Player
             }
 
             projectiles = FindObjectOfType<BulletController>().petAi;
-        }
-
-        private void Start()
-        {
             _listEnemyInMap = GameObject.FindGameObjectsWithTag("Enemy").ToList();
         }
-        
+
         private void Update()
         {
             HuyManager.Instance.SetUpTime(ref currentTimeAttack);
@@ -59,7 +56,7 @@ namespace Script.Player
                 {
                     if ((CharacterController2D.IsLocalPlayer.transform.position - transform.position).magnitude > distancePlayer)
                     {
-                        photonView.RPC(nameof(MoveToPlayer), RpcTarget.All);
+                        photonView.RPC(nameof(MoveToPlayer), RpcTarget.AllBuffered);
                         CheckAttack();
                     }
                     else
@@ -74,28 +71,46 @@ namespace Script.Player
 
         private void CheckAttack()
         {
-            closestEnemy = FindClosestEnemy();
-            RaycastHit2D hit = Physics2D.Linecast(transform.position, closestEnemy.transform.position, 1 << LayerMask.NameToLayer("ground"));
-            if (hit)
+            photonView.RPC(nameof(RpcEnemyCloset), RpcTarget.AllBuffered);
+            if (canAttack)
             {
-                if (hit.collider.CompareTag("ground"))
+                RaycastHit2D hit = Physics2D.Linecast(transform.position, closestEnemy.transform.position,
+                    1 << LayerMask.NameToLayer("ground"));
+                if (hit)
                 {
-                    _checkHitGround = true;
-                    return;
-                }
-            }
-
-            _checkHitGround = false;
-            if (_enemyContact)
-            {
-                if (Vector2.Distance(transform.position, closestEnemy.position) < rangeAttack)
-                {
-                    if (currentTimeAttack <= 0f)
+                    if (hit.collider.CompareTag("ground"))
                     {
-                        photonView.RPC(nameof(BulletAttack), RpcTarget.All);
-                        currentTimeAttack = TimeAttack;
+                        _checkHitGround = true;
+                        return;
                     }
                 }
+
+                _checkHitGround = false;
+                if (_enemyContact)
+                {
+                    if (Vector2.Distance(transform.position, closestEnemy.position) < rangeAttack)
+                    {
+                        if (currentTimeAttack <= 0f)
+                        {
+                            photonView.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
+                            currentTimeAttack = TimeAttack;
+                        }
+                    }
+                }
+            }
+        }
+
+        [PunRPC]
+        private void RpcEnemyCloset()
+        {
+            closestEnemy = FindClosestEnemy();
+            if (closestEnemy != null)
+            {
+                canAttack = true;
+            }
+            else
+            {
+                canAttack = false;
             }
         }
 
@@ -105,12 +120,12 @@ namespace Script.Player
             {
                 if (!_checkHitGround)
                 {
-                    closestEnemy.GetComponentInChildren<SpriteRenderer>()?.DOColor(new Color(1f, 0.6f, 0.5f),0.3f);
+                    //closestEnemy.GetComponentInChildren<SpriteRenderer>()?.DOColor(new Color(1f, 0.6f, 0.5f),0.3f);
                     _enemyContact = true;
                 }
                 else
                 {
-                    closestEnemy.GetComponentInChildren<SpriteRenderer>()?.DOColor(Color.white, 0.3f);
+                    //closestEnemy.GetComponentInChildren<SpriteRenderer>()?.DOColor(Color.white, 0.3f);
                     _enemyContact = false;
                 }
             }
@@ -121,7 +136,7 @@ namespace Script.Player
         {
             if (other.CompareTag("Enemy"))
             {
-                other.GetComponentInChildren<SpriteRenderer>()?.DOColor(Color.white, 0.3f);
+                //other.GetComponentInChildren<SpriteRenderer>()?.DOColor(Color.white, 0.3f);
                 _enemyContact = false;
             }
         }
@@ -154,15 +169,22 @@ namespace Script.Player
         {
             float closestDistance = Mathf.Infinity;
             Transform trans = null;
-            foreach (var go in _listEnemyInMap)
+            if (_listEnemyInMap.Count > 0)
             {
-                if (!go) continue;
-                float currentDistance = (transform.position - go.transform.position).magnitude;
-                if (currentDistance < closestDistance)
+                foreach (var go in _listEnemyInMap)
                 {
-                    closestDistance = currentDistance;
-                    trans = go.transform;
+                    if (!go) continue;
+                    float currentDistance = (transform.position - go.transform.position).magnitude;
+                    if (currentDistance < closestDistance)
+                    {
+                        closestDistance = currentDistance;
+                        trans = go.transform;
+                    }
                 }
+            }
+            else
+            {
+                return null;
             }
 
             return trans;

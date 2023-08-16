@@ -51,7 +51,7 @@ namespace Script.Enemy
 
         private void FixedUpdate()
         {
-            photonView.RPC(nameof(RpcPositionPlayer), RpcTarget.All);
+            photonView.RPC(nameof(RpcPositionPlayer), RpcTarget.AllBuffered);
             HuyManager.Instance.SetUpTime(ref currentTime);
 
 
@@ -63,7 +63,7 @@ namespace Script.Enemy
                     {
                         if (enemySetting.canMoving)
                         {
-                            photonView.RPC(nameof(StopMoving), RpcTarget.All);
+                            photonView.RPC(nameof(StopMoving), RpcTarget.AllBuffered);
                         }
                     }
                     else
@@ -76,7 +76,7 @@ namespace Script.Enemy
                         {
                             if (enemySetting.canMoving)
                             {
-                                photonView.RPC(nameof(MoveToPosition), RpcTarget.All);
+                                photonView.RPC(nameof(MoveToPosition), RpcTarget.AllBuffered);
                             }
                         }
                     }
@@ -85,7 +85,7 @@ namespace Script.Enemy
                 {
                     if (enemySetting.canMoving)
                     {
-                        photonView.RPC(nameof(MoveToPosition), RpcTarget.All);
+                        photonView.RPC(nameof(MoveToPosition), RpcTarget.AllBuffered);
                     }
                 }
             }
@@ -93,7 +93,7 @@ namespace Script.Enemy
             {
                 if (enemySetting.canMoving)
                 {
-                    photonView.RPC(nameof(MoveToPosition), RpcTarget.All);
+                    photonView.RPC(nameof(MoveToPosition), RpcTarget.AllBuffered);
                 }
             }
         }
@@ -105,7 +105,6 @@ namespace Script.Enemy
 
             if (currentCharacterPos != null)
             {
-                Debug.LogError(currentCharacterPos.name);
                 canAttack = true;
             }
             else
@@ -147,17 +146,15 @@ namespace Script.Enemy
 
         private void SetUpTargetToMove(Vector3 pos, float timeSleep)
         {
+            animator.SetBool(IsRun, false);
             DOTween.Sequence()
-                .AppendCallback(() =>
-                {
-                    animator.SetBool(IsRun, false);
-                }).AppendInterval(timeSleep)
+                .AppendInterval(timeSleep)
                 .AppendCallback(() =>
                 {
                     target = pos;
                 }).Play();
         }
-        
+
         private void FaceToWards(Vector3 direction)
         {
             if (direction.x < 0f)
@@ -174,17 +171,19 @@ namespace Script.Enemy
         {
             if ((currentCharacterPos.position - transform.position).magnitude < 3f)
             {
-                photonView.RPC(nameof(AttackSword), RpcTarget.All);
+                Flip();
+                photonView.RPC(nameof(AttackSword), RpcTarget.AllBuffered);
             }
-            else if ((currentCharacterPos.position - transform.position).magnitude <= 8)
+            else if ((currentCharacterPos.position - transform.position).magnitude >= 3 || (currentCharacterPos.position - transform.position).magnitude <= 8)
             {
-                photonView.RPC(nameof(SetUpAttackBullet), RpcTarget.All);
+                Flip();
+                photonView.RPC(nameof(SetUpAttackBullet), RpcTarget.AllBuffered);
             }
             else
             {
                 if (enemySetting.canMoving)
                 {
-                    photonView.RPC(nameof(MoveToPosition), RpcTarget.All);
+                    photonView.RPC(nameof(MoveToPosition), RpcTarget.AllBuffered);
                 }
             }
         }
@@ -192,14 +191,12 @@ namespace Script.Enemy
         [PunRPC]
         private void AttackSword()
         {
-            Flip();
             if (isHitGrounds)
             {
                 if ((currentCharacterPos.position - transform.position).magnitude > 2f)
                 {
                     Vector3 currentPosition = body.transform.position;
-                    Vector3 targetPosition = new Vector3(currentCharacterPos.position.x - currentPosition.x,
-                        0f, 0f);
+                    Vector3 targetPosition = new Vector3(currentCharacterPos.position.x - currentPosition.x, 0f, 0f);
                     body.MovePosition(currentPosition + targetPosition * Time.fixedDeltaTime);
                     animator.SetBool(IsRun, true);
                 }
@@ -229,7 +226,7 @@ namespace Script.Enemy
                                 bool hits = Physics2D.OverlapCircle(transform.position, radiusAttack, playerMasks);
                                 if (hits)
                                 {
-                                    currentCharacterPos.GetComponent<CharacterController2D>().playerHealth.GetDamage(21f);
+                                    currentCharacterPos.GetComponent<CharacterController2D>().playerHealth.RpcGetDamage(21f);
                                 }
 
                                 wasAttackSword = false;
@@ -242,7 +239,6 @@ namespace Script.Enemy
         [PunRPC]
         private void SetUpAttackBullet()
         {
-            Flip();
             animator.SetBool(IsRun, false);
             body.MovePosition(body.transform.position);
             if (currentTime <= 0f)

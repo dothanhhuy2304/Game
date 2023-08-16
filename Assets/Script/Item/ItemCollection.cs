@@ -64,7 +64,7 @@ namespace Script.Item
                         case ItemType.Heal:
                         {
                             animator.SetLayerWeight(1, 1);
-                            other.GetComponent<CharacterController2D>().playerHealth.Healing(itemData.valueReceive);
+                            other.GetComponent<PlayerHealth>().RpcHealing(itemData.valueReceive);
                             AudioManager.instance.Play("Item_Heal");
                             itemCollider.enabled = false;
                             DOTween.Sequence()
@@ -79,7 +79,7 @@ namespace Script.Item
                         case ItemType.Hurt:
                         {
                             animator.SetLayerWeight(1, 1);
-                            other.GetComponent<CharacterController2D>().playerHealth.GetDamage(itemData.valueReceive);
+                            other.GetComponent<PlayerHealth>().RpcGetDamage(itemData.valueReceive);
                             AudioManager.instance.Play("Item_Hurt");
                             itemCollider.enabled = false;
                             DOTween.Sequence()

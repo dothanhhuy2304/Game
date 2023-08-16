@@ -76,16 +76,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78a9207b57b6c2344a0460272dc8e8b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canRespawn: 0
+  canReSpawn: 0
   heathDefault: 100
   currentHealth: 0
   maxHealth: 150
   hpIc: 50
+  damageFix: 0
   enemyHealthBar: {fileID: 967367811024892467}
-  timeRespawn: 10
+  timeReSpawn: 0
   enemyCollider: {fileID: 967367811024892465}
   spriteRenderer: {fileID: 1137819358589429931}
-  uIDamageEnemy: {fileID: 898911466340090346, guid: 60b1aed8d968ce9499c3afcb26e22f95, type: 3}
+  objectDamageEnemy: Damages
 --- !u!114 &967367811024892467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,6 +131,7 @@ MonoBehaviour:
   maxTimeAttack: 5
   offsetAttack: {fileID: 6824136752933056127}
   positionAttack: {x: -1, y: -0.25}
+  currentCharacterPos: {fileID: 0}
   rangeAttack: 10
   mask:
     serializedVersion: 2
@@ -424,7 +426,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1661679385207538407, guid: 36889752821b70443ad174dc6f1ba8be, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.8
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 1661679385207538407, guid: 36889752821b70443ad174dc6f1ba8be, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

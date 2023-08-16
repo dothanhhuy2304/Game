@@ -54,7 +54,7 @@ namespace Script.Enemy
                 yield return new WaitForSeconds(delay);
             }
 
-            playerHealth.GetDamage(1f);
+            playerHealth.RpcGetDamage(1f);
             isFirst = false;
             currentCoroutine = StartCoroutine(IeFireOn(delay));
         }

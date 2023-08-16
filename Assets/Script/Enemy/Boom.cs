@@ -47,7 +47,7 @@ namespace Script.Enemy
                         explosionObj.SetActive(true);
                         colObj.enabled = false;
                         AudioManager.instance.Play("Boom_Explosion");
-                        other.collider.GetComponent<CharacterController2D>().playerHealth.GetDamage(30f);
+                        other.collider.GetComponent<CharacterController2D>().playerHealth.RpcGetDamage(30f);
                     }).AppendInterval(1)
                     .AppendCallback(() =>
                     {

@@ -7,11 +7,11 @@ namespace Script.Enemy
 {
     public class Explosion : MonoBehaviour
     {
-        private Camera cam;
+        private Camera _cam;
 
         private void Start()
         {
-            cam = Camera.main;
+            _cam = Camera.main;
         }
 
         private void OnEnable()
@@ -23,8 +23,9 @@ namespace Script.Enemy
         {
             if (other.CompareTag("Player"))
             {
-                FindObjectOfType<PlayerHealth>().GetDamage(20f);
                 GetComponent<Collider2D>().enabled = false;
+                other.GetComponent<PlayerHealth>().RpcGetDamage(20f);
+
             }
         }
 
@@ -34,7 +35,7 @@ namespace Script.Enemy
                 .AppendCallback(() =>
                 {
                     AudioManager.instance.Play("Boom_Explosion");
-                    HuyManager.Instance.CameraShake(cam, 1f, new Vector3(0.5f, 0.5f, 0.5f), 10, 90f, true);
+                    HuyManager.Instance.CameraShake(_cam, 1f, new Vector3(0.5f, 0.5f, 0.5f), 10, 90f, true);
                 }).AppendInterval(0.2f)
                 .AppendCallback(() =>
                 {

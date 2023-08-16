@@ -1,12 +1,14 @@
 using System.Globalization;
 using DG.Tweening;
+using Photon.Pun;
 using UnityEngine;
 using Script.Core;
 using Script.Player;
+using TMPro;
 
 namespace Script.Enemy
 {
-    public class EnemyHealth : MonoBehaviour, IHealthSystem
+    public class EnemyHealth : MonoBehaviourPunCallbacks
     {
         [SerializeField] private bool canReSpawn;
         [SerializeField] private float heathDefault;
@@ -18,13 +20,11 @@ namespace Script.Enemy
         [SerializeField] private float timeReSpawn;
         [SerializeField] private Collider2D enemyCollider;
         [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private GameObject uIDamageEnemy;
-        private TMPro.TextMeshProUGUI txtDamage;
+        [SerializeField] private string objectDamageEnemy;
 
         private void Start()
         {
             LoadHealth();
-            txtDamage = uIDamageEnemy.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         }
 
         private void LoadHealth()
@@ -34,22 +34,37 @@ namespace Script.Enemy
             enemyHealthBar.SetHealth(currentHealth, maxHealth);
         }
 
-        public void GetDamage(float damage)
+        public void RpcGetDamage(float damage)
+        {
+            photonView.RPC(nameof(EnemyGetDamage), RpcTarget.AllBuffered, damage);
+        }
+
+        [PunRPC]
+        private void EnemyGetDamage(float damage)
         {
             currentHealth = Mathf.Clamp(currentHealth - damage, 0f, maxHealth);
             if (currentHealth <= 0) Die();
-            txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
             enemyHealthBar.SetHealth(currentHealth, maxHealth);
-            GameObject uIDamageInstance = Instantiate(uIDamageEnemy, transform.position + Vector3.up, Quaternion.identity);
-            Destroy(uIDamageInstance, 0.5f);
+            GameObject damageInstance = PhotonNetwork.Instantiate(objectDamageEnemy, transform.position + Vector3.up, Quaternion.identity);
+            TMP_Text txtDamage = damageInstance.GetComponentInChildren<TMP_Text>();
+            txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
+            DOTween.Sequence()
+                .AppendInterval(0.5f)
+                .AppendCallback(() => { PhotonNetwork.Destroy(damageInstance); });
         }
 
-        public void Healing(float value)
-        {
-            currentHealth = Mathf.Clamp(currentHealth + value, 0f, maxHealth);
-            if (currentHealth > maxHealth) currentHealth = maxHealth;
-            enemyHealthBar.SetHealth(currentHealth, maxHealth);
-        }
+        // public void RpcHealing(float value)
+        // {
+        //     photonView.RPC(nameof(EnemyHealing), RpcTarget.AllBuffered, value);
+        // }
+        //
+        // [PunRPC]
+        // private void EnemyHealing(float value)
+        // {
+        //     currentHealth = Mathf.Clamp(currentHealth + value, 0f, maxHealth);
+        //     if (currentHealth > maxHealth) currentHealth = maxHealth;
+        //     enemyHealthBar.SetHealth(currentHealth, maxHealth);
+        // }
 
         public bool EnemyDeath()
         {

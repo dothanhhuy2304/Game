@@ -14,7 +14,6 @@ public class FireProjectile : MonoBehaviour
     [SerializeField] private GameObject explosionSpriteFxObj;
     private CharacterController2D _playerCharacter;
     private Vector2 _targetPetEnemy = Vector2.zero;
-    private PlayerHealth _playerHealth;
     private PetAI _petAi;
     [Header("Arc")]
     [SerializeField] private float arcHeight = 1;
@@ -24,7 +23,6 @@ public class FireProjectile : MonoBehaviour
     private void Awake()
     {
         _playerCharacter = CharacterController2D.IsLocalPlayer;
-        _playerHealth = FindObjectOfType<PlayerHealth>();
         _petAi = PetAI.IsLocalPet;
     }
 
@@ -128,7 +126,7 @@ public class FireProjectile : MonoBehaviour
 
                 if (other.CompareTag("Player"))
                 {
-                    _playerHealth.GetDamage(20f);
+                    other.GetComponent<PlayerHealth>().RpcGetDamage(20f);
                     BulletExplosions();
                 }
 
@@ -150,7 +148,7 @@ public class FireProjectile : MonoBehaviour
 
                 if (other.CompareTag("Player"))
                 {
-                    _playerHealth.GetDamage(14f);
+                    other.GetComponent<PlayerHealth>().RpcGetDamage(14f);
                     BulletExplosions();
                 }
 
@@ -172,7 +170,7 @@ public class FireProjectile : MonoBehaviour
 
                 if (other.CompareTag("Player"))
                 {
-                    _playerHealth.GetDamage(18f);
+                    other.GetComponent<PlayerHealth>().RpcGetDamage(18f);
                     BulletExplosions();
                 }
 
@@ -195,7 +193,7 @@ public class FireProjectile : MonoBehaviour
                 if (other.CompareTag("Enemy"))
                 {
                     EnemyHealth eHealth = other.GetComponent<EnemyHealth>();
-                    eHealth.GetDamage(_playerCharacter.playerData.damageAttack + eHealth.damageFix);
+                    eHealth.RpcGetDamage(_playerCharacter.playerData.damageAttack + eHealth.damageFix);
                     BulletExplosions();
                 }
 
@@ -218,7 +216,7 @@ public class FireProjectile : MonoBehaviour
                 if (other.CompareTag("Enemy"))
                 {
                     EnemyHealth eHealth = other.GetComponent<EnemyHealth>();
-                    eHealth.GetDamage(_petAi.petData.damageAttack + eHealth.damageFix);
+                    eHealth.RpcGetDamage(_petAi.petData.damageAttack + eHealth.damageFix);
                     BulletExplosions();
                 }
 
@@ -240,7 +238,7 @@ public class FireProjectile : MonoBehaviour
             case EnemyType.Trunk:
                 if (other.CompareTag("Player"))
                 {
-                    _playerHealth.GetDamage(20f);
+                    other.GetComponent<PlayerHealth>().RpcGetDamage(20f);
                     BulletExplosions();
                     AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
                 }

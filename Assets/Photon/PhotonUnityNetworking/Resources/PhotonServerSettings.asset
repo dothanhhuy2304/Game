@@ -34,73 +34,41 @@ MonoBehaviour:
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
+  - AttackSword
+  - BulletAttack
+  - ChickenMoving
   - ClickRpc
+  - Dash
   - DestroyRpc
   - DestroySpaceship
-  - Fire
-  - RespawnSpaceship
-  - CheckStartGame
+  - DieByFalling
+  - EnemyGetDamage
   - FadeLoadingScene
-  - SpawnPlayer
-  - Dash
-  - EvaluateCollision
-  - Flip
+  - Fire
+  - GetDamage
+  - Healing
   - Jump
-  - LockPlayerPositionOnMap
-  - Move
-  - SetUpJump
-  - RpcFixedUpdate
-  - RpcUpdate
-  - UpdateAnimJump
-  - YVelocity
-  - AnimPlayerJump
-  - AnimPlayerRun
-  - PlayerInput
-  - RpcCheckGround
-  - RpcJumpAnim
-  - RpcJump
-  - RpcResetAnimJump
-  - LoadCharacter
-  - ButtonStartGame
-  - RpcStartGame
-  - RpcVariable
-  - RpcCharacter
-  - RpcActorNumber
-  - BulletAttack
-  - CheckAttack
+  - LoadCurrentHealth
+  - LoadHeath
   - MoveToPlayer
-  - Rpc
-  - AnimationRun
-  - SpawnPet
-  - GetComponent
-  - AttackSword
   - MoveToPosition
+  - MoveToTarget
+  - Moving
+  - PlayerInput
+  - RespawnSpaceship
+  - RpcCharacter
+  - RpcCheckGround
+  - RpcEnemyCloset
+  - RpcEnemyReSpawn
+  - RpcFlip
+  - RpcLockPosition
+  - RpcPlayerDeath
+  - RpcPosition
+  - RpcPositionPlayer
+  - RpcResetAnimJump
   - SetUpAttackBullet
   - StopMoving
-  - RpcPlayer
-  - RpcPositionPlayer
-  - ShootAttack
-  - ChickenMoving
-  - MoveToTarget
-  - StopAttack
-  - RpcGround
-  - RpcPosition
-  - RpcFlip
-  - PlayExplosion
-  - ReSpawnObject
-  - RpcDisableObject
-  - RpcPlayExplosion
-  - RpcReSpawnObject
-  - Moving
-  - RunAnimation
-  - JumpAnimation
-  - JumpForce
-  - RpcRunAnimation
-  - RpcFindPlayerCloset
-  - RpcPlanetBulletAttack
-  - RpcAnimationAttack
-  - RpcTime
-  - RpcFindPlayerClosets
+  - YVelocity
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

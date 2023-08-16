@@ -11,7 +11,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class LaunchManager : MonoBehaviourPunCallbacks
 {
-    public static LaunchManager instance;
+    //public static LaunchManager instance;
     [SerializeField] private LoadingSceneAnim loadingAnim;
     private List<MyRoomInfo> cachedRoomList = new List<MyRoomInfo>();
     [SerializeField] private GameObject panelIntro;
@@ -29,23 +29,22 @@ public class LaunchManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            LaunchManager[] currentInstanceExit = FindObjectsOfType<LaunchManager>();
-            foreach (var cInstance in currentInstanceExit)
-            {
-                if (cInstance == instance)
-                {
-                    Destroy(cInstance);
-                }
-            }
-        }
+        // if (instance == null)
+        // {
+        //     instance = this;
+        // }
+        // else
+        // {
+        //     LaunchManager[] currentInstanceExit = FindObjectsOfType<LaunchManager>();
+        //     foreach (var cInstance in currentInstanceExit)
+        //     {
+        //         if (cInstance == instance)
+        //         {
+        //             Destroy(cInstance);
+        //         }
+        //     }
+        // }
 
-        DontDestroyOnLoad(gameObject);
         PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.GameVersion = Application.version;
         PhotonNetwork.ConnectUsingSettings();

@@ -32,7 +32,7 @@ namespace Script.Player
                 {
                     if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.L))
                     {
-                        photonView.RPC(nameof(BulletAttack), RpcTarget.All);
+                        photonView.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
                         timeAttack = resetTimeAttack;
                     }
                 }
