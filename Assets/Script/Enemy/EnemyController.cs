@@ -24,24 +24,19 @@ namespace Script.Enemy
     public abstract class EnemyController : MonoBehaviourPunCallbacks
     {
         public EnemySetting enemySetting;
-        [Header("Types")] [SerializeField] protected Rigidbody2D body;
+        [Header("Types")] 
+        [SerializeField] protected Rigidbody2D body;
         [SerializeField] protected Animator animator;
         [SerializeField] private List<FireProjectile> projectiles;
         [SerializeField] protected float movingSpeed;
-        protected CharacterController2D playerCharacter;
         [SerializeField] private float offsetFlip;
-        [Space] [Header("Time")] protected float currentTime;
+        [Space] 
+        [Header("Time")] 
+        protected float CurrentTime = 0;
         [SerializeField] protected float maxTimeAttack;
         [SerializeField] protected Transform offsetAttack;
         [SerializeField] protected Vector2 positionAttack;
         [HideInInspector] [SerializeField] protected Transform currentCharacterPos;
-        protected bool isHitGrounds;
-
-
-        protected virtual void Start()
-        {
-            playerCharacter = CharacterController2D.IsLocalPlayer;
-        }
 
         protected void Flip()
         {
@@ -82,7 +77,8 @@ namespace Script.Enemy
                 RaycastHit2D hit = Physics2D.Linecast(position, gos, GameManager.instance.playerMask);
                 if (currentDistance < closestDistance)
                 {
-                    if (hit.collider != null && hit.collider.CompareTag("Player") && !hit.collider.GetComponent<PlayerHealth>().isDeath)
+                    if (hit.collider != null && hit.collider.gameObject.CompareTag("Player") &&
+                        !hit.collider.GetComponent<PlayerHealth>().isDeath)
                     {
                         closestDistance = currentDistance;
                         //trans = go.transform;
@@ -128,13 +124,14 @@ namespace Script.Enemy
                 var position = transform.position;
                 var gos = go.transform.position;
                 float currentDistance = (position - gos).magnitude;
-                RaycastHit2D hit = Physics2D.Linecast(new Vector3(position.x, position.y + 0.3f, 0f), 
-                        new Vector3(1 * 100f, position.y + 0.3f, 0f),
+                RaycastHit2D hit = Physics2D.Linecast(new Vector3(position.x, position.y + 0.3f, 0f),
+                    new Vector3(1 * 100f, position.y + 0.3f, 0f),
                     GameManager.instance.playerMask);
                 RaycastHit2D hit2 = Physics2D.Linecast(new Vector3(position.x, position.y + 0.3f, 0f),
                     new Vector3(-1 * 100f, position.y + 0.3f, 0f),
                     GameManager.instance.playerMask);
-                if (hit.collider != null && hit.collider.CompareTag("Player") && !hit.collider.GetComponent<PlayerHealth>().isDeath)
+                if (hit.collider != null && hit.collider.gameObject.CompareTag("Player") &&
+                    !hit.collider.GetComponent<PlayerHealth>().isDeath)
                 {
                     if (currentDistance < closestDistance)
                     {
@@ -143,7 +140,8 @@ namespace Script.Enemy
                         trans = hit.collider.gameObject.transform;
                     }
                 }
-                else if (hit2.collider != null && hit2.collider.gameObject.CompareTag("Player") && !hit2.collider.GetComponent<PlayerHealth>().isDeath)
+                else if (hit2.collider != null && hit2.collider.gameObject.CompareTag("Player") &&
+                         !hit2.collider.GetComponent<PlayerHealth>().isDeath)
                 {
                     if (currentDistance < closestDistance)
                     {
@@ -204,7 +202,7 @@ namespace Script.Enemy
         private void OnDrawGizmos()
         {
             Vector3 position = transform.position;
-            Gizmos.DrawLine(new Vector3(position.x, position.y + 0.3f, 0f), 
+            Gizmos.DrawLine(new Vector3(position.x, position.y + 0.3f, 0f),
                 new Vector3(1 * 100f, position.y + 0.3f, 0f));
         }
     }

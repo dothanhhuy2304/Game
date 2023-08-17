@@ -34,9 +34,7 @@ MonoBehaviour:
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
-  - AttackSword
   - BulletAttack
-  - ChickenMoving
   - ClickRpc
   - Dash
   - DestroyRpc
@@ -50,21 +48,12 @@ MonoBehaviour:
   - Jump
   - LoadCurrentHealth
   - LoadHeath
-  - MoveToPlayer
-  - MoveToPosition
-  - MoveToTarget
   - Moving
   - PlayerInput
   - RespawnSpaceship
   - RpcCharacter
   - RpcCheckGround
-  - RpcEnemyCloset
-  - RpcFlip
-  - RpcPosition
-  - RpcPositionPlayer
   - RpcResetAnimJump
-  - SetUpAttackBullet
-  - StopMoving
   - YVelocity
   DisableAutoOpenWizard: 1
   ShowSettings: 0

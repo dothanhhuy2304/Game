@@ -7,7 +7,6 @@ using UnityEngine;
 using Script.Core;
 using Script.Enemy;
 using Script.ScriptTable;
-using Random = UnityEngine.Random;
 
 namespace Script.Player
 {
@@ -56,7 +55,8 @@ namespace Script.Player
                 {
                     if ((CharacterController2D.IsLocalPlayer.transform.position - transform.position).magnitude > distancePlayer)
                     {
-                        photonView.RPC(nameof(MoveToPlayer), RpcTarget.AllBuffered);
+                        //photonView.RPC(nameof(MoveToPlayer), RpcTarget.AllBuffered);
+                        MoveToPlayer();
                         CheckAttack();
                     }
                     else
@@ -71,7 +71,8 @@ namespace Script.Player
 
         private void CheckAttack()
         {
-            photonView.RPC(nameof(RpcEnemyCloset), RpcTarget.AllBuffered);
+            //photonView.RPC(nameof(RpcEnemyCloset), RpcTarget.AllBuffered);
+            RpcEnemyCloset();
             if (canAttack)
             {
                 RaycastHit2D hit = Physics2D.Linecast(transform.position, closestEnemy.transform.position,
@@ -92,7 +93,8 @@ namespace Script.Player
                     {
                         if (currentTimeAttack <= 0f)
                         {
-                            photonView.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
+                            //photonView.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
+                            BulletAttack();
                             currentTimeAttack = TimeAttack;
                         }
                     }
@@ -100,7 +102,7 @@ namespace Script.Player
             }
         }
 
-        [PunRPC]
+        //[PunRPC]
         private void RpcEnemyCloset()
         {
             closestEnemy = FindClosestEnemy();
@@ -141,21 +143,20 @@ namespace Script.Player
             }
         }
         
-        [PunRPC]
+        //[PunRPC]
         private void MoveToPlayer()
         {
             //Vector2 angle = (_player.transform.position - transform.position).normalized;
             //body.velocity = Vector2.SmoothDamp(body.velocity, angle * petData.movingSpeed, ref _velocity, .05f);
             Vector2 playerPos = CharacterController2D.IsLocalPlayer.transform.position;
-            //transform.DOMove(new Vector3(playerPos.x + Random.Range(- 2f , 2f), playerPos.y + 1), 0.5f).SetEase(Ease.Linear);
+            transform.DOMove(new Vector3(playerPos.x + UnityEngine.Random.Range(- 2f , 2f), playerPos.y + 1), 0.5f).SetEase(Ease.Linear);
             //Vector2 target = (_player.transform.position - transform.position).normalized;
-            transform.position = Vector2.MoveTowards(transform.position,
-                new Vector2(playerPos.x + 1, playerPos.y + 1), 10 * Time.deltaTime);
+            //transform.position = Vector2.MoveTowards(transform.position, new Vector2(playerPos.x + 1, playerPos.y + 1), 10 * Time.deltaTime);
             animator.SetBool(IsRun, true);
 
         }
 
-        [PunRPC]
+        //[PunRPC]
         private void BulletAttack()
         {
             int index = FindBullet();

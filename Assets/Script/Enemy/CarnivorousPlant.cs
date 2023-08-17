@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using Photon.Pun;
 using UnityEngine;
@@ -5,20 +6,16 @@ using Script.Core;
 
 namespace Script.Enemy
 {
-    public class CarnivorousPlant : EnemyController, IPunObservable
+    public class CarnivorousPlant : EnemyController , IPunObservable
     {
         [SerializeField] private bool canFlip;
         private bool _canAttack;
-
-        protected override void Start()
-        {
-            base.Start();
-        }
+        
 
         private void FixedUpdate()
         {
-            RpcFindPlayerClosets();
-            HuyManager.Instance.SetUpTime(ref currentTime);
+            RpcTargetPosition();
+            HuyManager.Instance.SetUpTime(ref CurrentTime);
 
             if (_canAttack)
             {
@@ -31,27 +28,20 @@ namespace Script.Enemy
                             Flip();
                         }
 
-                        if (currentTime <= 0f)
+                        if (CurrentTime <= 0f)
                         {
                             RpcCarnivorousAttack(0.5f);
-                            currentTime = maxTimeAttack;
+                            CurrentTime = maxTimeAttack;
                         }
                     }
                 }
             }
         }
 
-        private void RpcFindPlayerClosets()
+        private void RpcTargetPosition()
         {
             currentCharacterPos = FindClosetPlayerWithForwardPhysic();
-            if (currentCharacterPos)
-            {
-                _canAttack = true;
-            }
-            else
-            {
-                _canAttack = false;
-            }
+            _canAttack = currentCharacterPos;
         }
 
         private void RpcCarnivorousAttack(float duration)

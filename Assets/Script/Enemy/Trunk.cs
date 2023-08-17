@@ -1,31 +1,26 @@
 using DG.Tweening;
+using Photon.Pun;
 using UnityEngine;
 using Script.Core;
 
 namespace Script.Enemy
 {
-    public class Trunk : EnemyController
+    public class Trunk : EnemyController , IPunObservable
     {
         [SerializeField] private float rangeAttack = 10f;
-        [SerializeField] private LayerMask mask;
-
-        protected override void Start()
-        {
-            base.Start();
-        }
 
         private void Update()
         {
-            RpcPlayerPosition();
+            RpcTargetPosition();
             if (enemySetting.canAttack)
             {
                 if (!enemySetting.enemyHeal.EnemyDeath())
                 {
-                    HuyManager.Instance.SetUpTime(ref currentTime);
+                    HuyManager.Instance.SetUpTime(ref CurrentTime);
                     if ((currentCharacterPos.transform.position - transform.position).magnitude < rangeAttack)
                     {
                         Flip();
-                        if (currentTime <= 0)
+                        if (CurrentTime <= 0)
                         {
                             Shot();
                         }
@@ -34,17 +29,10 @@ namespace Script.Enemy
             }
         }
 
-        private void RpcPlayerPosition()
+        private void RpcTargetPosition()
         {
             currentCharacterPos = FindClosestPlayer();
-            if (currentCharacterPos!=null)
-            {
-                enemySetting.canAttack = true;
-            }
-            else
-            {
-                enemySetting.canAttack = false;
-            }
+            enemySetting.canAttack = currentCharacterPos;
         }
 
         private void Shot()
@@ -54,7 +42,25 @@ namespace Script.Enemy
                 .AppendCallback(AttackBullet)
                 .Play();
             animator.SetTrigger("isAttack");
-            currentTime = maxTimeAttack;
+            CurrentTime = maxTimeAttack;
+        }
+        
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                stream.SendNext((Vector3) body.velocity);
+                stream.SendNext((float) body.rotation);
+                stream.SendNext((Vector3) transform.position);
+                stream.SendNext((Quaternion) transform.rotation);
+            }
+            else
+            {
+                body.velocity = (Vector3) stream.ReceiveNext();
+                body.rotation = (float) stream.ReceiveNext();
+                transform.position = (Vector3) stream.ReceiveNext();
+                transform.rotation = (Quaternion) stream.ReceiveNext();
+            }
         }
     }
 }
