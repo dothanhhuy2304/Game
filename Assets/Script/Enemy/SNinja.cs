@@ -27,26 +27,6 @@ namespace Script.Enemy
         {
             base.Start();
             currentTime = 0;
-            HuyManager.Instance.eventResetWhenPlayerDeath += WaitToReset;
-        }
-
-        private void WaitToReset()
-        {
-            if (HuyManager.Instance.PlayerIsDeath())
-            {
-                if (enemySetting.enemyHeal.EnemyDeath())
-                {
-                    enemySetting.enemyHeal.ResetHeathDefault();
-                    enemySetting.enemyHeal.ReSpawn(2);
-                }
-                else
-                {
-                    DOTween.Sequence()
-                        .AppendInterval(2f)
-                        .AppendCallback(enemySetting.enemyHeal.ResetHeathDefault)
-                        .Play();
-                }
-            }
         }
 
         private void FixedUpdate()
@@ -57,7 +37,7 @@ namespace Script.Enemy
 
             if (canAttack)
             {
-                if (!HuyManager.Instance.PlayerIsDeath())
+                if (!currentCharacterPos.GetComponent<PlayerHealth>().isDeath)
                 {
                     if (enemySetting.enemyHeal.EnemyDeath())
                     {
@@ -68,7 +48,7 @@ namespace Script.Enemy
                     }
                     else
                     {
-                        if (!HuyManager.Instance.PlayerIsDeath())
+                        if (!currentCharacterPos.GetComponent<PlayerHealth>().isDeath)
                         {
                             SNinjaAttack();
                         }
@@ -200,11 +180,9 @@ namespace Script.Enemy
                     body.MovePosition(currentPosition + targetPosition * Time.fixedDeltaTime);
                     animator.SetBool(IsRun, true);
                 }
-
+                
                 if ((currentCharacterPos.position - transform.position).magnitude < 2f)
                 {
-                    if (HuyManager.Instance.PlayerIsDeath())
-                        return;
                     DOTween.Sequence()
                         .AppendCallback(() =>
                         {
@@ -226,7 +204,7 @@ namespace Script.Enemy
                                 bool hits = Physics2D.OverlapCircle(transform.position, radiusAttack, playerMasks);
                                 if (hits)
                                 {
-                                    currentCharacterPos.GetComponent<CharacterController2D>().playerHealth.RpcGetDamage(21f);
+                                    currentCharacterPos.GetComponent<PlayerHealth>().RpcGetDamage(21f);
                                 }
 
                                 wasAttackSword = false;
@@ -243,12 +221,9 @@ namespace Script.Enemy
             body.MovePosition(body.transform.position);
             if (currentTime <= 0f)
             {
-                if (!HuyManager.Instance.PlayerIsDeath())
+                if (!enemySetting.enemyHeal.EnemyDeath())
                 {
-                    if (!enemySetting.enemyHeal.EnemyDeath())
-                    {
-                        ShootAttack(0.5f);
-                    }
+                    ShootAttack(0.5f);
                 }
 
                 currentTime = maxTimeAttack;

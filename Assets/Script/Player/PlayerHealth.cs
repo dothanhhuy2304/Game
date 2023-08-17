@@ -14,7 +14,8 @@ namespace Script.Player
         [SerializeField] private PlayerHealthBar playerHealthBar;
         [SerializeField] private PetAI petAi;
         [SerializeField] private string prefabDamagePlayer;
-        //private TextMeshProUGUI _txtDamage;
+        public bool isDeath;
+        public bool isHurt;
 
         private void Start()
         {
@@ -30,7 +31,7 @@ namespace Script.Player
                     photonView.RPC(nameof(LoadCurrentHealth), RpcTarget.AllBuffered);
                 }
 
-                photonView.RPC(nameof(RpcPlayerDeath), RpcTarget.AllBuffered);
+                //photonView.RPC(nameof(RpcPlayerDeath), RpcTarget.AllBuffered);
             }
         }
 
@@ -48,12 +49,14 @@ namespace Script.Player
             playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
         }
 
-        [PunRPC]
-        private void RpcPlayerDeath()
-        {
-            HuyManager.Instance.SetPlayerIsDeath(0);
-            HuyManager.Instance.SetPlayerIsHurt(0);
-        }
+        // [PunRPC]
+        // private void RpcPlayerDeath()
+        // {
+        //     HuyManager.Instance.SetPlayerIsDeath(0);
+        //     HuyManager.Instance.SetPlayerIsHurt(0);
+        //     isDeath = false;
+        //     isHurt = false;
+        // }
 
         public void RpcGetDamage(float damage)
         {
@@ -102,11 +105,10 @@ namespace Script.Player
 
         public void Die()
         {
-            HuyManager.Instance.eventResetWhenPlayerDeath?.Invoke();
             DOTween.Sequence()
                 .AppendCallback(() =>
                 {
-                    HuyManager.Instance.SetPlayerIsDeath(1);
+                    isDeath = true;
                     playerCharacter.playerData.currentHealth = 0;
                     PlayerDeathAnim(playerCharacter.animator);
                     GameManager.instance.numberScore = 0;
@@ -125,7 +127,7 @@ namespace Script.Player
                     playerCharacter.animator.SetLayerWeight(1, 0);
                     playerCharacter.body.bodyType = RigidbodyType2D.Dynamic;
                     playerCharacter.col.enabled = true;
-                    HuyManager.Instance.SetPlayerIsDeath(0);
+                    isDeath = false;
                     Car.instance.eventResetCar?.Invoke();
                 }).Play();
         }
@@ -138,11 +140,10 @@ namespace Script.Player
         [PunRPC]
         public void DieByFalling()
         {
-            HuyManager.Instance.eventResetWhenPlayerDeath?.Invoke();
             DOTween.Sequence()
                 .AppendCallback(() =>
                 {
-                    HuyManager.Instance.SetPlayerIsDeath(1);
+                    isDeath = true;
                     playerCharacter.playerData.currentHealth = 0f;
                     AudioManager.instance.Play("Enemy_Death");
                     GameManager.instance.numberScore = 0;
@@ -155,7 +156,7 @@ namespace Script.Player
                     position.position = new Vector3(HuyManager.Instance.currentPosition[0],
                         HuyManager.Instance.currentPosition[1], HuyManager.Instance.currentPosition[2]);
                     petAi.transform.position = position.up;
-                    HuyManager.Instance.SetPlayerIsDeath(0);
+                    isDeath = false;
                     Car.instance.eventResetCar?.Invoke();
                 }).Play();
         }
@@ -165,14 +166,14 @@ namespace Script.Player
             DOTween.Sequence()
                 .AppendCallback(() =>
                 {
-                    HuyManager.Instance.SetPlayerIsHurt(1);
+                    isHurt = true;
                     PlayerHurtAnim(playerCharacter.animator);
                     playerCharacter.body.bodyType = RigidbodyType2D.Static;
                 }).AppendInterval(0.5f)
                 .AppendCallback(() =>
                 {
                     playerCharacter.body.bodyType = RigidbodyType2D.Dynamic;
-                    HuyManager.Instance.SetPlayerIsHurt(0);
+                    isHurt = false;
                 }).Play();
         }
 

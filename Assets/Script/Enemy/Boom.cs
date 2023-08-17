@@ -11,35 +11,11 @@ namespace Script.Enemy
     {
         [SerializeField] private GameObject boomObj, explosionObj;
         [SerializeField] private Collider2D colObj;
-        [SerializeField] private float timeRespawn;
-        private bool isReSpawn;
-
-        private void Awake()
-        {
-            HuyManager.Instance.eventResetWhenPlayerDeath += WaitToRest;
-        }
-
-        private void WaitToRest()
-        {
-            if (HuyManager.Instance.PlayerIsDeath() && !isReSpawn)
-            {
-                DOTween.Sequence()
-                    .AppendInterval(timeRespawn)
-                    .AppendCallback(() =>
-                    {
-                        isReSpawn = true;
-                        boomObj.SetActive(true);
-                        explosionObj.SetActive(false);
-                        colObj.enabled = true;
-                    });
-            }
-        }
 
         private void OnCollisionEnter2D(Collision2D other)
         {
             if (other.collider.CompareTag("Player"))
             {
-                //PlayExplosion(1, other.collider.GetComponent<CharacterController2D>());
                 DOTween.Sequence()
                     .AppendCallback(() =>
                     {
@@ -47,12 +23,11 @@ namespace Script.Enemy
                         explosionObj.SetActive(true);
                         colObj.enabled = false;
                         AudioManager.instance.Play("Boom_Explosion");
-                        other.collider.GetComponent<CharacterController2D>().playerHealth.RpcGetDamage(30f);
+                        other.collider.GetComponent<PlayerHealth>().RpcGetDamage(30f);
                     }).AppendInterval(1)
                     .AppendCallback(() =>
                     {
                         explosionObj.SetActive(false);
-                        isReSpawn = false;
                     }).Play();
             }
         }

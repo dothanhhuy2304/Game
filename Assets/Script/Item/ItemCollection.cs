@@ -23,9 +23,9 @@ namespace Script.Item
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (!HuyManager.Instance.PlayerIsDeath())
+            if (other.CompareTag("Player"))
             {
-                if (other.CompareTag("Player"))
+                if (!other.GetComponent<PlayerHealth>().isDeath)
                 {
                     switch (itemType)
                     {
@@ -95,7 +95,6 @@ namespace Script.Item
                 }
             }
         }
-        
     }
 
     public enum ItemType

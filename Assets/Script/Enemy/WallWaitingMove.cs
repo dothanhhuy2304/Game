@@ -1,51 +1,50 @@
+using Photon.Pun;
 using Script.Player;
 using UnityEngine;
 
 namespace Script.Enemy
 {
-    public class WallWaitingMove : MonoBehaviour
+    public class WallWaitingMove : MonoBehaviourPunCallbacks
     {
         private const float Direction = -1f;
-        private CharacterController2D character;
-        private bool isMoving;
+        private bool _isMoving;
         [SerializeField] private float movingSpeed = 2f;
-        private bool isComeback;
-        private bool playerExit;
-        private Vector3 startTrans = Vector3.zero;
+        private bool _isComeback;
+        private bool playerExist;
+        private Vector3 _startTrans = Vector3.zero;
 
-        private SpriteRenderer spriteRenderer;
+        private SpriteRenderer _spriteRenderer;
 
         private void Start()
         {
-            character = FindObjectOfType<CharacterController2D>();
-            startTrans = transform.position;
-            spriteRenderer = GetComponent<SpriteRenderer>();
+            _startTrans = transform.position;
+            _spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
         private void Update()
         {
-            if (spriteRenderer.isVisible)
+            if (_spriteRenderer.isVisible)
             {
-                if (isComeback)
+                if (_isComeback)
                 {
-                    transform.position = Vector3.Lerp(transform.position, startTrans, movingSpeed * Time.deltaTime);
+                    transform.position = Vector3.Lerp(transform.position, _startTrans, movingSpeed * Time.deltaTime);
                 }
             }
 
             //
-            if (!spriteRenderer.isVisible)
+            if (!_spriteRenderer.isVisible)
             {
-                isComeback = true;
+                _isComeback = true;
             }
 
-            if (isMoving)
+            if (_isMoving)
             {
                 transform.position += Vector3.right * (movingSpeed * Time.deltaTime);
             }
 
-            if (isComeback)
+            if (_isComeback)
             {
-                transform.position = Vector3.Lerp(transform.position, startTrans, movingSpeed * Time.deltaTime);
+                transform.position = Vector3.Lerp(transform.position, _startTrans, movingSpeed * Time.deltaTime);
             }
         }
 
@@ -53,23 +52,23 @@ namespace Script.Enemy
         {
             if (other.collider.CompareTag("ground"))
             {
-                if (!playerExit)
+                if (!playerExist)
                 {
                     movingSpeed *= Direction;
                 }
                 else
                 {
                     movingSpeed *= Direction;
-                    isComeback = true;
+                    _isComeback = true;
                 }
             }
 
             if (other.collider.CompareTag("Player"))
             {
-                character.transform.SetParent(transform);
-                isMoving = true;
-                isComeback = false;
-                playerExit = false;
+                other.transform.SetParent(transform);
+                _isMoving = true;
+                _isComeback = false;
+                playerExist = false;
             }
         }
 
@@ -77,8 +76,8 @@ namespace Script.Enemy
         {
             if (other.collider.CompareTag("Player"))
             {
-                character.transform.SetParent(null);
-                playerExit = true;
+                other.transform.SetParent(null);
+                playerExist = true;
             }
         }
     }

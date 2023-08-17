@@ -55,8 +55,7 @@ namespace Script.Enemy
             int index = FindBullet();
             projectiles[index].transform.position = transform.TransformPoint(positionAttack);
             Vector2 direction = (currentCharacterPos.position - transform.position).normalized;
-            projectiles[index].transform.rotation =
-                Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+            projectiles[index].transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
             projectiles[index].Shoot(transform);
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
@@ -83,7 +82,7 @@ namespace Script.Enemy
                 RaycastHit2D hit = Physics2D.Linecast(position, gos, GameManager.instance.playerMask);
                 if (currentDistance < closestDistance)
                 {
-                    if (hit.collider != null && hit.collider.CompareTag("Player"))
+                    if (hit.collider != null && hit.collider.CompareTag("Player") && !hit.collider.GetComponent<PlayerHealth>().isDeath)
                     {
                         closestDistance = currentDistance;
                         //trans = go.transform;
@@ -135,7 +134,7 @@ namespace Script.Enemy
                 RaycastHit2D hit2 = Physics2D.Linecast(new Vector3(position.x, position.y + 0.3f, 0f),
                     new Vector3(-1 * 100f, position.y + 0.3f, 0f),
                     GameManager.instance.playerMask);
-                if (hit.collider != null && hit.collider.CompareTag("Player"))
+                if (hit.collider != null && hit.collider.CompareTag("Player") && !hit.collider.GetComponent<PlayerHealth>().isDeath)
                 {
                     if (currentDistance < closestDistance)
                     {
@@ -144,7 +143,7 @@ namespace Script.Enemy
                         trans = hit.collider.gameObject.transform;
                     }
                 }
-                else if (hit2.collider != null && hit2.collider.gameObject.CompareTag("Player"))
+                else if (hit2.collider != null && hit2.collider.gameObject.CompareTag("Player") && !hit2.collider.GetComponent<PlayerHealth>().isDeath)
                 {
                     if (currentDistance < closestDistance)
                     {

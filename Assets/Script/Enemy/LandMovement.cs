@@ -1,20 +1,17 @@
+using DG.Tweening;
+using Photon.Pun;
 using UnityEngine;
-using Script.Player;
-using Script.Core;
 
-//Improver
 namespace Script.Enemy
 {
-    public class LandMovement : MoveLandController
+    public class LandMovement : MonoBehaviourPunCallbacks
     {
-        private CharacterController2D character;
+        [SerializeField] protected float timeEndAction;
         [SerializeField] private Vector2 endPos = Vector2.zero;
 
         private void Start()
         {
-            character = FindObjectOfType<CharacterController2D>();
-            numberLoop = int.MaxValue;
-            MoveLandNormal(transform, endPos, timeEndAction, numberLoop);
+            MoveLandNormal(transform, endPos, timeEndAction, int.MaxValue);
         }
 
         // private void Update()
@@ -26,7 +23,7 @@ namespace Script.Enemy
         {
             if (other.collider.CompareTag("Player"))
             {
-                character.transform.SetParent(transform);
+                other.transform.SetParent(transform);
             }
         }
 
@@ -34,8 +31,13 @@ namespace Script.Enemy
         {
             if (other.collider.CompareTag("Player"))
             {
-                character.transform.SetParent(null);
+                other.transform.SetParent(null);
             }
+        }
+        
+        private static void MoveLandNormal(Transform startPosition, Vector2 endPosition, float timeEndActions, int loop)
+        {
+            startPosition.DOMove(endPosition, timeEndActions).SetEase(Ease.Linear).SetLoops(loop, LoopType.Yoyo);
         }
     }
 }

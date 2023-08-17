@@ -7,55 +7,45 @@ namespace Script.Enemy
     public class Bee : EnemyController
     {
         private static readonly int IsAttack = Animator.StringToHash("isAttack");
-        [SerializeField] private LayerMask mask;
+        private bool _canAttack;
 
         protected override void Start()
         {
             base.Start();
-            HuyManager.Instance.eventResetWhenPlayerDeath += WaitToReset;
-        }
-
-        private void WaitToReset()
-        {
-            if (HuyManager.Instance.PlayerIsDeath())
-            {
-                if (enemySetting.enemyHeal.EnemyDeath())
-                {
-                    enemySetting.enemyHeal.ResetHeathDefault();
-                    enemySetting.enemyHeal.ReSpawn(2);
-                }
-                else
-                {
-                    DOTween.Sequence()
-                        .AppendInterval(2f)
-                        .AppendCallback(enemySetting.enemyHeal.ResetHeathDefault)
-                        .Play();
-                }
-            }
         }
 
         private void Update()
         {
-            if (!HuyManager.Instance.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
+            RpcFindClosetPlayer();
+            if (!enemySetting.enemyHeal.EnemyDeath())
             {
                 HuyManager.Instance.SetUpTime(ref currentTime);
-                if ((playerCharacter.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
+                if (_canAttack)
                 {
-                    RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position, mask);
-                    if (hit)
+                    if ((currentCharacterPos.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
                     {
-                        if (hit.collider.CompareTag("Player"))
+                        Flip();
+                        if (currentTime <= 0)
                         {
-                            Flip();
-                            if (currentTime <= 0)
-                            {
-                                BulletAttack();
-                                animator.SetTrigger(IsAttack);
-                                currentTime = maxTimeAttack;
-                            }
+                            BulletAttack();
+                            animator.SetTrigger(IsAttack);
+                            currentTime = maxTimeAttack;
                         }
                     }
                 }
+            }
+        }
+
+        private void RpcFindClosetPlayer()
+        {
+            currentCharacterPos = FindClosestPlayer();
+            if (currentCharacterPos != null)
+            {
+                _canAttack = true;
+            }
+            else
+            {
+                _canAttack = false;
             }
         }
 

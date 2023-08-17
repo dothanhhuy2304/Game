@@ -1,6 +1,7 @@
 using DG.Tweening;
 using Photon.Pun;
 using Script.Core;
+using Script.Player;
 using UnityEngine;
 
 namespace Script.Enemy
@@ -14,63 +15,13 @@ namespace Script.Enemy
         [SerializeField] private Explosion explosionObj;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private bool isHitGround;
-        private Quaternion startRotation;
         private static readonly int IsRun = Animator.StringToHash("is_Run");
-
-        protected void Awake()
-        {
-            HuyManager.Instance.eventResetWhenPlayerDeath += WaitToReset;
-            startRotation = transform.rotation;
-        }
 
         protected override void Start()
         {
             base.Start();
             currentTime = maxTimeAttack;
             transform.position = enemySetting.startPosition;
-            ChickenMoving();
-        }
-
-        private void WaitToReset()
-        {
-            if (!spriteRenderer.enabled)
-            {
-                EnemyReSpawn();
-            }
-        }
-        
-        private void EnemyReSpawn()
-        {
-            DOTween.Sequence()
-                .AppendCallback(() =>
-                {
-                    photonView.RPC(nameof(RpcLockPosition), RpcTarget.AllBuffered);
-                })
-                .AppendInterval(3f)
-                .AppendCallback(() =>
-                {
-                    photonView.RPC(nameof(RpcEnemyReSpawn), RpcTarget.AllBuffered);
-                }).Play();
-        }
-
-        [PunRPC]
-        private void RpcLockPosition()
-        {
-            body.MovePosition(body.transform.position);
-        }
-
-        [PunRPC]
-        private void RpcEnemyReSpawn()
-        {
-            currentTime = maxTimeAttack;
-            enemySetting.canAttack = false;
-            spriteRenderer.enabled = true;
-            chickenCol.enabled = true;
-            Transform trans = transform;
-            trans.rotation = startRotation;
-            trans.position = enemySetting.startPosition;
-            transform.Rotate(new Vector3(0, rotations[1], 0));
-            gameObject.SetActive(true);
             ChickenMoving();
         }
 
@@ -82,54 +33,59 @@ namespace Script.Enemy
             }
 
             photonView.RPC(nameof(RpcPosition), RpcTarget.AllBuffered);
-            if (!enemySetting.canAttack)
+            if (!currentCharacterPos.GetComponent<PlayerHealth>().isDeath)
             {
-                if ((currentCharacterPos.position - transform.position).magnitude < enemySetting.rangeAttack)
+                if (!enemySetting.canAttack)
                 {
-                    enemySetting.canAttack = true;
-                    body.bodyType = RigidbodyType2D.Kinematic;
-                }
-            }
-
-            if (enemySetting.canAttack && spriteRenderer.enabled)
-            {
-                if ((currentCharacterPos.position - transform.position).magnitude > 0.5f && isHitGround)
-                {
-                    photonView.RPC(nameof(MoveToTarget), RpcTarget.AllBuffered, isHitGround);
-                }
-                else
-                {
-                    photonView.RPC(nameof(MoveToTarget), RpcTarget.AllBuffered, false);
-                }
-
-                if (currentTime <= 0f)
-                {
-                    if (HuyManager.Instance.PlayerIsDeath())
+                    if ((currentCharacterPos.position - transform.position).magnitude < enemySetting.rangeAttack)
                     {
-                        if ((transform.position - enemySetting.startPosition).magnitude >
-                            (transform.position - enemySetting.endPosition).magnitude)
-                        {
+                        enemySetting.canAttack = true;
+                        body.bodyType = RigidbodyType2D.Kinematic;
+                    }
+                }
 
-                            photonView.RPC(nameof(RpcFlip), RpcTarget.AllBuffered, enemySetting.endPosition, enemySetting.startPosition);
-                        }
-                        else
-                        {
-                            photonView.RPC(nameof(RpcFlip), RpcTarget.AllBuffered, enemySetting.startPosition, enemySetting.endPosition);
-                        }
-
-                        enemySetting.canAttack = false;
-                        currentTime = maxTimeAttack;
-                        //ChickenMoving();
+                if (enemySetting.canAttack && spriteRenderer.enabled)
+                {
+                    if ((currentCharacterPos.position - transform.position).magnitude > 0.5f && isHitGround)
+                    {
+                        photonView.RPC(nameof(MoveToTarget), RpcTarget.AllBuffered, isHitGround);
                     }
                     else
                     {
-                        enemySetting.canAttack = false;
                         photonView.RPC(nameof(MoveToTarget), RpcTarget.AllBuffered, false);
-                        spriteRenderer.enabled = false;
-                        chickenCol.enabled = false;
-                        explosionObj.transform.position = offsetAttack.position;
-                        explosionObj.gameObject.SetActive(true);
-                        currentTime = maxTimeAttack;
+                    }
+
+                    if (currentTime <= 0f)
+                    {
+                        if (currentCharacterPos.GetComponent<PlayerHealth>().isDeath)
+                        {
+                            if ((transform.position - enemySetting.startPosition).magnitude >
+                                (transform.position - enemySetting.endPosition).magnitude)
+                            {
+
+                                photonView.RPC(nameof(RpcFlip), RpcTarget.AllBuffered, enemySetting.endPosition,
+                                    enemySetting.startPosition);
+                            }
+                            else
+                            {
+                                photonView.RPC(nameof(RpcFlip), RpcTarget.AllBuffered, enemySetting.startPosition,
+                                    enemySetting.endPosition);
+                            }
+
+                            enemySetting.canAttack = false;
+                            currentTime = maxTimeAttack;
+                            //ChickenMoving();
+                        }
+                        else
+                        {
+                            enemySetting.canAttack = false;
+                            photonView.RPC(nameof(MoveToTarget), RpcTarget.AllBuffered, false);
+                            spriteRenderer.enabled = false;
+                            chickenCol.enabled = false;
+                            explosionObj.transform.position = offsetAttack.position;
+                            explosionObj.gameObject.SetActive(true);
+                            currentTime = maxTimeAttack;
+                        }
                     }
                 }
             }

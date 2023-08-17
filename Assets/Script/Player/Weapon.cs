@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
@@ -9,9 +8,10 @@ namespace Script.Player
 {
     public class Weapon : MonoBehaviourPunCallbacks
     {
-        [SerializeField] private List<FireProjectile> projectiles;
+        [SerializeField] private PlayerHealth playerHeath;
+        [HideInInspector] [SerializeField] private List<FireProjectile> projectiles;
         [SerializeField] private Vector2 offset;
-        private float timeAttack;
+        private float _timeAttack;
         [SerializeField] private float resetTimeAttack;
         private int _tempIndex;
 
@@ -24,16 +24,15 @@ namespace Script.Player
         {
             if (photonView.IsMine)
             {
-                HuyManager.Instance.SetUpTime(ref timeAttack);
-                if (HuyManager.Instance.PlayerIsDeath() || HuyManager.Instance.GetPlayerIsHurt() ||
-                    EventSystem.current.IsPointerOverGameObject())
+                HuyManager.Instance.SetUpTime(ref _timeAttack);
+                if (playerHeath.isDeath || playerHeath.isHurt || EventSystem.current.IsPointerOverGameObject())
                     return;
-                if (timeAttack <= 0)
+                if (_timeAttack <= 0)
                 {
-                    if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.L))
+                    if (Input.GetMouseButtonDown(0))
                     {
                         photonView.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
-                        timeAttack = resetTimeAttack;
+                        _timeAttack = resetTimeAttack;
                     }
                 }
             }

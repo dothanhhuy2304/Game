@@ -13,36 +13,6 @@ namespace Script.Enemy
         protected override void Start()
         {
             base.Start();
-            HuyManager.Instance.eventResetWhenPlayerDeath += WaitToReset;
-        }
-
-        private void WaitToReset()
-        {
-
-            if (HuyManager.Instance.PlayerIsDeath())
-            {
-                if (enemySetting.enemyHeal.EnemyDeath())
-                {
-                    RpcReSpawnCarEnemy();
-                }
-                else
-                {
-                    DOTween.Sequence()
-                        .AppendInterval(2f)
-                        .AppendCallback(RpcResetHeath);
-                }
-            }
-        }
-
-        private void RpcReSpawnCarEnemy()
-        {
-            enemySetting.enemyHeal.ResetHeathDefault();
-            enemySetting.enemyHeal.ReSpawn(2);
-        }
-
-        private void RpcResetHeath()
-        {
-            enemySetting.enemyHeal.ResetHeathDefault();
         }
 
         private void FixedUpdate()
@@ -52,7 +22,7 @@ namespace Script.Enemy
 
             if (_canAttack)
             {
-                if (!HuyManager.Instance.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
+                if (!enemySetting.enemyHeal.EnemyDeath())
                 {
                     if ((currentCharacterPos.position - transform.position).magnitude < enemySetting.rangeAttack)
                     {

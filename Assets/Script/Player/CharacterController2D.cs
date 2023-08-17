@@ -58,7 +58,7 @@ namespace Script.Player
         {
             if (photonView.IsMine)
             {
-                if (!HuyManager.Instance.PlayerIsDeath() && !HuyManager.Instance.GetPlayerIsHurt())
+                if (!playerHealth.isHurt && !playerHealth.isDeath)
                 {
                     photonView.RPC(nameof(PlayerInput), RpcTarget.AllBuffered);
                     HuyManager.Instance.SetUpTime(ref timeNextDash);
@@ -89,7 +89,7 @@ namespace Script.Player
         {
             if (photonView.IsMine)
             {
-                if (!HuyManager.Instance.PlayerIsDeath() && !HuyManager.Instance.GetPlayerIsHurt())
+                if (!playerHealth.isDeath && !playerHealth.isHurt)
                 {
                     photonView.RPC(nameof(RpcCheckGround), RpcTarget.AllBuffered);
                     ControlPc(playerInput * (startSpeed * Time.fixedDeltaTime));

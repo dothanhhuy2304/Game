@@ -49,7 +49,7 @@ public class Test3 : MonoBehaviour
         {
             if (other.CompareTag("Player"))
             {
-                FindObjectOfType<PlayerHealth>().RpcGetDamage(20f);
+                other.GetComponent<PlayerHealth>().RpcGetDamage(20f);
             }
             else
             {

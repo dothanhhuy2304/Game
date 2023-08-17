@@ -1,27 +1,30 @@
+using Photon.Pun;
 using UnityEngine;
 using Script.Player;
 using Script.Core;
 
 namespace Script.Enemy
 {
-    public class Spike : MonoBehaviour
+    public class Spike : MonoBehaviourPunCallbacks
     {
-        private float timeAttack;
+        private float _timeAttack;
         [SerializeField] private float maxTimeAttack = 1f;
-        private bool isHurts;
+        private bool _takeDamage;
 
         private void OnTriggerStay2D(Collider2D other)
         {
             if (other.CompareTag("Player"))
             {
-                if (HuyManager.Instance.PlayerIsDeath() || HuyManager.Instance.GetPlayerIsHurt()) return;
-                HuyManager.Instance.SetUpTime(ref timeAttack);
-                if (isHurts)
+                PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
+                if (playerHealth.isDeath || playerHealth.isHurt)
+                    return;
+                HuyManager.Instance.SetUpTime(ref _timeAttack);
+                if (_takeDamage)
                 {
-                    if (timeAttack <= 0f)
+                    if (_timeAttack <= 0f)
                     {
-                        FindObjectOfType<PlayerHealth>().RpcGetDamage(20f);
-                        timeAttack = maxTimeAttack;
+                        playerHealth.RpcGetDamage(20f);
+                        _timeAttack = maxTimeAttack;
                     }
                 }
             }
@@ -31,7 +34,7 @@ namespace Script.Enemy
         {
             if (other.CompareTag("Player"))
             {
-                isHurts = true;
+                _takeDamage = true;
             }
         }
 
@@ -39,7 +42,7 @@ namespace Script.Enemy
         {
             if (other.CompareTag("Player"))
             {
-                isHurts = false;
+                _takeDamage = false;
             }
         }
     }

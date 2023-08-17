@@ -1,42 +1,45 @@
+using DG.Tweening;
+using Photon.Pun;
 using Script.Player;
 using UnityEngine;
 using Script.Core;
 
 namespace Script.Enemy
 {
-    public class ObjectMoving : MoveLandController
+    public class ObjectMoving : MonoBehaviourPunCallbacks
     {
         [SerializeField] private Animator animator;
+        [SerializeField] protected float timeEndAction;
         [SerializeField] private Vector2 endPos = Vector2.zero;
-        private float timeAttack;
+        private float _timeAttack;
         [SerializeField] private float resetTimeAttack;
 
         private void Start()
         {
-            numberLoop = int.MaxValue;
-            MoveLandNormal(transform, endPos, timeEndAction, numberLoop);
-            //MoveLandNormalWithAnimation(transform, endPos, timeEndAction, numberLoop, animator, "TopHit", "ButtomHit");
+            MoveLandNormal(transform, endPos, timeEndAction, int.MaxValue);
         }
-
-        // private void Update()
-        // {
-        //     transform.position = Vector2.Lerp(startPos, endPos, Mathf.PingPong(Time.time * speed, timeSleep));
-        // }
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (!HuyManager.Instance.PlayerIsDeath())
+            if (other.CompareTag("Player"))
             {
-                if (other.CompareTag("Player"))
+                PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
+                if (!playerHealth.isDeath)
                 {
-                    HuyManager.Instance.SetUpTime(ref timeAttack);
-                    if (timeAttack <= 0f)
+                    HuyManager.Instance.SetUpTime(ref _timeAttack);
+                    if (_timeAttack <= 0f)
                     {
-                        FindObjectOfType<PlayerHealth>().RpcGetDamage(20f);
-                        timeAttack = resetTimeAttack;
+                        playerHealth.RpcGetDamage(20f);
+                        _timeAttack = resetTimeAttack;
                     }
                 }
             }
+        }
+        
+        
+        protected static void MoveLandNormal(Transform startPosition, Vector2 endPosition, float timeEndActions, int loop)
+        {
+            startPosition.DOMove(endPosition, timeEndActions).SetEase(Ease.Linear).SetLoops(loop, LoopType.Yoyo);
         }
     }
 }

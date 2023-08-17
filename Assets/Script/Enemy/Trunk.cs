@@ -12,60 +12,49 @@ namespace Script.Enemy
         protected override void Start()
         {
             base.Start();
-            HuyManager.Instance.eventResetWhenPlayerDeath += WaitToReset;
-        }
-
-        private void WaitToReset()
-        {
-            if (HuyManager.Instance.PlayerIsDeath())
-            {
-                if (enemySetting.enemyHeal.EnemyDeath())
-                {
-                    enemySetting.enemyHeal.ResetHeathDefault();
-                    enemySetting.enemyHeal.ReSpawn(2);
-                }
-                else
-                {
-                    DOTween.Sequence()
-                        .AppendInterval(2f)
-                        .AppendCallback(enemySetting.enemyHeal.ResetHeathDefault)
-                        .Play();
-                }
-            }
         }
 
         private void Update()
         {
-            if (!HuyManager.Instance.PlayerIsDeath() && !enemySetting.enemyHeal.EnemyDeath())
+            RpcPlayerPosition();
+            if (enemySetting.canAttack)
             {
-                HuyManager.Instance.SetUpTime(ref currentTime);
-                if ((playerCharacter.transform.position - transform.position).magnitude < rangeAttack)
+                if (!enemySetting.enemyHeal.EnemyDeath())
                 {
-                    RaycastHit2D hit = Physics2D.Linecast(transform.position, playerCharacter.transform.position,
-                        mask);
-                    if (hit)
+                    HuyManager.Instance.SetUpTime(ref currentTime);
+                    if ((currentCharacterPos.transform.position - transform.position).magnitude < rangeAttack)
                     {
-                        if (hit.collider.CompareTag("Player"))
+                        Flip();
+                        if (currentTime <= 0)
                         {
-                            Flip();
-                            if (currentTime <= 0)
-                            {
-                                DurationAttack(0.5f);
-                                animator.SetTrigger("isAttack");
-                                currentTime = maxTimeAttack;
-                            }
+                            Shot();
                         }
                     }
                 }
             }
         }
 
-        private void DurationAttack(float duration)
+        private void RpcPlayerPosition()
+        {
+            currentCharacterPos = FindClosestPlayer();
+            if (currentCharacterPos!=null)
+            {
+                enemySetting.canAttack = true;
+            }
+            else
+            {
+                enemySetting.canAttack = false;
+            }
+        }
+
+        private void Shot()
         {
             DOTween.Sequence()
-                .AppendInterval(duration)
+                .AppendInterval(0.5f)
                 .AppendCallback(AttackBullet)
                 .Play();
+            animator.SetTrigger("isAttack");
+            currentTime = maxTimeAttack;
         }
     }
 }

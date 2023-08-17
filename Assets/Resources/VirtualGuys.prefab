@@ -259,12 +259,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 573703942ce4c0448a6db8a680555477, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectiles:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  playerHeath: {fileID: 772435844488864098}
+  projectiles: []
   offset: {x: 1, y: 0}
   resetTimeAttack: 0.5
 --- !u!114 &772435844488864098
@@ -283,6 +279,8 @@ MonoBehaviour:
   playerHealthBar: {fileID: 4412285656257431379}
   petAi: {fileID: 0}
   prefabDamagePlayer: Damages
+  isDeath: 0
+  isHurt: 0
 --- !u!114 &4412285656257431379
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -15,19 +15,6 @@ namespace Script.Enemy
         private void Awake()
         {
             startPos = transform.position;
-            HuyManager.Instance.eventResetWhenPlayerDeath += WaitToReset;
-        }
-
-        private void WaitToReset()
-        {
-            DOTween.Sequence()
-                .AppendInterval(3.5f)
-                .AppendCallback(() =>
-                {
-                    body.bodyType = RigidbodyType2D.Static;
-                    body.transform.position = startPos;
-                    col.isTrigger = false;
-                }).Play();
         }
 
         private void OnCollisionEnter2D(Collision2D other)

@@ -153,7 +153,6 @@ MonoBehaviour:
   boomObj: {fileID: 8009217519771486241}
   explosionObj: {fileID: 9078472782628703764}
   colObj: {fileID: 2844333083645179042}
-  timeRespawn: 3.5
 --- !u!58 &2844333083645179042
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -207,7 +206,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
-  m_SynchronizeScale: 1
+  m_SynchronizeScale: 0
   m_UseLocal: 1
 --- !u!1 &9078472782628600746
 GameObject:

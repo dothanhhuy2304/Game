@@ -13,7 +13,7 @@ namespace Script.Animation
 
         public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (!HuyManager.Instance.PlayerIsDeath())
+            if (!CharacterController2D.IsLocalPlayer.playerHealth.isDeath && !CharacterController2D.IsLocalPlayer.playerHealth.isHurt)
             {
                 float nt = stateInfo.normalizedTime;
                 if (modulus > 0f) nt %= modulus;

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Photon.Pun;
 using UnityEngine;
 
 namespace Script.Core
@@ -6,11 +7,10 @@ namespace Script.Core
     public abstract class MoveLandController : MonoBehaviour
     {
         [SerializeField] protected float timeEndAction;
-        protected int numberLoop;
-        private int currentAnimation;
+        protected int NumberLoop;
+        private int _currentAnimation;
 
-        protected static void MoveLandNormal(Transform startPosition, Vector2 endPosition, float timeEndActions,
-            int loop)
+        protected static void MoveLandNormal(Transform startPosition, Vector2 endPosition, float timeEndActions, int loop)
         {
             startPosition.DOMove(endPosition, timeEndActions).SetEase(Ease.Linear).SetLoops(loop, LoopType.Yoyo);
         }
@@ -22,15 +22,15 @@ namespace Script.Core
                 .SetEase(Ease.Linear)
                 .OnComplete(() =>
                 {
-                    if (currentAnimation == 0)
+                    if (_currentAnimation == 0)
                     {
                         animator.Play(anim1);
-                        currentAnimation++;
+                        _currentAnimation++;
                     }
                     else
                     {
                         animator.Play(anim2);
-                        currentAnimation = 0;
+                        _currentAnimation = 0;
                     }
                 }).SetLoops(loop);
         }

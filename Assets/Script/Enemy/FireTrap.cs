@@ -1,27 +1,22 @@
 using System.Collections;
+using Photon.Pun;
 using Script.Player;
 using UnityEngine;
 using Script.Core;
 
 namespace Script.Enemy
 {
-    public class FireTrap : MonoBehaviour
+    public class FireTrap : MonoBehaviourPunCallbacks
     {
         [SerializeField] private Animator animator;
-        private PlayerHealth playerHealth;
         private bool isFirst;
         private Coroutine currentCoroutine;
-
-        private void Start()
-        {
-            playerHealth = FindObjectOfType<PlayerHealth>();
-        }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.CompareTag("Player"))
             {
-                currentCoroutine = StartCoroutine(IeFireOn(1f));
+                currentCoroutine = StartCoroutine(IeFireOn(other.GetComponent<PlayerHealth>()));
             }
         }
 
@@ -35,9 +30,9 @@ namespace Script.Enemy
             }
         }
 
-        private IEnumerator IeFireOn(float delay)
+        private IEnumerator IeFireOn(PlayerHealth playerHealth)
         {
-            if (HuyManager.Instance.PlayerIsDeath() || HuyManager.Instance.GetPlayerIsHurt()) yield break;
+            if (playerHealth.isDeath || playerHealth.isHurt) yield break;
             if (isFirst)
             {
                 animator.Play("Begin");
@@ -51,12 +46,12 @@ namespace Script.Enemy
             }
             else
             {
-                yield return new WaitForSeconds(delay);
+                yield return new WaitForSeconds(1f);
             }
 
             playerHealth.RpcGetDamage(1f);
             isFirst = false;
-            currentCoroutine = StartCoroutine(IeFireOn(delay));
+            currentCoroutine = StartCoroutine(IeFireOn(playerHealth));
         }
     }
 }

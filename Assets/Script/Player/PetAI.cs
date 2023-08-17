@@ -52,7 +52,7 @@ namespace Script.Player
         {
             if (photonView.IsMine)
             {
-                if (!HuyManager.Instance.PlayerIsDeath())
+                if (!CharacterController2D.IsLocalPlayer.playerHealth.isDeath)
                 {
                     if ((CharacterController2D.IsLocalPlayer.transform.position - transform.position).magnitude > distancePlayer)
                     {
