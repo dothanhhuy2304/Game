@@ -1,39 +1,43 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Photon.Pun;
 using UnityEngine;
 using Script.Core;
-using Script.Enemy;
+using Script.GamePlay;
 using Script.ScriptTable;
 
 namespace Script.Player
 {
-
     public class PetAI : MonoBehaviourPunCallbacks, IPunObservable
     {
         public static PetAI IsLocalPet;
+        [SerializeField] private PhotonView pv;
         public Data petData;
         [SerializeField] private Rigidbody2D body;
-        //private Vector2 velocity = Vector2.zero;
         [SerializeField] private List<FireProjectile> projectiles;
         private List<GameObject> _listEnemyInMap;
         [HideInInspector] public Transform closestEnemy;
         private bool _enemyContact;
         [SerializeField] private float distancePlayer;
         [SerializeField] private float rangeAttack;
-        private float currentTimeAttack = 3f;
-        private const float TimeAttack = 3f;
+        private float _timeAttack = 3f;
+        private const float MaxTimeAttack = 3f;
         [SerializeField] private Animator animator;
-        private static readonly int IsRun = Animator.StringToHash("isRun");
+        private readonly int _isRun = Animator.StringToHash("isRun");
+        private readonly int _isAttack = Animator.StringToHash("isAttack");
         private bool _checkHitGround;
         private int _tempIndex;
-        private bool canAttack;
+        private bool _canAttack;
 
         private void Awake()
         {
-            if (photonView.IsMine)
+            if (pv == null)
+            {
+                pv = GetComponent<PhotonView>();
+            }
+
+            if (pv.IsMine)
             {
                 IsLocalPet = GetComponent<PetAI>();
             }
@@ -42,41 +46,26 @@ namespace Script.Player
             _listEnemyInMap = GameObject.FindGameObjectsWithTag("Enemy").ToList();
         }
 
-        private void Update()
-        {
-            HuyManager.Instance.SetUpTime(ref currentTimeAttack);
-        }
-
         private void FixedUpdate()
         {
-            if (photonView.IsMine)
+            HuyManager.Instance.SetUpTime(ref _timeAttack);
+            if (!CharacterController2D.IsLocalPlayer.playerHealth.isDeath)
             {
-                if (!CharacterController2D.IsLocalPlayer.playerHealth.isDeath)
+                if ((CharacterController2D.IsLocalPlayer.transform.position - transform.position).magnitude > distancePlayer)
                 {
-                    if ((CharacterController2D.IsLocalPlayer.transform.position - transform.position).magnitude > distancePlayer)
-                    {
-                        //photonView.RPC(nameof(MoveToPlayer), RpcTarget.AllBuffered);
-                        MoveToPlayer();
-                        CheckAttack();
-                    }
-                    else
-                    {
-                        CheckAttack();
-                        body.velocity = Vector2.zero;
-                    }
-
+                    MovingPet();
                 }
+
+                CheckAttack();
             }
         }
 
         private void CheckAttack()
         {
-            //photonView.RPC(nameof(RpcEnemyCloset), RpcTarget.AllBuffered);
-            RpcEnemyCloset();
-            if (canAttack)
+            FindEnemyCloset();
+            if (_canAttack)
             {
-                RaycastHit2D hit = Physics2D.Linecast(transform.position, closestEnemy.transform.position,
-                    1 << LayerMask.NameToLayer("ground"));
+                RaycastHit2D hit = Physics2D.Linecast(transform.position, closestEnemy.transform.position, 1 << LayerMask.NameToLayer("ground"));
                 if (hit)
                 {
                     if (hit.collider.CompareTag("ground"))
@@ -89,103 +78,93 @@ namespace Script.Player
                 _checkHitGround = false;
                 if (_enemyContact)
                 {
-                    if (Vector2.Distance(transform.position, closestEnemy.position) < rangeAttack)
+                    if ((closestEnemy.transform.position - transform.position).magnitude < rangeAttack)
                     {
-                        if (currentTimeAttack <= 0f)
-                        {
-                            //photonView.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
-                            BulletAttack();
-                            currentTimeAttack = TimeAttack;
-                        }
+                        pv.RPC(nameof(RpcShot), RpcTarget.AllBuffered);
                     }
                 }
             }
         }
 
-        //[PunRPC]
-        private void RpcEnemyCloset()
+        private void FindEnemyCloset()
         {
             closestEnemy = FindClosestEnemy();
-            if (closestEnemy != null)
+            _canAttack = closestEnemy;
+        }
+
+        private void MovingPet()
+        {
+            if (pv.IsMine)
             {
-                canAttack = true;
+                animator.SetBool(_isRun, true);
+                Vector2 playerPos = CharacterController2D.IsLocalPlayer.transform.position;
+                transform.DOMove(new Vector2(playerPos.x + Random.Range(-2f, 2f), playerPos.y + 1), 0.5f).SetEase(Ease.Linear);
             }
-            else
+        }
+
+        [PunRPC]
+        private void RpcShot()
+        {
+            if (_timeAttack <= 0f)
             {
-                canAttack = false;
+                animator.SetTrigger(_isAttack);
+                DurationAttack();
+                _timeAttack = MaxTimeAttack;
             }
+        }
+
+        private void DurationAttack()
+        {
+            DOTween.Sequence()
+                .AppendInterval(0.2f)
+                .AppendCallback(BulletAttack);
         }
 
         private void OnTriggerStay2D(Collider2D other)
         {
             if (other.CompareTag("Enemy"))
             {
-                if (!_checkHitGround)
-                {
-                    //closestEnemy.GetComponentInChildren<SpriteRenderer>()?.DOColor(new Color(1f, 0.6f, 0.5f),0.3f);
-                    _enemyContact = true;
-                }
-                else
-                {
-                    //closestEnemy.GetComponentInChildren<SpriteRenderer>()?.DOColor(Color.white, 0.3f);
-                    _enemyContact = false;
-                }
+                _enemyContact = !_checkHitGround;
             }
         }
-        
+
 
         private void OnTriggerExit2D(Collider2D other)
         {
             if (other.CompareTag("Enemy"))
             {
-                //other.GetComponentInChildren<SpriteRenderer>()?.DOColor(Color.white, 0.3f);
                 _enemyContact = false;
             }
         }
-        
-        //[PunRPC]
-        private void MoveToPlayer()
-        {
-            //Vector2 angle = (_player.transform.position - transform.position).normalized;
-            //body.velocity = Vector2.SmoothDamp(body.velocity, angle * petData.movingSpeed, ref _velocity, .05f);
-            Vector2 playerPos = CharacterController2D.IsLocalPlayer.transform.position;
-            transform.DOMove(new Vector3(playerPos.x + UnityEngine.Random.Range(- 2f , 2f), playerPos.y + 1), 0.5f).SetEase(Ease.Linear);
-            //Vector2 target = (_player.transform.position - transform.position).normalized;
-            //transform.position = Vector2.MoveTowards(transform.position, new Vector2(playerPos.x + 1, playerPos.y + 1), 10 * Time.deltaTime);
-            animator.SetBool(IsRun, true);
 
-        }
-
-        //[PunRPC]
         private void BulletAttack()
         {
             int index = FindBullet();
             projectiles[index].transform.position = transform.position;
             projectiles[index].transform.rotation = transform.rotation;
-            projectiles[index].Shoot(transform);
-            animator.SetBool(IsRun, false);
+            projectiles[index].Shoot(transform, closestEnemy);
         }
 
         private Transform FindClosestEnemy()
         {
             float closestDistance = Mathf.Infinity;
             Transform trans = null;
-            if (_listEnemyInMap.Count > 0)
+            foreach (var go in _listEnemyInMap)
             {
-                foreach (var go in _listEnemyInMap)
+                if (!go) continue;
+                Vector3 location = transform.position;
+                Vector3 gos = go.transform.position;
+                float currentDistance = (location - gos).magnitude;
+                RaycastHit2D hit = Physics2D.Linecast(location, gos, GameManager.instance.enemyMask);
+                if (currentDistance < closestDistance)
                 {
-                    if (!go) continue;
-                    float currentDistance = (transform.position - go.transform.position).magnitude;
-                    if (currentDistance < closestDistance)
+                    if (hit.collider && hit.collider.gameObject.CompareTag("Enemy"))
                     {
                         closestDistance = currentDistance;
-                        trans = go.transform;
+                        //trans = go.transform;
+                        trans = hit.collider.gameObject.transform;
                     }
                 }
-            }
-            else
-            {
-                return null;
             }
 
             return trans;
@@ -217,9 +196,9 @@ namespace Script.Player
             if (stream.IsWriting)
             {
                 stream.SendNext((Vector3) body.velocity);
-                stream.SendNext((float) body.rotation);
-                stream.SendNext((Vector3) transform.position);
-                stream.SendNext((Quaternion) transform.rotation);
+                stream.SendNext(body.rotation);
+                stream.SendNext(transform.position);
+                stream.SendNext(transform.rotation);
             }
             else
             {

@@ -13,69 +13,16 @@ public class FireProjectile : MonoBehaviour
     [SerializeField] private ParticleSystem explosionFxObj;
     [SerializeField] private GameObject explosionSpriteFxObj;
     private CharacterController2D _playerCharacter;
-    private Vector2 _targetPetEnemy = Vector2.zero;
     private PetAI _petAi;
-    [Header("Arc")]
-    [SerializeField] private float arcHeight = 1;
-    private Vector3 _startPos = Vector3.zero;
-    private Vector3 _targetPos = Vector3.zero;
-    
+
     private void Awake()
     {
         _playerCharacter = CharacterController2D.IsLocalPlayer;
         _petAi = PetAI.IsLocalPet;
     }
 
-    private void OnEnable()
+    private void BulletDirection(Transform startPosition,Transform target = null)
     {
-        if (enemyType == EnemyType.Trunk)
-        {
-            _startPos = transform.position;
-            _targetPos = _playerCharacter.transform.position;
-        }
-    }
-
-    #region TrunkEnemy
-    private void Update()
-    {
-        if (enemyType == EnemyType.Trunk)
-        {
-            float x0 = _startPos.x;
-            float x1 = _targetPos.x;
-            float dist = x1 - x0;
-            float nextX = Mathf.MoveTowards(transform.position.x, x1, bulletSpeed * Time.deltaTime);
-            float baseY = Mathf.Lerp(_startPos.y, _targetPos.y, (nextX - x0) / dist);
-            float arc = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
-            Vector3 nextPos = new Vector3(nextX, baseY + arc, transform.position.z);
-            // Rotate to face the next position, and then move there
-            transform.rotation = LookAt2D(nextPos - transform.position);
-            transform.position = nextPos;
-            if (nextPos == _targetPos)
-            {
-                Arrived();
-            }
-        }
-    }
-
-    private void Arrived()
-    {
-        bulletPrefab.SetActive(false);
-        TemporarilyDeactivate(1.7f);
-    }
-
-    private static Quaternion LookAt2D(Vector2 forward)
-    {
-        return Quaternion.Euler(0, 0, Mathf.Atan2(forward.y, forward.x) * Mathf.Rad2Deg);
-    }
-    #endregion
-
-    private void BulletDirection(Transform trans)
-    {
-        // if (petAI)
-        // {
-        //     targetPetEnemy = (petAI.closestEnemy.position - transform.position).normalized;
-        // }
-
         TemporarilyDeactivate(1.7f);
         if (body.isKinematic)
         {
@@ -83,32 +30,29 @@ public class FireProjectile : MonoBehaviour
             {
                 case EnemyType.Ninja:
                 {
-                    body.velocity = GetDistanceObjectToPlayer(trans) * bulletSpeed;
+                    body.velocity = GetDistanceObjectToPlayer(startPosition, target) * bulletSpeed;
                     break;
                 }
                 case EnemyType.CarnivorousPlant:
                 {
-                    body.velocity = trans.right * bulletSpeed;
+                    body.velocity = startPosition.right * bulletSpeed;
                     break;
                 }
                 case EnemyType.Player:
                 {
-                    body.velocity = trans.right * bulletSpeed;
+                    body.velocity = startPosition.right * bulletSpeed;
                     break;
                 }
                 case EnemyType.Pet:
                 {
-                    //Todo need check
-                    if (_petAi)
-                    {
-                        _targetPetEnemy = (_petAi.closestEnemy.position - transform.position).normalized;
-                    }
-                    
-                    body.velocity = _targetPetEnemy * bulletSpeed;
+                    body.velocity = GetDistanceObjectToPlayer(startPosition, target) * bulletSpeed;
                     break;
                 }
                 case EnemyType.Bee:
-                    body.velocity = GetDistanceObjectToPlayer(trans) * bulletSpeed;
+                    body.velocity = GetDistanceObjectToPlayer(startPosition, target) * bulletSpeed;
+                    break;
+                case EnemyType.Trunk:
+                    body.DOJump(startPosition.position, 3, 1, 1);
                     break;
             }
         }
@@ -245,7 +189,8 @@ public class FireProjectile : MonoBehaviour
 
                 if (other.CompareTag("ground"))
                 {
-                    Arrived();
+                    //Arrived();
+                    BulletExplosions();
                     AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
                 }
 
@@ -253,7 +198,8 @@ public class FireProjectile : MonoBehaviour
                 {
                     if (!body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy")))
                     {
-                        Arrived();
+                        //Arrived();
+                        BulletExplosions();
                         AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
                     }
                 }
@@ -262,9 +208,9 @@ public class FireProjectile : MonoBehaviour
         }
     }
 
-    private Vector2 GetDistanceObjectToPlayer(Transform trans)
+    private Vector2 GetDistanceObjectToPlayer(Transform startPosition,Transform target)
     {
-        return (_playerCharacter.transform.position - trans.position).normalized;
+        return (target.position - startPosition.position).normalized;
     }
 
     private void BulletExplosions()
@@ -303,11 +249,11 @@ public class FireProjectile : MonoBehaviour
             }).Play();
     }
 
-    public void Shoot(Transform trans)
+    public void Shoot(Transform trans, Transform target = null)
     {
         gameObject.SetActive(true);
         bulletPrefab.SetActive(true);
-        BulletDirection(trans);
+        BulletDirection(trans, target);
     }
 
 }

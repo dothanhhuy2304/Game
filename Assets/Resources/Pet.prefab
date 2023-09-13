@@ -70,6 +70,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0da7f0943319e9b448524672b9b33916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pv: {fileID: 2615392063268435766}
   petData: {fileID: 11400000, guid: a63b5893ff1ff9b418f2d3851dd8507a, type: 2}
   body: {fileID: 322445969}
   projectiles:
@@ -117,8 +118,10 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
+  - {fileID: 322445966}
   - {fileID: 1816299928917152467}
   - {fileID: 4753425525453389068}
+  - {fileID: 4047562198384841373}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -136,7 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
+  m_SynchronizeScale: 1
   m_UseLocal: 1
 --- !u!114 &4753425525453389068
 MonoBehaviour:
@@ -165,6 +168,7 @@ GameObject:
   - component: {fileID: 5118974561984219651}
   - component: {fileID: 1064185863719343552}
   - component: {fileID: 8603816641668506050}
+  - component: {fileID: 4047562198384841373}
   m_Layer: 0
   m_Name: PetModel
   m_TagString: Untagged
@@ -256,3 +260,30 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4047562198384841373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3559190203258753186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 0
+    Name: isRun
+  - Type: 4
+    SynchronizeType: 0
+    Name: isDeath
+  - Type: 9
+    SynchronizeType: 0
+    Name: isAttack
+  m_SynchronizeLayers:
+  - SynchronizeType: 1
+    LayerIndex: 0

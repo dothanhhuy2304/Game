@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using Photon.Pun;
 using UnityEngine;
@@ -10,49 +9,63 @@ namespace Script.Enemy
     {
         [SerializeField] private bool canFlip;
         private bool _canAttack;
-        
+
+        private void Awake()
+        {
+            if (pv == null)
+            {
+                pv = GetComponent<PhotonView>();
+            }
+        }
 
         private void FixedUpdate()
         {
-            RpcTargetPosition();
-            HuyManager.Instance.SetUpTime(ref CurrentTime);
+            if (enemySetting.enemyHeal.EnemyDeath())
+            {
+                return;
+            }
 
+            FindPlayerPosition();
             if (_canAttack)
             {
-                if (!enemySetting.enemyHeal.EnemyDeath())
+                HuyManager.Instance.SetUpTime(ref CurrentTime);
+                if ((currentCharacterPos.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
-                    if ((currentCharacterPos.position - transform.position).magnitude < enemySetting.rangeAttack)
+                    if (pv.IsMine && canFlip)
                     {
-                        if (canFlip)
-                        {
-                            Flip();
-                        }
-
-                        if (CurrentTime <= 0f)
-                        {
-                            RpcCarnivorousAttack(0.5f);
-                            CurrentTime = maxTimeAttack;
-                        }
+                        Flip();
                     }
+
+                    pv.RPC(nameof(RpcShot), RpcTarget.AllBuffered);
                 }
             }
         }
 
-        private void RpcTargetPosition()
+        private void FindPlayerPosition()
         {
             currentCharacterPos = FindClosetPlayerWithForwardPhysic();
             _canAttack = currentCharacterPos;
         }
 
-        private void RpcCarnivorousAttack(float duration)
+        [PunRPC]
+        private void RpcShot()
+        {
+            if (CurrentTime <= 0f)
+            {
+                CarnivorousAttack(0.5f);
+                CurrentTime = maxTimeAttack;
+            }
+        }
+
+        private void CarnivorousAttack(float duration)
         {
             animator.SetTrigger("isAttack");
             DOTween.Sequence()
                 .AppendInterval(duration)
-                .AppendCallback(AttackBullet)
+                .AppendCallback(() => AttackBullet())
                 .Play();
         }
-        
+
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if (stream.IsWriting)

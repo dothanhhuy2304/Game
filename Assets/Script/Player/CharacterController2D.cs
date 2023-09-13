@@ -1,35 +1,34 @@
-using System;
 using Photon.Pun;
 using UnityEngine;
 using Script.Core;
 using Script.ScriptTable;
-using Unity.Mathematics;
 
 namespace Script.Player
 {
     public class CharacterController2D : MonoBehaviourPunCallbacks, IPunObservable
     {
         public static CharacterController2D IsLocalPlayer;
+        public PhotonView pv;
         public Rigidbody2D body;
         public Collider2D col;
         public Data playerData;
         [Header("Movement")] private const float MovementSmoothing = .05f;
-        private Vector2 velocity = Vector2.zero;
-        private float playerInput;
+        private Vector2 _velocity = Vector2.zero;
+        private float _playerInput;
 
-        [Space] [Header("Flip")] private bool mFacingRight = true;
-        private bool isDashing;
-        private float timeNextDash = 1.5f;
+        [Space] [Header("Flip")] private bool _mFacingRight = true;
+        private bool _isDashing;
+        private float _timeNextDash = 1.5f;
         [SerializeField] private bool mGrounded;
         [SerializeField] private bool isJump;
-        private bool mDbJump;
+        private bool _mDbJump;
         public Animator animator;
         [SerializeField] private float clampMinX, clampMaxX;
         [HideInInspector] public PlayerHealth playerHealth;
-        private bool isOnCar;
-        private float startSpeed;
-        private int jumpCount;
-        private bool onWall;
+        private bool _isOnCar;
+        private float _startSpeed;
+        private int _jumpCount;
+        private bool _onWall;
         private static readonly int Velocity = Animator.StringToHash("y_velocity");
         private static readonly int MRun = Animator.StringToHash("m_Run");
         private static readonly int IsJump = Animator.StringToHash("is_Jump");
@@ -37,7 +36,12 @@ namespace Script.Player
 
         private void Awake()
         {
-            if (photonView.IsMine)
+            if (pv == null)
+            {
+                pv = GetComponent<PhotonView>();
+            }
+
+            if (pv.IsMine)
             {
                 IsLocalPlayer = GetComponent<CharacterController2D>();
             }
@@ -47,26 +51,26 @@ namespace Script.Player
         
         private void Start()
         {
-            if (photonView.IsMine)
+            if (pv.IsMine)
             {
                 playerHealth = FindObjectOfType<PlayerHealth>();
-                startSpeed = playerData.movingSpeed;
+                _startSpeed = playerData.movingSpeed;
             }
         }
 
         private void Update()
         {
-            if (photonView.IsMine)
+            if (pv.IsMine)
             {
                 if (!playerHealth.isHurt && !playerHealth.isDeath)
                 {
-                    photonView.RPC(nameof(PlayerInput), RpcTarget.AllBuffered);
-                    HuyManager.Instance.SetUpTime(ref timeNextDash);
-                    if (timeNextDash <= 0)
+                    pv.RPC(nameof(PlayerInput), RpcTarget.AllBuffered);
+                    HuyManager.Instance.SetUpTime(ref _timeNextDash);
+                    if (_timeNextDash <= 0)
                     {
-                        if ((Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) && isDashing)
+                        if ((Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) && _isDashing)
                         {
-                            photonView.RPC(nameof(Dash), RpcTarget.AllBuffered, playerInput);
+                            pv.RPC(nameof(Dash), RpcTarget.AllBuffered, _playerInput);
                         }
                     }
                 }
@@ -77,7 +81,7 @@ namespace Script.Player
         private void PlayerInput()
         {
 #if UNITY_EDITOR || UNITY_STANDALONE
-            playerInput = Input.GetAxisRaw("Horizontal");
+            _playerInput = Input.GetAxisRaw("Horizontal");
             isJump |= Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow);
 #elif !UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
              playerInput = Input.GetAxisRaw("Vertical");
@@ -87,24 +91,24 @@ namespace Script.Player
 
         private void FixedUpdate()
         {
-            if (photonView.IsMine)
+            if (pv.IsMine)
             {
                 if (!playerHealth.isDeath && !playerHealth.isHurt)
                 {
-                    photonView.RPC(nameof(RpcCheckGround), RpcTarget.AllBuffered);
-                    ControlPc(playerInput * (startSpeed * Time.fixedDeltaTime));
+                    pv.RPC(nameof(RpcCheckGround), RpcTarget.AllBuffered);
+                    ControlPc(_playerInput * (_startSpeed * Time.fixedDeltaTime));
 
                     if (isJump)
                     {
-                        photonView.RPC(nameof(Jump), RpcTarget.AllBuffered);
+                        pv.RPC(nameof(Jump), RpcTarget.AllBuffered);
                     }
 
                     if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
                     {
-                        photonView.RPC(nameof(RpcResetAnimJump), RpcTarget.AllBuffered);
+                        pv.RPC(nameof(RpcResetAnimJump), RpcTarget.AllBuffered);
                     }
 
-                    photonView.RPC(nameof(YVelocity), RpcTarget.AllBuffered);
+                    pv.RPC(nameof(YVelocity), RpcTarget.AllBuffered);
                 }
             }
         }
@@ -134,13 +138,13 @@ namespace Script.Player
 
         private void ControlPc(float input)
         {
-            photonView.RPC(nameof(Moving), RpcTarget.AllBuffered, input);
+            pv.RPC(nameof(Moving), RpcTarget.AllBuffered, input);
 
-            if (input > 0f && !mFacingRight)
+            if (input > 0f && !_mFacingRight)
             {
                 Flip();
             }
-            else if (input < 0f && mFacingRight)
+            else if (input < 0f && _mFacingRight)
             {
                 Flip();
             }
@@ -152,9 +156,9 @@ namespace Script.Player
         private void Moving(float @fixed)
         {
             Vector3 position = body.velocity;
-            body.velocity = Vector2.SmoothDamp(position, new Vector2(@fixed * 10f, position.y), ref velocity, MovementSmoothing);
+            body.velocity = Vector2.SmoothDamp(position, new Vector2(@fixed * 10f, position.y), ref _velocity, MovementSmoothing);
 
-            if (isOnCar || onWall)
+            if (_isOnCar || _onWall)
             {
                 RunAnimation(0f);
             }
@@ -178,7 +182,7 @@ namespace Script.Player
 
         private void MobileMove(float move)
         {
-            playerInput = move;
+            _playerInput = move;
         }
 
         [PunRPC]
@@ -188,17 +192,17 @@ namespace Script.Player
             if (mGrounded)
             {
                 JumpForce();
-                mDbJump = true;
+                _mDbJump = true;
             }
-            else if (mDbJump)
+            else if (_mDbJump)
             {
                 JumpForce();
-                mDbJump = false;
+                _mDbJump = false;
             }
 
             JumpAnimation();
             mGrounded = false;
-            isDashing = true;
+            _isDashing = true;
         }
 
         private void JumpForce()
@@ -206,12 +210,12 @@ namespace Script.Player
             body.velocity = new Vector2(body.velocity.x, 0f);
             body.AddForce(Vector2.up * playerData.jumpForce, ForceMode2D.Impulse);
             AudioManager.instance.Play("Player_Jump");
-            jumpCount++;
+            _jumpCount++;
         }
 
         private void JumpAnimation()
         {
-            switch (jumpCount)
+            switch (_jumpCount)
             {
                 case 0:
                     animator.SetBool(IsJump, false);
@@ -229,7 +233,7 @@ namespace Script.Player
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (photonView.IsMine)
+            if (pv.IsMine)
             {
                 EvaluateCollision(other);
             }
@@ -248,7 +252,7 @@ namespace Script.Player
                 }
             }
 
-            onWall = isWall;
+            _onWall = isWall;
         }
 
         [PunRPC]
@@ -256,13 +260,13 @@ namespace Script.Player
         {
             body.velocity = new Vector2(body.velocity.x, 0);
             body.AddForce(Vector2.right * (horizontal * playerData.dashSpeed), ForceMode2D.Impulse);
-            isDashing = false;
-            timeNextDash = 1.5f;
+            _isDashing = false;
+            _timeNextDash = 1.5f;
         }
 
         private void Flip()
         {
-            mFacingRight = !mFacingRight;
+            _mFacingRight = !_mFacingRight;
             Vector3 dir = new Vector3(0, 180f, 0);
             transform.Rotate(dir);
             // var position = transform;
@@ -274,45 +278,45 @@ namespace Script.Player
         [PunRPC]
         private void RpcResetAnimJump()
         {
-            jumpCount = 0;
+            _jumpCount = 0;
             animator.SetBool(IsJump, false);
             animator.SetBool(IsDbJump, false);
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (photonView.IsMine)
+            if (pv.IsMine)
             {
                 if (other.CompareTag("Grass"))
                 {
-                    startSpeed -= 10f;
+                    _startSpeed -= 10f;
                 }
             }
         }
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (photonView.IsMine)
+            if (pv.IsMine)
             {
                 if (other.CompareTag("Car"))
                 {
-                    isOnCar = true;
+                    _isOnCar = true;
                 }
             }
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (photonView.IsMine)
+            if (pv.IsMine)
             {
                 if (other.CompareTag("Car"))
                 {
-                    isOnCar = false;
+                    _isOnCar = false;
                 }
 
                 if (other.CompareTag("Grass"))
                 {
-                    startSpeed = playerData.movingSpeed;
+                    _startSpeed = playerData.movingSpeed;
                 }
             }
         }
@@ -321,11 +325,11 @@ namespace Script.Player
         {
             if (stream.IsWriting)
             {
-                stream.SendNext((float) body.rotation);
+                stream.SendNext(body.rotation);
                 stream.SendNext((Vector3) body.velocity);
-                stream.SendNext((Vector3) transform.position);
-                stream.SendNext((Quaternion) transform.rotation);
-                stream.SendNext((float) playerData.movingSpeed);
+                stream.SendNext(transform.position);
+                stream.SendNext(transform.rotation);
+                stream.SendNext(playerData.movingSpeed);
             }
             else
             {

@@ -12,12 +12,12 @@ namespace Script.GamePlay
         [SerializeField] private TextMeshProUGUI txtScore;
         [SerializeField] private TextMeshProUGUI txtDiamond;
         [SerializeField] private TextMeshProUGUI txtMoney;
-        //
         [HideInInspector] public int numberScore;
         [HideInInspector ]public int numberGold;
         [HideInInspector] public int numberDiamond;
         public GameObject lobbyPanel;
         public LayerMask playerMask;
+        public LayerMask enemyMask;
 
         private void Start()
         {
@@ -29,7 +29,7 @@ namespace Script.GamePlay
             else
             {
                 HuyManager.Instance.userId = HuyManager.Instance.GetCurrentPlayerProfile().Id;
-                Debug.LogError("Exit data");
+                Debug.Log("Exit data");
             }
 
             if (!string.IsNullOrEmpty(HuyManager.Instance.userId))
@@ -37,14 +37,14 @@ namespace Script.GamePlay
                 var playerData = HuyManager.Instance.GetCurrentPlayerData();
                 if (playerData.PlayerId.Equals(HuyManager.Instance.userId))
                 {
-                    SetScore(playerData.score);
-                    SetMoney(playerData.gold);
-                    SetDiamond(playerData.diamond);
-                    HuyManager.Instance.characterSelected = playerData.characterSelect;
-                    HuyManager.Instance.currentScreen = playerData.levelId;
-                    HuyManager.Instance.currentPosition[0] = playerData.positionX;
-                    HuyManager.Instance.currentPosition[1] = playerData.positionY;
-                    HuyManager.Instance.currentPosition[2] = playerData.positionZ;
+                    SetScore(playerData.Score);
+                    SetMoney(playerData.Gold);
+                    SetDiamond(playerData.Diamond);
+                    HuyManager.Instance.characterSelected = playerData.CharacterSelect;
+                    HuyManager.Instance.currentScreen = playerData.LevelId;
+                    HuyManager.Instance.currentPosition[0] = playerData.PositionX;
+                    HuyManager.Instance.currentPosition[1] = playerData.PositionY;
+                    HuyManager.Instance.currentPosition[2] = playerData.PositionZ;
                 }
             }
             else
@@ -81,15 +81,15 @@ namespace Script.GamePlay
         {
             DataService.GameData gameData = new DataService.GameData();
             gameData.PlayerId = HuyManager.Instance.userId;
-            gameData.characterSelect = HuyManager.Instance.characterSelected;
-            gameData.levelId = HuyManager.Instance.currentScreen;
-            gameData.positionX = HuyManager.Instance.currentPosition[0];
-            gameData.positionY = HuyManager.Instance.currentPosition[1];
-            gameData.positionZ = HuyManager.Instance.currentPosition[2];
-            gameData.score = numberScore;
-            gameData.gold = numberGold;
-            gameData.diamond = numberDiamond;
-            gameData.health = gameData.health;
+            gameData.CharacterSelect = HuyManager.Instance.characterSelected;
+            gameData.LevelId = HuyManager.Instance.currentScreen;
+            gameData.PositionX = HuyManager.Instance.currentPosition[0];
+            gameData.PositionY = HuyManager.Instance.currentPosition[1];
+            gameData.PositionZ = HuyManager.Instance.currentPosition[2];
+            gameData.Score = numberScore;
+            gameData.Gold = numberGold;
+            gameData.Diamond = numberDiamond;
+            gameData.Health = gameData.Health;
             HuyManager.Instance.UpdateUserData(gameData);
         }
 

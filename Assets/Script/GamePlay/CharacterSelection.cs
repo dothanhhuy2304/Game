@@ -10,13 +10,13 @@ namespace Script.GamePlay
     public class CharacterSelection : MonoBehaviourPunCallbacks
     {
         [SerializeField] private List<GameObject> characters;
-        private int currentCharacter;
+        private int _currentCharacter;
         [SerializeField] private Button btnNext, btnPreview;
-        private LoadingScreenManager loadingScreenManager;
+        private LoadingScreenManager _loadingScreenManager;
 
         private void Start()
         {
-            loadingScreenManager = LoadingScreenManager.instance;
+            _loadingScreenManager = LoadingScreenManager.Instance;
             for (var i = 0; i < characters.Count; i++)
             {
                 characters[i].SetActive(i == 0);
@@ -27,36 +27,35 @@ namespace Script.GamePlay
 
         public void ChangeCharacter(int index)
         {
-            currentCharacter += index;
+            _currentCharacter += index;
             foreach (var t in characters)
             {
                 t.SetActive(false);
             }
 
-            characters[currentCharacter].SetActive(true);
+            characters[_currentCharacter].SetActive(true);
             SwitchCharacterIndex();
         }
 
         private void SwitchCharacterIndex()
         {
-            btnNext.interactable = currentCharacter != characters.Count - 1;
-            btnPreview.interactable = currentCharacter != 0;
+            btnNext.interactable = _currentCharacter != characters.Count - 1;
+            btnPreview.interactable = _currentCharacter != 0;
         }
 
         public void LoadCharacter()
         {
             photonView.RPC(nameof(RpcCharacter), RpcTarget.AllBuffered);
-            loadingScreenManager.FadeLoadingScene(
+            _loadingScreenManager.FadeLoadingScene(
                 HuyManager.Instance.currentScreen == 0
-                    ? loadingScreenManager.NextScreen()
-                    : loadingScreenManager.LoadCurrentScreen());
-            //loadingScreenManager.FadeLoadingScene(gameManager.playerData.playerDataObj.currentScenes == 0 ? loadingScreenManager.NextScreen(1) : LoadingScreenManager.LoadCurrentScreen());
+                    ? _loadingScreenManager.NextScreen()
+                    : _loadingScreenManager.LoadCurrentScreen());
         }
 
         [PunRPC]
         private void RpcCharacter()
         {
-            HuyManager.Instance.characterSelected = currentCharacter;
+            HuyManager.Instance.characterSelected = _currentCharacter;
         }
 
         public void PlayEffectClick()

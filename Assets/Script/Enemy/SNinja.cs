@@ -6,60 +6,89 @@ using Script.Core;
 
 namespace Script.Enemy
 {
-    public class SNinja : EnemyController , IPunObservable
+    public class SNinja : EnemyController, IPunObservable
     {
         [SerializeField] private float radiusAttack;
-        [Header("SetUp Patrol")]
-        [SerializeField] private Vector3 target;
 
-        [SerializeField] private float timeDurationMoving;
+        [Header("SetUp Patrol")] [SerializeField]
+        private Vector3 target;
+
         private readonly int _isRun = Animator.StringToHash("isRun");
         private readonly int _isAttackSword = Animator.StringToHash("isAttack1");
-        private bool _wasAttackSword;
+        private bool _canAttackSword;
         private bool _canAttack;
         private bool _isHitGrounds;
 
         [SerializeField] private LayerMask playerMasks;
 
+        private void Awake()
+        {
+            if (pv == null)
+            {
+                pv = GetComponent<PhotonView>();
+            }
+
+            CurrentTime = maxTimeAttack;
+        }
+
         private void FixedUpdate()
         {
-            RpcTargetPosition();
-            HuyManager.Instance.SetUpTime(ref CurrentTime);
+            if (enemySetting.enemyHeal.EnemyDeath())
+            {
+                return;
+            }
 
+            FindPlayerPosition();
             if (_canAttack)
             {
+                HuyManager.Instance.SetUpTime(ref CurrentTime);
                 if (!currentCharacterPos.GetComponent<PlayerHealth>().isDeath)
                 {
-                    if (!enemySetting.enemyHeal.EnemyDeath())
+                    if ((currentCharacterPos.position - transform.position).magnitude <= 3f)
                     {
-                        if ((currentCharacterPos.position - transform.position).magnitude <= 3f)
+                        if (pv.IsMine)
                         {
                             Flip();
-                            AttackSword();
                         }
-                        else if ((currentCharacterPos.position - transform.position).magnitude > 3 && (currentCharacterPos.position - transform.position).magnitude <= 8)
+
+                        pv.RPC(nameof(AttackSword), RpcTarget.AllBuffered);
+                    }
+                    else if ((currentCharacterPos.position - transform.position).magnitude > 3 && (currentCharacterPos.position - transform.position).magnitude <= 8)
+                    {
+                        if (pv.IsMine)
                         {
-                            Debug.LogError("pos");
                             Flip();
-                            RpcAttackBullet();
                         }
-                        else
+
+                        pv.RPC(nameof(RpcAttackBullet), RpcTarget.AllBuffered);
+                        
+                    }
+                    else
+                    {
+                        if (pv.IsMine)
                         {
                             if (enemySetting.canMoving)
                             {
                                 MoveToPosition();
                             }
                         }
-                    }
-                    else
-                    {
-                        if (enemySetting.canMoving)
-                        {
-                            StopMoving();
-                        }
+
                     }
                 }
                 else
+                {
+                    if (pv.IsMine)
+                    {
+                        if (enemySetting.canMoving)
+                        {
+                            MoveToPosition();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (pv.IsMine)
                 {
                     if (enemySetting.canMoving)
                     {
@@ -67,72 +96,55 @@ namespace Script.Enemy
                     }
                 }
             }
-            else
-            {
-                if (enemySetting.canMoving)
-                {
-                    MoveToPosition();
-                }
-            }
         }
 
-        private void RpcTargetPosition()
+        private void FindPlayerPosition()
         {
             currentCharacterPos = FindClosestPlayer();
-            _canAttack = currentCharacterPos != null;
-        }
+            _canAttack = currentCharacterPos;
 
-        private void StopMoving()
-        {
-            body.MovePosition(body.position);
         }
 
         private void MoveToPosition()
         {
-            if (transform.position != target)
+            Transform obj = transform;
+            if (obj.position != target)
             {
-                Vector3 trans = transform.position;
-                Vector3 moveDir = Vector3.MoveTowards(trans, target, movingSpeed * Time.fixedDeltaTime);
-                body.MovePosition(moveDir);
-                animator.SetBool(_isRun, true);
-                FaceToWards(target - trans);
+                pv.RPC(nameof(RpcNinjaMove), RpcTarget.AllBuffered);
+                obj.localEulerAngles = (target - obj.position).x < 0f ? new Vector3(0, 180f, 0) : Vector3.zero;
+
             }
             else
             {
-                if (target == enemySetting.startPosition)
-                {
-                    SetUpTargetToMove(enemySetting.endPosition, timeDurationMoving);
-                }
-                else
-                {
-                    SetUpTargetToMove(enemySetting.startPosition, timeDurationMoving);
-                }
+                pv.RPC(nameof(RpcNinjaMove2), RpcTarget.AllBuffered);
             }
         }
 
-        private void SetUpTargetToMove(Vector3 pos, float timeSleep)
+        [PunRPC]
+        private void RpcNinjaMove()
+        {
+            animator.SetBool(_isRun, true);
+            body.MovePosition(Vector3.MoveTowards(transform.position, target, movingSpeed * Time.fixedDeltaTime));
+        }
+
+        [PunRPC]
+        private void RpcNinjaMove2()
         {
             animator.SetBool(_isRun, false);
-            DOTween.Sequence()
-                .AppendInterval(timeSleep)
-                .AppendCallback(() =>
-                {
-                    target = pos;
-                }).Play();
+            SetUpTargetToMove(target == enemySetting.startPosition
+                ? enemySetting.endPosition
+                : enemySetting.startPosition);
         }
 
-        private void FaceToWards(Vector3 direction)
+        private void SetUpTargetToMove(Vector3 location)
         {
-            if (direction.x < 0f)
-            {
-                transform.localEulerAngles = new Vector3(0, 180f, 0);
-            }
-            else
-            {
-                transform.localEulerAngles = Vector3.zero;
-            }
+            DOTween.Sequence()
+                .AppendInterval(2f)
+                .AppendCallback(() => { target = location; })
+                .Play();
         }
 
+        [PunRPC]
         private void AttackSword()
         {
             if (_isHitGrounds)
@@ -144,14 +156,13 @@ namespace Script.Enemy
                     body.MovePosition(currentPosition + targetPosition * Time.fixedDeltaTime);
                     animator.SetBool(_isRun, true);
                 }
-                
-                if ((currentCharacterPos.position - transform.position).magnitude < 2f)
+                else
                 {
                     body.MovePosition(body.position);
                     animator.SetBool(_isRun, false);
                     if (CurrentTime <= 0f)
                     {
-                        _wasAttackSword = true;
+                        _canAttackSword = true;
                         animator.SetTrigger(_isAttackSword);
                         AudioManager.instance.Play("Enemy_Attack_Sword");
                         CurrentTime = 1.5f;
@@ -161,31 +172,31 @@ namespace Script.Enemy
                         .AppendInterval(1f)
                         .AppendCallback(() =>
                         {
-                            if (_wasAttackSword)
+                            if (_canAttackSword)
                             {
                                 bool hitPlayer = Physics2D.OverlapCircle(transform.position, radiusAttack, playerMasks);
                                 if (hitPlayer)
                                 {
-                                    currentCharacterPos.GetComponent<PlayerHealth>()?.RpcGetDamage(21f);
+                                    currentCharacterPos.GetComponent<PlayerHealth>().RpcGetDamage(21f);
                                 }
 
-                                _wasAttackSword = false;
+                                _canAttackSword = false;
                             }
                         }).Play();
                 }
             }
         }
 
+        [PunRPC]
         private void RpcAttackBullet()
         {
-            animator.SetBool(_isRun, false);
             body.MovePosition(body.position);
-            Debug.LogError(CurrentTime);
+            animator.SetBool(_isRun, false);
             if (CurrentTime <= 0f)
             {
                 DOTween.Sequence()
                     .AppendInterval(0.5f)
-                    .AppendCallback(AttackBulletDirection)
+                    .AppendCallback(() => AttackBullet(true))
                     .Play();
                 CurrentTime = maxTimeAttack;
             }
@@ -215,7 +226,7 @@ namespace Script.Enemy
                 stream.SendNext((float) body.rotation);
                 stream.SendNext((Vector3) transform.position);
                 stream.SendNext((Quaternion) transform.rotation);
-                stream.SendNext((Vector3) transform.localScale);
+                stream.SendNext((Vector3) transform.localEulerAngles);
             }
             else
             {
@@ -223,7 +234,7 @@ namespace Script.Enemy
                 body.rotation = (float) stream.ReceiveNext();
                 transform.position = (Vector3) stream.ReceiveNext();
                 transform.rotation = (Quaternion) stream.ReceiveNext();
-                transform.localScale = (Vector3) stream.ReceiveNext();
+                transform.localEulerAngles = (Vector3) stream.ReceiveNext();
             }
         }
 

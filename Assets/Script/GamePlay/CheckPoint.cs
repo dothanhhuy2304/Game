@@ -5,11 +5,11 @@ namespace Script.GamePlay
     public class CheckPoint : MonoBehaviour
     {
         [SerializeField] private GameObject uiGuide;
-        private LoadingScreenManager loadingScreenManager;
+        private LoadingScreenManager _loadingScreenManager;
 
         private void Start()
         {
-            loadingScreenManager = LoadingScreenManager.instance;
+            _loadingScreenManager = LoadingScreenManager.Instance;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -26,7 +26,7 @@ namespace Script.GamePlay
             {
                 if (Input.GetKey(KeyCode.F))
                 {
-                    loadingScreenManager.FadeLoadingScene(loadingScreenManager.NextScreen());
+                    _loadingScreenManager.FadeLoadingScene(_loadingScreenManager.NextScreen());
                 }
             }
         }

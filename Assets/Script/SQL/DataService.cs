@@ -69,47 +69,47 @@ public class DataService
     {
 
         [PrimaryKey] public string Id { get; set; }
-        public string userName { get; set; }
-        public DateTime createdDate { get; set; }
-        public int age { get; set; }
-        public bool gender { get; set; }
-        public string deviceId { get; set; }
-        public string deviceName { get; set; }
-        public string os { get; set; }
-        public string appVersion { get; set; }
-        public string osVer { get; set; }
-        public int status { get; set; }
-        public int avatarId { get; set; }
+        public string UserName { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public int Age { get; set; }
+        public bool Gender { get; set; }
+        public string DeviceId { get; set; }
+        public string DeviceName { get; set; }
+        public string Os { get; set; }
+        public string AppVersion { get; set; }
+        public string OsVer { get; set; }
+        public int Status { get; set; }
+        public int AvatarId { get; set; }
     }
 
     [Serializable]
     public class GameData
     {
         [PrimaryKey] public string PlayerId { get; set; }
-        public int characterSelect { get; set; }
-        public int levelId { get; set; }
-        public float positionX { get; set; }
-        public float positionY { get; set; }
-        public float positionZ { get; set; }
-        public int score { get; set; }
-        public int gold { get; set; }
-        public int diamond { get; set; }
-        public int health { get; set; }
+        public int CharacterSelect { get; set; }
+        public int LevelId { get; set; }
+        public float PositionX { get; set; }
+        public float PositionY { get; set; }
+        public float PositionZ { get; set; }
+        public int Score { get; set; }
+        public int Gold { get; set; }
+        public int Diamond { get; set; }
+        public int Health { get; set; }
     }
 
     [Serializable]
     public class PlayerSetting
     {
         [PrimaryKey] public string PlayerId { get; set; }
-        public float soundMusic { get; set; }
-        public float soundEffect { get; set; }
+        public float SoundMusic { get; set; }
+        public float SoundEffect { get; set; }
     }
     
     [Serializable]
     public class Item
     {
         [PrimaryKey] [AutoIncrement] public int Id { get; set; }
-        public string name { get; set; }
-        public int value { get; set; }
+        public string Name { get; set; }
+        public int Value { get; set; }
     }
 }

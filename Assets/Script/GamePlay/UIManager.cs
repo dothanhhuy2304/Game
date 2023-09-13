@@ -16,18 +16,17 @@ namespace Script.GamePlay
         [SerializeField] private Slider sliderMusic;
         [SerializeField] private Slider sliderEffect;
 
-        //public GameObject healthUI;
         public GameObject scoreUi;
         public GameObject uiVolume;
         public Button btnBackToMenu;
         public Button btnRestart;
-        private LoadingScreenManager loadingScreenManager;
-        private bool isShowUiSetting;
+        private LoadingScreenManager _loadingScreenManager;
+        private bool _isShowUiSetting;
 
         private void Start()
         {
-            loadingScreenManager = LoadingScreenManager.instance;
-            btnShowAndHiddenUi.onClick.AddListener(() => { ShowAndHiddenUiSetting(ref isShowUiSetting); });
+            _loadingScreenManager = LoadingScreenManager.Instance;
+            btnShowAndHiddenUi.onClick.AddListener(() => { ShowAndHiddenUiSetting(ref _isShowUiSetting); });
             sliderMusic.onValueChanged.AddListener(ChangeVolumeMusic);
             sliderEffect.onValueChanged.AddListener(ChangeVolumeEffect);
             if (string.IsNullOrEmpty(HuyManager.Instance.userId))
@@ -42,12 +41,12 @@ namespace Script.GamePlay
 
             if (playerSetting.PlayerId.Equals(HuyManager.Instance.userId))
             {
-                sliderMusic.value = playerSetting.soundMusic;
-                sliderEffect.value = playerSetting.soundEffect;
-                audioMusic.volume = playerSetting.soundMusic;
+                sliderMusic.value = playerSetting.SoundMusic;
+                sliderEffect.value = playerSetting.SoundEffect;
+                audioMusic.volume = playerSetting.SoundMusic;
                 foreach (var source in AudioManager.instance.sounds)
                 {
-                    source.audioFX.volume = playerSetting.soundEffect;
+                    source.audioFX.volume = playerSetting.SoundEffect;
                 }
             }
 
@@ -102,26 +101,26 @@ namespace Script.GamePlay
 
         public void BackToMenu()
         {
-            isShowUiSetting = false;
+            _isShowUiSetting = false;
             Time.timeScale = 1f;
             settingUi.SetActive(false);
             scoreUi.SetActive(false);
             btnBackToMenu.gameObject.SetActive(false);
             btnRestart.gameObject.SetActive(false);
             AudioManager.instance.Plays_Music("Music_Menu");
-            loadingScreenManager.FadeLoadingScene(0);
+            _loadingScreenManager.FadeLoadingScene(0);
         }
 
         public void RestartLevel()
         {
-            isShowUiSetting = false;
+            _isShowUiSetting = false;
             Time.timeScale = 1f;
             settingUi.SetActive(false);
             scoreUi.SetActive(false);
             btnBackToMenu.gameObject.SetActive(false);
             btnRestart.gameObject.SetActive(false);
             AudioManager.instance.Plays_Music("Music_Menu");
-            loadingScreenManager.FadeLoadingScene(loadingScreenManager.RestartLevel());
+            _loadingScreenManager.FadeLoadingScene(_loadingScreenManager.RestartLevel());
         }
 
         public void ExitGame()

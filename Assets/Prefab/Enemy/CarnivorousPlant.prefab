@@ -290,6 +290,7 @@ MonoBehaviour:
     enemyHeal: {fileID: 7130098565743549990}
     rangeAttack: 10
     canMoving: 0
+  pv: {fileID: 3719249766801715143}
   body: {fileID: 3137032912317739878}
   animator: {fileID: 2809867020894082271}
   projectiles: []

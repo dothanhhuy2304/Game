@@ -10,12 +10,6 @@ namespace Script.Enemy
         [SerializeField] private Rigidbody2D body;
         [SerializeField] private Collider2D col;
         [Range(0, 10)] [SerializeField] private int timeFalling;
-        private Vector2 startPos;
-
-        private void Awake()
-        {
-            startPos = transform.position;
-        }
 
         private void OnCollisionEnter2D(Collision2D other)
         {

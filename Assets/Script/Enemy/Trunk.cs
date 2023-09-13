@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using Photon.Pun;
 using UnityEngine;
@@ -9,9 +10,17 @@ namespace Script.Enemy
     {
         [SerializeField] private float rangeAttack = 10f;
 
+        private void Awake()
+        {
+            if (pv == null)
+            {
+                pv = GetComponent<PhotonView>();
+            }
+        }
+
         private void Update()
         {
-            RpcTargetPosition();
+            FindPlayerPosition();
             if (enemySetting.canAttack)
             {
                 if (!enemySetting.enemyHeal.EnemyDeath())
@@ -19,32 +28,43 @@ namespace Script.Enemy
                     HuyManager.Instance.SetUpTime(ref CurrentTime);
                     if ((currentCharacterPos.transform.position - transform.position).magnitude < rangeAttack)
                     {
-                        Flip();
-                        if (CurrentTime <= 0)
+                        if (pv.IsMine)
                         {
-                            Shot();
+                            Flip();
                         }
+                        
+                        pv.RPC(nameof(RpcShot), RpcTarget.AllBuffered);
                     }
                 }
             }
         }
 
-        private void RpcTargetPosition()
+        private void FindPlayerPosition()
         {
             currentCharacterPos = FindClosestPlayer();
             enemySetting.canAttack = currentCharacterPos;
         }
 
+        [PunRPC]
+        private void RpcShot()
+        {
+            if (CurrentTime <= 0)
+            {
+                Shot();
+            }
+        }
+
         private void Shot()
         {
+            animator.SetTrigger("isAttack");
             DOTween.Sequence()
                 .AppendInterval(0.5f)
-                .AppendCallback(AttackBullet)
+                .AppendCallback(() => { AttackBulletByPlayer(currentCharacterPos); })
                 .Play();
-            animator.SetTrigger("isAttack");
             CurrentTime = maxTimeAttack;
         }
-        
+
+
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if (stream.IsWriting)

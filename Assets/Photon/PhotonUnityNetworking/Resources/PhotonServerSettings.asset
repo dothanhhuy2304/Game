@@ -34,6 +34,7 @@ MonoBehaviour:
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
+  - AttackSword
   - BulletAttack
   - ClickRpc
   - Dash
@@ -51,10 +52,15 @@ MonoBehaviour:
   - Moving
   - PlayerInput
   - RespawnSpaceship
+  - RpcAttackBullet
   - RpcCharacter
   - RpcCheckGround
+  - RpcNinjaMove
+  - RpcNinjaMove2
   - RpcResetAnimJump
+  - RpcShot
   - YVelocity
+  - RpcMoving
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

@@ -12086,7 +12086,7 @@ GameObject:
   - component: {fileID: 7305501568197246341}
   - component: {fileID: 1193846889390587628}
   - component: {fileID: 1617045116}
-  - component: {fileID: 1551373991}
+  - component: {fileID: 3759217347789782167}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -12132,9 +12132,13 @@ MonoBehaviour:
   numberScore: 0
   numberGold: 0
   numberDiamond: 0
+  lobbyPanel: {fileID: 380701634}
   playerMask:
     serializedVersion: 2
     m_Bits: 254080
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 384
 --- !u!114 &7305501568197246341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12190,7 +12194,7 @@ MonoBehaviour:
   - {fileID: 316831055601829943}
   btnNext: {fileID: 1064292033}
   btnPreview: {fileID: 150991190}
---- !u!114 &1551373991
+--- !u!114 &3759217347789782167
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

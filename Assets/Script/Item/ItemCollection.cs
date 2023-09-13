@@ -3,7 +3,6 @@ using Photon.Pun;
 using Script.GamePlay;
 using Script.Player;
 using UnityEngine;
-using Script.Core;
 using Script.ScriptTable;
 
 namespace Script.Item

@@ -672,6 +672,7 @@ MonoBehaviour:
     enemyHeal: {fileID: 0}
     rangeAttack: 0
     canMoving: 0
+  pv: {fileID: 1360946181824052064}
   body: {fileID: 7777926475499111050}
   animator: {fileID: 4549498311706445916}
   projectiles: []
@@ -683,7 +684,6 @@ MonoBehaviour:
   currentCharacterPos: {fileID: 0}
   moveTime: 9
   moveWaitingTime: 12
-  rotations: 
   chickenCol: {fileID: 8924637331163455981}
   explosionObj: {fileID: 4549498311450808673}
   spriteRenderer: {fileID: 4549498311706445917}
@@ -707,8 +707,10 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
+  - {fileID: 8736459600110473510}
   - {fileID: 8177280485201020794}
   - {fileID: 2009244177572719005}
+  - {fileID: 7350374535571492347}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

@@ -212,6 +212,7 @@ MonoBehaviour:
     enemyHeal: {fileID: 3443694513160801480}
     rangeAttack: 0
     canMoving: 0
+  pv: {fileID: 200322106688377554}
   body: {fileID: 3443694513160801474}
   animator: {fileID: 2951199663832917074}
   projectiles: []
@@ -223,14 +224,9 @@ MonoBehaviour:
   currentCharacterPos: {fileID: 0}
   radiusAttack: 2
   target: {x: 0, y: 0, z: 0}
-  currentTrans: {fileID: 3443694513160801486}
-  timeDurationMoving: 0
   playerMasks:
     serializedVersion: 2
     m_Bits: 253952
-  mask:
-    serializedVersion: 2
-    m_Bits: 254080
 --- !u!114 &200322106688377554
 MonoBehaviour:
   m_ObjectHideFlags: 0

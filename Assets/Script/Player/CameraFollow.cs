@@ -1,4 +1,3 @@
-using Script.Core;
 using UnityEngine;
 
 namespace Script.Player
@@ -10,7 +9,7 @@ namespace Script.Player
 
         private void LateUpdate()
         {
-            if (!CharacterController2D.IsLocalPlayer.playerHealth.isDeath)
+            if (!CharacterController2D.IsLocalPlayer.playerHealth.isDeath && CharacterController2D.IsLocalPlayer.pv.IsMine)
             {
                 Vector3 target = CharacterController2D.IsLocalPlayer.transform.position;
                 Vector3 desiredPosition = new Vector3(target.x + offset.x, target.y + offset.y, -10f);

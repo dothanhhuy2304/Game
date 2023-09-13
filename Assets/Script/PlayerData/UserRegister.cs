@@ -10,11 +10,11 @@ public class UserRegister : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private TMP_InputField userName;
     [SerializeField] private TMP_InputField age;
-    private GameManager gameManager;
+    private GameManager _gameManager;
 
     private void Start()
     {
-        gameManager = GameManager.instance;
+        _gameManager = GameManager.instance;
     }
 
     private void OnEnable()
@@ -35,17 +35,17 @@ public class UserRegister : MonoBehaviour
                 DataService.PlayerProfileData playerProfileData = new DataService.PlayerProfileData
                 {
                     Id = SystemInfo.deviceUniqueIdentifier,
-                    userName = userName.text,
-                    createdDate = DateTime.UtcNow,
-                    age = int.Parse(age.text),
-                    gender = true,
-                    deviceId = SystemInfo.deviceUniqueIdentifier,
-                    deviceName = SystemInfo.deviceName,
-                    os = SystemInfo.operatingSystem,
-                    appVersion = Application.version,
-                    osVer = Environment.OSVersion.Version.ToString(),
-                    status = 0,
-                    avatarId = 0
+                    UserName = userName.text,
+                    CreatedDate = DateTime.UtcNow,
+                    Age = int.Parse(age.text),
+                    Gender = true,
+                    DeviceId = SystemInfo.deviceUniqueIdentifier,
+                    DeviceName = SystemInfo.deviceName,
+                    Os = SystemInfo.operatingSystem,
+                    AppVersion = Application.version,
+                    OsVer = Environment.OSVersion.Version.ToString(),
+                    Status = 0,
+                    AvatarId = 0
                 };
 
                 //DataService.GetConnection().Table<DataService.PlayerProfileData>().Connection.InsertOrReplace(playerProfileData);
@@ -55,14 +55,14 @@ public class UserRegister : MonoBehaviour
                 DataService.GameData gameData = new DataService.GameData
                 {
                     PlayerId = HuyManager.Instance.userId,
-                    characterSelect = 0,
-                    levelId = 0,
-                    gold = 0,
-                    diamond = 0,
-                    positionX = -4.95f,
-                    positionY = -4f,
-                    positionZ = 0f,
-                    health = 100
+                    CharacterSelect = 0,
+                    LevelId = 0,
+                    Gold = 0,
+                    Diamond = 0,
+                    PositionX = -4.95f,
+                    PositionY = -4f,
+                    PositionZ = 0f,
+                    Health = 100
                 };
                 //DataService.GetConnection().Table<DataService.GameData>().Connection.InsertOrReplace(gameData);
                 HuyManager.Instance.UpdateUserData(gameData);
@@ -70,22 +70,22 @@ public class UserRegister : MonoBehaviour
                 DataService.PlayerSetting playerSetting = new DataService.PlayerSetting
                 {
                     PlayerId = HuyManager.Instance.userId,
-                    soundMusic = 1f,
-                    soundEffect = 1f
+                    SoundMusic = 1f,
+                    SoundEffect = 1f
                 };
                 //DataService.GetConnection().Table<DataService.PlayerSetting>().Connection.InsertOrReplace(playerSetting);
                 HuyManager.Instance.UpdatePlayerSetting(playerSetting);
                 
-                DataService.Item item = new DataService.Item {name = "tEst", value = 2};
+                DataService.Item item = new DataService.Item {Name = "tEst", Value = 2};
                 DataService.GetConnection().Table<DataService.Item>().Connection.Insert(item);
                 //Load Data
-                HuyManager.Instance.currentPosition[0] = gameData.positionX;
-                HuyManager.Instance.currentPosition[1] = gameData.positionY;
-                HuyManager.Instance.currentPosition[2] = gameData.positionZ;
+                HuyManager.Instance.currentPosition[0] = gameData.PositionX;
+                HuyManager.Instance.currentPosition[1] = gameData.PositionY;
+                HuyManager.Instance.currentPosition[2] = gameData.PositionZ;
                 var data = HuyManager.Instance.GetCurrentPlayerData();
-                gameManager.SetScore(data.score);
-                gameManager.SetMoney(data.gold);
-                gameManager.SetDiamond(data.diamond);
+                _gameManager.SetScore(data.Score);
+                _gameManager.SetMoney(data.Gold);
+                _gameManager.SetDiamond(data.Diamond);
                 animator.Play("Down");
             }).AppendInterval(0.6f)
             .AppendCallback(() =>

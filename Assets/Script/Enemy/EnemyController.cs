@@ -24,15 +24,13 @@ namespace Script.Enemy
     public abstract class EnemyController : MonoBehaviourPunCallbacks
     {
         public EnemySetting enemySetting;
-        [Header("Types")] 
-        [SerializeField] protected Rigidbody2D body;
+        [SerializeField] protected PhotonView pv;
+        [Header("Types")] [SerializeField] protected Rigidbody2D body;
         [SerializeField] protected Animator animator;
         [SerializeField] private List<FireProjectile> projectiles;
         [SerializeField] protected float movingSpeed;
         [SerializeField] private float offsetFlip;
-        [Space] 
-        [Header("Time")] 
-        protected float CurrentTime = 0;
+        [Space] [Header("Time")] protected float CurrentTime = 0;
         [SerializeField] protected float maxTimeAttack;
         [SerializeField] protected Transform offsetAttack;
         [SerializeField] protected Vector2 positionAttack;
@@ -45,22 +43,31 @@ namespace Script.Enemy
             transform.rotation = Quaternion.Euler(new Vector3(0, angle + offsetFlip, 0));
         }
 
-        protected void AttackBulletDirection()
+        protected void AttackBullet(bool useDirection = false)
         {
             int index = FindBullet();
             projectiles[index].transform.position = transform.TransformPoint(positionAttack);
-            Vector2 direction = (currentCharacterPos.position - transform.position).normalized;
-            projectiles[index].transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-            projectiles[index].Shoot(transform);
+            if (!useDirection)
+            {
+                projectiles[index].transform.rotation = Quaternion.identity;
+                projectiles[index].Shoot(transform);
+            }
+            else
+            {
+                Vector2 direction = currentCharacterPos.position - transform.position;
+                projectiles[index].transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+                projectiles[index].Shoot(transform, currentCharacterPos);
+            }
+
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
 
-        protected void AttackBullet()
+        protected void AttackBulletByPlayer(Transform trans)
         {
             int index = FindBullet();
             projectiles[index].transform.position = transform.TransformPoint(positionAttack);
             projectiles[index].transform.rotation = Quaternion.identity;
-            projectiles[index].Shoot(transform);
+            projectiles[index].Shoot(trans);
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }
 
@@ -84,14 +91,22 @@ namespace Script.Enemy
                         //trans = go.transform;
                         trans = hit.collider.gameObject.transform;
                     }
-                    else
-                    {
-                        return null;
-                    }
                 }
             }
 
             return trans;
+        }
+        
+        protected Transform FindPlayerClosetWithLocalPlayer()
+        {
+            Vector3 target = CharacterController2D.IsLocalPlayer.transform.position;
+            RaycastHit2D hit = Physics2D.Linecast(transform.position, target, GameManager.instance.playerMask);
+            if (hit.collider != null && hit.collider.CompareTag("Player"))
+            {
+                return hit.collider.gameObject.transform;
+            }
+
+            return null;
         }
 
         protected Transform FindClosetPlayerWithoutPhysic()
@@ -125,12 +140,10 @@ namespace Script.Enemy
                 var gos = go.transform.position;
                 float currentDistance = (position - gos).magnitude;
                 RaycastHit2D hit = Physics2D.Linecast(new Vector3(position.x, position.y + 0.3f, 0f),
-                    new Vector3(1 * 100f, position.y + 0.3f, 0f),
-                    GameManager.instance.playerMask);
+                    new Vector3(1 * 100f, position.y + 0.3f, 0f), GameManager.instance.playerMask);
                 RaycastHit2D hit2 = Physics2D.Linecast(new Vector3(position.x, position.y + 0.3f, 0f),
-                    new Vector3(-1 * 100f, position.y + 0.3f, 0f),
-                    GameManager.instance.playerMask);
-                if (hit.collider != null && hit.collider.gameObject.CompareTag("Player") &&
+                    new Vector3(-1 * 100f, position.y + 0.3f, 0f), GameManager.instance.playerMask);
+                if (hit.collider && hit.collider.gameObject.CompareTag("Player") &&
                     !hit.collider.GetComponent<PlayerHealth>().isDeath)
                 {
                     if (currentDistance < closestDistance)
@@ -140,7 +153,7 @@ namespace Script.Enemy
                         trans = hit.collider.gameObject.transform;
                     }
                 }
-                else if (hit2.collider != null && hit2.collider.gameObject.CompareTag("Player") &&
+                else if (hit2.collider && hit2.collider.gameObject.CompareTag("Player") &&
                          !hit2.collider.GetComponent<PlayerHealth>().isDeath)
                 {
                     if (currentDistance < closestDistance)
@@ -181,29 +194,5 @@ namespace Script.Enemy
             return 0;
         }
 
-        // public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        // {
-        //     if (stream.IsWriting)
-        //     {
-        //         stream.SendNext((Vector3) body.velocity);
-        //         stream.SendNext((float) body.rotation);
-        //         stream.SendNext((Vector3) transform.position);
-        //         stream.SendNext((Quaternion) transform.rotation);
-        //     }
-        //     else
-        //     {
-        //         body.velocity = (Vector3) stream.ReceiveNext();
-        //         body.rotation = (float) stream.ReceiveNext();
-        //         transform.position = (Vector3) stream.ReceiveNext();
-        //         transform.rotation = (Quaternion) stream.ReceiveNext();
-        //     }
-        // }
-
-        private void OnDrawGizmos()
-        {
-            Vector3 position = transform.position;
-            Gizmos.DrawLine(new Vector3(position.x, position.y + 0.3f, 0f),
-                new Vector3(1 * 100f, position.y + 0.3f, 0f));
-        }
     }
 }

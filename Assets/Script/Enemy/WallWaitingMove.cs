@@ -10,7 +10,7 @@ namespace Script.Enemy
         private bool _isMoving;
         [SerializeField] private float movingSpeed = 2f;
         private bool _isComeback;
-        private bool playerExist;
+        private bool _playerExist;
         private Vector3 _startTrans = Vector3.zero;
 
         private SpriteRenderer _spriteRenderer;
@@ -52,7 +52,7 @@ namespace Script.Enemy
         {
             if (other.collider.CompareTag("ground"))
             {
-                if (!playerExist)
+                if (!_playerExist)
                 {
                     movingSpeed *= Direction;
                 }
@@ -68,7 +68,7 @@ namespace Script.Enemy
                 other.transform.SetParent(transform);
                 _isMoving = true;
                 _isComeback = false;
-                playerExist = false;
+                _playerExist = false;
             }
         }
 
@@ -77,7 +77,7 @@ namespace Script.Enemy
             if (other.collider.CompareTag("Player"))
             {
                 other.transform.SetParent(null);
-                playerExist = true;
+                _playerExist = true;
             }
         }
     }

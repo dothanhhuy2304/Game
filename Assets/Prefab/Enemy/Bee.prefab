@@ -344,6 +344,7 @@ MonoBehaviour:
     enemyHeal: {fileID: 7350970975510589207}
     rangeAttack: 6
     canMoving: 0
+  pv: {fileID: 4667490616916348823}
   body: {fileID: 2488203086413059535}
   animator: {fileID: 1062633453580850972}
   projectiles: []
@@ -464,6 +465,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
+  - {fileID: 7350970975510589211}
   - {fileID: 6058120945168926348}
   - {fileID: 8149556709856691337}
   - {fileID: 2258713978709275410}

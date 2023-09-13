@@ -19,19 +19,12 @@ namespace Script.Player
 
         private void Start()
         {
-            if (photonView.IsMine)
+            if (playerCharacter.pv.IsMine)
             {
                 petAi = PetAI.IsLocalPet;
-                if (playerCharacter.playerData.currentHealth <= 0)
-                {
-                    photonView.RPC(nameof(LoadHeath), RpcTarget.AllBuffered);
-                }
-                else
-                {
-                    photonView.RPC(nameof(LoadCurrentHealth), RpcTarget.AllBuffered);
-                }
-
-                //photonView.RPC(nameof(RpcPlayerDeath), RpcTarget.AllBuffered);
+                playerCharacter.pv.RPC(playerCharacter.playerData.currentHealth <= 0
+                    ? nameof(LoadHeath)
+                    : nameof(LoadCurrentHealth), RpcTarget.AllBuffered);
             }
         }
 
@@ -49,18 +42,9 @@ namespace Script.Player
             playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
         }
 
-        // [PunRPC]
-        // private void RpcPlayerDeath()
-        // {
-        //     HuyManager.Instance.SetPlayerIsDeath(0);
-        //     HuyManager.Instance.SetPlayerIsHurt(0);
-        //     isDeath = false;
-        //     isHurt = false;
-        // }
-
         public void RpcGetDamage(float damage)
         {
-            photonView.RPC(nameof(GetDamage), RpcTarget.AllBuffered, damage);
+            playerCharacter.pv.RPC(nameof(GetDamage), RpcTarget.AllBuffered, damage);
         }
 
         [PunRPC]
@@ -89,7 +73,7 @@ namespace Script.Player
 
         public void RpcHealing(float value)
         {
-            photonView.RPC(nameof(Healing), RpcTarget.AllBuffered, value);
+            playerCharacter.pv.RPC(nameof(Healing), RpcTarget.AllBuffered, value);
         }
 
         [PunRPC]
@@ -134,7 +118,7 @@ namespace Script.Player
 
         public void RpcDieByFalling()
         {
-            photonView.RPC(nameof(DieByFalling), RpcTarget.AllBuffered);
+            playerCharacter.pv.RPC(nameof(DieByFalling), RpcTarget.AllBuffered);
         }
 
         [PunRPC]

@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using Photon.Pun;
 using UnityEngine;
@@ -10,29 +11,35 @@ namespace Script.Enemy
         private readonly int _isAttack = Animator.StringToHash("isAttack");
         private bool _canAttack;
 
+        private void Awake()
+        {
+            if (pv == null)
+            {
+                pv = GetComponent<PhotonView>();
+            }
+        }
+
         private void Update()
         {
-            RpcTargetPosition();
-            if (!enemySetting.enemyHeal.EnemyDeath())
+            if (enemySetting.enemyHeal.EnemyDeath()) return;
+            FindPlayerPosition();
+            if (_canAttack)
             {
                 HuyManager.Instance.SetUpTime(ref CurrentTime);
-                if (_canAttack)
+                if ((currentCharacterPos.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
-                    if ((currentCharacterPos.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
+                    Flip();
+                    if (CurrentTime <= 0)
                     {
-                        Flip();
-                        if (CurrentTime <= 0)
-                        {
-                            BulletAttack();
-                            animator.SetTrigger(_isAttack);
-                            CurrentTime = maxTimeAttack;
-                        }
+                        BulletAttack();
+                        animator.SetTrigger(_isAttack);
+                        CurrentTime = maxTimeAttack;
                     }
                 }
             }
         }
 
-        private void RpcTargetPosition()
+        private void FindPlayerPosition()
         {
             currentCharacterPos = FindClosestPlayer();
             _canAttack = currentCharacterPos;
@@ -42,7 +49,7 @@ namespace Script.Enemy
         {
             DOTween.Sequence()
                 .AppendInterval(0.5f)
-                .AppendCallback(AttackBulletDirection)
+                .AppendCallback(()=>AttackBullet(true))
                 .Play();
         }
         

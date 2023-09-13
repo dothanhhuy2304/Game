@@ -10,16 +10,16 @@ namespace Script.GamePlay
 {
     public class LoadingScreenManager : MonoBehaviourPunCallbacks
     {
-        public static LoadingScreenManager instance;
+        public static LoadingScreenManager Instance;
         [SerializeField] private GameObject uiLoading;
         [SerializeField] private Image fillLoading;
         private AsyncOperation async;
 
         private void Awake()
         {
-            if (instance == null)
+            if (Instance == null)
             {
-                instance = this;
+                Instance = this;
             }
             else
             {

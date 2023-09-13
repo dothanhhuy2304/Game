@@ -55,15 +55,15 @@ namespace Script.Core
             DataService.GameData gameData = new DataService.GameData()
             {
                 PlayerId = pf.PlayerId,
-                characterSelect = pf.characterSelect,
-                levelId = pf.levelId,
-                positionX = pf.positionX,
-                positionY = pf.positionY,
-                positionZ = pf.positionZ,
-                score = pf.score,
-                gold = pf.gold,
-                diamond = pf.diamond,
-                health = pf.health
+                CharacterSelect = pf.CharacterSelect,
+                LevelId = pf.LevelId,
+                PositionX = pf.PositionX,
+                PositionY = pf.PositionY,
+                PositionZ = pf.PositionZ,
+                Score = pf.Score,
+                Gold = pf.Gold,
+                Diamond = pf.Diamond,
+                Health = pf.Health
             };
             DataService.GetConnection().Table<DataService.GameData>().Connection.InsertOrReplace(gameData);
         }
@@ -73,17 +73,17 @@ namespace Script.Core
             DataService.PlayerProfileData playerProfileData = new DataService.PlayerProfileData
             {
                 Id = profileData.Id,
-                userName = profileData.userName,
-                createdDate = profileData.createdDate,
-                age = profileData.age,
-                gender = profileData.gender,
-                deviceId = profileData.deviceId,
-                deviceName = profileData.deviceName,
-                os = profileData.os,
-                appVersion = profileData.appVersion,
-                osVer = profileData.osVer,
-                status = profileData.status,
-                avatarId = profileData.avatarId
+                UserName = profileData.UserName,
+                CreatedDate = profileData.CreatedDate,
+                Age = profileData.Age,
+                Gender = profileData.Gender,
+                DeviceId = profileData.DeviceId,
+                DeviceName = profileData.DeviceName,
+                Os = profileData.Os,
+                AppVersion = profileData.AppVersion,
+                OsVer = profileData.OsVer,
+                Status = profileData.Status,
+                AvatarId = profileData.AvatarId
             };
             DataService.GetConnection().Table<DataService.PlayerProfileData>().Connection.InsertOrReplace(playerProfileData);
         }
@@ -92,8 +92,8 @@ namespace Script.Core
         {
             DataService.PlayerSetting playerSetting=new DataService.PlayerSetting();
             playerSetting.PlayerId = userId;
-            playerSetting.soundMusic = setting.soundMusic;
-            playerSetting.soundEffect = setting.soundEffect;
+            playerSetting.SoundMusic = setting.SoundMusic;
+            playerSetting.SoundEffect = setting.SoundEffect;
             DataService.GetConnection().Table<DataService.PlayerSetting>().Connection.InsertOrReplace(playerSetting);
         }
 

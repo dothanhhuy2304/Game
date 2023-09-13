@@ -17,7 +17,10 @@ namespace Script.Enemy
             {
                 PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
                 if (playerHealth.isDeath || playerHealth.isHurt)
+                {
                     return;
+                }
+
                 HuyManager.Instance.SetUpTime(ref _timeAttack);
                 if (_takeDamage)
                 {

@@ -315,6 +315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06d95b80c6c38704f9cf1ed4799ac333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pv: {fileID: 4282258128844528452}
   body: {fileID: 6529767382540131349}
   col: {fileID: 6529767382540131348}
   playerData: {fileID: 11400000, guid: 0844518f0f0c29c4cb88c37d6ac01270, type: 2}
@@ -336,7 +337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 573703942ce4c0448a6db8a680555477, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHeath: {fileID: 6529767382540131347}
+  player: {fileID: 6529767382540131345}
   projectiles: []
   offset: {x: 1, y: 0}
   resetTimeAttack: 0.5

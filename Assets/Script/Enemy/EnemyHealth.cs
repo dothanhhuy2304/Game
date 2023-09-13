@@ -10,6 +10,7 @@ namespace Script.Enemy
 {
     public class EnemyHealth : MonoBehaviourPunCallbacks
     {
+        [SerializeField] private PhotonView pv;
         [SerializeField] private bool canReSpawn;
         [SerializeField] private float heathDefault;
         [SerializeField] private float currentHealth;
@@ -24,6 +25,11 @@ namespace Script.Enemy
 
         private void Start()
         {
+            if (pv == null)
+            {
+                pv = GetComponent<PhotonView>();
+            }
+
             LoadHealth();
         }
 
@@ -36,7 +42,7 @@ namespace Script.Enemy
 
         public void RpcGetDamage(float damage)
         {
-            photonView.RPC(nameof(EnemyGetDamage), RpcTarget.AllBuffered, damage);
+            pv.RPC(nameof(EnemyGetDamage), RpcTarget.AllBuffered, damage);
         }
 
         [PunRPC]
@@ -52,19 +58,6 @@ namespace Script.Enemy
                 .AppendInterval(0.5f)
                 .AppendCallback(() => { PhotonNetwork.Destroy(damageInstance); });
         }
-
-        // public void RpcHealing(float value)
-        // {
-        //     photonView.RPC(nameof(EnemyHealing), RpcTarget.AllBuffered, value);
-        // }
-        //
-        // [PunRPC]
-        // private void EnemyHealing(float value)
-        // {
-        //     currentHealth = Mathf.Clamp(currentHealth + value, 0f, maxHealth);
-        //     if (currentHealth > maxHealth) currentHealth = maxHealth;
-        //     enemyHealthBar.SetHealth(currentHealth, maxHealth);
-        // }
 
         public bool EnemyDeath()
         {

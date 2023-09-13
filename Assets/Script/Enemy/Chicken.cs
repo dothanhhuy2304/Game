@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using Photon.Pun;
 using Script.Core;
@@ -10,13 +11,20 @@ namespace Script.Enemy
     {
         [SerializeField] private float moveTime = 9f;
         [SerializeField] private float moveWaitingTime = 12f;
-        [SerializeField] private int[] rotations;
         [SerializeField] private Collider2D chickenCol;
         [SerializeField] private Explosion explosionObj;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private bool isHitGround;
         private readonly int _isRun = Animator.StringToHash("is_Run");
         private bool _canAttack;
+
+        private void Awake()
+        {
+            if (pv == null)
+            {
+                pv = GetComponent<PhotonView>();
+            }
+        }
 
         protected void Start()
         {
@@ -27,9 +35,7 @@ namespace Script.Enemy
 
         private void FixedUpdate()
         {
-            //photonView.RPC(nameof(RpcPosition), RpcTarget.AllBuffered);
-            RpcTargetPosition();
-
+            FindPlayerPosition();
             if (!enemySetting.canAttack)
             {
                 if (_canAttack)
@@ -47,12 +53,10 @@ namespace Script.Enemy
                 HuyManager.Instance.SetUpTime(ref CurrentTime);
                 if ((currentCharacterPos.position - transform.position).magnitude > 0.5f && isHitGround)
                 {
-                    //photonView.RPC(nameof(MoveToTargets), RpcTarget.AllBuffered, isHitGround);
                     MoveToTargets(isHitGround);
                 }
                 else
                 {
-                    //photonView.RPC(nameof(MoveToTargets), RpcTarget.AllBuffered, false);
                     MoveToTargets(false);
                 }
 
@@ -63,17 +67,21 @@ namespace Script.Enemy
                         if ((transform.position - enemySetting.startPosition).magnitude >
                             (transform.position - enemySetting.endPosition).magnitude)
                         {
-
-                            RpcFlip(enemySetting.endPosition, enemySetting.startPosition);
+                            if (pv.IsMine)
+                            {
+                                RpcFlip(enemySetting.endPosition, enemySetting.startPosition);
+                            }
                         }
                         else
                         {
-                            RpcFlip(enemySetting.startPosition, enemySetting.endPosition);
+                            if (pv.IsMine)
+                            {
+                                RpcFlip(enemySetting.startPosition, enemySetting.endPosition);
+                            }
                         }
 
                         enemySetting.canAttack = false;
                         CurrentTime = maxTimeAttack;
-                        //photonView.RPC(nameof(ChickenMoving), RpcTarget.AllBuffered);
                     }
                     else
                     {
@@ -83,7 +91,6 @@ namespace Script.Enemy
                         explosionObj.gameObject.SetActive(true);
                         CurrentTime = maxTimeAttack;
                         enemySetting.canAttack = false;
-                        //photonView.RPC(nameof(MoveToTargets), RpcTarget.AllBuffered, false);
                         MoveToTargets(false);
                     }
                 }
@@ -91,14 +98,12 @@ namespace Script.Enemy
 
         }
 
-        //[PunRPC]
-        private void RpcTargetPosition()
+        private void FindPlayerPosition()
         {
             currentCharacterPos = FindClosetPlayerWithoutPhysic();
             _canAttack = currentCharacterPos;
         }
 
-        //[PunRPC]
         private void RpcFlip(Vector3 start, Vector3 end)
         {
             Vector3 target = (start - end).normalized;
@@ -106,36 +111,30 @@ namespace Script.Enemy
             body.transform.rotation = Quaternion.Euler(new Vector3(0, angle + -45, 0));
         }
 
-        //[PunRPC]
         private void ChickenMoving()
         {
             DOTween.Sequence()
                 .AppendCallback(() =>
                 {
-                    //photonView.RPC(nameof(MoveToTarget), RpcTarget.AllBuffered, enemySetting.endPosition);
                     MoveToTarget(enemySetting.endPosition);
                 })
                 .AppendInterval(moveWaitingTime)
                 .AppendCallback(() =>
                 {
-                    //photonView.RPC(nameof(RpcFlip), RpcTarget.AllBuffered, enemySetting.endPosition, enemySetting.startPosition);
                     RpcFlip(enemySetting.endPosition, enemySetting.startPosition);
                 })
                 .AppendCallback(() =>
                 {
-                    //photonView.RPC(nameof(MoveToTarget), RpcTarget.AllBuffered, enemySetting.startPosition);
                     MoveToTarget(enemySetting.startPosition);
                 })
                 .AppendInterval(moveWaitingTime)
                 .AppendCallback(() =>
                 {
-                    //photonView.RPC(nameof(RpcFlip), RpcTarget.AllBuffered, enemySetting.startPosition, enemySetting.endPosition);
                     RpcFlip(enemySetting.startPosition, enemySetting.endPosition);
                 })
                 .SetLoops(int.MaxValue).Play();
         }
 
-        //[PunRPC]
         private void MoveToTarget(Vector3 target)
         {
             animator.SetBool(_isRun, true);
@@ -147,7 +146,6 @@ namespace Script.Enemy
         }
 
 
-        //[PunRPC]
         private void MoveToTargets(bool canMove)
         {
             if (canMove)
@@ -162,7 +160,11 @@ namespace Script.Enemy
                 body.MovePosition(body.position);
             }
 
-            Flip();
+            if (pv.IsMine)
+            {
+                Flip();
+            }
+
             animator.SetBool(_isRun, canMove);
         }
 

@@ -8,7 +8,7 @@ namespace Script.Player
 {
     public class Weapon : MonoBehaviourPunCallbacks
     {
-        [SerializeField] private PlayerHealth playerHeath;
+        [SerializeField] private CharacterController2D player;
         [HideInInspector] [SerializeField] private List<FireProjectile> projectiles;
         [SerializeField] private Vector2 offset;
         private float _timeAttack;
@@ -22,19 +22,18 @@ namespace Script.Player
 
         private void LateUpdate()
         {
-            if (photonView.IsMine)
+            if (!player.pv.IsMine)
             {
-                HuyManager.Instance.SetUpTime(ref _timeAttack);
-                if (playerHeath.isDeath || playerHeath.isHurt || EventSystem.current.IsPointerOverGameObject())
-                    return;
-                if (_timeAttack <= 0)
-                {
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        photonView.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
-                        _timeAttack = resetTimeAttack;
-                    }
-                }
+                return;
+            }
+
+            HuyManager.Instance.SetUpTime(ref _timeAttack);
+            if (player.playerHealth.isDeath || player.playerHealth.isHurt || EventSystem.current.IsPointerOverGameObject())
+                return;
+            if (_timeAttack <= 0 && Input.GetMouseButtonDown(0))
+            {
+                player.pv.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
+                _timeAttack = resetTimeAttack;
             }
         }
 
