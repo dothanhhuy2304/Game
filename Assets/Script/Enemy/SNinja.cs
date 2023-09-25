@@ -10,8 +10,8 @@ namespace Script.Enemy
     {
         [SerializeField] private float radiusAttack;
 
-        [Header("SetUp Patrol")] [SerializeField]
-        private Vector3 target;
+        [Header("SetUp Patrol")] 
+        [SerializeField] private Vector3 target;
 
         private readonly int _isRun = Animator.StringToHash("isRun");
         private readonly int _isAttackSword = Animator.StringToHash("isAttack1");
@@ -102,7 +102,6 @@ namespace Script.Enemy
         {
             currentCharacterPos = FindClosestPlayer();
             _canAttack = currentCharacterPos;
-
         }
 
         private void MoveToPosition()
@@ -177,7 +176,7 @@ namespace Script.Enemy
                                 bool hitPlayer = Physics2D.OverlapCircle(transform.position, radiusAttack, playerMasks);
                                 if (hitPlayer)
                                 {
-                                    currentCharacterPos.GetComponent<PlayerHealth>().RpcGetDamage(21f);
+                                    currentCharacterPos.GetComponent<PlayerHealth>().GetDamage(21f);
                                 }
 
                                 _canAttackSword = false;

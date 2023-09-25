@@ -8,7 +8,7 @@ using UnityEngine;
 using Script.Enemy;
 namespace Script.Player
 {
-    public class PlayerHealth :MonoBehaviourPunCallbacks, IHealthSystem
+    public class PlayerHealth :MonoBehaviourPun, IHealthSystem
     {
         [SerializeField] private CharacterController2D playerCharacter;
         [SerializeField] private PlayerHealthBar playerHealthBar;
@@ -42,12 +42,6 @@ namespace Script.Player
             playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
         }
 
-        public void RpcGetDamage(float damage)
-        {
-            playerCharacter.pv.RPC(nameof(GetDamage), RpcTarget.AllBuffered, damage);
-        }
-
-        [PunRPC]
         public void GetDamage(float damage)
         {
             playerCharacter.playerData.currentHealth = Mathf.Clamp(playerCharacter.playerData.currentHealth - damage, 0,
@@ -62,13 +56,16 @@ namespace Script.Player
             }
 
             playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
-
-            var objectDamage = PhotonNetwork.Instantiate(prefabDamagePlayer, transform.position + Vector3.up, Quaternion.identity);
-            TMP_Text txtDamage = objectDamage.GetComponentInChildren<TMP_Text>();
-            txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
-            DOTween.Sequence()
-                .AppendInterval(0.5f)
-                .AppendCallback(() => { PhotonNetwork.Destroy(objectDamage); });
+            if (playerCharacter.pv.IsMine)
+            {
+                var objectDamage = PhotonNetwork.Instantiate(prefabDamagePlayer, transform.position + Vector3.up,
+                    Quaternion.identity);
+                TMP_Text txtDamage = objectDamage.GetComponentInChildren<TMP_Text>();
+                txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
+                DOTween.Sequence()
+                    .AppendInterval(0.5f)
+                    .AppendCallback(() => { PhotonNetwork.Destroy(objectDamage); });
+            }
         }
 
         public void RpcHealing(float value)
@@ -89,6 +86,10 @@ namespace Script.Player
 
         public void Die()
         {
+            if (!playerCharacter.pv.IsMine)
+            {
+                return;
+            }
             DOTween.Sequence()
                 .AppendCallback(() =>
                 {
@@ -103,7 +104,7 @@ namespace Script.Player
                 }).AppendInterval(3)
                 .AppendCallback(() =>
                 {
-                    LoadHeath();
+                    playerCharacter.pv.RPC(nameof(LoadHeath), RpcTarget.AllBuffered);
                     Transform position = transform;
                     position.position = new Vector3(HuyManager.Instance.currentPosition[0],
                         HuyManager.Instance.currentPosition[1], HuyManager.Instance.currentPosition[2]);
@@ -114,16 +115,15 @@ namespace Script.Player
                     isDeath = false;
                     Car.instance.eventResetCar?.Invoke();
                 }).Play();
+            
         }
 
-        public void RpcDieByFalling()
+        public void DiedFromFalling()
         {
-            playerCharacter.pv.RPC(nameof(DieByFalling), RpcTarget.AllBuffered);
-        }
-
-        [PunRPC]
-        public void DieByFalling()
-        {
+            if (!playerCharacter.pv.IsMine)
+            {
+                return;
+            }
             DOTween.Sequence()
                 .AppendCallback(() =>
                 {
@@ -135,7 +135,7 @@ namespace Script.Player
                 }).AppendInterval(3)
                 .AppendCallback(() =>
                 {
-                    LoadHeath();
+                    playerCharacter.pv.RPC(nameof(LoadHeath), RpcTarget.AllBuffered);
                     Transform position = transform;
                     position.position = new Vector3(HuyManager.Instance.currentPosition[0],
                         HuyManager.Instance.currentPosition[1], HuyManager.Instance.currentPosition[2]);
@@ -147,18 +147,23 @@ namespace Script.Player
 
         private void PlayerHurt()
         {
+            if (!playerCharacter.photonView.IsMine)
+            {
+                return;
+            }
+
             DOTween.Sequence()
-                .AppendCallback(() =>
-                {
-                    isHurt = true;
-                    PlayerHurtAnim(playerCharacter.animator);
-                    playerCharacter.body.bodyType = RigidbodyType2D.Static;
-                }).AppendInterval(0.5f)
-                .AppendCallback(() =>
-                {
-                    playerCharacter.body.bodyType = RigidbodyType2D.Dynamic;
-                    isHurt = false;
-                }).Play();
+                    .AppendCallback(() =>
+                    {
+                        isHurt = true;
+                        PlayerHurtAnim(playerCharacter.animator);
+                        playerCharacter.body.bodyType = RigidbodyType2D.Static;
+                    }).AppendInterval(0.5f)
+                    .AppendCallback(() =>
+                    {
+                        playerCharacter.body.bodyType = RigidbodyType2D.Dynamic;
+                        isHurt = false;
+                    }).Play();
         }
 
         private static void PlayerDeathAnim(Animator animator)

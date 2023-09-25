@@ -301,7 +301,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1765978405203225584
 RectTransform:
   m_ObjectHideFlags: 0
@@ -335,9 +335,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: {fileID: 1765978404356265866}
-  txtCurrentHealth: {fileID: 1765978404087226747}
   colorA: {fileID: 2100000, guid: 8947b76312f07e34aabce6d59ef03a5d, type: 2}
   colorB: {fileID: 2100000, guid: f3f2211f65cf0ed429221801562ff53e, type: 2}
+  canvas: {fileID: 0}
 --- !u!1 &1765978405778227897
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,7 +469,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: -1896078889
   m_SortingOrder: 1
   m_TargetDisplay: 0

@@ -6,9 +6,8 @@ using Script.Core;
 
 namespace Script.Enemy
 {
-    public class ObjectMoving : MonoBehaviourPunCallbacks
+    public class ObjectMoving : MonoBehaviourPun
     {
-        [SerializeField] private Animator animator;
         [SerializeField] protected float timeEndAction;
         [SerializeField] private Vector2 endPos = Vector2.zero;
         private float _timeAttack;
@@ -29,7 +28,7 @@ namespace Script.Enemy
                     HuyManager.Instance.SetUpTime(ref _timeAttack);
                     if (_timeAttack <= 0f)
                     {
-                        playerHealth.RpcGetDamage(20f);
+                        playerHealth.GetDamage(20f);
                         _timeAttack = resetTimeAttack;
                     }
                 }

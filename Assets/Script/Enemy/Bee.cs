@@ -21,7 +21,11 @@ namespace Script.Enemy
 
         private void Update()
         {
-            if (enemySetting.enemyHeal.EnemyDeath()) return;
+            if (enemySetting.enemyHeal.EnemyDeath())
+            {
+                return;
+            }
+
             FindPlayerPosition();
             if (_canAttack)
             {

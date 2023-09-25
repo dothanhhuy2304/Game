@@ -675,7 +675,7 @@ MonoBehaviour:
   animator: {fileID: 8953777264641693482}
   clampMinX: -6.46
   clampMaxX: 227
-  playerHealth: {fileID: 0}
+  playerHealth: {fileID: 8953777265638131185}
 --- !u!114 &8953777265638131186
 MonoBehaviour:
   m_ObjectHideFlags: 0

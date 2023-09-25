@@ -9,7 +9,7 @@ using Script.ScriptTable;
 
 namespace Script.Player
 {
-    public class PetAI : MonoBehaviourPunCallbacks, IPunObservable
+    public class PetAI : MonoBehaviourPun, IPunObservable
     {
         public static PetAI IsLocalPet;
         [SerializeField] private PhotonView pv;
@@ -29,6 +29,7 @@ namespace Script.Player
         private bool _checkHitGround;
         private int _tempIndex;
         private bool _canAttack;
+        private CharacterController2D _character;
 
         private void Awake()
         {
@@ -41,19 +42,26 @@ namespace Script.Player
             {
                 IsLocalPet = GetComponent<PetAI>();
             }
-
+            
+            _character = CharacterController2D.IsLocalPlayer;
             projectiles = FindObjectOfType<BulletController>().petAi;
             _listEnemyInMap = GameObject.FindGameObjectsWithTag("Enemy").ToList();
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             HuyManager.Instance.SetUpTime(ref _timeAttack);
-            if (!CharacterController2D.IsLocalPlayer.playerHealth.isDeath)
+            if (!_character.playerHealth.isDeath)
             {
-                if ((CharacterController2D.IsLocalPlayer.transform.position - transform.position).magnitude > distancePlayer)
+                if ((_character.transform.position - transform.position).magnitude > distancePlayer)
                 {
-                    MovingPet();
+                    if (pv.IsMine)
+                    {
+                        animator.SetBool(_isRun, true);
+                        Vector2 playerPos = _character.transform.position;
+                        transform.DOMove(new Vector2(playerPos.x + 2f, playerPos.y + 1f), 0.5f)
+                            .SetEase(Ease.Linear);
+                    }
                 }
 
                 CheckAttack();
@@ -90,16 +98,6 @@ namespace Script.Player
         {
             closestEnemy = FindClosestEnemy();
             _canAttack = closestEnemy;
-        }
-
-        private void MovingPet()
-        {
-            if (pv.IsMine)
-            {
-                animator.SetBool(_isRun, true);
-                Vector2 playerPos = CharacterController2D.IsLocalPlayer.transform.position;
-                transform.DOMove(new Vector2(playerPos.x + Random.Range(-2f, 2f), playerPos.y + 1), 0.5f).SetEase(Ease.Linear);
-            }
         }
 
         [PunRPC]

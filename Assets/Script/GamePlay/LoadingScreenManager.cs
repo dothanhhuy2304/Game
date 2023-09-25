@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Script.GamePlay
 {
-    public class LoadingScreenManager : MonoBehaviourPunCallbacks
+    public class LoadingScreenManager : MonoBehaviourPun
     {
         public static LoadingScreenManager Instance;
         [SerializeField] private GameObject uiLoading;

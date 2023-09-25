@@ -5,7 +5,7 @@ using Script.ScriptTable;
 
 namespace Script.Player
 {
-    public class CharacterController2D : MonoBehaviourPunCallbacks, IPunObservable
+    public class CharacterController2D : MonoBehaviourPun, IPunObservable
     {
         public static CharacterController2D IsLocalPlayer;
         public PhotonView pv;
@@ -24,7 +24,7 @@ namespace Script.Player
         private bool _mDbJump;
         public Animator animator;
         [SerializeField] private float clampMinX, clampMaxX;
-        [HideInInspector] public PlayerHealth playerHealth;
+        [SerializeField] public PlayerHealth playerHealth;
         private bool _isOnCar;
         private float _startSpeed;
         private int _jumpCount;
@@ -53,7 +53,7 @@ namespace Script.Player
         {
             if (pv.IsMine)
             {
-                playerHealth = FindObjectOfType<PlayerHealth>();
+                //playerHealth = FindObjectOfType<PlayerHealth>();
                 _startSpeed = playerData.movingSpeed;
             }
         }
@@ -119,14 +119,7 @@ namespace Script.Player
             RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f, 1 << LayerMask.NameToLayer("ground"));
             if (hit)
             {
-                if (!hit.collider.CompareTag("ground"))
-                {
-                    mGrounded = false;
-                }
-                else
-                {
-                    mGrounded = true;
-                }
+                mGrounded = hit.collider.CompareTag("ground");
             }
         }
 

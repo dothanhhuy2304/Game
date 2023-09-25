@@ -5,7 +5,7 @@ using Script.Player;
 
 namespace Script.GamePlay
 {
-    public class Chest : MonoBehaviourPunCallbacks
+    public class Chest : MonoBehaviourPun
     {
         [SerializeField] private GameObject uIGuild, itemScore, itemHurt;
         private bool _isOpen;
@@ -45,7 +45,7 @@ namespace Script.GamePlay
                         }
                         else
                         {
-                            other.GetComponent<PlayerHealth>().RpcGetDamage(20f);
+                            other.GetComponent<PlayerHealth>().GetDamage(20f);
                         }
 
                         _isOpen = true;

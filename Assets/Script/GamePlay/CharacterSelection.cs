@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Script.GamePlay
 {
-    public class CharacterSelection : MonoBehaviourPunCallbacks
+    public class CharacterSelection : MonoBehaviourPun
     {
         [SerializeField] private List<GameObject> characters;
         private int _currentCharacter;

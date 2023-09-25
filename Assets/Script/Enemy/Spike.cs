@@ -5,7 +5,7 @@ using Script.Core;
 
 namespace Script.Enemy
 {
-    public class Spike : MonoBehaviourPunCallbacks
+    public class Spike : MonoBehaviourPun
     {
         private float _timeAttack;
         [SerializeField] private float maxTimeAttack = 1f;
@@ -26,7 +26,7 @@ namespace Script.Enemy
                 {
                     if (_timeAttack <= 0f)
                     {
-                        playerHealth.RpcGetDamage(20f);
+                        playerHealth.GetDamage(20f);
                         _timeAttack = maxTimeAttack;
                     }
                 }

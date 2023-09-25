@@ -6,7 +6,7 @@ using Script.Core;
 
 namespace Script.Enemy
 {
-    public class FireTrap : MonoBehaviourPunCallbacks
+    public class FireTrap : MonoBehaviourPun
     {
         [SerializeField] private Animator animator;
         private bool isFirst;
@@ -49,7 +49,7 @@ namespace Script.Enemy
                 yield return new WaitForSeconds(1f);
             }
 
-            playerHealth.RpcGetDamage(1f);
+            playerHealth.GetDamage(1f);
             isFirst = false;
             currentCoroutine = StartCoroutine(IeFireOn(playerHealth));
         }

@@ -70,7 +70,7 @@ public class FireProjectile : MonoBehaviour
 
                 if (other.CompareTag("Player"))
                 {
-                    other.GetComponent<PlayerHealth>().RpcGetDamage(20f);
+                    other.GetComponent<PlayerHealth>().GetDamage(20f);
                     BulletExplosions();
                 }
 
@@ -92,7 +92,7 @@ public class FireProjectile : MonoBehaviour
 
                 if (other.CompareTag("Player"))
                 {
-                    other.GetComponent<PlayerHealth>().RpcGetDamage(14f);
+                    other.GetComponent<PlayerHealth>().GetDamage(14f);
                     BulletExplosions();
                 }
 
@@ -114,7 +114,7 @@ public class FireProjectile : MonoBehaviour
 
                 if (other.CompareTag("Player"))
                 {
-                    other.GetComponent<PlayerHealth>().RpcGetDamage(18f);
+                    other.GetComponent<PlayerHealth>().GetDamage(18f);
                     BulletExplosions();
                 }
 
@@ -137,7 +137,7 @@ public class FireProjectile : MonoBehaviour
                 if (other.CompareTag("Enemy"))
                 {
                     EnemyHealth eHealth = other.GetComponent<EnemyHealth>();
-                    eHealth.RpcGetDamage(_playerCharacter.playerData.damageAttack + eHealth.damageFix);
+                    eHealth.EnemyGetDamage(_playerCharacter.playerData.damageAttack + eHealth.damageFix);
                     BulletExplosions();
                 }
 
@@ -160,7 +160,7 @@ public class FireProjectile : MonoBehaviour
                 if (other.CompareTag("Enemy"))
                 {
                     EnemyHealth eHealth = other.GetComponent<EnemyHealth>();
-                    eHealth.RpcGetDamage(_petAi.petData.damageAttack + eHealth.damageFix);
+                    eHealth.EnemyGetDamage(_petAi.petData.damageAttack + eHealth.damageFix);
                     BulletExplosions();
                 }
 
@@ -182,7 +182,7 @@ public class FireProjectile : MonoBehaviour
             case EnemyType.Trunk:
                 if (other.CompareTag("Player"))
                 {
-                    other.GetComponent<PlayerHealth>().RpcGetDamage(20f);
+                    other.GetComponent<PlayerHealth>().GetDamage(20f);
                     BulletExplosions();
                     AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
                 }

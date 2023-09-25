@@ -6,7 +6,7 @@ using Script.Core;
 
 namespace Script.Player
 {
-    public class Weapon : MonoBehaviourPunCallbacks
+    public class Weapon : MonoBehaviourPun
     {
         [SerializeField] private CharacterController2D player;
         [HideInInspector] [SerializeField] private List<FireProjectile> projectiles;

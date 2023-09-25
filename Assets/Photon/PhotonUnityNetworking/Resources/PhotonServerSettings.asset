@@ -40,11 +40,8 @@ MonoBehaviour:
   - Dash
   - DestroyRpc
   - DestroySpaceship
-  - DieByFalling
-  - EnemyGetDamage
   - FadeLoadingScene
   - Fire
-  - GetDamage
   - Healing
   - Jump
   - LoadCurrentHealth
@@ -60,7 +57,6 @@ MonoBehaviour:
   - RpcResetAnimJump
   - RpcShot
   - YVelocity
-  - RpcMoving
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

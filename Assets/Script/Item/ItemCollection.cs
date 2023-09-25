@@ -7,7 +7,7 @@ using Script.ScriptTable;
 
 namespace Script.Item
 {
-    public class ItemCollection : MonoBehaviourPunCallbacks
+    public class ItemCollection : MonoBehaviourPun
     {
         [SerializeField] private ItemType itemType;
         [SerializeField] private ItemData itemData;
@@ -78,7 +78,7 @@ namespace Script.Item
                         case ItemType.Hurt:
                         {
                             animator.SetLayerWeight(1, 1);
-                            other.GetComponent<PlayerHealth>().RpcGetDamage(itemData.valueReceive);
+                            other.GetComponent<PlayerHealth>().GetDamage(itemData.valueReceive);
                             AudioManager.instance.Play("Item_Hurt");
                             itemCollider.enabled = false;
                             DOTween.Sequence()

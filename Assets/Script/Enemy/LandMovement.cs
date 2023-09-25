@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Script.Enemy
 {
-    public class LandMovement : MonoBehaviourPunCallbacks
+    public class LandMovement : MonoBehaviourPun
     {
         [SerializeField] protected float timeEndAction;
         [SerializeField] private Vector2 endPos = Vector2.zero;

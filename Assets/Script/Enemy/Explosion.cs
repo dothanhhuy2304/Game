@@ -24,7 +24,7 @@ namespace Script.Enemy
             if (other.CompareTag("Player"))
             {
                 GetComponent<Collider2D>().enabled = false;
-                other.GetComponent<PlayerHealth>().RpcGetDamage(20f);
+                other.GetComponent<PlayerHealth>().GetDamage(20f);
 
             }
         }

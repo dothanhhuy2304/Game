@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace Script.GamePlay
 {
-    public class LoadCharacter : MonoBehaviourPunCallbacks
+    public class LoadCharacter : MonoBehaviourPun
     {
         [SerializeField] private GameObject[] characters;
         [SerializeField] private GameObject pet;

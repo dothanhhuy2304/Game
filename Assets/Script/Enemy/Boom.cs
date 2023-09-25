@@ -7,7 +7,7 @@ using Script.Core;
 
 namespace Script.Enemy
 {
-    public class Boom : MonoBehaviourPunCallbacks
+    public class Boom : MonoBehaviourPun
     {
         [SerializeField] private GameObject boomObj, explosionObj;
         [SerializeField] private Collider2D colObj;
@@ -23,7 +23,7 @@ namespace Script.Enemy
                         explosionObj.SetActive(true);
                         colObj.enabled = false;
                         AudioManager.instance.Play("Boom_Explosion");
-                        other.collider.GetComponent<PlayerHealth>().RpcGetDamage(30f);
+                        other.collider.GetComponent<PlayerHealth>().GetDamage(30f);
                     }).AppendInterval(1)
                     .AppendCallback(() =>
                     {

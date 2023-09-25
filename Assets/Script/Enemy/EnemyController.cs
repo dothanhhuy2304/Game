@@ -21,7 +21,7 @@ namespace Script.Enemy
         public bool canMoving;
     }
 
-    public abstract class EnemyController : MonoBehaviourPunCallbacks
+    public abstract class EnemyController : MonoBehaviourPun
     {
         public EnemySetting enemySetting;
         [SerializeField] protected PhotonView pv;

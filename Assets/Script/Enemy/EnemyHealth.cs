@@ -8,7 +8,7 @@ using TMPro;
 
 namespace Script.Enemy
 {
-    public class EnemyHealth : MonoBehaviourPunCallbacks
+    public class EnemyHealth : MonoBehaviourPun
     {
         [SerializeField] private PhotonView pv;
         [SerializeField] private bool canReSpawn;
@@ -40,23 +40,27 @@ namespace Script.Enemy
             enemyHealthBar.SetHealth(currentHealth, maxHealth);
         }
 
-        public void RpcGetDamage(float damage)
-        {
-            pv.RPC(nameof(EnemyGetDamage), RpcTarget.AllBuffered, damage);
-        }
+        // public void RpcGetDamage(float damage)
+        // {
+        //     pv.RPC(nameof(EnemyGetDamage), RpcTarget.AllBuffered, damage);
+        // }
 
-        [PunRPC]
-        private void EnemyGetDamage(float damage)
+        //[PunRPC]
+        public void EnemyGetDamage(float damage)
         {
             currentHealth = Mathf.Clamp(currentHealth - damage, 0f, maxHealth);
             if (currentHealth <= 0) Die();
             enemyHealthBar.SetHealth(currentHealth, maxHealth);
-            GameObject damageInstance = PhotonNetwork.Instantiate(objectDamageEnemy, transform.position + Vector3.up, Quaternion.identity);
-            TMP_Text txtDamage = damageInstance.GetComponentInChildren<TMP_Text>();
-            txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
-            DOTween.Sequence()
-                .AppendInterval(0.5f)
-                .AppendCallback(() => { PhotonNetwork.Destroy(damageInstance); });
+            if (pv.IsMine)
+            {
+                var damageInstance = PhotonNetwork.Instantiate(objectDamageEnemy, transform.position + Vector3.up,
+                    Quaternion.identity);
+                TMP_Text txtDamage = damageInstance.GetComponentInChildren<TMP_Text>();
+                txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
+                DOTween.Sequence()
+                    .AppendInterval(0.5f)
+                    .AppendCallback(() => { PhotonNetwork.Destroy(damageInstance); });
+            }
         }
 
         public bool EnemyDeath()
