@@ -22,74 +22,71 @@ namespace Script.Item
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Player") && !other.GetComponent<PlayerHealth>().isDeath)
             {
-                if (!other.GetComponent<PlayerHealth>().isDeath)
+                switch (itemType)
                 {
-                    switch (itemType)
+                    case ItemType.Money:
                     {
-                        case ItemType.Money:
-                        {
-                            _gameManager.SetScore(itemData.scoreReceive);
-                            _gameManager.SetMoney(itemData.moneyReceive);
-                            animator.SetLayerWeight(1, 1);
-                            AudioManager.instance.Play("Item_Heal");
-                            itemCollider.enabled = false;
-                            DOTween.Sequence()
-                                .AppendInterval(0.8f)
-                                .AppendCallback(() =>
-                                {
-                                    animator.SetLayerWeight(0, 1);
-                                    gameObject.SetActive(false);
-                                }).Play();
-                            break;
-                        }
-                        case ItemType.Diamond:
-                        {
-                            _gameManager.SetScore(itemData.scoreReceive);
-                            _gameManager.SetDiamond(itemData.diamondReceive);
-                            animator.SetLayerWeight(1, 1);
-                            AudioManager.instance.Play("Item_Heal");
-                            itemCollider.enabled = false;
-                            DOTween.Sequence()
-                                .AppendInterval(0.8f)
-                                .AppendCallback(() =>
-                                {
-                                    animator.SetLayerWeight(0, 1);
-                                    gameObject.SetActive(false);
-                                }).Play();
-                            break;
-                        }
-                        case ItemType.Heal:
-                        {
-                            animator.SetLayerWeight(1, 1);
-                            other.GetComponent<PlayerHealth>().RpcHealing(itemData.valueReceive);
-                            AudioManager.instance.Play("Item_Heal");
-                            itemCollider.enabled = false;
-                            DOTween.Sequence()
-                                .AppendInterval(0.8f)
-                                .AppendCallback(() =>
-                                {
-                                    animator.SetLayerWeight(0, 1);
-                                    gameObject.SetActive(false);
-                                }).Play();
-                            break;
-                        }
-                        case ItemType.Hurt:
-                        {
-                            animator.SetLayerWeight(1, 1);
-                            other.GetComponent<PlayerHealth>().GetDamage(itemData.valueReceive);
-                            AudioManager.instance.Play("Item_Hurt");
-                            itemCollider.enabled = false;
-                            DOTween.Sequence()
-                                .AppendInterval(0.8f)
-                                .AppendCallback(() =>
-                                {
-                                    animator.SetLayerWeight(0, 1);
-                                    gameObject.SetActive(false);
-                                }).Play();
-                            break;
-                        }
+                        _gameManager.SetScore(itemData.scoreReceive);
+                        _gameManager.SetMoney(itemData.moneyReceive);
+                        animator.SetLayerWeight(1, 1);
+                        AudioManager.instance.Play("Item_Heal");
+                        itemCollider.enabled = false;
+                        DOTween.Sequence()
+                            .AppendInterval(0.8f)
+                            .AppendCallback(() =>
+                            {
+                                animator.SetLayerWeight(0, 1);
+                                gameObject.SetActive(false);
+                            }).Play();
+                        break;
+                    }
+                    case ItemType.Diamond:
+                    {
+                        _gameManager.SetScore(itemData.scoreReceive);
+                        _gameManager.SetDiamond(itemData.diamondReceive);
+                        animator.SetLayerWeight(1, 1);
+                        AudioManager.instance.Play("Item_Heal");
+                        itemCollider.enabled = false;
+                        DOTween.Sequence()
+                            .AppendInterval(0.8f)
+                            .AppendCallback(() =>
+                            {
+                                animator.SetLayerWeight(0, 1);
+                                gameObject.SetActive(false);
+                            }).Play();
+                        break;
+                    }
+                    case ItemType.Heal:
+                    {
+                        animator.SetLayerWeight(1, 1);
+                        other.GetComponent<PlayerHealth>().RpcHealing(itemData.valueReceive);
+                        AudioManager.instance.Play("Item_Heal");
+                        itemCollider.enabled = false;
+                        DOTween.Sequence()
+                            .AppendInterval(0.8f)
+                            .AppendCallback(() =>
+                            {
+                                animator.SetLayerWeight(0, 1);
+                                gameObject.SetActive(false);
+                            }).Play();
+                        break;
+                    }
+                    case ItemType.Hurt:
+                    {
+                        animator.SetLayerWeight(1, 1);
+                        other.GetComponent<PlayerHealth>().GetDamage(itemData.valueReceive);
+                        AudioManager.instance.Play("Item_Hurt");
+                        itemCollider.enabled = false;
+                        DOTween.Sequence()
+                            .AppendInterval(0.8f)
+                            .AppendCallback(() =>
+                            {
+                                animator.SetLayerWeight(0, 1);
+                                gameObject.SetActive(false);
+                            }).Play();
+                        break;
                     }
                 }
             }

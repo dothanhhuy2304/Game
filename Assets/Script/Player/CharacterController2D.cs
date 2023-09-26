@@ -53,7 +53,6 @@ namespace Script.Player
         {
             if (pv.IsMine)
             {
-                //playerHealth = FindObjectOfType<PlayerHealth>();
                 _startSpeed = playerData.movingSpeed;
             }
         }
@@ -168,9 +167,9 @@ namespace Script.Player
 
         private void MovementLimit()
         {
-            Vector3 pos = transform.position;
-            pos = new Vector3(Mathf.Clamp(pos.x, clampMinX, clampMaxX), pos.y, pos.z);
-            body.transform.position = pos;
+            Vector3 playerPosition = transform.position;
+            playerPosition = new Vector3(Mathf.Clamp(playerPosition.x, clampMinX, clampMaxX), playerPosition.y, playerPosition.z);
+            body.transform.position = playerPosition;
         }
 
         private void MobileMove(float move)

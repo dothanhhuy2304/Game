@@ -15,14 +15,14 @@ namespace Script.Enemy
         {
             if (other.collider.CompareTag("Player"))
             {
-                WaitToFalling(timeFalling);
+                WaitToFalling();
             }
         }
 
-        private void WaitToFalling(int delay)
+        private void WaitToFalling()
         {
             DOTween.Sequence()
-                .AppendInterval(delay)
+                .AppendInterval(timeFalling)
                 .AppendCallback(() =>
                 {
                     body.bodyType = RigidbodyType2D.Dynamic;

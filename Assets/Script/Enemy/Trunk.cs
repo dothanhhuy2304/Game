@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using Photon.Pun;
 using UnityEngine;
@@ -8,7 +7,7 @@ namespace Script.Enemy
 {
     public class Trunk : EnemyController , IPunObservable
     {
-        [SerializeField] private float rangeAttack = 10f;
+        private readonly int _isAttack = Animator.StringToHash("isAttack");
 
         private void Awake()
         {
@@ -20,21 +19,23 @@ namespace Script.Enemy
 
         private void Update()
         {
+            if (enemySetting.enemyHeal.EnemyDeath())
+            {
+                return;
+            }
+
             FindPlayerPosition();
             if (enemySetting.canAttack)
             {
-                if (!enemySetting.enemyHeal.EnemyDeath())
+                HuyManager.Instance.SetUpTime(ref CurrentTime);
+                if ((currentCharacterPos.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
-                    HuyManager.Instance.SetUpTime(ref CurrentTime);
-                    if ((currentCharacterPos.transform.position - transform.position).magnitude < rangeAttack)
+                    if (pv.IsMine)
                     {
-                        if (pv.IsMine)
-                        {
-                            Flip();
-                        }
-                        
-                        pv.RPC(nameof(RpcShot), RpcTarget.AllBuffered);
+                        Flip();
                     }
+
+                    pv.RPC(nameof(RpcShot), RpcTarget.AllBuffered);
                 }
             }
         }
@@ -56,7 +57,7 @@ namespace Script.Enemy
 
         private void Shot()
         {
-            animator.SetTrigger("isAttack");
+            animator.SetTrigger(_isAttack);
             DOTween.Sequence()
                 .AppendInterval(0.5f)
                 .AppendCallback(() => { AttackBulletByPlayer(currentCharacterPos); })

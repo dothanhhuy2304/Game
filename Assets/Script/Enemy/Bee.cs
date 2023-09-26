@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using Photon.Pun;
 using UnityEngine;
@@ -53,11 +52,11 @@ namespace Script.Enemy
         {
             DOTween.Sequence()
                 .AppendInterval(0.5f)
-                .AppendCallback(()=>AttackBullet(true))
+                .AppendCallback(() => AttackBullet(true))
                 .Play();
         }
-        
-        
+
+
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if (stream.IsWriting)

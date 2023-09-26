@@ -2,7 +2,6 @@ using System.Globalization;
 using DG.Tweening;
 using Photon.Pun;
 using UnityEngine;
-using Script.Core;
 using Script.Player;
 using TMPro;
 
@@ -39,13 +38,7 @@ namespace Script.Enemy
             currentHealth = maxHealth;
             enemyHealthBar.SetHealth(currentHealth, maxHealth);
         }
-
-        // public void RpcGetDamage(float damage)
-        // {
-        //     pv.RPC(nameof(EnemyGetDamage), RpcTarget.AllBuffered, damage);
-        // }
-
-        //[PunRPC]
+        
         public void EnemyGetDamage(float damage)
         {
             currentHealth = Mathf.Clamp(currentHealth - damage, 0f, maxHealth);
@@ -53,8 +46,7 @@ namespace Script.Enemy
             enemyHealthBar.SetHealth(currentHealth, maxHealth);
             if (pv.IsMine)
             {
-                var damageInstance = PhotonNetwork.Instantiate(objectDamageEnemy, transform.position + Vector3.up,
-                    Quaternion.identity);
+                var damageInstance = PhotonNetwork.Instantiate(objectDamageEnemy, transform.position + Vector3.up, Quaternion.identity);
                 TMP_Text txtDamage = damageInstance.GetComponentInChildren<TMP_Text>();
                 txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
                 DOTween.Sequence()
@@ -74,7 +66,7 @@ namespace Script.Enemy
             enemyHealthBar.SetHealth(currentHealth, maxHealth);
         }
 
-        public void Die()
+        private void Die()
         {
             currentHealth = 0f;
             spriteRenderer.enabled = false;

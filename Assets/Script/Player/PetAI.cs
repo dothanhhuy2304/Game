@@ -153,13 +153,12 @@ namespace Script.Player
                 Vector3 location = transform.position;
                 Vector3 gos = go.transform.position;
                 float currentDistance = (location - gos).magnitude;
-                RaycastHit2D hit = Physics2D.Linecast(location, gos, GameManager.instance.enemyMask);
+                RaycastHit2D hit = Physics2D.Linecast(location, gos, LayerMaskManager.instance.enemyMask);
                 if (currentDistance < closestDistance)
                 {
                     if (hit.collider && hit.collider.gameObject.CompareTag("Enemy"))
                     {
                         closestDistance = currentDistance;
-                        //trans = go.transform;
                         trans = hit.collider.gameObject.transform;
                     }
                 }

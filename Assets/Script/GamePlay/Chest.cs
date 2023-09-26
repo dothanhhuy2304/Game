@@ -16,41 +16,37 @@ namespace Script.GamePlay
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (!_isOpen)
+            if (_isOpen)
             {
-                if (other.CompareTag("Player"))
-                {
-                    uIGuild.SetActive(true);
-                }
+                return;
+            }
+
+            if (other.CompareTag("Player"))
+            {
+                uIGuild.SetActive(true);
             }
         }
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Player") && Input.GetKey(KeyCode.F) && !_isOpen)
             {
-                if (!_isOpen)
+                animator.SetBool(IsOpen, true);
+                uIGuild.SetActive(false);
+                //set value
+                _value = Random.Range(0, 10);
+                StartCoroutine(ActiveItem(3f));
+                if (_value != 0)
                 {
-                    if (Input.GetKey(KeyCode.F))
-                    {
-                        animator.SetBool(IsOpen, true);
-                        uIGuild.SetActive(false);
-                        //set value
-                        _value = Random.Range(0, 10);
-                        StartCoroutine(ActiveItem(3f));
-                        if (_value != 0)
-                        {
-                            txtValueItem.text = "x" + _value.ToString(System.Globalization.CultureInfo.CurrentCulture);
-                            GameManager.instance.SetDiamond(_value);
-                        }
-                        else
-                        {
-                            other.GetComponent<PlayerHealth>().GetDamage(20f);
-                        }
-
-                        _isOpen = true;
-                    }
+                    txtValueItem.text = "x" + _value.ToString(System.Globalization.CultureInfo.CurrentCulture);
+                    GameManager.instance.SetDiamond(_value);
                 }
+                else
+                {
+                    other.GetComponent<PlayerHealth>().GetDamage(20f);
+                }
+
+                _isOpen = true;
             }
         }
 

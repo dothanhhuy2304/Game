@@ -14,11 +14,6 @@ namespace Script.Enemy
             MoveLandNormal(transform, endPos, timeEndAction, int.MaxValue);
         }
 
-        // private void Update()
-        // {
-        //     transform.position = Vector2.Lerp(startPos, endPos, Mathf.PingPong(Time.time * speed, timeSleep));
-        // }
-
         private void OnCollisionEnter2D(Collision2D other)
         {
             if (other.collider.CompareTag("Player"))

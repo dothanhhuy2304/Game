@@ -1,5 +1,4 @@
 using Photon.Pun;
-using Script.Player;
 using UnityEngine;
 
 namespace Script.Enemy

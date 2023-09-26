@@ -58,9 +58,8 @@ namespace Script.Player
             playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
             if (playerCharacter.pv.IsMine)
             {
-                var objectDamage = PhotonNetwork.Instantiate(prefabDamagePlayer, transform.position + Vector3.up,
-                    Quaternion.identity);
-                TMP_Text txtDamage = objectDamage.GetComponentInChildren<TMP_Text>();
+                var objectDamage = PhotonNetwork.Instantiate(prefabDamagePlayer, transform.position + Vector3.up, Quaternion.identity);
+                var txtDamage = objectDamage.GetComponentInChildren<TMP_Text>();
                 txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
                 DOTween.Sequence()
                     .AppendInterval(0.5f)

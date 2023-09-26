@@ -79,6 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78a9207b57b6c2344a0460272dc8e8b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pv: {fileID: 0}
   canReSpawn: 0
   heathDefault: 100
   currentHealth: 0
@@ -124,7 +125,7 @@ MonoBehaviour:
     isStun: 0
     canAttack: 0
     enemyHeal: {fileID: 967367811024892466}
-    rangeAttack: 0
+    rangeAttack: 10
     canMoving: 0
   pv: {fileID: 6912718238108778589}
   body: {fileID: 5606069922568021621}
@@ -136,7 +137,6 @@ MonoBehaviour:
   offsetAttack: {fileID: 6824136752933056127}
   positionAttack: {x: -1, y: -0.25}
   currentCharacterPos: {fileID: 0}
-  rangeAttack: 10
 --- !u!50 &5606069922568021621
 Rigidbody2D:
   serializedVersion: 4

@@ -52,8 +52,6 @@ MonoBehaviour:
   - RpcAttackBullet
   - RpcCharacter
   - RpcCheckGround
-  - RpcNinjaMove
-  - RpcNinjaMove2
   - RpcResetAnimJump
   - RpcShot
   - YVelocity

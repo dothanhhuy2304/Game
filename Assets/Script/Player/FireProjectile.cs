@@ -189,7 +189,6 @@ public class FireProjectile : MonoBehaviour
 
                 if (other.CompareTag("ground"))
                 {
-                    //Arrived();
                     BulletExplosions();
                     AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
                 }
@@ -198,7 +197,6 @@ public class FireProjectile : MonoBehaviour
                 {
                     if (!body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy")))
                     {
-                        //Arrived();
                         BulletExplosions();
                         AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
                     }

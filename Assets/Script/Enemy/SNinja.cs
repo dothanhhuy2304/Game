@@ -1,3 +1,4 @@
+using System.Linq;
 using DG.Tweening;
 using Photon.Pun;
 using Script.Player;
@@ -18,9 +19,7 @@ namespace Script.Enemy
         private bool _canAttackSword;
         private bool _canAttack;
         private bool _isHitGrounds;
-
-        [SerializeField] private LayerMask playerMasks;
-
+        
         private void Awake()
         {
             if (pv == null)
@@ -106,33 +105,20 @@ namespace Script.Enemy
 
         private void MoveToPosition()
         {
-            Transform obj = transform;
-            if (obj.position != target)
+            Transform objectTrans = transform;
+            if (objectTrans.position != target)
             {
-                pv.RPC(nameof(RpcNinjaMove), RpcTarget.AllBuffered);
-                obj.localEulerAngles = (target - obj.position).x < 0f ? new Vector3(0, 180f, 0) : Vector3.zero;
-
+                animator.SetBool(_isRun, true);
+                body.MovePosition(Vector3.MoveTowards(transform.position, target, movingSpeed * Time.deltaTime));
+                objectTrans.localEulerAngles = (target - objectTrans.position).x < 0f ? new Vector3(0, 180f, 0) : Vector3.zero;
             }
             else
             {
-                pv.RPC(nameof(RpcNinjaMove2), RpcTarget.AllBuffered);
+                animator.SetBool(_isRun, false);
+                SetUpTargetToMove(target == enemySetting.startPosition
+                    ? enemySetting.endPosition
+                    : enemySetting.startPosition);
             }
-        }
-
-        [PunRPC]
-        private void RpcNinjaMove()
-        {
-            animator.SetBool(_isRun, true);
-            body.MovePosition(Vector3.MoveTowards(transform.position, target, movingSpeed * Time.fixedDeltaTime));
-        }
-
-        [PunRPC]
-        private void RpcNinjaMove2()
-        {
-            animator.SetBool(_isRun, false);
-            SetUpTargetToMove(target == enemySetting.startPosition
-                ? enemySetting.endPosition
-                : enemySetting.startPosition);
         }
 
         private void SetUpTargetToMove(Vector3 location)
@@ -146,50 +132,58 @@ namespace Script.Enemy
         [PunRPC]
         private void AttackSword()
         {
-            if (_isHitGrounds)
+            if (!_isHitGrounds)
             {
-                if ((currentCharacterPos.position - transform.position).magnitude > 2f)
+                return;
+            }
+
+            if ((currentCharacterPos.position - transform.position).magnitude > 2f)
+            {
+                Vector2 currentPosition = body.position;
+                Vector2 targetPosition = new Vector2(currentCharacterPos.position.x - currentPosition.x, 0f);
+                body.MovePosition(currentPosition + targetPosition * Time.fixedDeltaTime);
+                animator.SetBool(_isRun, true);
+            }
+            else
+            {
+                animator.SetBool(_isRun, false);
+                if (CurrentTime <= 0f)
                 {
-                    Vector3 currentPosition = body.position;
-                    Vector3 targetPosition = new Vector3(currentCharacterPos.position.x - currentPosition.x, 0f, 0f);
-                    body.MovePosition(currentPosition + targetPosition * Time.fixedDeltaTime);
-                    animator.SetBool(_isRun, true);
+                    _canAttackSword = true;
+                    animator.SetTrigger(_isAttackSword);
+                    AudioManager.instance.Play("Enemy_Attack_Sword");
+                    CurrentTime = 1.5f;
                 }
-                else
-                {
-                    body.MovePosition(body.position);
-                    animator.SetBool(_isRun, false);
-                    if (CurrentTime <= 0f)
+
+                DOTween.Sequence()
+                    .AppendInterval(1.5f)
+                    .AppendCallback(() =>
                     {
-                        _canAttackSword = true;
-                        animator.SetTrigger(_isAttackSword);
-                        AudioManager.instance.Play("Enemy_Attack_Sword");
-                        CurrentTime = 1.5f;
-                    }
-
-                    DOTween.Sequence()
-                        .AppendInterval(1f)
-                        .AppendCallback(() =>
+                        if (_canAttackSword)
                         {
-                            if (_canAttackSword)
+                            var hits = Physics2D.OverlapCircleAll(transform.position, radiusAttack, LayerMaskManager.instance.onlyPlayerMask);
+                            if (hits.Length > 0)
                             {
-                                bool hitPlayer = Physics2D.OverlapCircle(transform.position, radiusAttack, playerMasks);
-                                if (hitPlayer)
+                                hits.ToList().ForEach(t =>
                                 {
-                                    currentCharacterPos.GetComponent<PlayerHealth>().GetDamage(21f);
-                                }
+                                    PlayerHealth playerHealth = t.GetComponent<PlayerHealth>();
+                                    if (!playerHealth.isDeath)
+                                    {
+                                        playerHealth.GetDamage(21);
+                                    }
+                                });
 
-                                _canAttackSword = false;
                             }
-                        }).Play();
-                }
+                        }
+
+                        _canAttackSword = false;
+                    }).Play();
             }
         }
 
         [PunRPC]
         private void RpcAttackBullet()
         {
-            body.MovePosition(body.position);
             animator.SetBool(_isRun, false);
             if (CurrentTime <= 0f)
             {

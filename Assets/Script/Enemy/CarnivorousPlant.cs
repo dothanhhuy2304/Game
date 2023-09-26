@@ -9,6 +9,7 @@ namespace Script.Enemy
     {
         [SerializeField] private bool canFlip;
         private bool _canAttack;
+        private readonly int _isAttack = Animator.StringToHash("isAttack");
 
         private void Awake()
         {
@@ -52,16 +53,16 @@ namespace Script.Enemy
         {
             if (CurrentTime <= 0f)
             {
-                CarnivorousAttack(0.5f);
+                CarnivorousAttack();
                 CurrentTime = maxTimeAttack;
             }
         }
 
-        private void CarnivorousAttack(float duration)
+        private void CarnivorousAttack()
         {
-            animator.SetTrigger("isAttack");
+            animator.SetTrigger(_isAttack);
             DOTween.Sequence()
-                .AppendInterval(duration)
+                .AppendInterval(0.5f)
                 .AppendCallback(() => AttackBullet())
                 .Play();
         }

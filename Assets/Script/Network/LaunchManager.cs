@@ -11,8 +11,6 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class LaunchManager : MonoBehaviourPunCallbacks
 {
-    //public static LaunchManager instance;
-    [SerializeField] private LoadingSceneAnim loadingAnim;
     private List<MyRoomInfo> cachedRoomList = new List<MyRoomInfo>();
     [SerializeField] private GameObject panelIntro;
     [SerializeField] private GameObject panelRoom;
@@ -26,36 +24,18 @@ public class LaunchManager : MonoBehaviourPunCallbacks
     [SerializeField] private int currentScreen = 1;
     [SerializeField] private GameObject listRoom;
     [SerializeField] private TMP_Text txtRoomName;
+    [SerializeField] private TMP_Text feedBackText;
+    [SerializeField] private string[] levelGame;
 
     private void Awake()
     {
-        // if (instance == null)
-        // {
-        //     instance = this;
-        // }
-        // else
-        // {
-        //     LaunchManager[] currentInstanceExit = FindObjectsOfType<LaunchManager>();
-        //     foreach (var cInstance in currentInstanceExit)
-        //     {
-        //         if (cInstance == instance)
-        //         {
-        //             Destroy(cInstance);
-        //         }
-        //     }
-        // }
-
         PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.GameVersion = Application.version;
         PhotonNetwork.ConnectUsingSettings();
     }
-
-    /// <summary>
-    /// Photon will calling this function when application is ready
-    /// </summary>
+    
     public override void OnConnectedToMaster()
     {
-        loadingAnim.StartAnimationLoading();
         PhotonNetwork.JoinLobby();
     }
 
@@ -67,15 +47,14 @@ public class LaunchManager : MonoBehaviourPunCallbacks
         if (cachedRoomList.Count > 0)
         {
             panelIntro.SetActive(false);
-            loadingAnim.LogFeedback("Something Wrong...", true);
-            loadingAnim.StartAnimationLoading();
+            LogFeedback("Something Wrong...", true);
             string roomNames = System.Guid.NewGuid().ToString().Substring(0, 10);
             PhotonNetwork.JoinRandomOrCreateRoom(null, maxPlayerInRoom, MatchmakingMode.FillRoom, null, null,
                 roomNames);
         }
         else
         {
-            loadingAnim.LogFeedback("<Color=Red>Room name can't be blank!</Color>", true);
+            LogFeedback("<Color=Red>Room name can't be blank!</Color>", true);
         }
     }
 
@@ -88,14 +67,13 @@ public class LaunchManager : MonoBehaviourPunCallbacks
         if (!string.IsNullOrEmpty(roomName.text))
         {
             panelIntro.SetActive(false);
-            loadingAnim.LogFeedback("Something Wrong...", true);
-            loadingAnim.StartAnimationLoading();
+            LogFeedback("Something Wrong...", true);
             PhotonNetwork.JoinRoom(roomName.text);
             inRoom.SetActive(true);
         }
         else
         {
-            loadingAnim.LogFeedback("<Color=Red>Room name can't be blank!</Color>", true);
+            LogFeedback("<Color=Red>Room name can't be blank!</Color>", true);
         }
     }
 
@@ -109,8 +87,7 @@ public class LaunchManager : MonoBehaviourPunCallbacks
         if (!string.IsNullOrEmpty(roomName.text))
         {
             panelIntro.SetActive(false);
-            loadingAnim.LogFeedback("CreateRoom...", true);
-            loadingAnim.StartAnimationLoading();
+            LogFeedback("CreateRoom...", true);
             PhotonNetwork.JoinOrCreateRoom(roomName.text, new RoomOptions {IsOpen = true, MaxPlayers = maxPlayerInRoom},
                 TypedLobby.Default);
             inRoom.SetActive(true);
@@ -118,7 +95,7 @@ public class LaunchManager : MonoBehaviourPunCallbacks
         else
         {
             Debug.LogError("This");
-            loadingAnim.LogFeedback("<Color=Red>Room name can't be blank!</Color>", true);
+            LogFeedback("<Color=Red>Room name can't be blank!</Color>", true);
         }
     }
 
@@ -191,7 +168,6 @@ public class LaunchManager : MonoBehaviourPunCallbacks
     {
         panelIntro.SetActive(false);
         PhotonNetwork.JoinRoom(roomNames);
-        loadingAnim.StartAnimationLoading();
         inRoom.SetActive(true);
     }
 
@@ -202,8 +178,7 @@ public class LaunchManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
-        loadingAnim.LogFeedback("Joined to lobby...", true);
-        loadingAnim.StopAnimationLoading();
+        LogFeedback("Joined to lobby...", true);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -235,25 +210,22 @@ public class LaunchManager : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.LeaveLobby();
             PhotonNetwork.LeaveRoom();
-            loadingAnim.StopAnimationLoading();
         }
     }
 
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        loadingAnim.LogFeedback("<Color=Red>OnJoinRandomFailed</Color>: Next -> Create a new Room", true);
-        loadingAnim.StopAnimationLoading();
+        LogFeedback("<Color=Red>OnJoinRandomFailed</Color>: Next -> Create a new Room", true);
         PhotonNetwork.JoinOrCreateRoom(System.Guid.NewGuid().ToString()
             .Substring(0, 10), new RoomOptions {IsOpen = true, MaxPlayers = maxPlayerInRoom}, TypedLobby.Default);
     }
 
     public override void OnJoinedRoom()
     {
-        loadingAnim.LogFeedback($"<Color=Green>{PhotonNetwork.CurrentRoom.Name}</Color>", true);
-        loadingAnim.LogFeedback($"{PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}");
+        LogFeedback($"<Color=Green>{PhotonNetwork.CurrentRoom.Name}</Color>", true);
+        LogFeedback($"{PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}");
         startGame.gameObject.SetActive(PhotonNetwork.IsMasterClient);
-        loadingAnim.StopAnimationLoading();
         txtRoomName.text = PhotonNetwork.CurrentRoom.Name + " " + PhotonNetwork.CurrentRoom.PlayerCount + "/" + maxPlayerInRoom;
     }
 
@@ -305,19 +277,18 @@ public class LaunchManager : MonoBehaviourPunCallbacks
 
     private IEnumerator DurationEndScene(float timeDuration, int sceneLoad)
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(loadingAnim.levelGame[0]);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(levelGame[0]);
         while (!UnityEngine.SceneManagement.SceneManager.GetSceneAt(sceneLoad).isLoaded)
         {
             yield return null;
         }
 
         yield return new WaitForSeconds(timeDuration);
-        int time = 0;
         float currentTime = 0;
         while (currentTime < 1f)
         {
             currentTime *= Time.deltaTime;
-            var txt = loadingAnim.feedBackText;
+            var txt = feedBackText;
             Color t = new Color {r = 255, g = 255, b = 255, a = 0.5f};
             Color b = new Color {r = 0, g = 0, b = 0, a = 1f};
             txt.color = Color.Lerp(t, b, 1 * Time.deltaTime);
@@ -326,16 +297,24 @@ public class LaunchManager : MonoBehaviourPunCallbacks
         }
 
         yield return null;
-        loadingAnim.LogFeedback("Leave Room", true);
+        LogFeedback("Leave Room", true);
         panelIntro.SetActive(true);
-        loadingAnim.StopAnimationLoading();
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LeaveLobby();
     }
 
     public void ButtonStartGame()
     {
-        loadingAnim.StopAnimationLoading();
-        PhotonNetwork.LoadLevel(loadingAnim.levelGame[currentScreen]);
+        PhotonNetwork.LoadLevel(levelGame[currentScreen]);
     }
+    
+    /// <summary>
+    /// Using to log message when next state
+    /// </summary>
+    /// <param name="message">Content message</param>
+    public void LogFeedback(string message, bool reset = false)
+    {
+        feedBackText.text += "Connect status:" + PhotonNetwork.NetworkClientState;
+    }
+    
 }

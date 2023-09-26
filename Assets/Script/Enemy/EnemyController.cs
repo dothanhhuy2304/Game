@@ -55,7 +55,8 @@ namespace Script.Enemy
             else
             {
                 Vector2 direction = currentCharacterPos.position - transform.position;
-                projectiles[index].transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+                projectiles[index].transform.rotation =
+                    Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                 projectiles[index].Shoot(transform, currentCharacterPos);
             }
 
@@ -81,7 +82,7 @@ namespace Script.Enemy
                 var position = transform.position;
                 var gos = go.transform.position;
                 float currentDistance = (position - gos).magnitude;
-                RaycastHit2D hit = Physics2D.Linecast(position, gos, GameManager.instance.playerMask);
+                RaycastHit2D hit = Physics2D.Linecast(position, gos, LayerMaskManager.instance.playerMask);
                 if (currentDistance < closestDistance)
                 {
                     if (hit.collider != null && hit.collider.gameObject.CompareTag("Player") &&
@@ -96,11 +97,11 @@ namespace Script.Enemy
 
             return trans;
         }
-        
+
         protected Transform FindPlayerClosetWithLocalPlayer()
         {
             Vector3 target = CharacterController2D.IsLocalPlayer.transform.position;
-            RaycastHit2D hit = Physics2D.Linecast(transform.position, target, GameManager.instance.playerMask);
+            RaycastHit2D hit = Physics2D.Linecast(transform.position, target, LayerMaskManager.instance.playerMask);
             if (hit.collider != null && hit.collider.CompareTag("Player"))
             {
                 return hit.collider.gameObject.transform;
@@ -140,9 +141,9 @@ namespace Script.Enemy
                 var gos = go.transform.position;
                 float currentDistance = (position - gos).magnitude;
                 RaycastHit2D hit = Physics2D.Linecast(new Vector3(position.x, position.y + 0.3f, 0f),
-                    new Vector3(1 * 100f, position.y + 0.3f, 0f), GameManager.instance.playerMask);
+                    new Vector3(1 * 100f, position.y + 0.3f, 0f), LayerMaskManager.instance.playerMask);
                 RaycastHit2D hit2 = Physics2D.Linecast(new Vector3(position.x, position.y + 0.3f, 0f),
-                    new Vector3(-1 * 100f, position.y + 0.3f, 0f), GameManager.instance.playerMask);
+                    new Vector3(-1 * 100f, position.y + 0.3f, 0f), LayerMaskManager.instance.playerMask);
                 if (hit.collider && hit.collider.gameObject.CompareTag("Player") &&
                     !hit.collider.GetComponent<PlayerHealth>().isDeath)
                 {

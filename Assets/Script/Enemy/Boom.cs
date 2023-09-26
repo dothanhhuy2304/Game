@@ -1,9 +1,7 @@
-using System;
 using DG.Tweening;
 using Photon.Pun;
 using Script.Player;
 using UnityEngine;
-using Script.Core;
 
 namespace Script.Enemy
 {
@@ -24,7 +22,7 @@ namespace Script.Enemy
                         colObj.enabled = false;
                         AudioManager.instance.Play("Boom_Explosion");
                         other.collider.GetComponent<PlayerHealth>().GetDamage(30f);
-                    }).AppendInterval(1)
+                    }).AppendInterval(1f)
                     .AppendCallback(() =>
                     {
                         explosionObj.SetActive(false);
