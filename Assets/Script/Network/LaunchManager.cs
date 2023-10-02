@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Photon.Pun;
 using Photon.Realtime;
 using Script.Core;
@@ -11,7 +9,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class LaunchManager : MonoBehaviourPunCallbacks
 {
-    private List<MyRoomInfo> cachedRoomList = new List<MyRoomInfo>();
+    [HideInInspector] [SerializeField] private List<MyRoomInfo> cachedRoomList = new List<MyRoomInfo>();
     [SerializeField] private GameObject panelIntro;
     [SerializeField] private GameObject panelRoom;
     [SerializeField] private GameObject inRoom;
@@ -44,17 +42,20 @@ public class LaunchManager : MonoBehaviourPunCallbacks
     /// </summary>
     public void JoinRandomRoom()
     {
-        if (cachedRoomList.Count > 0)
+        if (PhotonNetwork.InLobby)
         {
-            panelIntro.SetActive(false);
-            LogFeedback("Something Wrong...", true);
-            string roomNames = System.Guid.NewGuid().ToString().Substring(0, 10);
-            PhotonNetwork.JoinRandomOrCreateRoom(null, maxPlayerInRoom, MatchmakingMode.FillRoom, null, null,
-                roomNames);
-        }
-        else
-        {
-            LogFeedback("<Color=Red>Room name can't be blank!</Color>", true);
+            if (cachedRoomList.Count > 0)
+            {
+                panelIntro.SetActive(false);
+                LogFeedback("<color=green>Something Wrong...</color>");
+                string roomNames = System.Guid.NewGuid().ToString().Substring(0, 10);
+                PhotonNetwork.JoinRandomOrCreateRoom(null, maxPlayerInRoom, MatchmakingMode.FillRoom, null, null,
+                    roomNames);
+            }
+            else
+            {
+                LogFeedback("<color=Red>Room name can't be blank!</color>");
+            }
         }
     }
 
@@ -64,16 +65,19 @@ public class LaunchManager : MonoBehaviourPunCallbacks
     /// </summary>
     public void JoinRoomByName()
     {
-        if (!string.IsNullOrEmpty(roomName.text))
+        if (PhotonNetwork.InLobby)
         {
-            panelIntro.SetActive(false);
-            LogFeedback("Something Wrong...", true);
-            PhotonNetwork.JoinRoom(roomName.text);
-            inRoom.SetActive(true);
-        }
-        else
-        {
-            LogFeedback("<Color=Red>Room name can't be blank!</Color>", true);
+            if (!string.IsNullOrEmpty(roomName.text))
+            {
+                panelIntro.SetActive(false);
+                LogFeedback("Something Wrong...");
+                PhotonNetwork.JoinRoom(roomName.text);
+                inRoom.SetActive(true);
+            }
+            else
+            {
+                LogFeedback("<Color=Red>Room name can't be blank!</Color>");
+            }
         }
     }
 
@@ -84,27 +88,33 @@ public class LaunchManager : MonoBehaviourPunCallbacks
     /// 
     public void CreateRoom()
     {
-        if (!string.IsNullOrEmpty(roomName.text))
+        if (PhotonNetwork.InLobby)
         {
-            panelIntro.SetActive(false);
-            LogFeedback("CreateRoom...", true);
-            PhotonNetwork.JoinOrCreateRoom(roomName.text, new RoomOptions {IsOpen = true, MaxPlayers = maxPlayerInRoom},
-                TypedLobby.Default);
-            inRoom.SetActive(true);
-        }
-        else
-        {
-            Debug.LogError("This");
-            LogFeedback("<Color=Red>Room name can't be blank!</Color>", true);
+            if (!string.IsNullOrEmpty(roomName.text))
+            {
+                panelIntro.SetActive(false);
+                LogFeedback("<color=green>CreateRoom...</color>");
+                PhotonNetwork.JoinOrCreateRoom(roomName.text,
+                    new RoomOptions {IsOpen = true, MaxPlayers = maxPlayerInRoom},
+                    TypedLobby.Default);
+                inRoom.SetActive(true);
+            }
+            else
+            {
+                LogFeedback("<color=Red>Room name can't be blank!</color>");
+            }
         }
     }
 
     public void ShowListRoom()
     {
-        _isShowListRoom = !_isShowListRoom;
-        parentSpawnListRoom.SetActive(_isShowListRoom);
-        panelRoom.SetActive(false);
-        listRoom.SetActive(true);
+        if (PhotonNetwork.InLobby)
+        {
+            _isShowListRoom = !_isShowListRoom;
+            parentSpawnListRoom.SetActive(_isShowListRoom);
+            panelRoom.SetActive(false);
+            listRoom.SetActive(true);
+        }
     }
 
     /// <summary>
@@ -166,25 +176,34 @@ public class LaunchManager : MonoBehaviourPunCallbacks
 
     private void JoinRoom(string roomNames)
     {
-        panelIntro.SetActive(false);
-        PhotonNetwork.JoinRoom(roomNames);
-        inRoom.SetActive(true);
+        if (PhotonNetwork.InLobby)
+        {
+            panelIntro.SetActive(false);
+            PhotonNetwork.JoinRoom(roomNames);
+            inRoom.SetActive(true);
+        }
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        UpdateCurrentRoomList(roomList);
+        if (PhotonNetwork.InLobby)
+        {
+            UpdateCurrentRoomList(roomList);
+        }
     }
 
     public override void OnJoinedLobby()
     {
-        LogFeedback("Joined to lobby...", true);
+        LogFeedback("<color=green>Joined to lobby...</color>");
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        startGame.SetActive(PhotonNetwork.IsMasterClient);
-        txtRoomName.text = PhotonNetwork.CurrentRoom.Name + " " + PhotonNetwork.CurrentRoom.PlayerCount + "/" + maxPlayerInRoom;
+        if (PhotonNetwork.InRoom)
+        {
+            startGame.SetActive(PhotonNetwork.IsMasterClient);
+            txtRoomName.text = PhotonNetwork.CurrentRoom.Name + " " + PhotonNetwork.CurrentRoom.PlayerCount + "/" + maxPlayerInRoom;
+        }
     }
 
     public override void OnLeftLobby()
@@ -216,15 +235,14 @@ public class LaunchManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        LogFeedback("<Color=Red>OnJoinRandomFailed</Color>: Next -> Create a new Room", true);
+        LogFeedback("<color=red>OnJoinRandomFailed</color>: Next -> Create a new Room</color>");
         PhotonNetwork.JoinOrCreateRoom(System.Guid.NewGuid().ToString()
             .Substring(0, 10), new RoomOptions {IsOpen = true, MaxPlayers = maxPlayerInRoom}, TypedLobby.Default);
     }
 
     public override void OnJoinedRoom()
     {
-        LogFeedback($"<Color=Green>{PhotonNetwork.CurrentRoom.Name}</Color>", true);
-        LogFeedback($"{PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}");
+        LogFeedback($"<color=green>{PhotonNetwork.CurrentRoom.Name}</color><br>{PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}");
         startGame.gameObject.SetActive(PhotonNetwork.IsMasterClient);
         txtRoomName.text = PhotonNetwork.CurrentRoom.Name + " " + PhotonNetwork.CurrentRoom.PlayerCount + "/" + maxPlayerInRoom;
     }
@@ -297,7 +315,7 @@ public class LaunchManager : MonoBehaviourPunCallbacks
         }
 
         yield return null;
-        LogFeedback("Leave Room", true);
+        LogFeedback("<color=red>Leave Room...</color>");
         panelIntro.SetActive(true);
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LeaveLobby();
@@ -307,14 +325,15 @@ public class LaunchManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.LoadLevel(levelGame[currentScreen]);
     }
-    
+
     /// <summary>
     /// Using to log message when next state
     /// </summary>
     /// <param name="message">Content message</param>
-    public void LogFeedback(string message, bool reset = false)
+    public void LogFeedback(string message)
     {
-        feedBackText.text += "Connect status:" + PhotonNetwork.NetworkClientState;
+        feedBackText.text = null;
+        feedBackText.text = message;
     }
-    
+
 }

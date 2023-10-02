@@ -415,6 +415,62 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7305501567201959892, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7305501567201959892, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7305501567201959892, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7305501567201959892, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7305501567201959892, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7305501567546216788, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7305501567546216788, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7305501567546216788, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7305501567546216788, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7305501567546216788, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7305501567609069514, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7305501567609069514, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7305501567609069514, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7305501567609069514, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7305501568197246340, guid: 8211eab0f68567a418dd471d8b8f4443, type: 3}
       propertyPath: m_Name
       value: GameManager

@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Photon.Pun;
+using Script.Core;
 using Script.Player;
 using UnityEngine;
 
@@ -22,6 +23,7 @@ namespace Script.Enemy
                         colObj.enabled = false;
                         AudioManager.instance.Play("Boom_Explosion");
                         other.collider.GetComponent<PlayerHealth>().GetDamage(30f);
+                        HuyManager.Instance.CameraShake(Camera.main, 1f, new Vector3(3f, 3f, 3f), 10, 90f, true);
                     }).AppendInterval(1f)
                     .AppendCallback(() =>
                     {

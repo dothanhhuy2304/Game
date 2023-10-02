@@ -35,7 +35,7 @@ namespace Script.Enemy
                 .AppendCallback(() =>
                 {
                     AudioManager.instance.Play("Boom_Explosion");
-                    HuyManager.Instance.CameraShake(_cam, 1f, new Vector3(0.5f, 0.5f, 0.5f), 10, 90f, true);
+                    HuyManager.Instance.CameraShake(_cam, 1f, new Vector3(3.5f, 3.5f, 3.5f), 10, 90f, true);
                 }).AppendInterval(0.2f)
                 .AppendCallback(() =>
                 {

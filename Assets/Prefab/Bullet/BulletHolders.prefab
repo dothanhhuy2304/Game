@@ -4902,7 +4902,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 9067629599088828967}
   explosionFxObj: {fileID: 8673037792859261924}
   explosionSpriteFxObj: {fileID: 0}
-  arcHeight: 1
 --- !u!1 &738218816790150201
 GameObject:
   m_ObjectHideFlags: 0
@@ -4955,7 +4954,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1256446536216332476}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 1218749763934633325}
-  arcHeight: 1
 --- !u!50 &7453188306015519257
 Rigidbody2D:
   serializedVersion: 4
@@ -19225,13 +19223,14 @@ GameObject:
   - component: {fileID: 4379691597252496045}
   - component: {fileID: 7498164581578641495}
   - component: {fileID: 4791337100890832821}
+  - component: {fileID: 3328723168013491609}
   m_Layer: 12
   m_Name: Bullet
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4379691597252496045
 Transform:
   m_ObjectHideFlags: 0
@@ -19241,7 +19240,7 @@ Transform:
   m_GameObject: {fileID: 1215385197625622069}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 2395753920878578410}
   m_RootOrder: 0
@@ -19286,7 +19285,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f817ba5aabd773e4f914480bdd62d0c8, type: 3}
+  m_Sprite: {fileID: -3239594328036583930, guid: c078262cfe23e5f45b0fdf215c6fa100, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -19310,9 +19309,28 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.06370217, y: -0.031309765}
-  m_Size: {x: 0.62211955, y: 0.44074225}
-  m_Direction: 1
+  m_Offset: {x: 0.0020457625, y: -0.04049268}
+  m_Size: {x: 0.24168657, y: 0.24693394}
+  m_Direction: 0
+--- !u!95 &3328723168013491609
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215385197625622069}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7f179c22f30e6f14999d8fff1aa860d1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1218749763934633325
 GameObject:
   m_ObjectHideFlags: 0
@@ -19668,7 +19686,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 8281123720554243202}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 3071187914480545349}
-  arcHeight: 1
 --- !u!50 &7468871487424722334
 Rigidbody2D:
   serializedVersion: 4
@@ -19742,7 +19759,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 8556481560276443757}
   explosionFxObj: {fileID: 993236231967617681}
   explosionSpriteFxObj: {fileID: 0}
-  arcHeight: 1
 --- !u!50 &5560341180629694480
 Rigidbody2D:
   serializedVersion: 4
@@ -19918,7 +19934,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 8904186842628308329}
   explosionFxObj: {fileID: 6849558906774726514}
   explosionSpriteFxObj: {fileID: 0}
-  arcHeight: 1
 --- !u!50 &2394819140138488628
 Rigidbody2D:
   serializedVersion: 4
@@ -19992,7 +20007,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 7664262147101281626}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6687509516496348516}
-  arcHeight: 1
 --- !u!50 &5125448141006146712
 Rigidbody2D:
   serializedVersion: 4
@@ -20252,7 +20266,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 21
   m_Sprite: {fileID: -8726359049309041282, guid: 22736736411496449a6ca861964d8332, type: 3}
-  m_Color: {r: 0.023529412, g: 1, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -20525,7 +20539,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 3994414797332951006}
   explosionFxObj: {fileID: 5849103868259468125}
   explosionSpriteFxObj: {fileID: 0}
-  arcHeight: 1
 --- !u!1 &5125996030131441668
 GameObject:
   m_ObjectHideFlags: 0
@@ -20817,7 +20830,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 21
   m_Sprite: {fileID: -8726359049309041282, guid: 22736736411496449a6ca861964d8332, type: 3}
-  m_Color: {r: 0.023529412, g: 1, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -25603,7 +25616,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 5125996030131441668}
   explosionFxObj: {fileID: 6047787407023206766}
   explosionSpriteFxObj: {fileID: 0}
-  arcHeight: 1
 --- !u!50 &1649815637804993545
 Rigidbody2D:
   serializedVersion: 4
@@ -30382,7 +30394,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 4237256528593846220}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 7614738442527889775}
-  arcHeight: 1
 --- !u!50 &1671830034157877869
 Rigidbody2D:
   serializedVersion: 4
@@ -73412,7 +73423,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787407849126652}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787407103722417}
-  arcHeight: 1
 --- !u!1 &6047787406458683591
 GameObject:
   m_ObjectHideFlags: 0
@@ -78315,7 +78325,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787406743724272}
   explosionFxObj: {fileID: 5849103866374196226}
   explosionSpriteFxObj: {fileID: 0}
-  arcHeight: 1
 --- !u!1 &6047787406486071918
 GameObject:
   m_ObjectHideFlags: 0
@@ -83615,7 +83624,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787408234162058}
   explosionFxObj: {fileID: 5849103866707155282}
   explosionSpriteFxObj: {fileID: 0}
-  arcHeight: 1
 --- !u!1 &6047787406621575154
 GameObject:
   m_ObjectHideFlags: 0
@@ -83895,7 +83903,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787406486071918}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787406521946794}
-  arcHeight: 1
 --- !u!1 &6047787406743724272
 GameObject:
   m_ObjectHideFlags: 0
@@ -84113,7 +84120,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787408240414272}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787406764726179}
-  arcHeight: 1
 --- !u!50 &6047787406744946468
 Rigidbody2D:
   serializedVersion: 4
@@ -84388,7 +84394,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787406636804273}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787406527871907}
-  arcHeight: 1
 --- !u!50 &6047787406785231429
 Rigidbody2D:
   serializedVersion: 4
@@ -89982,7 +89987,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787406778416524}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787408024743956}
-  arcHeight: 1
 --- !u!50 &6047787407054871331
 Rigidbody2D:
   serializedVersion: 4
@@ -90248,7 +90252,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 21
   m_Sprite: {fileID: -8726359049309041282, guid: 22736736411496449a6ca861964d8332, type: 3}
-  m_Color: {r: 0.023529412, g: 1, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -90350,7 +90354,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787407931977780}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787406878294186}
-  arcHeight: 1
 --- !u!1 &6047787407178451132
 GameObject:
   m_ObjectHideFlags: 0
@@ -90424,7 +90427,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787408264457570}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787407326973784}
-  arcHeight: 1
 --- !u!1 &6047787407247100907
 GameObject:
   m_ObjectHideFlags: 0
@@ -90498,7 +90500,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787407271772660}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787406920877862}
-  arcHeight: 1
 --- !u!1 &6047787407248285638
 GameObject:
   m_ObjectHideFlags: 0
@@ -90572,7 +90573,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787407435080436}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787407045358906}
-  arcHeight: 1
 --- !u!1 &6047787407271772660
 GameObject:
   m_ObjectHideFlags: 0
@@ -90703,13 +90703,14 @@ GameObject:
   - component: {fileID: 6047787407286905916}
   - component: {fileID: 6047787407286906306}
   - component: {fileID: 6047787407286905917}
+  - component: {fileID: 1390548783702052340}
   m_Layer: 12
   m_Name: Bullet
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6047787407286905916
 Transform:
   m_ObjectHideFlags: 0
@@ -90719,7 +90720,7 @@ Transform:
   m_GameObject: {fileID: 6047787407286905919}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 6047787408237136072}
   m_RootOrder: 0
@@ -90764,7 +90765,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f817ba5aabd773e4f914480bdd62d0c8, type: 3}
+  m_Sprite: {fileID: -3239594328036583930, guid: c078262cfe23e5f45b0fdf215c6fa100, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -90788,9 +90789,28 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.06370217, y: -0.031309765}
-  m_Size: {x: 0.62211955, y: 0.44074225}
-  m_Direction: 1
+  m_Offset: {x: -0.0018897414, y: -0.035245337}
+  m_Size: {x: 0.23381555, y: 0.25218117}
+  m_Direction: 0
+--- !u!95 &1390548783702052340
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6047787407286905919}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7f179c22f30e6f14999d8fff1aa860d1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6047787407310114720
 GameObject:
   m_ObjectHideFlags: 0
@@ -95630,7 +95650,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 21
   m_Sprite: {fileID: -8726359049309041282, guid: 22736736411496449a6ca861964d8332, type: 3}
-  m_Color: {r: 0.023529412, g: 1, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -100576,7 +100596,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787407048639962}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787406956250047}
-  arcHeight: 1
 --- !u!50 &6047787407384419986
 Rigidbody2D:
   serializedVersion: 4
@@ -100964,7 +100983,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787407368044846}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787406968783666}
-  arcHeight: 1
 --- !u!50 &6047787407548553039
 Rigidbody2D:
   serializedVersion: 4
@@ -101094,7 +101112,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 21
   m_Sprite: {fileID: -8726359049309041282, guid: 22736736411496449a6ca861964d8332, type: 3}
-  m_Color: {r: 0.023529412, g: 1, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -106004,7 +106022,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787407481887014}
   explosionFxObj: {fileID: 6047787408034419564}
   explosionSpriteFxObj: {fileID: 0}
-  arcHeight: 1
 --- !u!50 &6047787407706012468
 Rigidbody2D:
   serializedVersion: 4
@@ -106037,13 +106054,14 @@ GameObject:
   - component: {fileID: 6047787407849126653}
   - component: {fileID: 6047787407849126531}
   - component: {fileID: 6047787407849126530}
+  - component: {fileID: 2447077377037313107}
   m_Layer: 12
   m_Name: Bullet
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6047787407849126653
 Transform:
   m_ObjectHideFlags: 0
@@ -106053,7 +106071,7 @@ Transform:
   m_GameObject: {fileID: 6047787407849126652}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 6047787406458285741}
   m_RootOrder: 0
@@ -106098,7 +106116,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f817ba5aabd773e4f914480bdd62d0c8, type: 3}
+  m_Sprite: {fileID: -3239594328036583930, guid: c078262cfe23e5f45b0fdf215c6fa100, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -106122,9 +106140,28 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.06370217, y: -0.031309765}
-  m_Size: {x: 0.62211955, y: 0.44074225}
-  m_Direction: 1
+  m_Offset: {x: -0.003164053, y: -0.03607421}
+  m_Size: {x: 0.24063578, y: 0.2501648}
+  m_Direction: 0
+--- !u!95 &2447077377037313107
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6047787407849126652}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7f179c22f30e6f14999d8fff1aa860d1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6047787407931977780
 GameObject:
   m_ObjectHideFlags: 0
@@ -111001,7 +111038,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787406956702047}
   explosionFxObj: {fileID: 6047787407962288647}
   explosionSpriteFxObj: {fileID: 0}
-  arcHeight: 1
 --- !u!50 &6047787408002542298
 Rigidbody2D:
   serializedVersion: 4
@@ -120897,7 +120933,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787407286905919}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787407587871290}
-  arcHeight: 1
 --- !u!1 &6047787408240414272
 GameObject:
   m_ObjectHideFlags: 0
@@ -121008,13 +121043,14 @@ GameObject:
   - component: {fileID: 6047787408264457571}
   - component: {fileID: 6047787408264457569}
   - component: {fileID: 6047787408264457568}
+  - component: {fileID: 3986510648228409711}
   m_Layer: 12
   m_Name: Bullet
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6047787408264457571
 Transform:
   m_ObjectHideFlags: 0
@@ -121024,7 +121060,7 @@ Transform:
   m_GameObject: {fileID: 6047787408264457570}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 6047787407178451133}
   m_RootOrder: 0
@@ -121069,7 +121105,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f817ba5aabd773e4f914480bdd62d0c8, type: 3}
+  m_Sprite: {fileID: -3239594328036583930, guid: c078262cfe23e5f45b0fdf215c6fa100, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -121093,9 +121129,28 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.06370217, y: -0.031309765}
-  m_Size: {x: 0.62211955, y: 0.44074225}
-  m_Direction: 1
+  m_Offset: {x: 0.0014488578, y: -0.036497403}
+  m_Size: {x: 0.2347656, y: 0.2451415}
+  m_Direction: 0
+--- !u!95 &3986510648228409711
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6047787408264457570}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7f179c22f30e6f14999d8fff1aa860d1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6047787408439465215
 GameObject:
   m_ObjectHideFlags: 0
@@ -121148,7 +121203,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6047787407102696188}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 6047787406601956236}
-  arcHeight: 1
 --- !u!50 &6047787408439465213
 Rigidbody2D:
   serializedVersion: 4
@@ -121243,7 +121297,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 9163136532282518253}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 5571590409615468160}
-  arcHeight: 1
 --- !u!1 &6545442256092755238
 GameObject:
   m_ObjectHideFlags: 0
@@ -121317,7 +121370,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 9177441610951494675}
   explosionFxObj: {fileID: 5962911919687491546}
   explosionSpriteFxObj: {fileID: 0}
-  arcHeight: 1
 --- !u!1 &6687509516496348516
 GameObject:
   m_ObjectHideFlags: 0
@@ -146021,7 +146073,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 5560518651429155841}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 2221474118685677085}
-  arcHeight: 1
 --- !u!1 &9067485024064748274
 GameObject:
   m_ObjectHideFlags: 0
@@ -146095,7 +146146,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1215385197625622069}
   explosionFxObj: {fileID: 0}
   explosionSpriteFxObj: {fileID: 4001640731770616325}
-  arcHeight: 1
 --- !u!1 &9067629599088828967
 GameObject:
   m_ObjectHideFlags: 0
@@ -151038,13 +151088,14 @@ GameObject:
   - component: {fileID: 5424304922473004966}
   - component: {fileID: 6261089433131961945}
   - component: {fileID: 4861824252416161376}
+  - component: {fileID: 8618071489981628374}
   m_Layer: 12
   m_Name: Bullet
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5424304922473004966
 Transform:
   m_ObjectHideFlags: 0
@@ -151054,7 +151105,7 @@ Transform:
   m_GameObject: {fileID: 9163136532282518253}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 1409264226538487615}
   m_RootOrder: 0
@@ -151099,7 +151150,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f817ba5aabd773e4f914480bdd62d0c8, type: 3}
+  m_Sprite: {fileID: -3239594328036583930, guid: c078262cfe23e5f45b0fdf215c6fa100, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -151123,9 +151174,28 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.06370217, y: -0.031309765}
-  m_Size: {x: 0.62211955, y: 0.44074225}
-  m_Direction: 1
+  m_Offset: {x: 0.0035428049, y: -0.03704815}
+  m_Size: {x: 0.24393983, y: 0.24393983}
+  m_Direction: 0
+--- !u!95 &8618071489981628374
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9163136532282518253}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7f179c22f30e6f14999d8fff1aa860d1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &9177441610951494675
 GameObject:
   m_ObjectHideFlags: 0

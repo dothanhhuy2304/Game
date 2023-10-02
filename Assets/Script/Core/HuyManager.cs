@@ -36,7 +36,8 @@ namespace Script.Core
         public void CameraShake(Camera cam, float duration, Vector3 strength, int vibrato, float randomness,
             bool fadeOut)
         {
-            cam.DOShakePosition(duration, strength, vibrato, randomness, fadeOut);
+            //cam.DOShakePosition(duration, strength, vibrato, randomness, fadeOut);
+            cam.DOShakeRotation(duration, strength, vibrato, randomness, fadeOut);
         }
 
         public DataService.GameData GetCurrentPlayerData()
@@ -89,7 +90,7 @@ namespace Script.Core
 
         public void UpdatePlayerSetting(DataService.PlayerSetting setting)
         {
-            DataService.PlayerSetting playerSetting=new DataService.PlayerSetting();
+            DataService.PlayerSetting playerSetting = new DataService.PlayerSetting();
             playerSetting.PlayerId = userId;
             playerSetting.SoundMusic = setting.SoundMusic;
             playerSetting.SoundEffect = setting.SoundEffect;
@@ -104,7 +105,7 @@ namespace Script.Core
             }
             else
             {
-                Debug.Log("player setting is null");
+                Debug.LogError("player data is null");
             }
         }
 
@@ -116,7 +117,7 @@ namespace Script.Core
             }
             else
             {
-                Debug.Log("player setting is null");
+                Debug.Log("player data is null");
             }
         }
     }
