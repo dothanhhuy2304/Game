@@ -14,6 +14,7 @@ namespace Script.Core
         }
         
         public string userId;
+        public bool startLoadScene;
         public int characterSelected;
         public int currentScreen;
         public int saveScreenPass;

@@ -24,11 +24,6 @@ namespace Script.GamePlay
             SetRectButton(w, h);
         }
 
-        private void Start()
-        {
-            DontDestroyOnLoad(gameObject);
-        }
-
         private void Update()
         {
             deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;

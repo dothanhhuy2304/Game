@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using Photon.Pun;
 using Script.Core;
 using TMPro;
 using UnityEngine;
@@ -16,6 +18,12 @@ namespace Script.GamePlay
         [HideInInspector ]public int numberGold;
         [HideInInspector] public int numberDiamond;
         public GameObject lobbyPanel;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            DontDestroyOnLoad(gameObject);
+        }
 
         private void Start()
         {
@@ -53,8 +61,6 @@ namespace Script.GamePlay
                 HuyManager.Instance.characterSelected = 0;
                 HuyManager.Instance.currentScreen = 0;
             }
-
-            DontDestroyOnLoad(this);
         }
 
         public void SetScore(float score)

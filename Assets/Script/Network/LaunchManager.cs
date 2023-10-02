@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using Script.Core;
+using Script.GamePlay;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class LaunchManager : MonoBehaviourPunCallbacks
@@ -94,9 +97,7 @@ public class LaunchManager : MonoBehaviourPunCallbacks
             {
                 panelIntro.SetActive(false);
                 LogFeedback("<color=green>CreateRoom...</color>");
-                PhotonNetwork.JoinOrCreateRoom(roomName.text,
-                    new RoomOptions {IsOpen = true, MaxPlayers = maxPlayerInRoom},
-                    TypedLobby.Default);
+                PhotonNetwork.JoinOrCreateRoom(roomName.text, new RoomOptions {IsOpen = true, MaxPlayers = maxPlayerInRoom}, TypedLobby.Default);
                 inRoom.SetActive(true);
             }
             else
@@ -126,7 +127,7 @@ public class LaunchManager : MonoBehaviourPunCallbacks
         Debug.LogError("Number room exits " + roomList.Count);
         foreach (var info in roomList)
         {
-            if (info.RemovedFromList || info.PlayerCount == info.MaxPlayers)
+            if (info.RemovedFromList || info.PlayerCount == info.MaxPlayers || !info.IsOpen)
             {
                 for (int i = 0; i < cachedRoomList.Count; i++)
                 {
@@ -208,27 +209,71 @@ public class LaunchManager : MonoBehaviourPunCallbacks
 
     public override void OnLeftLobby()
     {
-        if (PhotonNetwork.InLobby)
+        if (GameManager.instance)
         {
-            PhotonNetwork.LeaveLobby();
+            Destroy(GameManager.instance.gameObject);
         }
+
+        LoadingScreenManager.Instance.FadeLoadingScene(0, false);
+        base.OnLeftLobby();
     }
 
     public override void OnLeftRoom()
     {
-        if (PhotonNetwork.InRoom)
+        if (GameManager.instance)
         {
-            PhotonNetwork.LeaveRoom();
+            Destroy(GameManager.instance.gameObject);
         }
+
+        LoadingScreenManager.Instance.FadeLoadingScene(0, false);
+        base.OnLeftRoom();
     }
 
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        if (PhotonNetwork.InRoom || PhotonNetwork.InLobby)
+        switch (cause)
         {
-            PhotonNetwork.LeaveLobby();
-            PhotonNetwork.LeaveRoom();
+            case DisconnectCause.None:
+                break;
+            case DisconnectCause.ExceptionOnConnect:
+                break;
+            case DisconnectCause.DnsExceptionOnConnect:
+                break;
+            case DisconnectCause.ServerAddressInvalid:
+                break;
+            case DisconnectCause.Exception:
+                break;
+            case DisconnectCause.ServerTimeout:
+                break;
+            case DisconnectCause.ClientTimeout:
+                break;
+            case DisconnectCause.DisconnectByServerLogic:
+                break;
+            case DisconnectCause.DisconnectByServerReasonUnknown:
+                break;
+            case DisconnectCause.InvalidAuthentication:
+                break;
+            case DisconnectCause.CustomAuthenticationFailed:
+                break;
+            case DisconnectCause.AuthenticationTicketExpired:
+                break;
+            case DisconnectCause.MaxCcuReached:
+                break;
+            case DisconnectCause.InvalidRegion:
+                break;
+            case DisconnectCause.OperationNotAllowedInCurrentState:
+                break;
+            case DisconnectCause.DisconnectByClientLogic:
+                break;
+            case DisconnectCause.DisconnectByOperationLimit:
+                break;
+            case DisconnectCause.DisconnectByDisconnectMessage:
+                break;
+            case DisconnectCause.ApplicationQuit:
+                break;
+            default:
+                break;
         }
     }
 
@@ -278,48 +323,33 @@ public class LaunchManager : MonoBehaviourPunCallbacks
     }
 
 
-    //Beta need fix soon
-    //Should leaveRoom and keep lobby
-    //If disconnect lobby will connect again onConnectToMaster
-    //Change scene will not work if loading not correct
-    private Coroutine _currentCoroutine;
-
-    public void LeaveRoom()
-    {
-        if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom)
-        {
-            PhotonNetwork.LeaveRoom();
-            _currentCoroutine = StartCoroutine(DurationEndScene(1, 0));
-        }
-    }
-
-    private IEnumerator DurationEndScene(float timeDuration, int sceneLoad)
-    {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(levelGame[0]);
-        while (!UnityEngine.SceneManagement.SceneManager.GetSceneAt(sceneLoad).isLoaded)
-        {
-            yield return null;
-        }
-
-        yield return new WaitForSeconds(timeDuration);
-        float currentTime = 0;
-        while (currentTime < 1f)
-        {
-            currentTime *= Time.deltaTime;
-            var txt = feedBackText;
-            Color t = new Color {r = 255, g = 255, b = 255, a = 0.5f};
-            Color b = new Color {r = 0, g = 0, b = 0, a = 1f};
-            txt.color = Color.Lerp(t, b, 1 * Time.deltaTime);
-            yield return new WaitForSeconds(0.1f);
-            StopCoroutine(_currentCoroutine);
-        }
-
-        yield return null;
-        LogFeedback("<color=red>Leave Room...</color>");
-        panelIntro.SetActive(true);
-        PhotonNetwork.LeaveRoom();
-        PhotonNetwork.LeaveLobby();
-    }
+    // private IEnumerator DurationEndScene(float timeDuration, int sceneLoad)
+    // {
+    //     UnityEngine.SceneManagement.SceneManager.LoadScene(levelGame[0]);
+    //     while (!UnityEngine.SceneManagement.SceneManager.GetSceneAt(sceneLoad).isLoaded)
+    //     {
+    //         yield return null;
+    //     }
+    //
+    //     yield return new WaitForSeconds(timeDuration);
+    //     float currentTime = 0;
+    //     while (currentTime < 1f)
+    //     {
+    //         currentTime *= Time.deltaTime;
+    //         var txt = feedBackText;
+    //         Color t = new Color {r = 255, g = 255, b = 255, a = 0.5f};
+    //         Color b = new Color {r = 0, g = 0, b = 0, a = 1f};
+    //         txt.color = Color.Lerp(t, b, 1 * Time.deltaTime);
+    //         yield return new WaitForSeconds(0.1f);
+    //         StopCoroutine(_currentCoroutine);
+    //     }
+    //
+    //     yield return null;
+    //     LogFeedback("<color=red>Leave Room...</color>");
+    //     panelIntro.SetActive(true);
+    //     PhotonNetwork.LeaveRoom();
+    //     PhotonNetwork.LeaveLobby();
+    // }
 
     public void ButtonStartGame()
     {

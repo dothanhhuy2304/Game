@@ -9,6 +9,11 @@ namespace Script.Player
 
         private void LateUpdate()
         {
+            if (!CharacterController2D.IsLocalPlayer)
+            {
+                return;
+            }
+
             if (!CharacterController2D.IsLocalPlayer.playerHealth.isDeath && CharacterController2D.IsLocalPlayer.pv.IsMine)
             {
                 Vector3 target = CharacterController2D.IsLocalPlayer.transform.position;

@@ -1,4 +1,5 @@
 using System.Linq;
+using Photon.Pun;
 using Script.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,12 +21,10 @@ namespace Script.GamePlay
         public GameObject uiVolume;
         public Button btnBackToMenu;
         public Button btnRestart;
-        private LoadingScreenManager _loadingScreenManager;
         private bool _isShowUiSetting;
 
         private void Start()
         {
-            _loadingScreenManager = LoadingScreenManager.Instance;
             btnShowAndHiddenUi.onClick.AddListener(() => { ShowAndHiddenUiSetting(ref _isShowUiSetting); });
             sliderMusic.onValueChanged.AddListener(ChangeVolumeMusic);
             sliderEffect.onValueChanged.AddListener(ChangeVolumeEffect);
@@ -59,7 +58,7 @@ namespace Script.GamePlay
         {
             if (Input.GetKey(KeyCode.Escape))
             {
-                Time.timeScale = 0f;
+                //Time.timeScale = 0f;
                 settingUi.SetActive(true);
             }
         }
@@ -84,7 +83,7 @@ namespace Script.GamePlay
         {
             isShow = !isShow;
             settingUi.SetActive(isShow);
-            Time.timeScale = isShow ? 0f : 1f;
+            //Time.timeScale = isShow ? 0f : 1f;
         }
 
         public void ShowVolumeUi()
@@ -101,31 +100,32 @@ namespace Script.GamePlay
 
         public void BackToMenu()
         {
+            PhotonNetwork.LeaveRoom();
             _isShowUiSetting = false;
-            Time.timeScale = 1f;
+            //Time.timeScale = 1f;
             settingUi.SetActive(false);
             scoreUi.SetActive(false);
             btnBackToMenu.gameObject.SetActive(false);
             btnRestart.gameObject.SetActive(false);
             AudioManager.instance.Plays_Music("Music_Menu");
-            _loadingScreenManager.FadeLoadingScene(0);
         }
 
         public void RestartLevel()
         {
+            PhotonNetwork.LeaveRoom();
             _isShowUiSetting = false;
-            Time.timeScale = 1f;
+            //Time.timeScale = 1f;
             settingUi.SetActive(false);
             scoreUi.SetActive(false);
             btnBackToMenu.gameObject.SetActive(false);
             btnRestart.gameObject.SetActive(false);
             AudioManager.instance.Plays_Music("Music_Menu");
-            _loadingScreenManager.FadeLoadingScene(_loadingScreenManager.RestartLevel());
+            //_loadingScreenManager.FadeLoadingScene(_loadingScreenManager.RestartLevel());
         }
 
         public void ExitGame()
         {
-            Time.timeScale = 1f;
+            //Time.timeScale = 1f;
             Application.Quit();
         }
 

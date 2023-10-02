@@ -887,7 +887,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d0588cb19aa12b6418fc01d8614a3ffc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 95d47d687a016834490469455cd43800, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2067,8 +2067,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -329.99994, y: 0}
-  m_SizeDelta: {x: 660, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1516151740
 CanvasRenderer:
@@ -2098,7 +2098,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6452a8f7e355fab4da60238b7ec8bd13, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0c082c6f92ff8dc41982d955bda4a716, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4158,7 +4158,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6574641931197223571
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4501,7 +4501,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d0588cb19aa12b6418fc01d8614a3ffc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 95d47d687a016834490469455cd43800, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7186,7 +7186,7 @@ GameObject:
   - component: {fileID: 1193846889390587628}
   - component: {fileID: 1617045116}
   - component: {fileID: 6518584764692058467}
-  - component: {fileID: 827555632013462038}
+  - component: {fileID: 8196298376624670557}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -7256,6 +7256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c922eab8260227e48b91b39c5062af2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cachedRoomList: []
   panelIntro: {fileID: 2139469713}
   panelRoom: {fileID: 228809109}
   inRoom: {fileID: 1429065811}
@@ -7283,6 +7284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac83a3e0d6fc6fb458a81786f806750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pv: {fileID: 8196298376624670557}
   characters:
   - {fileID: 1957469953344711404}
   - {fileID: 6325781738555519416}
@@ -7311,7 +7313,7 @@ MonoBehaviour:
   onlyPlayerMask:
     serializedVersion: 2
     m_Bits: 253952
---- !u!114 &827555632013462038
+--- !u!114 &8196298376624670557
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8355,7 +8357,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &854763771900340991
 RectTransform:
   m_ObjectHideFlags: 0

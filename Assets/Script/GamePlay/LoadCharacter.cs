@@ -38,19 +38,16 @@ namespace Script.GamePlay
                 }
             }
 
-            if (GameManager.instance == null)
+            if (!GameManager.instance)
             {
                 Instantiate(Resources.Load<GameObject>("GameManager"));
             }
 
             AudioManager.instance.Plays_Music("Music_Game");
 
-            if (!UIManager.instance.scoreUi.activeSelf)
-            {
-                UIManager.instance.scoreUi.SetActive(true);
-                UIManager.instance.btnBackToMenu.gameObject.SetActive(true);
-                UIManager.instance.btnRestart.gameObject.SetActive(true);
-            }
+            UIManager.instance.scoreUi.SetActive(true);
+            UIManager.instance.btnBackToMenu.gameObject.SetActive(true);
+            UIManager.instance.btnRestart.gameObject.SetActive(true);
         }
     }
 }

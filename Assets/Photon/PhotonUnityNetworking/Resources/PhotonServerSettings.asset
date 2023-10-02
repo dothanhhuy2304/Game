@@ -40,7 +40,6 @@ MonoBehaviour:
   - Dash
   - DestroyRpc
   - DestroySpaceship
-  - FadeLoadingScene
   - Fire
   - Healing
   - Jump

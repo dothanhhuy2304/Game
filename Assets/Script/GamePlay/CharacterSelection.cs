@@ -9,6 +9,7 @@ namespace Script.GamePlay
 {
     public class CharacterSelection : MonoBehaviourPun
     {
+        [SerializeField] private PhotonView pv;
         [SerializeField] private List<GameObject> characters;
         private int _currentCharacter;
         [SerializeField] private Button btnNext, btnPreview;
@@ -45,7 +46,9 @@ namespace Script.GamePlay
 
         public void LoadCharacter()
         {
-            photonView.RPC(nameof(RpcCharacter), RpcTarget.AllBuffered);
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.CurrentRoom.IsVisible = true;
+            pv.RPC(nameof(RpcCharacter), RpcTarget.AllBuffered);
             _loadingScreenManager.FadeLoadingScene(
                 HuyManager.Instance.currentScreen == 0
                     ? _loadingScreenManager.NextScreen()
