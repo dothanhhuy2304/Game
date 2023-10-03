@@ -215,6 +215,7 @@ namespace Script.Enemy
         {
             if (stream.IsWriting)
             {
+                stream.SendNext((bool) _canAttack);
                 stream.SendNext((Vector3) body.velocity);
                 stream.SendNext((float) body.rotation);
                 stream.SendNext((Vector3) transform.position);
@@ -223,6 +224,7 @@ namespace Script.Enemy
             }
             else
             {
+                _canAttack = (bool) stream.ReceiveNext();
                 body.velocity = (Vector3) stream.ReceiveNext();
                 body.rotation = (float) stream.ReceiveNext();
                 transform.position = (Vector3) stream.ReceiveNext();

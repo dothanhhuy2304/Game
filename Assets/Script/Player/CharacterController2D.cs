@@ -11,6 +11,7 @@ namespace Script.Player
         public PhotonView pv;
         public Rigidbody2D body;
         public Collider2D col;
+        [SerializeField] private SpriteRenderer[] playerRenderer;
         public Data playerData;
         [Header("Movement")] private const float MovementSmoothing = .05f;
         private Vector2 _velocity = Vector2.zero;
@@ -44,6 +45,8 @@ namespace Script.Player
             if (pv.IsMine)
             {
                 IsLocalPlayer = GetComponent<CharacterController2D>();
+                playerRenderer[0].sortingOrder += pv.Owner.ActorNumber;
+                playerRenderer[1].sortingOrder += pv.Owner.ActorNumber;
             }
 
             HuyManager.Instance.listPlayerInGame = FindObjectsOfType<CharacterController2D>();

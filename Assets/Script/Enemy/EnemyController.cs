@@ -85,12 +85,14 @@ namespace Script.Enemy
                 RaycastHit2D hit = Physics2D.Linecast(position, gos, LayerMaskManager.instance.playerMask);
                 if (currentDistance < closestDistance)
                 {
-                    if (hit.collider != null && hit.collider.gameObject.CompareTag("Player") &&
-                        !hit.collider.GetComponent<PlayerHealth>().isDeath)
+                    if (hit.collider != null)
                     {
-                        closestDistance = currentDistance;
-                        //trans = go.transform;
-                        trans = hit.collider.gameObject.transform;
+                        if (hit.collider.gameObject.CompareTag("Player") && !hit.collider.GetComponent<PlayerHealth>().isDeath)
+                        {
+                            closestDistance = currentDistance;
+                            //trans = go.transform;
+                            trans = hit.collider.gameObject.transform;
+                        }
                     }
                 }
             }

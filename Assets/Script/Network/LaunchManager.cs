@@ -287,7 +287,7 @@ public class LaunchManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        LogFeedback($"<color=green>{PhotonNetwork.CurrentRoom.Name}</color><br>{PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}");
+        LogFeedback($"<color=green>{PhotonNetwork.CurrentRoom.Name}</color>");
         startGame.gameObject.SetActive(PhotonNetwork.IsMasterClient);
         txtRoomName.text = PhotonNetwork.CurrentRoom.Name + " " + PhotonNetwork.CurrentRoom.PlayerCount + "/" + maxPlayerInRoom;
     }

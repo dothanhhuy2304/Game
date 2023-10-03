@@ -72,6 +72,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pv: {fileID: 2615392063268435766}
   petData: {fileID: 11400000, guid: a63b5893ff1ff9b418f2d3851dd8507a, type: 2}
+  petRenderer: {fileID: 1064185863719343552}
   body: {fileID: 322445969}
   projectiles:
   - {fileID: 0}

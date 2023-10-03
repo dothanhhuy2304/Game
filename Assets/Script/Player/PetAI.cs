@@ -4,7 +4,6 @@ using DG.Tweening;
 using Photon.Pun;
 using UnityEngine;
 using Script.Core;
-using Script.GamePlay;
 using Script.ScriptTable;
 
 namespace Script.Player
@@ -14,6 +13,7 @@ namespace Script.Player
         public static PetAI IsLocalPet;
         [SerializeField] private PhotonView pv;
         public Data petData;
+        [SerializeField] private SpriteRenderer petRenderer;
         [SerializeField] private Rigidbody2D body;
         [SerializeField] private List<FireProjectile> projectiles;
         private List<GameObject> _listEnemyInMap;
@@ -41,8 +41,9 @@ namespace Script.Player
             if (pv.IsMine)
             {
                 IsLocalPet = GetComponent<PetAI>();
+                petRenderer.sortingOrder += pv.Owner.ActorNumber;
             }
-            
+
             _character = CharacterController2D.IsLocalPlayer;
             projectiles = FindObjectOfType<BulletController>().petAi;
             _listEnemyInMap = GameObject.FindGameObjectsWithTag("Enemy").ToList();

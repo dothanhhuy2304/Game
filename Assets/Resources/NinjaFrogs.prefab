@@ -103,6 +103,9 @@ MonoBehaviour:
   pv: {fileID: 4558337873839590095}
   body: {fileID: 377494481518129201}
   col: {fileID: 377494481518129200}
+  playerRenderer:
+  - {fileID: 377494481715831528}
+  - {fileID: 8633144306668702116}
   playerData: {fileID: 11400000, guid: 954bc62a90d001a41a173ad8d413a47d, type: 2}
   mGrounded: 0
   isJump: 0
