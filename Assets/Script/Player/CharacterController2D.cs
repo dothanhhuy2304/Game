@@ -201,14 +201,16 @@ namespace Script.Player
             {
                 JumpForce();
                 _mDbJump = true;
-                _db1 = true;
             }
             else if (_mDbJump && !mGrounded)
             {
                 JumpForce();
                 _mDbJump = false;
-                _db1 = false;
             }
+            
+            JumpAnimation();
+            mGrounded = false;
+            _isDashing = true;
 #elif UNITY_ANDROID || UNITY_IOS
             if (mGrounded)
             {
@@ -226,10 +228,13 @@ namespace Script.Player
                 _mDbJump = false;
                 _db1 = false;
             }
-#endif
             JumpAnimation();
             mGrounded = false;
             _isDashing = true;
+#endif
+            // JumpAnimation();
+            // mGrounded = false;
+            // _isDashing = true;
         }
 
         private void JumpForce()
