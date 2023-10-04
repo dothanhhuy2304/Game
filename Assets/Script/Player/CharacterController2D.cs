@@ -53,20 +53,13 @@ namespace Script.Player
                 playerRenderer[1].sortingOrder += pv.Owner.ActorNumber;
                 mobileInput = FindObjectOfType<MobileInputManager>();
                 mobileInput.btnDash.onClick.AddListener(MobileDash);
+                _startSpeed = playerData.movingSpeed;
             }
             
 
             HuyManager.Instance.listPlayerInGame = FindObjectsOfType<CharacterController2D>();
         }
-
-        private void Start()
-        {
-            if (pv.IsMine)
-            {
-                _startSpeed = playerData.movingSpeed;
-            }
-        }
-
+        
         private void Update()
         {
             if (pv.IsMine)
@@ -210,7 +203,7 @@ namespace Script.Player
                 _mDbJump = true;
                 _db1 = true;
             }
-            else if (_mDbJump)
+            else if (_mDbJump && !mGrounded)
             {
                 JumpForce();
                 _mDbJump = false;
