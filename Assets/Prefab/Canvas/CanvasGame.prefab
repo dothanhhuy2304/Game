@@ -530,6 +530,7 @@ MonoBehaviour:
   joystick: {fileID: 5375981497533736424}
   btnShot: {fileID: 8339281188880589667}
   btnDash: {fileID: 6272149011080213878}
+  objMobileInput: {fileID: 7722566404077151796}
 --- !u!1 &1765978405876503506
 GameObject:
   m_ObjectHideFlags: 0
