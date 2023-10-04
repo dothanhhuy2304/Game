@@ -52,18 +52,11 @@ namespace Script.Player
                 playerRenderer[1].sortingOrder += pv.Owner.ActorNumber;
                 mobileInput = FindObjectOfType<MobileInputManager>();
                 mobileInput.btnDash.onClick.AddListener(MobileDash);
+                _startSpeed = playerData.movingSpeed;
             }
             
 
             HuyManager.Instance.listPlayerInGame = FindObjectsOfType<CharacterController2D>();
-        }
-        
-        private void Start()
-        {
-            if (pv.IsMine)
-            {
-                _startSpeed = playerData.movingSpeed;
-            }
         }
 
         private void Update()
@@ -231,7 +224,7 @@ namespace Script.Player
                 _db1 = false;
             }
 #endif
-            JumpAnimation();
+            pv.RPC(nameof(JumpAnimation), RpcTarget.AllBuffered);
             mGrounded = false;
             _isDashing = true;
         }
@@ -244,6 +237,7 @@ namespace Script.Player
             _jumpCount++;
         }
 
+        [PunRPC]
         private void JumpAnimation()
         {
             switch (_jumpCount)

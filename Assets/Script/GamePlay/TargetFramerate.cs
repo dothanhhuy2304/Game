@@ -20,6 +20,7 @@ namespace Script.GamePlay
         protected override void Awake()
         {
             base.Awake();
+            Application.targetFrameRate = 60;
             int w = Screen.width, h = Screen.height;
             SetRectButton(w, h);
         }
