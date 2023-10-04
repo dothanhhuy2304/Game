@@ -46,13 +46,13 @@ namespace Script.Player
                 pv = GetComponent<PhotonView>();
             }
 
+            mobileInput = FindObjectOfType<MobileInputManager>();
+            mobileInput.btnDash.onClick.AddListener(MobileDash);
             if (pv.IsMine)
             {
                 IsLocalPlayer = GetComponent<CharacterController2D>();
                 playerRenderer[0].sortingOrder += pv.Owner.ActorNumber;
                 playerRenderer[1].sortingOrder += pv.Owner.ActorNumber;
-                mobileInput = FindObjectOfType<MobileInputManager>();
-                mobileInput.btnDash.onClick.AddListener(MobileDash);
                 _startSpeed = playerData.movingSpeed;
             }
             
