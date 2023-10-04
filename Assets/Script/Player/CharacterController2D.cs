@@ -200,11 +200,13 @@ namespace Script.Player
             {
                 JumpForce();
                 _mDbJump = true;
+                _db1 = true;
             }
             else if (_mDbJump)
             {
                 JumpForce();
                 _mDbJump = false;
+                _db1 = false;
             }
 #elif UNITY_ANDROID || UNITY_IOS
             if (mGrounded)
@@ -224,7 +226,7 @@ namespace Script.Player
                 _db1 = false;
             }
 #endif
-            pv.RPC(nameof(JumpAnimation), RpcTarget.AllBuffered);
+            JumpAnimation();
             mGrounded = false;
             _isDashing = true;
         }
@@ -237,7 +239,6 @@ namespace Script.Player
             _jumpCount++;
         }
 
-        [PunRPC]
         private void JumpAnimation()
         {
             switch (_jumpCount)
