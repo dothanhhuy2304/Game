@@ -2,6 +2,7 @@ using Photon.Pun;
 using UnityEngine;
 using Script.Core;
 using Script.ScriptTable;
+using UnityEngine.Serialization;
 
 namespace Script.Player
 {
@@ -34,6 +35,8 @@ namespace Script.Player
         private static readonly int MRun = Animator.StringToHash("m_Run");
         private static readonly int IsJump = Animator.StringToHash("is_Jump");
         private static readonly int IsDbJump = Animator.StringToHash("is_DBJump");
+        
+        [HideInInspector]public MobileInputManager mobileInput;
 
         private void Awake()
         {
@@ -47,7 +50,10 @@ namespace Script.Player
                 IsLocalPlayer = GetComponent<CharacterController2D>();
                 playerRenderer[0].sortingOrder += pv.Owner.ActorNumber;
                 playerRenderer[1].sortingOrder += pv.Owner.ActorNumber;
+                mobileInput = FindObjectOfType<MobileInputManager>();
+                mobileInput.btnDash.onClick.AddListener(MobileDash);
             }
+            
 
             HuyManager.Instance.listPlayerInGame = FindObjectsOfType<CharacterController2D>();
         }
@@ -68,6 +74,7 @@ namespace Script.Player
                 {
                     pv.RPC(nameof(PlayerInput), RpcTarget.AllBuffered);
                     HuyManager.Instance.SetUpTime(ref _timeNextDash);
+#if UNITY_STANDALONE
                     if (_timeNextDash <= 0)
                     {
                         if ((Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) && _isDashing)
@@ -75,6 +82,7 @@ namespace Script.Player
                             pv.RPC(nameof(Dash), RpcTarget.AllBuffered, _playerInput);
                         }
                     }
+#endif
                 }
             }
         }
@@ -82,12 +90,12 @@ namespace Script.Player
         [PunRPC]
         private void PlayerInput()
         {
-#if UNITY_EDITOR || UNITY_STANDALONE
+#if UNITY_STANDALONE
             _playerInput = Input.GetAxisRaw("Horizontal");
             isJump |= Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow);
-#elif !UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
-             playerInput = Input.GetAxisRaw("Vertical");
-             isJump |= Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow);
+#elif UNITY_ANDROID || UNITY_IOS
+            _playerInput = mobileInput.joystick.Horizontal;
+            isJump |= mobileInput.joystick.Vertical > 0;
 #endif
         }
 
@@ -111,6 +119,18 @@ namespace Script.Player
                     }
 
                     pv.RPC(nameof(YVelocity), RpcTarget.AllBuffered);
+                }
+            }
+        }
+
+
+        private void MobileDash()
+        {
+            if (_timeNextDash <= 0)
+            {
+                if (_isDashing)
+                {
+                    pv.RPC(nameof(Dash), RpcTarget.AllBuffered, _playerInput);
                 }
             }
         }
@@ -180,10 +200,14 @@ namespace Script.Player
             _playerInput = move;
         }
 
+
+        private bool _db1;
+
         [PunRPC]
         private void Jump()
         {
             isJump = false;
+#if UNITY_STANDALONE
             if (mGrounded)
             {
                 JumpForce();
@@ -191,10 +215,28 @@ namespace Script.Player
             }
             else if (_mDbJump)
             {
+                Debug.LogError(_mDbJump);
                 JumpForce();
                 _mDbJump = false;
             }
+#elif UNITY_ANDROID || UNITY_IOS
+            if (mGrounded)
+            {
+                JumpForce();
+                _mDbJump = true;
+            }
+            else if (mobileInput.joystick.Vertical < 0 && !_db1 && _mDbJump)
+            {
+                _db1 = true;
+            }
 
+            if (_db1 && mobileInput.joystick.Vertical > 0 && _mDbJump && !mGrounded)
+            {
+                JumpForce();
+                _mDbJump = false;
+                _db1 = false;
+            }
+#endif
             JumpAnimation();
             mGrounded = false;
             _isDashing = true;

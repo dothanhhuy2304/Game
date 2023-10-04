@@ -251,6 +251,7 @@ MonoBehaviour:
   clampMinX: -6.46
   clampMaxX: 227
   playerHealth: {fileID: 772435844488864098}
+  mobileInput: {fileID: 0}
 --- !u!114 &772435844488864097
 MonoBehaviour:
   m_ObjectHideFlags: 0

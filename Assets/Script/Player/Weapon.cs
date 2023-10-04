@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using Script.Core;
 
 namespace Script.Player
@@ -14,10 +13,12 @@ namespace Script.Player
         private float _timeAttack;
         [SerializeField] private float resetTimeAttack;
         private int _tempIndex;
+        private bool mobileShot;
 
         private void Awake()
         {
             projectiles = FindObjectOfType<BulletController>().bulletPlayer;
+            player.mobileInput.btnShot.onClick.AddListener(MobileShot);
         }
 
         private void LateUpdate()
@@ -28,13 +29,30 @@ namespace Script.Player
             }
 
             HuyManager.Instance.SetUpTime(ref _timeAttack);
-            if (player.playerHealth.isDeath || player.playerHealth.isHurt || EventSystem.current.IsPointerOverGameObject())
+            if (player.playerHealth.isDeath || player.playerHealth.isHurt)
+            {
                 return;
-            if (_timeAttack <= 0 && Input.GetMouseButtonDown(0))
+            }
+
+#if UNITY_STANDALONE || UNITY_EDITOR
+            if (_timeAttack <= 0 && Input.GetMouseButtonDown(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             {
                 player.pv.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
                 _timeAttack = resetTimeAttack;
             }
+#elif UNITY_ANDROID || UNITY_IOS
+            if (_timeAttack <= 0 && _mobileShot)
+            {
+                player.pv.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
+                _timeAttack = resetTimeAttack;
+                _mobileShot = false;
+            }
+#endif
+        }
+
+        private void MobileShot()
+        {
+            mobileShot = true;
         }
 
         [PunRPC]
