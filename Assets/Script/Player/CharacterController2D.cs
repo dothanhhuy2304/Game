@@ -1,3 +1,4 @@
+using System;
 using Photon.Pun;
 using UnityEngine;
 using Script.Core;
@@ -52,11 +53,18 @@ namespace Script.Player
                 playerRenderer[1].sortingOrder += pv.Owner.ActorNumber;
                 mobileInput = FindObjectOfType<MobileInputManager>();
                 mobileInput.btnDash.onClick.AddListener(MobileDash);
-                _startSpeed = playerData.movingSpeed;
             }
             
 
             HuyManager.Instance.listPlayerInGame = FindObjectsOfType<CharacterController2D>();
+        }
+
+        private void Start()
+        {
+            if (pv.IsMine)
+            {
+                _startSpeed = playerData.movingSpeed;
+            }
         }
 
         private void Update()
