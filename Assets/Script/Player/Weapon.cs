@@ -34,7 +34,7 @@ namespace Script.Player
                 return;
             }
 
-#if UNITY_STANDALONE || UNITY_EDITOR
+#if UNITY_STANDALONE
             if (_timeAttack <= 0 && Input.GetMouseButtonDown(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             {
                 player.pv.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);

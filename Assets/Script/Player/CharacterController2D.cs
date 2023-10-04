@@ -195,11 +195,6 @@ namespace Script.Player
             body.transform.position = playerPosition;
         }
 
-        private void MobileMove(float move)
-        {
-            _playerInput = move;
-        }
-
 
         private bool _db1;
 
@@ -215,7 +210,6 @@ namespace Script.Player
             }
             else if (_mDbJump)
             {
-                Debug.LogError(_mDbJump);
                 JumpForce();
                 _mDbJump = false;
             }
