@@ -41,11 +41,11 @@ namespace Script.Player
                 _timeAttack = resetTimeAttack;
             }
 #elif UNITY_ANDROID || UNITY_IOS
-            if (_timeAttack <= 0 && _mobileShot)
+            if (_timeAttack <= 0 && mobileShot)
             {
                 player.pv.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
                 _timeAttack = resetTimeAttack;
-                _mobileShot = false;
+                mobileShot = false;
             }
 #endif
         }
