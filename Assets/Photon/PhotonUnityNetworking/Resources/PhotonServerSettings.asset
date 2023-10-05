@@ -51,10 +51,8 @@ MonoBehaviour:
   - RpcAttackBullet
   - RpcCharacter
   - RpcCheckGround
-  - RpcResetAnimJump
   - RpcShot
   - YVelocity
-  - JumpAnimation
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

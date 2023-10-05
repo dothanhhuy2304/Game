@@ -109,7 +109,8 @@ namespace Script.Player
 
                     if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
                     {
-                        pv.RPC(nameof(RpcResetAnimJump), RpcTarget.AllBuffered);
+                        //pv.RPC(nameof(RpcResetAnimJump), RpcTarget.AllBuffered);
+                        RpcResetAnimJump();
                     }
 
                     pv.RPC(nameof(YVelocity), RpcTarget.AllBuffered);
@@ -307,7 +308,7 @@ namespace Script.Player
             // position.localScale = theScale;
         }
 
-        [PunRPC]
+        //[PunRPC]
         private void RpcResetAnimJump()
         {
             _jumpCount = 0;
