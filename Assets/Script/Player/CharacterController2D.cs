@@ -109,8 +109,7 @@ namespace Script.Player
 
                     if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
                     {
-                        //pv.RPC(nameof(RpcResetAnimJump), RpcTarget.AllBuffered);
-                        RpcResetAnimJump();
+                        pv.RPC(nameof(RpcResetAnimJump), RpcTarget.AllBuffered);
                     }
 
                     pv.RPC(nameof(YVelocity), RpcTarget.AllBuffered);
@@ -200,22 +199,30 @@ namespace Script.Player
 #if UNITY_STANDALONE
             if (mGrounded)
             {
-                JumpForce();
+                //JumpForce();
+                body.velocity = new Vector2(body.velocity.x, 0f);
+                body.AddForce(Vector2.up * playerData.jumpForce, ForceMode2D.Impulse);
+                AudioManager.instance.Play("Player_Jump");
+                _jumpCount++;
                 _mDbJump = true;
             }
             else if (_mDbJump && !mGrounded)
             {
-                JumpForce();
+                //JumpForce();
+                body.velocity = new Vector2(body.velocity.x, 0f);
+                body.AddForce(Vector2.up * playerData.jumpForce, ForceMode2D.Impulse);
+                AudioManager.instance.Play("Player_Jump");
+                _jumpCount++;
                 _mDbJump = false;
             }
-            
-            JumpAnimation();
-            mGrounded = false;
-            _isDashing = true;
 #elif UNITY_ANDROID || UNITY_IOS
             if (mGrounded)
             {
-                JumpForce();
+                //JumpForce();
+                body.velocity = new Vector2(body.velocity.x, 0f);
+                body.AddForce(Vector2.up * playerData.jumpForce, ForceMode2D.Impulse);
+                AudioManager.instance.Play("Player_Jump");
+                _jumpCount++;
                 _mDbJump = true;
             }
             else if (mobileInput.joystick.Vertical < 0 && !_db1 && _mDbJump)
@@ -225,17 +232,32 @@ namespace Script.Player
 
             if (_db1 && mobileInput.joystick.Vertical > 0 && _mDbJump && !mGrounded)
             {
-                JumpForce();
+                //JumpForce();
+                body.velocity = new Vector2(body.velocity.x, 0f);
+                body.AddForce(Vector2.up * playerData.jumpForce, ForceMode2D.Impulse);
+                AudioManager.instance.Play("Player_Jump");
+                _jumpCount++;
                 _mDbJump = false;
                 _db1 = false;
             }
-            JumpAnimation();
+#endif
+            //JumpAnimation();
+            switch (_jumpCount)
+            {
+                case 0:
+                    animator.SetBool(IsJump, false);
+                    animator.SetBool(IsDbJump, false);
+                    break;
+                case 1:
+                    animator.SetBool(IsJump, true);
+                    break;
+                case 2:
+                    animator.SetBool(IsJump, false);
+                    animator.SetBool(IsDbJump, true);
+                    break;
+            }
             mGrounded = false;
             _isDashing = true;
-#endif
-            // JumpAnimation();
-            // mGrounded = false;
-            // _isDashing = true;
         }
 
         private void JumpForce()
@@ -308,7 +330,7 @@ namespace Script.Player
             // position.localScale = theScale;
         }
 
-        //[PunRPC]
+        [PunRPC]
         private void RpcResetAnimJump()
         {
             _jumpCount = 0;
