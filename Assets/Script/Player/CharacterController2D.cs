@@ -196,23 +196,23 @@ namespace Script.Player
         private void Jump()
         {
             isJump = false;
-#if UNITY_STANDALONE
             if (mGrounded)
             {
                 JumpForce();
                 _mDbJump = true;
             }
+#if UNITY_STANDALONE
             else if (_mDbJump && !mGrounded)
             {
                 JumpForce();
                 _mDbJump = false;
             }
 #elif UNITY_ANDROID || UNITY_IOS
-            if (mGrounded)
-            {
-                JumpForce();
-                _mDbJump = true;
-            }
+            // if (mGrounded)
+            // {
+            //     JumpForce();
+            //     _mDbJump = true;
+            // }
             else if (mobileInput.joystick.Vertical < 0 && !_db1 && _mDbJump)
             {
                 _db1 = true;
@@ -355,8 +355,6 @@ namespace Script.Player
                 stream.SendNext(transform.position);
                 stream.SendNext(transform.rotation);
                 stream.SendNext(playerData.movingSpeed);
-                stream.SendNext(_db1);
-                stream.SendNext(_jumpCount);
             }
             else
             {
@@ -367,8 +365,6 @@ namespace Script.Player
                 playerData.movingSpeed = (float) stream.ReceiveNext();
                 //float lag = Mathf.Abs((float) (PhotonNetwork.Time - info.SentServerTime));
                 //networkPosition += (body.velocity * lag);
-                _db1 = (bool) stream.ReceiveNext();
-                _jumpCount = (int) stream.ReceiveNext();
             }
         }
     }
