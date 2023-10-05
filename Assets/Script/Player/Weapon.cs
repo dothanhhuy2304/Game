@@ -18,7 +18,7 @@ namespace Script.Player
         private void Awake()
         {
             projectiles = FindObjectOfType<BulletController>().bulletPlayer;
-            player.mobileInput.btnShot.onClick.AddListener(MobileShot);
+            player.mobileInput.btnShot.onClick.AddListener(() => mobileShot = true);
         }
 
         private void LateUpdate()
@@ -48,11 +48,6 @@ namespace Script.Player
                 mobileShot = false;
             }
 #endif
-        }
-
-        private void MobileShot()
-        {
-            mobileShot = true;
         }
 
         [PunRPC]

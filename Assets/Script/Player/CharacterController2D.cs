@@ -48,6 +48,7 @@ namespace Script.Player
 
             mobileInput = FindObjectOfType<MobileInputManager>();
             mobileInput.btnDash.onClick.AddListener(MobileDash);
+            mobileInput.btnJump.onClick.AddListener(() => isJump = true);
             if (pv.IsMine)
             {
                 IsLocalPlayer = GetComponent<CharacterController2D>();
@@ -88,8 +89,18 @@ namespace Script.Player
             _playerInput = Input.GetAxisRaw("Horizontal");
             isJump |= Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow);
 #elif UNITY_ANDROID || UNITY_IOS
-            _playerInput = mobileInput.joystick.Horizontal;
-            isJump |= mobileInput.joystick.Vertical > 0;
+            if (mobileInput.joystick.Horizontal < 0)
+            {
+                _playerInput = -1;
+            }
+            else if (mobileInput.joystick.Horizontal > 0)
+            {
+                _playerInput = 1;
+            }
+            else
+            {
+                _playerInput = 0;
+            }
 #endif
         }
 
@@ -201,30 +212,24 @@ namespace Script.Player
                 JumpForce();
                 _mDbJump = true;
             }
-#if UNITY_STANDALONE
+//#if UNITY_STANDALONE
             else if (_mDbJump && !mGrounded)
             {
                 JumpForce();
                 _mDbJump = false;
             }
-#elif UNITY_ANDROID || UNITY_IOS
-            // if (mGrounded)
-            // {
-            //     JumpForce();
-            //     _mDbJump = true;
-            // }
-            else if (mobileInput.joystick.Vertical < 0 && !_db1 && _mDbJump)
-            {
-                _db1 = true;
-            }
-
-            if (_db1 && mobileInput.joystick.Vertical > 0 && _mDbJump && !mGrounded)
-            {
-                JumpForce();
-                _mDbJump = false;
-                _db1 = false;
-            }
-#endif
+// #elif UNITY_ANDROID || UNITY_IOS
+//             else if (mobileInput.joystick.Vertical < 0 && !_db1 && _mDbJump)
+//             {
+//                 _db1 = true;
+//             }
+//             else if (_db1 && mobileInput.joystick.Vertical > 0 && _mDbJump && !mGrounded)
+//             {
+//                 JumpForce();
+//                 _mDbJump = false;
+//                 _db1 = false;
+//             }
+//#endif
             JumpAnimation();
             mGrounded = false;
             _isDashing = true;
