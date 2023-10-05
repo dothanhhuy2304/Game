@@ -13,12 +13,12 @@ namespace Script.Player
         private float _timeAttack;
         [SerializeField] private float resetTimeAttack;
         private int _tempIndex;
-        private bool mobileShot;
+        private bool _mobileShot;
 
         private void Awake()
         {
             projectiles = FindObjectOfType<BulletController>().bulletPlayer;
-            player.mobileInput.btnShot.onClick.AddListener(() => mobileShot = true);
+            player.mobileInput.btnShot.onClick.AddListener(() => _mobileShot = true);
         }
 
         private void LateUpdate()
@@ -41,11 +41,11 @@ namespace Script.Player
                 _timeAttack = resetTimeAttack;
             }
 #elif UNITY_ANDROID || UNITY_IOS
-            if (_timeAttack <= 0 && mobileShot)
+            if (_timeAttack <= 0 && _mobileShot)
             {
                 player.pv.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
                 _timeAttack = resetTimeAttack;
-                mobileShot = false;
+                _mobileShot = false;
             }
 #endif
         }

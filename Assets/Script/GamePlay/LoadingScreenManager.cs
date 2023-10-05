@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using Photon.Pun;
 using Script.Core;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace Script.GamePlay
         public static LoadingScreenManager Instance;
         [SerializeField] private GameObject uiLoading;
         [SerializeField] private Image fillLoading;
+        [SerializeField] private PhotonView pv;
 
         private void Awake()
         {
@@ -50,7 +52,8 @@ namespace Script.GamePlay
         {
             if (photonNetwork)
             {
-                StartCoroutine(LoadAsync(sceneIndex));
+                //StartCoroutine(LoadAsync(sceneIndex));
+                pv.RPC(nameof(LoadScene), RpcTarget.AllBuffered, sceneIndex);
             }
             else
             {
@@ -58,6 +61,11 @@ namespace Script.GamePlay
             }
         }
 
+        [PunRPC]
+        private void LoadScene(int index)
+        {
+            StartCoroutine(LoadAsync(index));
+        }
 
         private IEnumerator LoadAsync(int sceneIndex)
         {
@@ -72,6 +80,8 @@ namespace Script.GamePlay
                     yield return new WaitForEndOfFrame();
                 }
 
+                Debug.LogError(PhotonNetwork.PlayerList.Any(t => t.HasRejoined));
+                Debug.LogError(PhotonNetwork.PlayerList.Any(t => t.IsInactive));
                 yield return new WaitForSeconds(0.5f);
             }
             else
