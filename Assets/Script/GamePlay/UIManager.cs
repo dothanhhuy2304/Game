@@ -123,6 +123,27 @@ namespace Script.GamePlay
             //_loadingScreenManager.FadeLoadingScene(_loadingScreenManager.RestartLevel());
         }
 
+        public void DisconnectToServer()
+        {
+            if (PhotonNetwork.InLobby)
+            {
+                PhotonNetwork.LeaveLobby();
+            }
+
+            if (PhotonNetwork.InRoom)
+            {
+                PhotonNetwork.LeaveRoom();
+            }
+            
+            _isShowUiSetting = false;
+            //Time.timeScale = 1f;
+            settingUi.SetActive(false);
+            scoreUi.SetActive(false);
+            btnBackToMenu.gameObject.SetActive(false);
+            btnRestart.gameObject.SetActive(false);
+            AudioManager.instance.Plays_Music("Music_Menu");
+        }
+
         public void ExitGame()
         {
             //Time.timeScale = 1f;

@@ -19,39 +19,41 @@ namespace Script.GamePlay
             {
                 SceneManager.LoadScene("Client");
             }
-
-            GameManager.instance.lobbyPanel.SetActive(false);
-
-            if (characters == null || pet == null)
-            {
-                SceneManager.LoadScene("Client");
-            }
             else
             {
-                if (CharacterController2D.IsLocalPlayer == null)
+                GameManager.instance.lobbyPanel.SetActive(false);
+
+                if (characters == null || pet == null)
                 {
-                    GameObject character = PhotonNetwork.Instantiate(characters[HuyManager.Instance.characterSelected].name,
-                        characters[HuyManager.Instance.characterSelected].transform.position, Quaternion.identity);
-                    listCurrentCharacter.Add(character);
-                    HuyManager.Instance.listPlayerInGame = listCurrentCharacter;
+                    SceneManager.LoadScene("Client");
+                }
+                else
+                {
+                    if (CharacterController2D.IsLocalPlayer == null)
+                    {
+                        GameObject character = PhotonNetwork.Instantiate(characters[HuyManager.Instance.characterSelected].name,
+                            characters[HuyManager.Instance.characterSelected].transform.position, Quaternion.identity);
+                        listCurrentCharacter.Add(character);
+                        HuyManager.Instance.listPlayerInGame = listCurrentCharacter;
+                    }
+
+                    if (PetAI.IsLocalPet == null)
+                    {
+                        PhotonNetwork.Instantiate(pet.name, pet.transform.position, Quaternion.identity);
+                    }
                 }
 
-                if (PetAI.IsLocalPet == null)
+                if (!GameManager.instance)
                 {
-                    PhotonNetwork.Instantiate(pet.name, pet.transform.position, Quaternion.identity);
+                    Instantiate(Resources.Load<GameObject>("GameManager"));
                 }
+
+                AudioManager.instance.Plays_Music("Music_Game");
+
+                UIManager.instance.scoreUi.SetActive(true);
+                UIManager.instance.btnBackToMenu.gameObject.SetActive(true);
+                UIManager.instance.btnRestart.gameObject.SetActive(true);
             }
-
-            if (!GameManager.instance)
-            {
-                Instantiate(Resources.Load<GameObject>("GameManager"));
-            }
-
-            AudioManager.instance.Plays_Music("Music_Game");
-
-            UIManager.instance.scoreUi.SetActive(true);
-            UIManager.instance.btnBackToMenu.gameObject.SetActive(true);
-            UIManager.instance.btnRestart.gameObject.SetActive(true);
         }
     }
 }

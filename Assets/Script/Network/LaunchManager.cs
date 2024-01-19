@@ -57,7 +57,7 @@ public class LaunchManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                LogFeedback("<color=Red>Room name can't be blank!</color>");
+                LogFeedback("<color=red>Room name can't be blank!</color>");
             }
         }
     }
@@ -79,7 +79,7 @@ public class LaunchManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                LogFeedback("<Color=Red>Room name can't be blank!</Color>");
+                LogFeedback("<color=red>Room name can't be blank!</Color>");
             }
         }
     }
@@ -102,7 +102,7 @@ public class LaunchManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                LogFeedback("<color=Red>Room name can't be blank!</color>");
+                LogFeedback("<color=red>Room name can't be blank!</color>");
             }
         }
     }
@@ -235,46 +235,68 @@ public class LaunchManager : MonoBehaviourPunCallbacks
         switch (cause)
         {
             case DisconnectCause.None:
+                LogFeedback("None");
                 break;
             case DisconnectCause.ExceptionOnConnect:
+                LogFeedback("ExceptionOnConnect");
                 break;
             case DisconnectCause.DnsExceptionOnConnect:
+                LogFeedback("DnsExceptionOnConnect");
                 break;
             case DisconnectCause.ServerAddressInvalid:
+                LogFeedback("ServerAddressInvalid");
                 break;
             case DisconnectCause.Exception:
+                LogFeedback("Exception");
                 break;
             case DisconnectCause.ServerTimeout:
+                LogFeedback("ServerTimeout");
                 break;
             case DisconnectCause.ClientTimeout:
+                LogFeedback("ClientTimeout");
                 break;
             case DisconnectCause.DisconnectByServerLogic:
+                LogFeedback("DisconnectByServerLogic");
                 break;
             case DisconnectCause.DisconnectByServerReasonUnknown:
+                LogFeedback("DisconnectByServerReasonUnknown");
                 break;
             case DisconnectCause.InvalidAuthentication:
+                LogFeedback("InvalidAuthentication");
                 break;
             case DisconnectCause.CustomAuthenticationFailed:
+                LogFeedback("CustomAuthenticationFailed");
                 break;
             case DisconnectCause.AuthenticationTicketExpired:
+                LogFeedback("AuthenticationTicketExpired");
                 break;
             case DisconnectCause.MaxCcuReached:
+                LogFeedback("MaxCcuReached");
                 break;
             case DisconnectCause.InvalidRegion:
+                LogFeedback("InvalidRegion");
                 break;
             case DisconnectCause.OperationNotAllowedInCurrentState:
+                LogFeedback("OperationNotAllowedInCurrentState");
                 break;
             case DisconnectCause.DisconnectByClientLogic:
+                LogFeedback("DisconnectByClientLogic");
                 break;
             case DisconnectCause.DisconnectByOperationLimit:
+                LogFeedback("DisconnectByOperationLimit");
                 break;
             case DisconnectCause.DisconnectByDisconnectMessage:
+                LogFeedback("DisconnectByDisconnectMessage");
                 break;
             case DisconnectCause.ApplicationQuit:
+                LogFeedback("ApplicationQuit");
                 break;
             default:
+                LogFeedback("Undefined");
                 break;
         }
+
+        UIManager.instance.DisconnectToServer();
     }
 
 
