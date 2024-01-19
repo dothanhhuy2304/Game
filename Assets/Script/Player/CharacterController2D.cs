@@ -36,8 +36,8 @@ namespace Script.Player
         private static readonly int MRun = Animator.StringToHash("m_Run");
         private static readonly int IsJump = Animator.StringToHash("is_Jump");
         private static readonly int IsDbJump = Animator.StringToHash("is_DBJump");
-        
-        [HideInInspector]public MobileInputManager mobileInput;
+
+        [HideInInspector] public MobileInputManager mobileInput;
 
         private void Awake()
         {
@@ -48,7 +48,7 @@ namespace Script.Player
 
             mobileInput = FindObjectOfType<MobileInputManager>();
             mobileInput.btnDash.onClick.AddListener(MobileDash);
-            mobileInput.btnJump.onClick.AddListener(() => isJump = true);
+            mobileInput.btnJump.onClick.AddListener(MobileJump);
             if (pv.IsMine)
             {
                 IsLocalPlayer = GetComponent<CharacterController2D>();
@@ -56,9 +56,6 @@ namespace Script.Player
                 playerRenderer[1].sortingOrder += pv.Owner.ActorNumber;
                 _startSpeed = playerData.movingSpeed;
             }
-            
-
-            HuyManager.Instance.listPlayerInGame = FindObjectsOfType<CharacterController2D>();
         }
         
         private void Update()
@@ -111,7 +108,7 @@ namespace Script.Player
                 if (!playerHealth.isDeath && !playerHealth.isHurt)
                 {
                     pv.RPC(nameof(RpcCheckGround), RpcTarget.AllBuffered);
-                    ControlPc(_playerInput * (_startSpeed * Time.fixedDeltaTime));
+                    ControlPlayer(_playerInput * (_startSpeed * Time.fixedDeltaTime));
 
                     if (isJump)
                     {
@@ -140,10 +137,16 @@ namespace Script.Player
             }
         }
 
+        private void MobileJump()
+        {
+            isJump = true;
+        }
+
         [PunRPC]
         private void RpcCheckGround()
         {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f, 1 << LayerMask.NameToLayer("ground"));
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f,
+                1 << LayerMask.NameToLayer("ground"));
             if (hit)
             {
                 mGrounded = hit.collider.CompareTag("ground");
@@ -156,7 +159,7 @@ namespace Script.Player
             animator.SetFloat(Velocity, body.velocity.y);
         }
 
-        private void ControlPc(float input)
+        private void ControlPlayer(float input)
         {
             pv.RPC(nameof(Moving), RpcTarget.AllBuffered, input);
 
@@ -176,7 +179,8 @@ namespace Script.Player
         private void Moving(float @fixed)
         {
             Vector3 position = body.velocity;
-            body.velocity = Vector2.SmoothDamp(position, new Vector2(@fixed * 10f, position.y), ref _velocity, MovementSmoothing);
+            body.velocity = Vector2.SmoothDamp(position, new Vector2(@fixed * 10f, position.y), ref _velocity,
+                MovementSmoothing);
 
             if (_isOnCar || _onWall)
             {
@@ -196,12 +200,10 @@ namespace Script.Player
         private void MovementLimit()
         {
             Vector3 playerPosition = transform.position;
-            playerPosition = new Vector3(Mathf.Clamp(playerPosition.x, clampMinX, clampMaxX), playerPosition.y, playerPosition.z);
+            playerPosition = new Vector3(Mathf.Clamp(playerPosition.x, clampMinX, clampMaxX), playerPosition.y,
+                playerPosition.z);
             body.transform.position = playerPosition;
         }
-
-
-        private bool _db1;
 
         [PunRPC]
         private void Jump()
@@ -212,24 +214,12 @@ namespace Script.Player
                 JumpForce();
                 _mDbJump = true;
             }
-//#if UNITY_STANDALONE
             else if (_mDbJump && !mGrounded)
             {
                 JumpForce();
                 _mDbJump = false;
             }
-// #elif UNITY_ANDROID || UNITY_IOS
-//             else if (mobileInput.joystick.Vertical < 0 && !_db1 && _mDbJump)
-//             {
-//                 _db1 = true;
-//             }
-//             else if (_db1 && mobileInput.joystick.Vertical > 0 && _mDbJump && !mGrounded)
-//             {
-//                 JumpForce();
-//                 _mDbJump = false;
-//                 _db1 = false;
-//             }
-//#endif
+
             JumpAnimation();
             mGrounded = false;
             _isDashing = true;
@@ -242,7 +232,7 @@ namespace Script.Player
             AudioManager.instance.Play("Player_Jump");
             _jumpCount++;
         }
-
+        
         private void JumpAnimation()
         {
             switch (_jumpCount)

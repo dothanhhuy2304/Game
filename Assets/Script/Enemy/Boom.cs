@@ -23,7 +23,7 @@ namespace Script.Enemy
                         colObj.enabled = false;
                         AudioManager.instance.Play("Boom_Explosion");
                         other.collider.GetComponent<PlayerHealth>().GetDamage(30f);
-                        HuyManager.Instance.CameraShake(Camera.main, 1f, new Vector3(3f, 3f, 3f), 10, 90f, true);
+                        HuyManager.CameraShake(Camera.main, 0.5f, new Vector3(5f, 5f, 0f), 30, 90f, true);
                     }).AppendInterval(1f)
                     .AppendCallback(() =>
                     {

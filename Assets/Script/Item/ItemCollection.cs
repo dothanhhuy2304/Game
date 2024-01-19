@@ -78,7 +78,7 @@ namespace Script.Item
                     {
                         animator.SetLayerWeight(1, 1);
                         other.GetComponent<PlayerHealth>().GetDamage(itemData.valueReceive);
-                        HuyManager.Instance.CameraShake(Camera.main, 1f, new Vector3(3f, 3f, 3f), 10, 90f, true);
+                        HuyManager.CameraShake(Camera.main, 0.5f, new Vector3(5f, 5f, 3f), 30, 90f, true);
                         AudioManager.instance.Play("Item_Hurt");
                         itemCollider.enabled = false;
                         DOTween.Sequence()

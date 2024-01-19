@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
-using Script.Player;
 using UnityEngine;
 
 namespace Script.Core
@@ -8,7 +8,7 @@ namespace Script.Core
     public class HuyManager : Singleton<HuyManager>
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void InitOnLoad()
+        private static void InitOnLoad()
         {
             Init();
         }
@@ -20,7 +20,7 @@ namespace Script.Core
         public int saveScreenPass;
         public float[] currentPosition = new float[3];
 
-        public CharacterController2D[] listPlayerInGame;
+        [HideInInspector] public List<GameObject> listPlayerInGame;
 
         public void SetUpTime(ref float currentTime)
         {
@@ -34,19 +34,19 @@ namespace Script.Core
             }
         }
 
-        public void CameraShake(Camera cam, float duration, Vector3 strength, int vibrato, float randomness,
+        public static void CameraShake(Camera cam, float duration, Vector3 strength, int vibrato, float randomness,
             bool fadeOut)
         {
             //cam.DOShakePosition(duration, strength, vibrato, randomness, fadeOut);
             cam.DOShakeRotation(duration, strength, vibrato, randomness, fadeOut);
         }
 
-        public DataService.GameData GetCurrentPlayerData()
+        public static DataService.GameData GetCurrentPlayerData()
         {
             return DataService.GetConnection().Table<DataService.GameData>().FirstOrDefault();
         }
 
-        public DataService.PlayerProfileData GetCurrentPlayerProfile()
+        public static DataService.PlayerProfileData GetCurrentPlayerProfile()
         {
             return DataService.GetConnection().Table<DataService.PlayerProfileData>().FirstOrDefault();
         }

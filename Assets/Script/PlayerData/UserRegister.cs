@@ -82,7 +82,7 @@ public class UserRegister : MonoBehaviour
                 HuyManager.Instance.currentPosition[0] = gameData.PositionX;
                 HuyManager.Instance.currentPosition[1] = gameData.PositionY;
                 HuyManager.Instance.currentPosition[2] = gameData.PositionZ;
-                var data = HuyManager.Instance.GetCurrentPlayerData();
+                var data = HuyManager.GetCurrentPlayerData();
                 _gameManager.SetScore(data.Score);
                 _gameManager.SetMoney(data.Gold);
                 _gameManager.SetDiamond(data.Diamond);

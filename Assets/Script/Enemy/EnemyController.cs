@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Photon.Pun;
 using Script.Core;
-using Script.GamePlay;
 using Script.Player;
 using UnityEngine;
 
@@ -74,6 +73,11 @@ namespace Script.Enemy
 
         protected Transform FindClosestPlayer()
         {
+            if (HuyManager.Instance.listPlayerInGame.Count <= 0)
+            {
+                return null;
+            }
+                
             float closestDistance = Mathf.Infinity;
             Transform trans = null;
             foreach (var go in HuyManager.Instance.listPlayerInGame)
@@ -87,10 +91,10 @@ namespace Script.Enemy
                 {
                     if (hit.collider != null)
                     {
+                        // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
                         if (hit.collider.gameObject.CompareTag("Player") && !hit.collider.GetComponent<PlayerHealth>().isDeath)
                         {
                             closestDistance = currentDistance;
-                            //trans = go.transform;
                             trans = hit.collider.gameObject.transform;
                         }
                     }
@@ -114,6 +118,11 @@ namespace Script.Enemy
 
         protected Transform FindClosetPlayerWithoutPhysic()
         {
+            if (HuyManager.Instance.listPlayerInGame.Count <= 0)
+            {
+                return null;
+            }
+            
             float closestDistance = Mathf.Infinity;
             Transform trans = null;
             foreach (var go in HuyManager.Instance.listPlayerInGame)
@@ -134,6 +143,11 @@ namespace Script.Enemy
 
         protected Transform FindClosetPlayerWithForwardPhysic()
         {
+            if (HuyManager.Instance.listPlayerInGame.Count <= 0)
+            {
+                return null;
+            }
+            
             float closestDistance = Mathf.Infinity;
             Transform trans = null;
             foreach (var go in HuyManager.Instance.listPlayerInGame)
@@ -146,23 +160,21 @@ namespace Script.Enemy
                     new Vector3(1 * 100f, position.y + 0.3f, 0f), LayerMaskManager.instance.playerMask);
                 RaycastHit2D hit2 = Physics2D.Linecast(new Vector3(position.x, position.y + 0.3f, 0f),
                     new Vector3(-1 * 100f, position.y + 0.3f, 0f), LayerMaskManager.instance.playerMask);
-                if (hit.collider && hit.collider.gameObject.CompareTag("Player") &&
-                    !hit.collider.GetComponent<PlayerHealth>().isDeath)
+                // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
+                if (hit.collider && hit.collider.gameObject.CompareTag("Player") && !hit.collider.GetComponent<PlayerHealth>().isDeath)
                 {
                     if (currentDistance < closestDistance)
                     {
                         closestDistance = currentDistance;
-                        //trans = go.transform;
                         trans = hit.collider.gameObject.transform;
                     }
                 }
-                else if (hit2.collider && hit2.collider.gameObject.CompareTag("Player") &&
-                         !hit2.collider.GetComponent<PlayerHealth>().isDeath)
+                // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
+                else if (hit2.collider && hit2.collider.gameObject.CompareTag("Player") && !hit2.collider.GetComponent<PlayerHealth>().isDeath)
                 {
                     if (currentDistance < closestDistance)
                     {
                         closestDistance = currentDistance;
-                        //trans = go.transform;
                         trans = hit2.collider.gameObject.transform;
                     }
                 }

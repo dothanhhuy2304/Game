@@ -5,6 +5,7 @@ using Photon.Pun;
 using UnityEngine;
 using Script.Core;
 using Script.ScriptTable;
+using UnityEngine.Serialization;
 
 namespace Script.Player
 {
@@ -16,7 +17,7 @@ namespace Script.Player
         [SerializeField] private SpriteRenderer petRenderer;
         [SerializeField] private Rigidbody2D body;
         [SerializeField] private List<FireProjectile> projectiles;
-        private List<GameObject> _listEnemyInMap;
+        [SerializeField] [HideInInspector] private List<GameObject> listEnemyInMap;
         [HideInInspector] public Transform closestEnemy;
         private bool _enemyContact;
         [SerializeField] private float distancePlayer;
@@ -46,7 +47,7 @@ namespace Script.Player
 
             _character = CharacterController2D.IsLocalPlayer;
             projectiles = FindObjectOfType<BulletController>().petAi;
-            _listEnemyInMap = GameObject.FindGameObjectsWithTag("Enemy").ToList();
+            listEnemyInMap = GameObject.FindGameObjectsWithTag("Enemy").ToList();
         }
 
         private void Update()
@@ -146,9 +147,14 @@ namespace Script.Player
 
         private Transform FindClosestEnemy()
         {
+            if (listEnemyInMap.Count <= 0)
+            {
+                return null;
+            }
+            
             float closestDistance = Mathf.Infinity;
             Transform trans = null;
-            foreach (var go in _listEnemyInMap)
+            foreach (var go in listEnemyInMap)
             {
                 if (!go) continue;
                 Vector3 location = transform.position;

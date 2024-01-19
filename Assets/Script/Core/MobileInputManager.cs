@@ -6,6 +6,7 @@ public class MobileInputManager : MonoBehaviour
     public UnityEngine.UI.Button btnJump;
     public UnityEngine.UI.Button btnShot;
     public UnityEngine.UI.Button btnDash;
+    public UnityEngine.UI.Button btn;
     [SerializeField] private GameObject objMobileInput;
 
 

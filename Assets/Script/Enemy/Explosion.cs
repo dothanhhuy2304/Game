@@ -7,12 +7,6 @@ namespace Script.Enemy
 {
     public class Explosion : MonoBehaviour
     {
-        private Camera _cam;
-
-        private void Start()
-        {
-            _cam = Camera.main;
-        }
 
         private void OnEnable()
         {
@@ -35,7 +29,7 @@ namespace Script.Enemy
                 .AppendCallback(() =>
                 {
                     AudioManager.instance.Play("Boom_Explosion");
-                    HuyManager.Instance.CameraShake(_cam, 1f, new Vector3(3.5f, 3.5f, 3.5f), 10, 90f, true);
+                    HuyManager.CameraShake(Camera.main, 0.5f, new Vector3(5f, 5f, 0f), 30, 90f, true);
                 }).AppendInterval(0.2f)
                 .AppendCallback(() =>
                 {

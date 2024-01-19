@@ -32,13 +32,13 @@ namespace Script.GamePlay
             }
             else
             {
-                HuyManager.Instance.userId = HuyManager.Instance.GetCurrentPlayerProfile().Id;
+                HuyManager.Instance.userId = HuyManager.GetCurrentPlayerProfile().Id;
                 Debug.Log("Exit data");
             }
 
             if (!string.IsNullOrEmpty(HuyManager.Instance.userId))
             {
-                var playerData = HuyManager.Instance.GetCurrentPlayerData();
+                var playerData = HuyManager.GetCurrentPlayerData();
                 if (playerData.PlayerId.Equals(HuyManager.Instance.userId))
                 {
                     SetScore(playerData.Score);
