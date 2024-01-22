@@ -14,6 +14,7 @@ namespace Script.Player
         public Rigidbody2D body;
         public Collider2D col;
         [SerializeField] private SpriteRenderer[] playerRenderer;
+        [SerializeField] private TMPro.TMP_Text playerName;
         public Data playerData;
         [Header("Movement")] private const float MovementSmoothing = .05f;
         private Vector2 _velocity = Vector2.zero;
@@ -52,13 +53,14 @@ namespace Script.Player
             if (pv.IsMine)
             {
                 IsLocalPlayer = GetComponent<CharacterController2D>();
-
                 _startSpeed = playerData.movingSpeed;
             }
+
             playerRenderer[0].sortingOrder = pv.Owner.ActorNumber;
             playerRenderer[1].sortingOrder = pv.Owner.ActorNumber;
+            playerName.text = HuyManager.GetCurrentPlayerProfile().UserName;
         }
-        
+
         private void Update()
         {
             if (pv.IsMine)
