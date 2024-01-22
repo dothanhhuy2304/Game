@@ -237,64 +237,64 @@ public class LaunchManager : MonoBehaviourPunCallbacks
         switch (cause)
         {
             case DisconnectCause.None:
-                LogFeedback("None");
+                LogFeedback("<color=red>None</color>");
                 break;
             case DisconnectCause.ExceptionOnConnect:
-                LogFeedback("ExceptionOnConnect");
+                LogFeedback("<color=red>ExceptionOnConnect</color>");
                 break;
             case DisconnectCause.DnsExceptionOnConnect:
-                LogFeedback("DnsExceptionOnConnect");
+                LogFeedback("<color=red>DnsExceptionOnConnect</color>");
                 break;
             case DisconnectCause.ServerAddressInvalid:
-                LogFeedback("ServerAddressInvalid");
+                LogFeedback("<color=red>ServerAddressInvalid</color>");
                 break;
             case DisconnectCause.Exception:
-                LogFeedback("Exception");
+                LogFeedback("<color=red>Exception</color>");
                 break;
             case DisconnectCause.ServerTimeout:
-                LogFeedback("ServerTimeout");
+                LogFeedback("<color=red>ServerTimeout</color>");
                 break;
             case DisconnectCause.ClientTimeout:
-                LogFeedback("ClientTimeout");
+                LogFeedback("<color=red>ClientTimeout</color>");
                 break;
             case DisconnectCause.DisconnectByServerLogic:
-                LogFeedback("DisconnectByServerLogic");
+                LogFeedback("<color=red>DisconnectByServerLogic</color>");
                 break;
             case DisconnectCause.DisconnectByServerReasonUnknown:
-                LogFeedback("DisconnectByServerReasonUnknown");
+                LogFeedback("<color=red>DisconnectByServerReasonUnknown</color>");
                 break;
             case DisconnectCause.InvalidAuthentication:
-                LogFeedback("InvalidAuthentication");
+                LogFeedback("<color=red>InvalidAuthentication</color>");
                 break;
             case DisconnectCause.CustomAuthenticationFailed:
-                LogFeedback("CustomAuthenticationFailed");
+                LogFeedback("<color=red>CustomAuthenticationFailed</color>");
                 break;
             case DisconnectCause.AuthenticationTicketExpired:
-                LogFeedback("AuthenticationTicketExpired");
+                LogFeedback("<color=red>AuthenticationTicketExpired</color>");
                 break;
             case DisconnectCause.MaxCcuReached:
-                LogFeedback("MaxCcuReached");
+                LogFeedback("<color=red>MaxCcuReached</color>");
                 break;
             case DisconnectCause.InvalidRegion:
-                LogFeedback("InvalidRegion");
+                LogFeedback("<color=red>InvalidRegion</color>");
                 break;
             case DisconnectCause.OperationNotAllowedInCurrentState:
-                LogFeedback("OperationNotAllowedInCurrentState");
+                LogFeedback("<color=red>OperationNotAllowedInCurrentState</color>");
                 break;
             case DisconnectCause.DisconnectByClientLogic:
-                LogFeedback("DisconnectByClientLogic");
+                LogFeedback("<color=red>DisconnectByClientLogic</color>");
                 break;
             case DisconnectCause.DisconnectByOperationLimit:
-                LogFeedback("DisconnectByOperationLimit");
+                LogFeedback("<color=red>DisconnectByOperationLimit</color>");
                 break;
             case DisconnectCause.DisconnectByDisconnectMessage:
-                LogFeedback("DisconnectByDisconnectMessage");
+                LogFeedback("<color=red>DisconnectByDisconnectMessage</color>");
                 break;
             case DisconnectCause.ApplicationQuit:
-                LogFeedback("ApplicationQuit");
+                LogFeedback("<color=red>ApplicationQuit</color>");
                 break;
             default:
-                LogFeedback("Undefined");
+                LogFeedback("<color=red>Undefined</color>");
                 break;
         }
 
