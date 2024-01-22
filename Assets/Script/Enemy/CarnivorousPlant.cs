@@ -44,6 +44,7 @@ namespace Script.Enemy
 
         private void FindPlayerPosition()
         {
+            // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
             currentCharacterPos = FindClosetPlayerWithForwardPhysic();
             _canAttack = currentCharacterPos;
         }

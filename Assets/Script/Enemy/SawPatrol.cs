@@ -6,22 +6,22 @@ namespace Script.Enemy
     {
         [SerializeField] private bool useLerp;
         [SerializeField] private Vector2[] listPoint;
-        private int currentPoint;
+        private int _currentPoint;
         [SerializeField] private float speed = 2f;
 
         private void Update()
         {
             if (useLerp)
             {
-                transform.position = Vector2.Lerp(transform.position, listPoint[currentPoint], speed * Time.deltaTime);
+                transform.position = Vector2.Lerp(transform.position, listPoint[_currentPoint], speed * Time.deltaTime);
             }
             else
             {
                 transform.position =
-                    Vector2.MoveTowards(transform.position, listPoint[currentPoint], speed * Time.deltaTime);
+                    Vector2.MoveTowards(transform.position, listPoint[_currentPoint], speed * Time.deltaTime);
             }
 
-            if (Vector2.Distance(transform.position, listPoint[currentPoint]) < 0.1f)
+            if (Vector2.Distance(transform.position, listPoint[_currentPoint]) < 0.1f)
             {
                 GetCurrentPoint();
             }
@@ -29,13 +29,13 @@ namespace Script.Enemy
 
         private void GetCurrentPoint()
         {
-            if (listPoint.Length - 1 > currentPoint)
+            if (listPoint.Length - 1 > _currentPoint)
             {
-                currentPoint++;
+                _currentPoint++;
             }
             else
             {
-                currentPoint = 0;
+                _currentPoint = 0;
             }
         }
     }

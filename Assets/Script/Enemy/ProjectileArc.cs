@@ -6,41 +6,43 @@ namespace Script.Enemy
 {
     public class ProjectileArc : MonoBehaviour
     {
-        private CharacterController2D player;
-        private Rigidbody2D body;
+        private CharacterController2D _player;
+        private Rigidbody2D _body;
         [SerializeField] private float speed = 10;
         [SerializeField] private float arcHeight = 1;
-        private Vector3 startPos = Vector3.zero;
+        private Vector3 _startPos = Vector3.zero;
 
         [SerializeField] private GameObject bulletPrefab;
         [SerializeField] private GameObject explosionPrefab;
-        private Vector3 targetPos = Vector3.zero;
+        private Vector3 _targetPos = Vector3.zero;
 
         private void Awake()
         {
-            player = CharacterController2D.IsLocalPlayer;
-            body = GetComponent<Rigidbody2D>();
+            _player = CharacterController2D.IsLocalPlayer;
+            _body = GetComponent<Rigidbody2D>();
         }
 
         private void OnEnable()
         {
-            startPos = transform.position;
-            targetPos = player.transform.position;
+            _startPos = transform.position;
+            _targetPos = _player.transform.position;
         }
 
         private void Update()
         {
-            float x0 = startPos.x;
-            float x1 = targetPos.x;
+            float x0 = _startPos.x;
+            float x1 = _targetPos.x;
             float dist = x1 - x0;
-            float nextX = Mathf.MoveTowards(transform.position.x, x1, speed * Time.deltaTime);
-            float baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - x0) / dist);
+            Vector3 trans = transform.position;
+            float nextX = Mathf.MoveTowards(trans.x, x1, speed * Time.deltaTime);
+            float baseY = Mathf.Lerp(_startPos.y, _targetPos.y, (nextX - x0) / dist);
             float arc = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
-            Vector3 nextPos = new Vector3(nextX, baseY + arc, transform.position.z);
+            Vector3 nextPos = new Vector3(nextX, baseY + arc, trans.z);
             // Rotate to face the next position, and then move there
-            transform.rotation = LookAt2D(nextPos - transform.position);
+            transform.rotation = LookAt2D(nextPos - trans);
+            // ReSharper disable once Unity.InefficientPropertyAccess
             transform.position = nextPos;
-            if (nextPos == targetPos)
+            if (nextPos == _targetPos)
             {
                 Arrived();
             }
@@ -74,7 +76,7 @@ namespace Script.Enemy
             }
             else if (other.CompareTag("Bullet"))
             {
-                if (!body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy")))
+                if (!_body.IsTouchingLayers(1 << LayerMask.NameToLayer("BulletEnemy")))
                 {
                     Arrived();
                     AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
