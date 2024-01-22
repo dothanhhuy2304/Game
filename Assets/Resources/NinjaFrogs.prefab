@@ -113,6 +113,7 @@ MonoBehaviour:
   clampMinX: -6.46
   clampMaxX: 227
   playerHealth: {fileID: 377494481518129203}
+  mobileInput: {fileID: 0}
 --- !u!114 &377494481518129212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -309,7 +310,7 @@ SpriteRenderer:
   m_SpriteSortPoint: 0
 --- !u!95 &377494481715831535
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -322,10 +323,12 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &3659893538475826515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -512,7 +515,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4810384748283587964}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Heath
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -527,7 +530,7 @@ RectTransform:
   m_GameObject: {fileID: 3781047340537565732}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.2, y: 2, z: 1.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7427849487448353872}
   - {fileID: 8613645368495779654}
@@ -625,7 +628,7 @@ SpriteRenderer:
   m_SpriteSortPoint: 0
 --- !u!95 &2167468534978727502
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -638,10 +641,12 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6275763438864767912
 GameObject:
   m_ObjectHideFlags: 0
@@ -729,7 +734,7 @@ GameObject:
   - component: {fileID: 7427849487448353878}
   - component: {fileID: 7427849487448353879}
   m_Layer: 0
-  m_Name: background
+  m_Name: BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -802,6 +807,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7427849487936681784}
   - component: {fileID: 7427849487936681790}
+  - component: {fileID: 6081442589904631179}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -818,7 +824,7 @@ RectTransform:
   m_GameObject: {fileID: 7427849487936681785}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 2, z: 1.2}
   m_Children:
   - {fileID: 4810384748283587964}
   m_Father: {fileID: 377494481518129207}
@@ -826,7 +832,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0.03, y: 1}
   m_SizeDelta: {x: 1, y: 0.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7427849487936681790
@@ -850,6 +856,29 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &6081442589904631179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7427849487936681785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 0
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 1
 --- !u!1 &7427849488378100176
 GameObject:
   m_ObjectHideFlags: 0
@@ -862,7 +891,7 @@ GameObject:
   - component: {fileID: 7427849488378100181}
   - component: {fileID: 7427849488378100182}
   m_Layer: 0
-  m_Name: BorderHealth
+  m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -48,7 +48,12 @@ namespace Script.Core
 
         public static DataService.PlayerProfileData GetCurrentPlayerProfile()
         {
-            return DataService.GetConnection().Table<DataService.PlayerProfileData>().FirstOrDefault();
+            if (DataService.GetConnection().Table<DataService.PlayerProfileData>() != null)
+            {
+                return DataService.GetConnection().Table<DataService.PlayerProfileData>().FirstOrDefault();
+            }
+
+            return null;
         }
 
         public void UpdateUserData(DataService.GameData pf)

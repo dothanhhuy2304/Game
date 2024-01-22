@@ -16,6 +16,7 @@ public class LaunchManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject panelIntro;
     [SerializeField] private GameObject panelRoom;
     [SerializeField] private GameObject inRoom;
+    [SerializeField] private TMP_Text playerName;
     [SerializeField] private TMP_InputField roomName;
     [SerializeField] private byte maxPlayerInRoom;
     private bool _isShowListRoom;
@@ -33,6 +34,7 @@ public class LaunchManager : MonoBehaviourPunCallbacks
         PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.GameVersion = Application.version;
         PhotonNetwork.ConnectUsingSettings();
+        playerName.text = HuyManager.GetCurrentPlayerProfile().UserName;
     }
     
     public override void OnConnectedToMaster()

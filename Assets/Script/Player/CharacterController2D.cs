@@ -52,10 +52,11 @@ namespace Script.Player
             if (pv.IsMine)
             {
                 IsLocalPlayer = GetComponent<CharacterController2D>();
-                playerRenderer[0].sortingOrder += pv.Owner.ActorNumber;
-                playerRenderer[1].sortingOrder += pv.Owner.ActorNumber;
+
                 _startSpeed = playerData.movingSpeed;
             }
+            playerRenderer[0].sortingOrder = pv.Owner.ActorNumber;
+            playerRenderer[1].sortingOrder = pv.Owner.ActorNumber;
         }
         
         private void Update()

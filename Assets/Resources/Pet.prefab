@@ -80,6 +80,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  listEnemyInMap: []
   closestEnemy: {fileID: 0}
   distancePlayer: 3
   rangeAttack: 7

@@ -488,8 +488,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4ff595deb1b0a2e4fa1f1d6b3e3001ee, type: 2}
+  m_sharedMaterial: {fileID: 829046809844237535, guid: 4ff595deb1b0a2e4fa1f1d6b3e3001ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1043,7 +1043,7 @@ GameObject:
   - component: {fileID: 854680813}
   - component: {fileID: 854680812}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: TextName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1098,8 +1098,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Name
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4ff595deb1b0a2e4fa1f1d6b3e3001ee, type: 2}
+  m_sharedMaterial: {fileID: 829046809844237535, guid: 4ff595deb1b0a2e4fa1f1d6b3e3001ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7258,6 +7258,7 @@ MonoBehaviour:
   panelIntro: {fileID: 2139469713}
   panelRoom: {fileID: 228809109}
   inRoom: {fileID: 1429065811}
+  playerName: {fileID: 854680812}
   roomName: {fileID: 1004771609}
   maxPlayerInRoom: 4
   parentSpawnListRoom: {fileID: 1352586348}
@@ -7347,7 +7348,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiLoading: {fileID: 6406363625410056413}
   fillLoading: {fileID: 1284641131668288686}
-  pv: {fileID: 8196298376624670557}
 --- !u!1 &7305501568213207141
 GameObject:
   m_ObjectHideFlags: 0
