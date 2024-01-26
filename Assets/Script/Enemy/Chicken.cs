@@ -17,17 +17,9 @@ namespace Script.Enemy
         private readonly int _isRun = Animator.StringToHash("is_Run");
         private bool _canAttack;
 
-        private void Awake()
-        {
-            if (pv == null)
-            {
-                pv = GetComponent<PhotonView>();
-            }
-        }
-
         protected void Start()
         {
-            CurrentTime = maxTimeAttack;
+            currentTime = maxTimeAttack;
             transform.position = enemySetting.startPosition;
             ChickenMoving();
         }
@@ -49,7 +41,7 @@ namespace Script.Enemy
 
             if (enemySetting.canAttack)
             {
-                HuyManager.Instance.SetUpTime(ref CurrentTime);
+                HuyManager.Instance.SetUpTime(ref currentTime);
                 if ((currentCharacterPos.position - transform.position).magnitude > 0.5f && isHitGround)
                 {
                     MoveToTargets(isHitGround);
@@ -59,28 +51,28 @@ namespace Script.Enemy
                     MoveToTargets(false);
                 }
 
-                if (CurrentTime <= 0 && spriteRenderer.enabled)
+                if (currentTime <= 0 && spriteRenderer.enabled)
                 {
                     if (currentCharacterPos.GetComponent<PlayerHealth>().isDeath)
                     {
                         if ((transform.position - enemySetting.startPosition).magnitude >
                             (transform.position - enemySetting.endPosition).magnitude)
                         {
-                            if (pv.IsMine)
+                            if (photonView.IsMine)
                             {
                                 RpcFlip(enemySetting.endPosition, enemySetting.startPosition);
                             }
                         }
                         else
                         {
-                            if (pv.IsMine)
+                            if (photonView.IsMine)
                             {
                                 RpcFlip(enemySetting.startPosition, enemySetting.endPosition);
                             }
                         }
 
                         enemySetting.canAttack = false;
-                        CurrentTime = maxTimeAttack;
+                        currentTime = maxTimeAttack;
                     }
                     else
                     {
@@ -88,7 +80,7 @@ namespace Script.Enemy
                         chickenCol.enabled = false;
                         explosionObj.transform.position = offsetAttack.position;
                         explosionObj.gameObject.SetActive(true);
-                        CurrentTime = maxTimeAttack;
+                        currentTime = maxTimeAttack;
                         enemySetting.canAttack = false;
                         MoveToTargets(false);
                     }
@@ -159,7 +151,7 @@ namespace Script.Enemy
                 body.MovePosition(body.position);
             }
 
-            if (pv.IsMine)
+            if (photonView.IsMine)
             {
                 Flip();
             }

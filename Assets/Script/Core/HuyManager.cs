@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using Script.Player;
 using UnityEngine;
 
 namespace Script.Core
@@ -20,7 +20,7 @@ namespace Script.Core
         public int saveScreenPass;
         public float[] currentPosition = new float[3];
 
-        [HideInInspector] public List<GameObject> listPlayerInGame;
+        public CharacterController2D[] listPlayerInGame => FindObjectsOfType<CharacterController2D>();
 
         public void SetUpTime(ref float currentTime)
         {

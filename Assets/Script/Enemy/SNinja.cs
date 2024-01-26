@@ -19,16 +19,6 @@ namespace Script.Enemy
         private bool _canAttackSword;
         private bool _canAttack;
         private bool _isHitGrounds;
-        
-        private void Awake()
-        {
-            if (pv == null)
-            {
-                pv = GetComponent<PhotonView>();
-            }
-
-            CurrentTime = maxTimeAttack;
-        }
 
         private void FixedUpdate()
         {
@@ -40,31 +30,31 @@ namespace Script.Enemy
             FindPlayerPosition();
             if (_canAttack)
             {
-                HuyManager.Instance.SetUpTime(ref CurrentTime);
+                HuyManager.Instance.SetUpTime(ref currentTime);
                 if (!currentCharacterPos.GetComponent<PlayerHealth>().isDeath)
                 {
                     if ((currentCharacterPos.position - transform.position).magnitude <= 3f)
                     {
-                        if (pv.IsMine)
+                        if (photonView.IsMine)
                         {
                             Flip();
                         }
 
-                        pv.RPC(nameof(AttackSword), RpcTarget.AllBuffered);
+                        photonView.RPC(nameof(AttackSword), RpcTarget.AllBuffered);
                     }
                     else if ((currentCharacterPos.position - transform.position).magnitude > 3 && (currentCharacterPos.position - transform.position).magnitude <= 8)
                     {
-                        if (pv.IsMine)
+                        if (photonView.IsMine)
                         {
                             Flip();
                         }
 
-                        pv.RPC(nameof(RpcAttackBullet), RpcTarget.AllBuffered);
+                        photonView.RPC(nameof(RpcAttackBullet), RpcTarget.AllBuffered);
                         
                     }
                     else
                     {
-                        if (pv.IsMine)
+                        if (photonView.IsMine)
                         {
                             if (enemySetting.canMoving)
                             {
@@ -76,7 +66,7 @@ namespace Script.Enemy
                 }
                 else
                 {
-                    if (pv.IsMine)
+                    if (photonView.IsMine)
                     {
                         if (enemySetting.canMoving)
                         {
@@ -87,7 +77,7 @@ namespace Script.Enemy
             }
             else
             {
-                if (pv.IsMine)
+                if (photonView.IsMine)
                 {
                     if (enemySetting.canMoving)
                     {
@@ -147,12 +137,12 @@ namespace Script.Enemy
             else
             {
                 animator.SetBool(_isRun, false);
-                if (CurrentTime <= 0f)
+                if (currentTime <= 0f)
                 {
                     _canAttackSword = true;
                     animator.SetTrigger(_isAttackSword);
                     AudioManager.instance.Play("Enemy_Attack_Sword");
-                    CurrentTime = 1.5f;
+                    currentTime = 1.5f;
                 }
 
                 DOTween.Sequence()
@@ -185,13 +175,13 @@ namespace Script.Enemy
         private void RpcAttackBullet()
         {
             animator.SetBool(_isRun, false);
-            if (CurrentTime <= 0f)
+            if (currentTime <= 0f)
             {
                 DOTween.Sequence()
                     .AppendInterval(0.5f)
                     .AppendCallback(() => AttackBullet(true))
                     .Play();
-                CurrentTime = maxTimeAttack;
+                currentTime = maxTimeAttack;
             }
         }
 

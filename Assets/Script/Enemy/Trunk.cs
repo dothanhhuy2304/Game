@@ -9,14 +9,6 @@ namespace Script.Enemy
     {
         private readonly int _isAttack = Animator.StringToHash("isAttack");
 
-        private void Awake()
-        {
-            if (pv == null)
-            {
-                pv = GetComponent<PhotonView>();
-            }
-        }
-
         private void Update()
         {
             if (enemySetting.enemyHeal.EnemyDeath())
@@ -27,15 +19,15 @@ namespace Script.Enemy
             FindPlayerPosition();
             if (enemySetting.canAttack)
             {
-                HuyManager.Instance.SetUpTime(ref CurrentTime);
+                HuyManager.Instance.SetUpTime(ref currentTime);
                 if ((currentCharacterPos.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
-                    if (pv.IsMine)
+                    if (photonView.IsMine)
                     {
                         Flip();
                     }
 
-                    pv.RPC(nameof(RpcShot), RpcTarget.AllBuffered);
+                    photonView.RPC(nameof(RpcShot), RpcTarget.AllBuffered);
                 }
             }
         }
@@ -49,7 +41,7 @@ namespace Script.Enemy
         [PunRPC]
         private void RpcShot()
         {
-            if (CurrentTime <= 0)
+            if (currentTime <= 0)
             {
                 Shot();
             }
@@ -62,7 +54,7 @@ namespace Script.Enemy
                 .AppendInterval(0.5f)
                 .AppendCallback(() => { AttackBulletByPlayer(transform); })
                 .Play();
-            CurrentTime = maxTimeAttack;
+            currentTime = maxTimeAttack;
         }
 
 

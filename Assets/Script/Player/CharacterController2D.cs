@@ -10,7 +10,6 @@ namespace Script.Player
     public class CharacterController2D : MonoBehaviourPun, IPunObservable
     {
         public static CharacterController2D IsLocalPlayer;
-        public PhotonView pv;
         public Rigidbody2D body;
         public Collider2D col;
         [SerializeField] private SpriteRenderer[] playerRenderer;
@@ -41,40 +40,37 @@ namespace Script.Player
 
         private void Awake()
         {
-            if (pv == null)
-            {
-                pv = GetComponent<PhotonView>();
-            }
-
             mobileInput = FindObjectOfType<MobileInputManager>();
             mobileInput.btnDash.onClick.AddListener(MobileDash);
             mobileInput.btnJump.onClick.AddListener(MobileJump);
-            if (pv.IsMine)
+            if (photonView.IsMine)
             {
                 IsLocalPlayer = GetComponent<CharacterController2D>();
                 _startSpeed = playerData.movingSpeed;
             }
 
-            playerRenderer[0].sortingOrder = pv.Owner.ActorNumber;
-            playerRenderer[1].sortingOrder = pv.Owner.ActorNumber;
+            playerRenderer[0].sortingOrder = photonView.Owner.ActorNumber;
+            playerRenderer[1].sortingOrder = photonView.Owner.ActorNumber;
             playerName.text = HuyManager.GetCurrentPlayerProfile().UserName;
             playerData.startGravity = body.gravityScale;
+
+            //HuyManager.Instance.listPlayerInGame = FindObjectsOfType<CharacterController2D>();
         }
 
         private void Update()
         {
-            if (pv.IsMine)
+            if (photonView.IsMine)
             {
                 if (!playerHealth.isHurt && !playerHealth.isDeath)
                 {
-                    pv.RPC(nameof(PlayerInput), RpcTarget.AllBuffered);
+                    photonView.RPC(nameof(PlayerInput), RpcTarget.AllBuffered);
                     HuyManager.Instance.SetUpTime(ref playerData.timeToDash);
 #if UNITY_STANDALONE
                     if (playerData.timeToDash <= 0)
                     {
                         if ((Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) && _isDashing && !mGrounded)
                         {
-                            pv.RPC(nameof(Dash), RpcTarget.AllBuffered, _playerInput);
+                            photonView.RPC(nameof(Dash), RpcTarget.AllBuffered, _playerInput);
                         }
                     }
 #endif
@@ -106,24 +102,24 @@ namespace Script.Player
 
         private void FixedUpdate()
         {
-            if (pv.IsMine)
+            if (photonView.IsMine)
             {
                 if (!playerHealth.isDeath && !playerHealth.isHurt)
                 {
-                    pv.RPC(nameof(RpcCheckGround), RpcTarget.AllBuffered);
+                    photonView.RPC(nameof(RpcCheckGround), RpcTarget.AllBuffered);
                     ControlPlayer(_playerInput * (_startSpeed * Time.fixedDeltaTime));
 
                     if (isJump)
                     {
-                        pv.RPC(nameof(Jump), RpcTarget.AllBuffered);
+                        photonView.RPC(nameof(Jump), RpcTarget.AllBuffered);
                     }
 
                     if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
                     {
-                        pv.RPC(nameof(RpcResetAnimJump), RpcTarget.AllBuffered);
+                        photonView.RPC(nameof(RpcResetAnimJump), RpcTarget.AllBuffered);
                     }
 
-                    pv.RPC(nameof(YVelocity), RpcTarget.AllBuffered);
+                    photonView.RPC(nameof(YVelocity), RpcTarget.AllBuffered);
                 }
             }
         }
@@ -135,7 +131,7 @@ namespace Script.Player
             {
                 if (_isDashing && !mGrounded)
                 {
-                    pv.RPC(nameof(Dash), RpcTarget.AllBuffered, _playerInput);
+                    photonView.RPC(nameof(Dash), RpcTarget.AllBuffered, _playerInput);
                 }
             }
         }
@@ -164,7 +160,7 @@ namespace Script.Player
 
         private void ControlPlayer(float input)
         {
-            pv.RPC(nameof(Moving), RpcTarget.AllBuffered, input);
+            photonView.RPC(nameof(Moving), RpcTarget.AllBuffered, input);
 
             if (input > 0f && !_mFacingRight)
             {
@@ -256,7 +252,7 @@ namespace Script.Player
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (pv.IsMine)
+            if (photonView.IsMine)
             {
                 EvaluateCollision(other);
             }
@@ -318,7 +314,7 @@ namespace Script.Player
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (pv.IsMine)
+            if (photonView.IsMine)
             {
                 if (other.CompareTag("Grass"))
                 {
@@ -329,7 +325,7 @@ namespace Script.Player
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (pv.IsMine)
+            if (photonView.IsMine)
             {
                 if (other.CompareTag("Car"))
                 {
@@ -340,7 +336,7 @@ namespace Script.Player
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (pv.IsMine)
+            if (photonView.IsMine)
             {
                 if (other.CompareTag("Car"))
                 {

@@ -11,14 +11,6 @@ namespace Script.Enemy
         private bool _canAttack;
         private readonly int _isAttack = Animator.StringToHash("isAttack");
 
-        private void Awake()
-        {
-            if (pv == null)
-            {
-                pv = GetComponent<PhotonView>();
-            }
-        }
-
         private void FixedUpdate()
         {
             if (enemySetting.enemyHeal.EnemyDeath())
@@ -29,15 +21,15 @@ namespace Script.Enemy
             FindPlayerPosition();
             if (_canAttack)
             {
-                HuyManager.Instance.SetUpTime(ref CurrentTime);
+                HuyManager.Instance.SetUpTime(ref currentTime);
                 if ((currentCharacterPos.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
-                    if (pv.IsMine && canFlip)
+                    if (photonView.IsMine && canFlip)
                     {
                         Flip();
                     }
 
-                    pv.RPC(nameof(RpcShot), RpcTarget.AllBuffered);
+                    photonView.RPC(nameof(RpcShot), RpcTarget.AllBuffered);
                 }
             }
         }
@@ -52,10 +44,10 @@ namespace Script.Enemy
         [PunRPC]
         private void RpcShot()
         {
-            if (CurrentTime <= 0f)
+            if (currentTime <= 0f)
             {
                 CarnivorousAttack();
-                CurrentTime = maxTimeAttack;
+                currentTime = maxTimeAttack;
             }
         }
 

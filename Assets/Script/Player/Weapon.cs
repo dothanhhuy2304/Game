@@ -23,7 +23,7 @@ namespace Script.Player
 
         private void LateUpdate()
         {
-            if (!player.pv.IsMine)
+            if (!player.photonView.IsMine)
             {
                 return;
             }
@@ -37,7 +37,7 @@ namespace Script.Player
 #if UNITY_STANDALONE
             if (_timeAttack <= 0 && Input.GetMouseButtonDown(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             {
-                player.pv.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
+                player.photonView.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
                 _timeAttack = resetTimeAttack;
             }
 #elif UNITY_ANDROID || UNITY_IOS

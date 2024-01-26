@@ -23,13 +23,13 @@ namespace Script.Enemy
     public abstract class EnemyController : MonoBehaviourPun
     {
         public EnemySetting enemySetting;
-        [SerializeField] protected PhotonView pv;
-        [Header("Types")] [SerializeField] protected Rigidbody2D body;
+        [SerializeField] protected Rigidbody2D body;
         [SerializeField] protected Animator animator;
         [SerializeField] private List<FireProjectile> projectiles;
         [SerializeField] protected float movingSpeed;
         [SerializeField] private float offsetFlip;
-        [Space] [Header("Time")] protected float CurrentTime = 0;
+        [Space] 
+        protected float currentTime = 0;
         [SerializeField] protected float maxTimeAttack;
         [SerializeField] protected Transform offsetAttack;
         [SerializeField] protected Vector2 positionAttack;
@@ -73,7 +73,7 @@ namespace Script.Enemy
 
         protected Transform FindClosestPlayer()
         {
-            if (HuyManager.Instance.listPlayerInGame.Count <= 0)
+            if (HuyManager.Instance.listPlayerInGame.Length <= 0)
             {
                 return null;
             }
@@ -118,7 +118,7 @@ namespace Script.Enemy
 
         protected Transform FindClosetPlayerWithoutPhysic()
         {
-            if (HuyManager.Instance.listPlayerInGame.Count <= 0)
+            if (HuyManager.Instance.listPlayerInGame.Length <= 0)
             {
                 return null;
             }
@@ -143,7 +143,7 @@ namespace Script.Enemy
 
         protected Transform FindClosetPlayerWithForwardPhysic()
         {
-            if (HuyManager.Instance.listPlayerInGame.Count <= 0)
+            if (HuyManager.Instance.listPlayerInGame.Length <= 0)
             {
                 return null;
             }

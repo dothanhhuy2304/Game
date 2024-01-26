@@ -9,7 +9,6 @@ namespace Script.Enemy
 {
     public class EnemyHealth : MonoBehaviourPun
     {
-        [SerializeField] private PhotonView pv;
         [SerializeField] private bool canReSpawn;
         [SerializeField] private float heathDefault;
         [SerializeField] private float currentHealth;
@@ -24,11 +23,6 @@ namespace Script.Enemy
 
         private void Start()
         {
-            if (pv == null)
-            {
-                pv = GetComponent<PhotonView>();
-            }
-
             LoadHealth();
         }
 
@@ -44,7 +38,7 @@ namespace Script.Enemy
             currentHealth = Mathf.Clamp(currentHealth - damage, 0f, maxHealth);
             if (currentHealth <= 0) Die();
             enemyHealthBar.SetHealth(currentHealth, maxHealth);
-            if (pv.IsMine)
+            if (photonView.IsMine)
             {
                 var damageInstance = PhotonNetwork.Instantiate(objectDamageEnemy, transform.position + Vector3.up, Quaternion.identity);
                 TMP_Text txtDamage = damageInstance.GetComponentInChildren<TMP_Text>();

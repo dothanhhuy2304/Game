@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Photon.Pun;
 using Script.Core;
 using Script.Player;
@@ -11,7 +10,7 @@ namespace Script.GamePlay
     {
         [SerializeField] private GameObject[] characters;
         [SerializeField] private GameObject pet;
-        [SerializeField] [HideInInspector] private List<GameObject> listCurrentCharacter;
+        //[SerializeField] [HideInInspector] private List<GameObject> listCurrentCharacter;
 
         private void Awake()
         {
@@ -31,10 +30,10 @@ namespace Script.GamePlay
                 {
                     if (CharacterController2D.IsLocalPlayer == null)
                     {
-                        GameObject character = PhotonNetwork.Instantiate(characters[HuyManager.Instance.characterSelected].name,
+                        PhotonNetwork.Instantiate(characters[HuyManager.Instance.characterSelected].name,
                             characters[HuyManager.Instance.characterSelected].transform.position, Quaternion.identity);
-                        listCurrentCharacter.Add(character);
-                        HuyManager.Instance.listPlayerInGame = listCurrentCharacter;
+                        //listCurrentCharacter.Add(character);
+                        //HuyManager.Instance.listPlayerInGame = listCurrentCharacter;
                     }
 
                     if (PetAI.IsLocalPet == null)

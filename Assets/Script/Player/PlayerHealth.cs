@@ -8,7 +8,7 @@ using UnityEngine;
 using Script.Enemy;
 namespace Script.Player
 {
-    public class PlayerHealth :MonoBehaviourPun, IHealthSystem
+    public class PlayerHealth : MonoBehaviourPun, IHealthSystem
     {
         [SerializeField] private CharacterController2D playerCharacter;
         [SerializeField] private PlayerHealthBar playerHealthBar;
@@ -19,10 +19,10 @@ namespace Script.Player
 
         private void Start()
         {
-            if (playerCharacter.pv.IsMine)
+            if (playerCharacter.photonView.IsMine)
             {
                 petAi = PetAI.IsLocalPet;
-                playerCharacter.pv.RPC(playerCharacter.playerData.currentHealth <= 0
+                playerCharacter.photonView.RPC(playerCharacter.playerData.currentHealth <= 0
                     ? nameof(LoadHeath)
                     : nameof(LoadCurrentHealth), RpcTarget.AllBuffered);
             }
@@ -31,7 +31,8 @@ namespace Script.Player
         [PunRPC]
         private void LoadHeath()
         {
-            playerCharacter.playerData.maxHealth = playerCharacter.playerData.heathDefault + playerCharacter.playerData.hpIc;
+            playerCharacter.playerData.maxHealth =
+                playerCharacter.playerData.heathDefault + playerCharacter.playerData.hpIc;
             playerCharacter.playerData.currentHealth = playerCharacter.playerData.maxHealth;
             playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
         }
@@ -56,7 +57,7 @@ namespace Script.Player
             }
 
             playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
-            if (playerCharacter.pv.IsMine)
+            if (playerCharacter.photonView.IsMine)
             {
                 var objectDamage = PhotonNetwork.Instantiate(prefabDamagePlayer, transform.position + Vector3.up, Quaternion.identity);
                 var txtDamage = objectDamage.GetComponentInChildren<TMP_Text>();
@@ -69,7 +70,7 @@ namespace Script.Player
 
         public void RpcHealing(float value)
         {
-            playerCharacter.pv.RPC(nameof(Healing), RpcTarget.AllBuffered, value);
+            playerCharacter.photonView.RPC(nameof(Healing), RpcTarget.AllBuffered, value);
         }
 
         [PunRPC]
@@ -85,7 +86,7 @@ namespace Script.Player
 
         public void Die()
         {
-            if (!playerCharacter.pv.IsMine)
+            if (!playerCharacter.photonView.IsMine)
             {
                 return;
             }
@@ -103,7 +104,7 @@ namespace Script.Player
                 }).AppendInterval(3)
                 .AppendCallback(() =>
                 {
-                    playerCharacter.pv.RPC(nameof(LoadHeath), RpcTarget.AllBuffered);
+                    playerCharacter.photonView.RPC(nameof(LoadHeath), RpcTarget.AllBuffered);
                     Transform position = transform;
                     position.position = new Vector3(HuyManager.Instance.currentPosition[0],
                         HuyManager.Instance.currentPosition[1], HuyManager.Instance.currentPosition[2]);
@@ -119,7 +120,7 @@ namespace Script.Player
 
         public void DiedFromFalling()
         {
-            if (!playerCharacter.pv.IsMine)
+            if (!playerCharacter.photonView.IsMine)
             {
                 return;
             }
@@ -134,7 +135,7 @@ namespace Script.Player
                 }).AppendInterval(3)
                 .AppendCallback(() =>
                 {
-                    playerCharacter.pv.RPC(nameof(LoadHeath), RpcTarget.AllBuffered);
+                    playerCharacter.photonView.RPC(nameof(LoadHeath), RpcTarget.AllBuffered);
                     Transform position = transform;
                     position.position = new Vector3(HuyManager.Instance.currentPosition[0],
                         HuyManager.Instance.currentPosition[1], HuyManager.Instance.currentPosition[2]);

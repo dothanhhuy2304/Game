@@ -10,14 +10,6 @@ namespace Script.Enemy
         private readonly int _isAttack = Animator.StringToHash("isAttack");
         private bool _canAttack;
 
-        private void Awake()
-        {
-            if (pv == null)
-            {
-                pv = GetComponent<PhotonView>();
-            }
-        }
-
         private void Update()
         {
             if (enemySetting.enemyHeal.EnemyDeath())
@@ -28,15 +20,15 @@ namespace Script.Enemy
             FindPlayerPosition();
             if (_canAttack)
             {
-                HuyManager.Instance.SetUpTime(ref CurrentTime);
+                HuyManager.Instance.SetUpTime(ref currentTime);
                 if ((currentCharacterPos.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
                     Flip();
-                    if (CurrentTime <= 0)
+                    if (currentTime <= 0)
                     {
                         BulletAttack();
                         animator.SetTrigger(_isAttack);
-                        CurrentTime = maxTimeAttack;
+                        currentTime = maxTimeAttack;
                     }
                 }
             }
