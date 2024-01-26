@@ -22,7 +22,6 @@ namespace Script.Player
 
         [Space] [Header("Flip")] private bool _mFacingRight = true;
         private bool _isDashing;
-        private float _timeNextDash = 1.5f;
         [SerializeField] private bool mGrounded;
         [SerializeField] private bool isJump;
         private bool _mDbJump;
@@ -59,6 +58,7 @@ namespace Script.Player
             playerRenderer[0].sortingOrder = pv.Owner.ActorNumber;
             playerRenderer[1].sortingOrder = pv.Owner.ActorNumber;
             playerName.text = HuyManager.GetCurrentPlayerProfile().UserName;
+            playerData.startGravity = body.gravityScale;
         }
 
         private void Update()
@@ -68,11 +68,11 @@ namespace Script.Player
                 if (!playerHealth.isHurt && !playerHealth.isDeath)
                 {
                     pv.RPC(nameof(PlayerInput), RpcTarget.AllBuffered);
-                    HuyManager.Instance.SetUpTime(ref _timeNextDash);
+                    HuyManager.Instance.SetUpTime(ref playerData.timeToDash);
 #if UNITY_STANDALONE
-                    if (_timeNextDash <= 0)
+                    if (playerData.timeToDash <= 0)
                     {
-                        if ((Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) && _isDashing)
+                        if ((Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) && _isDashing && !mGrounded)
                         {
                             pv.RPC(nameof(Dash), RpcTarget.AllBuffered, _playerInput);
                         }
@@ -131,9 +131,9 @@ namespace Script.Player
 
         private void MobileDash()
         {
-            if (_timeNextDash <= 0)
+            if (playerData.timeToDash <= 0)
             {
-                if (_isDashing)
+                if (_isDashing && !mGrounded)
                 {
                     pv.RPC(nameof(Dash), RpcTarget.AllBuffered, _playerInput);
                 }
@@ -278,13 +278,23 @@ namespace Script.Player
             _onWall = isWall;
         }
 
+
         [PunRPC]
         private void Dash(float horizontal)
         {
             body.velocity = new Vector2(body.velocity.x, 0);
             body.AddForce(Vector2.right * (horizontal * playerData.dashSpeed), ForceMode2D.Impulse);
+            body.gravityScale = 0;
             _isDashing = false;
-            _timeNextDash = 1.5f;
+            playerData.timeToDash = playerData.timeEndDash;
+            isJump = false;
+            _mDbJump = false;
+            Invoke(nameof(BodyType),0.2f);
+        }
+        
+        private void BodyType()
+        {
+            body.gravityScale = playerData.startGravity;
         }
 
         private void Flip()

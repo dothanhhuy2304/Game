@@ -13,5 +13,7 @@ namespace Script.ScriptTable
         public float maxHealth;
         public float hpIc;
         public float damageAttack;
+        public float timeToDash, timeEndDash = 1f;
+        [HideInInspector] public float startGravity;
     }
 }

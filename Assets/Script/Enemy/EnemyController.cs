@@ -66,7 +66,7 @@ namespace Script.Enemy
         {
             int index = FindBullet();
             projectiles[index].transform.position = transform.TransformPoint(positionAttack);
-            projectiles[index].transform.rotation = Quaternion.identity;
+            projectiles[index].transform.rotation = transform.rotation;
             projectiles[index].Shoot(trans);
             AudioManager.instance.Play("Enemy_Attack_Shoot");
         }

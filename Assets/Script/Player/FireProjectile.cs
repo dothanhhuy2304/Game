@@ -21,7 +21,7 @@ public class FireProjectile : MonoBehaviour
         _petAi = PetAI.IsLocalPet;
     }
 
-    private void BulletDirection(Transform startPosition,Transform target = null)
+    private void BulletDirection(Transform startPosition, Transform target = null)
     {
         TemporarilyDeactivate(1.7f);
         if (body.isKinematic)
@@ -29,30 +29,22 @@ public class FireProjectile : MonoBehaviour
             switch (enemyType)
             {
                 case EnemyType.Ninja:
-                {
                     body.velocity = GetDistanceObjectToPlayer(startPosition, target) * bulletSpeed;
                     break;
-                }
                 case EnemyType.CarnivorousPlant:
-                {
                     body.velocity = startPosition.right * bulletSpeed;
                     break;
-                }
                 case EnemyType.Player:
-                {
                     body.velocity = startPosition.right * bulletSpeed;
                     break;
-                }
                 case EnemyType.Pet:
-                {
                     body.velocity = GetDistanceObjectToPlayer(startPosition, target) * bulletSpeed;
                     break;
-                }
                 case EnemyType.Bee:
                     body.velocity = GetDistanceObjectToPlayer(startPosition, target) * bulletSpeed;
                     break;
                 case EnemyType.Trunk:
-                    body.DOJump(startPosition.position, 3, 1, 1);
+                    body.velocity = -startPosition.right * bulletSpeed;
                     break;
             }
         }
@@ -176,6 +168,12 @@ public class FireProjectile : MonoBehaviour
                         BulletExplosions();
                         AudioManager.instance.Play("Player_Bullet_Explosion_1");
                     }
+                }
+
+                if (other.CompareTag("ground"))
+                {
+                    BulletExplosions();
+                    AudioManager.instance.Play("Enemy_Bullet_Explosion_1");
                 }
 
                 break;

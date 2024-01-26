@@ -140,8 +140,11 @@ namespace Script.Player
         private void BulletAttack()
         {
             int index = FindBullet();
-            projectiles[index].transform.position = transform.position;
-            projectiles[index].transform.rotation = transform.rotation;
+            Vector3 petTrans = transform.position;
+            projectiles[index].transform.position = petTrans;
+            Vector2 direction = closestEnemy.position - petTrans;
+            projectiles[index].transform.rotation = 
+                Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
             projectiles[index].Shoot(transform, closestEnemy);
         }
 

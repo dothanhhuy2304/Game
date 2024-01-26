@@ -60,7 +60,7 @@ namespace Script.Enemy
             animator.SetTrigger(_isAttack);
             DOTween.Sequence()
                 .AppendInterval(0.5f)
-                .AppendCallback(() => { AttackBulletByPlayer(currentCharacterPos); })
+                .AppendCallback(() => { AttackBulletByPlayer(transform); })
                 .Play();
             CurrentTime = maxTimeAttack;
         }
