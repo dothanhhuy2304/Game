@@ -1,8 +1,9 @@
+using Photon.Pun;
 using UnityEngine;
 
 namespace Script.GamePlay
 {
-    public class CheckPoint : MonoBehaviour
+    public class CheckPoint : MonoBehaviourPun
     {
         [SerializeField] private GameObject uiGuide;
         private LoadingScreenManager _loadingScreenManager;
