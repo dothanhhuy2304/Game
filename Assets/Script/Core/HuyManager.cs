@@ -58,7 +58,7 @@ namespace Script.Core
 
         public void UpdateUserData(DataService.GameData pf)
         {
-            DataService.GameData gameData = new DataService.GameData()
+            DataService.GameData gameData = new DataService.GameData
             {
                 PlayerId = pf.PlayerId,
                 CharacterSelect = pf.CharacterSelect,
@@ -96,10 +96,10 @@ namespace Script.Core
 
         public void UpdatePlayerSetting(DataService.PlayerSetting setting)
         {
-            DataService.PlayerSetting playerSetting = new DataService.PlayerSetting();
-            playerSetting.PlayerId = userId;
-            playerSetting.SoundMusic = setting.SoundMusic;
-            playerSetting.SoundEffect = setting.SoundEffect;
+            DataService.PlayerSetting playerSetting = new DataService.PlayerSetting
+            {
+                PlayerId = userId, SoundMusic = setting.SoundMusic, SoundEffect = setting.SoundEffect
+            };
             DataService.GetConnection().Table<DataService.PlayerSetting>().Connection.InsertOrReplace(playerSetting);
         }
 
