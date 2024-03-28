@@ -13,8 +13,9 @@ GameObject:
   - component: {fileID: 322445966}
   - component: {fileID: 322445971}
   - component: {fileID: 2615392063268435766}
-  - component: {fileID: 1816299928917152467}
   - component: {fileID: 4753425525453389068}
+  - component: {fileID: 5911945233205538751}
+  - component: {fileID: 327048438399916610}
   m_Layer: 0
   m_Name: Pet
   m_TagString: Untagged
@@ -70,7 +71,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0da7f0943319e9b448524672b9b33916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pv: {fileID: 2615392063268435766}
   petData: {fileID: 11400000, guid: a63b5893ff1ff9b418f2d3851dd8507a, type: 2}
   petRenderer: {fileID: 1064185863719343552}
   body: {fileID: 322445969}
@@ -120,29 +120,13 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 322445966}
-  - {fileID: 1816299928917152467}
   - {fileID: 4753425525453389068}
+  - {fileID: 5911945233205538751}
+  - {fileID: 327048438399916610}
   - {fileID: 4047562198384841373}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &1816299928917152467
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1548593766413804}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 1
-  m_UseLocal: 1
 --- !u!114 &4753425525453389068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,6 +143,34 @@ MonoBehaviour:
   m_SynchronizeAngularVelocity: 1
   m_TeleportEnabled: 1
   m_TeleportIfDistanceGreaterThan: 3
+--- !u!114 &5911945233205538751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548593766413804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 1
+  m_UseLocal: 1
+--- !u!114 &327048438399916610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548593766413804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35144820bcc25444bb8f0fd767d9423e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3559190203258753186
 GameObject:
   m_ObjectHideFlags: 0

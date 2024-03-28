@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Script.Enemy
 {
-    public class WallWaitingMove : MonoBehaviourPun
+    public class WallWaitingMove : MonoBehaviour
     {
         private const float Direction = -1f;
         private bool _isMoving;

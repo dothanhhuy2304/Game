@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 
 namespace Script.Player
 {
-    public class CharacterController2D : MonoBehaviourPun, IPunObservable
+    public class CharacterController2D : MonoBehaviour , IPunObservable
     {
         public static CharacterController2D IsLocalPlayer;
         public Rigidbody2D body;
@@ -35,6 +35,7 @@ namespace Script.Player
         private static readonly int MRun = Animator.StringToHash("m_Run");
         private static readonly int IsJump = Animator.StringToHash("is_Jump");
         private static readonly int IsDbJump = Animator.StringToHash("is_DBJump");
+        public PhotonView View => GetComponent<PhotonView>();
 
         [HideInInspector] public MobileInputManager mobileInput;
 
@@ -43,14 +44,14 @@ namespace Script.Player
             mobileInput = FindObjectOfType<MobileInputManager>();
             mobileInput.btnDash.onClick.AddListener(MobileDash);
             mobileInput.btnJump.onClick.AddListener(MobileJump);
-            if (photonView.IsMine)
+            if (View.IsMine)
             {
                 IsLocalPlayer = GetComponent<CharacterController2D>();
                 _startSpeed = playerData.movingSpeed;
             }
 
-            playerRenderer[0].sortingOrder = photonView.Owner.ActorNumber;
-            playerRenderer[1].sortingOrder = photonView.Owner.ActorNumber;
+            playerRenderer[0].sortingOrder = View.Owner.ActorNumber;
+            playerRenderer[1].sortingOrder = View.Owner.ActorNumber;
             playerName.text = HuyManager.GetCurrentPlayerProfile().UserName;
             playerData.startGravity = body.gravityScale;
 
@@ -59,18 +60,18 @@ namespace Script.Player
 
         private void Update()
         {
-            if (photonView.IsMine)
+            if (View.IsMine)
             {
                 if (!playerHealth.isHurt && !playerHealth.isDeath)
                 {
-                    photonView.RPC(nameof(PlayerInput), RpcTarget.AllBuffered);
+                    View.RPC(nameof(PlayerInput), RpcTarget.AllBuffered);
                     HuyManager.Instance.SetUpTime(ref playerData.timeToDash);
 #if UNITY_STANDALONE
                     if (playerData.timeToDash <= 0)
                     {
                         if ((Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) && _isDashing && !mGrounded)
                         {
-                            photonView.RPC(nameof(Dash), RpcTarget.AllBuffered, _playerInput);
+                            View.RPC(nameof(Dash), RpcTarget.AllBuffered, _playerInput);
                         }
                     }
 #endif
@@ -102,24 +103,24 @@ namespace Script.Player
 
         private void FixedUpdate()
         {
-            if (photonView.IsMine)
+            if (View.IsMine)
             {
                 if (!playerHealth.isDeath && !playerHealth.isHurt)
                 {
-                    photonView.RPC(nameof(RpcCheckGround), RpcTarget.AllBuffered);
+                    View.RPC(nameof(RpcCheckGround), RpcTarget.AllBuffered);
                     ControlPlayer(_playerInput * (_startSpeed * Time.fixedDeltaTime));
 
                     if (isJump)
                     {
-                        photonView.RPC(nameof(Jump), RpcTarget.AllBuffered);
+                        View.RPC(nameof(Jump), RpcTarget.AllBuffered);
                     }
 
                     if (Mathf.Abs(body.velocity.y) < 0.6f && mGrounded)
                     {
-                        photonView.RPC(nameof(RpcResetAnimJump), RpcTarget.AllBuffered);
+                        View.RPC(nameof(RpcResetAnimJump), RpcTarget.AllBuffered);
                     }
 
-                    photonView.RPC(nameof(YVelocity), RpcTarget.AllBuffered);
+                    View.RPC(nameof(YVelocity), RpcTarget.AllBuffered);
                 }
             }
         }
@@ -131,7 +132,7 @@ namespace Script.Player
             {
                 if (_isDashing && !mGrounded)
                 {
-                    photonView.RPC(nameof(Dash), RpcTarget.AllBuffered, _playerInput);
+                    View.RPC(nameof(Dash), RpcTarget.AllBuffered, _playerInput);
                 }
             }
         }
@@ -160,7 +161,7 @@ namespace Script.Player
 
         private void ControlPlayer(float input)
         {
-            photonView.RPC(nameof(Moving), RpcTarget.AllBuffered, input);
+            View.RPC(nameof(Moving), RpcTarget.AllBuffered, input);
 
             if (input > 0f && !_mFacingRight)
             {
@@ -252,7 +253,7 @@ namespace Script.Player
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (photonView.IsMine)
+            if (View.IsMine)
             {
                 EvaluateCollision(other);
             }
@@ -296,12 +297,12 @@ namespace Script.Player
         private void Flip()
         {
             _mFacingRight = !_mFacingRight;
-            Vector3 dir = new Vector3(0, 180f, 0);
-            transform.Rotate(dir);
-            // var position = transform;
-            // var theScale = position.localScale;
-            // theScale.x *= -1;
-            // position.localScale = theScale;
+            //Vector3 dir = new Vector3(0, 180f, 0);
+            //transform.Rotate(dir);
+            Transform position = transform;
+            Vector3 theScale = position.localScale;
+            theScale.x *= -1;
+            position.localScale = theScale;
         }
 
         [PunRPC]
@@ -314,7 +315,7 @@ namespace Script.Player
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (photonView.IsMine)
+            if (View.IsMine)
             {
                 if (other.CompareTag("Grass"))
                 {
@@ -325,7 +326,7 @@ namespace Script.Player
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (photonView.IsMine)
+            if (View.IsMine)
             {
                 if (other.CompareTag("Car"))
                 {
@@ -336,7 +337,7 @@ namespace Script.Player
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (photonView.IsMine)
+            if (View.IsMine)
             {
                 if (other.CompareTag("Car"))
                 {
@@ -367,8 +368,6 @@ namespace Script.Player
                 transform.position = (Vector3) stream.ReceiveNext();
                 transform.rotation = (Quaternion) stream.ReceiveNext();
                 playerData.movingSpeed = (float) stream.ReceiveNext();
-                //float lag = Mathf.Abs((float) (PhotonNetwork.Time - info.SentServerTime));
-                //networkPosition += (body.velocity * lag);
             }
         }
     }

@@ -1,5 +1,4 @@
 using DG.Tweening;
-using Photon.Pun;
 using Script.Core;
 using Script.GamePlay;
 using Script.Player;
@@ -8,7 +7,7 @@ using Script.ScriptTable;
 
 namespace Script.Item
 {
-    public class ItemCollection : MonoBehaviourPun
+    public class ItemCollection : MonoBehaviour
     {
         [SerializeField] private ItemType itemType;
         [SerializeField] private ItemData itemData;

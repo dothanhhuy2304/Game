@@ -1,10 +1,9 @@
 using DG.Tweening;
-using Photon.Pun;
 using UnityEngine;
 
 namespace Script.Enemy
 {
-    public class LandMovement : MonoBehaviourPun
+    public class LandMovement : MonoBehaviour
     {
         [SerializeField] protected float timeEndAction;
         [SerializeField] private Vector2 endPos = Vector2.zero;

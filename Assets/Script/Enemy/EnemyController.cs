@@ -20,7 +20,7 @@ namespace Script.Enemy
         public bool canMoving;
     }
 
-    public abstract class EnemyController : MonoBehaviourPun
+    public abstract class EnemyController : MonoBehaviour
     {
         public EnemySetting enemySetting;
         [SerializeField] protected Rigidbody2D body;
@@ -34,6 +34,7 @@ namespace Script.Enemy
         [SerializeField] protected Transform offsetAttack;
         [SerializeField] protected Vector2 positionAttack;
         [HideInInspector] [SerializeField] protected Transform currentCharacterPos;
+        protected PhotonView View => GetComponent<PhotonView>();
 
         protected void Flip()
         {

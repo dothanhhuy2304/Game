@@ -37,7 +37,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &4549498310818216928
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -50,10 +50,12 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4549498311271909723
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,7 +449,7 @@ SpriteRenderer:
   m_SpriteSortPoint: 0
 --- !u!95 &4549498311706445916
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -460,10 +462,12 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &7350374535571492347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -581,7 +585,8 @@ GameObject:
   - component: {fileID: 8736459600110473510}
   - component: {fileID: 1360946181824052064}
   - component: {fileID: 8177280485201020794}
-  - component: {fileID: 2009244177572719005}
+  - component: {fileID: 1589851061272486067}
+  - component: {fileID: 8615572232492596358}
   m_Layer: 0
   m_Name: Chickens
   m_TagString: Untagged
@@ -672,7 +677,6 @@ MonoBehaviour:
     enemyHeal: {fileID: 0}
     rangeAttack: 0
     canMoving: 0
-  pv: {fileID: 1360946181824052064}
   body: {fileID: 7777926475499111050}
   animator: {fileID: 4549498311706445916}
   projectiles: []
@@ -709,7 +713,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 8736459600110473510}
   - {fileID: 8177280485201020794}
-  - {fileID: 2009244177572719005}
+  - {fileID: 1589851061272486067}
+  - {fileID: 8615572232492596358}
   - {fileID: 7350374535571492347}
   sceneViewId: 0
   InstantiationId: 0
@@ -730,7 +735,7 @@ MonoBehaviour:
   m_SynchronizeAngularVelocity: 1
   m_TeleportEnabled: 1
   m_TeleportIfDistanceGreaterThan: 3
---- !u!114 &2009244177572719005
+--- !u!114 &1589851061272486067
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -746,3 +751,16 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 1
   m_UseLocal: 1
+--- !u!114 &8615572232492596358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4549498312341209815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35144820bcc25444bb8f0fd767d9423e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SmoothingDelay: 5

@@ -9,10 +9,9 @@ using UnityEngine.Serialization;
 
 namespace Script.Player
 {
-    public class PetAI : MonoBehaviourPun, IPunObservable
+    public class PetAI : MonoBehaviour
     {
         public static PetAI IsLocalPet;
-        [SerializeField] private PhotonView pv;
         public Data petData;
         [SerializeField] private SpriteRenderer petRenderer;
         [SerializeField] private Rigidbody2D body;
@@ -32,17 +31,14 @@ namespace Script.Player
         private bool _canAttack;
         private CharacterController2D _character;
 
+        private PhotonView View => GetComponent<PhotonView>();
+
         private void Awake()
         {
-            if (pv == null)
-            {
-                pv = GetComponent<PhotonView>();
-            }
-
-            if (pv.IsMine)
+            if (View.IsMine)
             {
                 IsLocalPet = GetComponent<PetAI>();
-                petRenderer.sortingOrder += pv.Owner.ActorNumber;
+                petRenderer.sortingOrder += View.Owner.ActorNumber;
             }
 
             _character = CharacterController2D.IsLocalPlayer;
@@ -57,7 +53,7 @@ namespace Script.Player
             {
                 if ((_character.transform.position - transform.position).magnitude > distancePlayer)
                 {
-                    if (pv.IsMine)
+                    if (View.IsMine)
                     {
                         animator.SetBool(_isRun, true);
                         Vector2 playerPos = _character.transform.position;
@@ -90,7 +86,7 @@ namespace Script.Player
                 {
                     if ((closestEnemy.transform.position - transform.position).magnitude < rangeAttack)
                     {
-                        pv.RPC(nameof(RpcShot), RpcTarget.AllBuffered);
+                        View.RPC(nameof(RpcShot), RpcTarget.AllBuffered);
                     }
                 }
             }

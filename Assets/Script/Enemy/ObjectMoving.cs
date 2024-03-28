@@ -1,12 +1,11 @@
 using DG.Tweening;
-using Photon.Pun;
+using Script.Core;
 using Script.Player;
 using UnityEngine;
-using Script.Core;
 
 namespace Script.Enemy
 {
-    public class ObjectMoving : MonoBehaviourPun
+    public class ObjectMoving : MonoBehaviour
     {
         [SerializeField] protected float timeEndAction;
         [SerializeField] private Vector2 endPos = Vector2.zero;

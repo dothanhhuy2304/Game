@@ -5,7 +5,7 @@ using Script.Core;
 
 namespace Script.Player
 {
-    public class Weapon : MonoBehaviourPun
+    public class Weapon : MonoBehaviour
     {
         [SerializeField] private CharacterController2D player;
         [HideInInspector] [SerializeField] private List<FireProjectile> projectiles;
@@ -23,7 +23,7 @@ namespace Script.Player
 
         private void LateUpdate()
         {
-            if (!player.photonView.IsMine)
+            if (!player.View.IsMine)
             {
                 return;
             }
@@ -37,13 +37,13 @@ namespace Script.Player
 #if UNITY_STANDALONE
             if (_timeAttack <= 0 && Input.GetMouseButtonDown(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             {
-                player.photonView.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
+                player.View.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
                 _timeAttack = resetTimeAttack;
             }
 #elif UNITY_ANDROID || UNITY_IOS
             if (_timeAttack <= 0 && _mobileShot)
             {
-                player.pv.RPC(nameof(BulletAttack), RpcTarget.AllBuffered);
+                player.View.RPC(nameof(BulletAttack), RpcTarget.All);
                 _timeAttack = resetTimeAttack;
                 _mobileShot = false;
             }
@@ -56,6 +56,7 @@ namespace Script.Player
             int index = FindBullet();
             projectiles[index].transform.position = transform.TransformPoint(offset);
             projectiles[index].transform.rotation = transform.rotation;
+            projectiles[index].transform.localScale = transform.localScale;
             projectiles[index].Shoot(transform);
             AudioManager.instance.Play("Player_Bullet_Shoot");
         }

@@ -14,7 +14,7 @@ namespace Script.Player
                 return;
             }
 
-            if (!CharacterController2D.IsLocalPlayer.playerHealth.isDeath && CharacterController2D.IsLocalPlayer.photonView.IsMine)
+            if (!CharacterController2D.IsLocalPlayer.playerHealth.isDeath && CharacterController2D.IsLocalPlayer.View.IsMine)
             {
                 Vector3 target = CharacterController2D.IsLocalPlayer.transform.position;
                 Vector3 desiredPosition = new Vector3(target.x + offset.x, target.y + offset.y, -10f);

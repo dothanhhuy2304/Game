@@ -35,7 +35,7 @@ public class FireProjectile : MonoBehaviour
                     body.velocity = startPosition.right * bulletSpeed;
                     break;
                 case EnemyType.Player:
-                    body.velocity = startPosition.right * bulletSpeed;
+                    body.velocity = Vector3.right * (startPosition.localScale.x * bulletSpeed);
                     break;
                 case EnemyType.Pet:
                     body.velocity = GetDistanceObjectToPlayer(startPosition, target) * bulletSpeed;

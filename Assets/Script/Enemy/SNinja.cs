@@ -7,7 +7,7 @@ using Script.Core;
 
 namespace Script.Enemy
 {
-    public class SNinja : EnemyController, IPunObservable
+    public class SNinja : EnemyController
     {
         [SerializeField] private float radiusAttack;
 
@@ -28,45 +28,32 @@ namespace Script.Enemy
             }
 
             FindPlayerPosition();
-            if (_canAttack)
+            if (_canAttack && !currentCharacterPos.GetComponent<PlayerHealth>().isDeath)
             {
                 HuyManager.Instance.SetUpTime(ref currentTime);
-                if (!currentCharacterPos.GetComponent<PlayerHealth>().isDeath)
+                if ((currentCharacterPos.position - transform.position).magnitude <= 3f)
                 {
-                    if ((currentCharacterPos.position - transform.position).magnitude <= 3f)
+                    if (View.IsMine)
                     {
-                        if (photonView.IsMine)
-                        {
-                            Flip();
-                        }
-
-                        photonView.RPC(nameof(AttackSword), RpcTarget.AllBuffered);
+                        Flip();
                     }
-                    else if ((currentCharacterPos.position - transform.position).magnitude > 3 && (currentCharacterPos.position - transform.position).magnitude <= 8)
+
+                    View.RPC(nameof(AttackSword), RpcTarget.AllBuffered);
+                }
+                else if ((currentCharacterPos.position - transform.position).magnitude > 3 &&
+                         (currentCharacterPos.position - transform.position).magnitude <= 8)
+                {
+                    if (View.IsMine)
                     {
-                        if (photonView.IsMine)
-                        {
-                            Flip();
-                        }
-
-                        photonView.RPC(nameof(RpcAttackBullet), RpcTarget.AllBuffered);
-                        
+                        Flip();
                     }
-                    else
-                    {
-                        if (photonView.IsMine)
-                        {
-                            if (enemySetting.canMoving)
-                            {
-                                MoveToPosition();
-                            }
-                        }
 
-                    }
+                    View.RPC(nameof(RpcAttackBullet), RpcTarget.AllBuffered);
+
                 }
                 else
                 {
-                    if (photonView.IsMine)
+                    if (View.IsMine)
                     {
                         if (enemySetting.canMoving)
                         {
@@ -77,7 +64,7 @@ namespace Script.Enemy
             }
             else
             {
-                if (photonView.IsMine)
+                if (View.IsMine)
                 {
                     if (enemySetting.canMoving)
                     {

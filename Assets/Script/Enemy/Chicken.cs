@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Script.Enemy
 {
-    public class Chicken : EnemyController , IPunObservable
+    public class Chicken : EnemyController
     {
         [SerializeField] private float moveTime = 9f;
         [SerializeField] private float moveWaitingTime = 12f;
@@ -58,14 +58,14 @@ namespace Script.Enemy
                         if ((transform.position - enemySetting.startPosition).magnitude >
                             (transform.position - enemySetting.endPosition).magnitude)
                         {
-                            if (photonView.IsMine)
+                            if (View.IsMine)
                             {
                                 RpcFlip(enemySetting.endPosition, enemySetting.startPosition);
                             }
                         }
                         else
                         {
-                            if (photonView.IsMine)
+                            if (View.IsMine)
                             {
                                 RpcFlip(enemySetting.startPosition, enemySetting.endPosition);
                             }
@@ -151,7 +151,7 @@ namespace Script.Enemy
                 body.MovePosition(body.position);
             }
 
-            if (photonView.IsMine)
+            if (View.IsMine)
             {
                 Flip();
             }

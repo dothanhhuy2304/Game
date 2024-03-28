@@ -17,7 +17,10 @@ namespace Script.Player
         private void LateUpdate()
         {
             if (!canvas) return;
-            canvas.transform.rotation = Quaternion.Euler(Vector3.zero);
+            //canvas.transform.rotation = Quaternion.Euler(Vector3.zero);
+            Vector3 cavScale = canvas.transform.localScale;
+            cavScale.x = transform.localScale.x < 0 ? -1.2f : 1.2f;
+            canvas.transform.localScale = cavScale;
         }
     }
 }

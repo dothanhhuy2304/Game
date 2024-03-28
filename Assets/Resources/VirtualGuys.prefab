@@ -153,9 +153,9 @@ GameObject:
   - component: {fileID: 772435844488864097}
   - component: {fileID: 772435844488864098}
   - component: {fileID: 4412285656257431379}
-  - component: {fileID: 1737868659}
-  - component: {fileID: 1737868661}
   - component: {fileID: 117252721417711184}
+  - component: {fileID: 1737868661}
+  - component: {fileID: 3714855997357812600}
   m_Layer: 13
   m_Name: VirtualGuys
   m_TagString: Player
@@ -302,38 +302,6 @@ MonoBehaviour:
   colorA: {fileID: 2100000, guid: 8947b76312f07e34aabce6d59ef03a5d, type: 2}
   colorB: {fileID: 2100000, guid: f3f2211f65cf0ed429221801562ff53e, type: 2}
   canvas: {fileID: 7035660771874916773}
---- !u!114 &1737868659
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 772435844488864102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 1
-  m_UseLocal: 1
---- !u!114 &1737868661
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 772435844488864102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e7cb724808c322458aa4d15f5035fa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizeVelocity: 1
-  m_SynchronizeAngularVelocity: 1
-  m_TeleportEnabled: 1
-  m_TeleportIfDistanceGreaterThan: 3
 --- !u!114 &117252721417711184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,12 +322,44 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 772435844488864096}
-  - {fileID: 1737868659}
   - {fileID: 1737868661}
+  - {fileID: 3714855997357812600}
   - {fileID: 3625207159880366178}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &1737868661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 772435844488864102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e7cb724808c322458aa4d15f5035fa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizeVelocity: 1
+  m_SynchronizeAngularVelocity: 1
+  m_TeleportEnabled: 1
+  m_TeleportIfDistanceGreaterThan: 10
+--- !u!114 &3714855997357812600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 772435844488864102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 1
+  m_UseLocal: 1
 --- !u!1 &772435844607926149
 GameObject:
   m_ObjectHideFlags: 0

@@ -91,7 +91,8 @@ GameObject:
   - component: {fileID: 526003783}
   - component: {fileID: 200322106688377554}
   - component: {fileID: 3652942308830686057}
-  - component: {fileID: 439091683920354183}
+  - component: {fileID: 5518226136070073612}
+  - component: {fileID: 5753750122787327324}
   m_Layer: 8
   m_Name: SNinja
   m_TagString: Enemy
@@ -165,7 +166,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78a9207b57b6c2344a0460272dc8e8b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pv: {fileID: 0}
   canReSpawn: 1
   heathDefault: 100
   currentHealth: 0
@@ -213,7 +213,6 @@ MonoBehaviour:
     enemyHeal: {fileID: 3443694513160801480}
     rangeAttack: 0
     canMoving: 0
-  pv: {fileID: 200322106688377554}
   body: {fileID: 3443694513160801474}
   animator: {fileID: 2951199663832917074}
   projectiles: []
@@ -244,9 +243,9 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 526003783}
   - {fileID: 3652942308830686057}
-  - {fileID: 439091683920354183}
+  - {fileID: 5518226136070073612}
+  - {fileID: 5753750122787327324}
   - {fileID: 6832686341570931079}
   sceneViewId: 0
   InstantiationId: 0
@@ -267,7 +266,7 @@ MonoBehaviour:
   m_SynchronizeAngularVelocity: 1
   m_TeleportEnabled: 1
   m_TeleportIfDistanceGreaterThan: 3
---- !u!114 &439091683920354183
+--- !u!114 &5518226136070073612
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -283,6 +282,19 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 1
   m_UseLocal: 1
+--- !u!114 &5753750122787327324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3443694513160801475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35144820bcc25444bb8f0fd767d9423e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SmoothingDelay: 1
 --- !u!1 &3443694513563559095
 GameObject:
   m_ObjectHideFlags: 0
@@ -612,7 +624,7 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: isRun
   - Type: 9
     SynchronizeType: 0

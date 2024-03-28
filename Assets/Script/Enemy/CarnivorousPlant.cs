@@ -5,7 +5,7 @@ using Script.Core;
 
 namespace Script.Enemy
 {
-    public class CarnivorousPlant : EnemyController , IPunObservable
+    public class CarnivorousPlant : EnemyController
     {
         [SerializeField] private bool canFlip;
         private bool _canAttack;
@@ -24,12 +24,12 @@ namespace Script.Enemy
                 HuyManager.Instance.SetUpTime(ref currentTime);
                 if ((currentCharacterPos.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
-                    if (photonView.IsMine && canFlip)
+                    if (View.IsMine && canFlip)
                     {
                         Flip();
                     }
 
-                    photonView.RPC(nameof(RpcShot), RpcTarget.AllBuffered);
+                    View.RPC(nameof(RpcShot), RpcTarget.AllBuffered);
                 }
             }
         }

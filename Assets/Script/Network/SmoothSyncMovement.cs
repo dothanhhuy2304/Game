@@ -21,11 +21,11 @@ namespace Photon.Pun.UtilityScripts
     [RequireComponent(typeof(PhotonView))]
     public class SmoothSyncMovement : Photon.Pun.MonoBehaviourPun, IPunObservable
     {
-        public float SmoothingDelay = 5;
+        private float SmoothingDelay = 0.1f;
         public void Awake()
         {
             bool observed = false;
-            foreach (Component observedComponent in this.photonView.ObservedComponents)
+            foreach (Component observedComponent in photonView.ObservedComponents)
             {
                 if (observedComponent == this)
                 {
@@ -46,25 +46,28 @@ namespace Photon.Pun.UtilityScripts
                 //We own this player: send the others our data
                 stream.SendNext(transform.position);
                 stream.SendNext(transform.rotation);
+                stream.SendNext(transform.localScale);
             }
             else
             {
                 //Network player, receive data
-                correctPlayerPos = (Vector3)stream.ReceiveNext();
-                correctPlayerRot = (Quaternion)stream.ReceiveNext();
+                _correctPlayerPos = (Vector3) stream.ReceiveNext();
+                _correctPlayerRot = (Quaternion) stream.ReceiveNext();
+                transform.localScale = (Vector3) stream.ReceiveNext();
             }
         }
 
-        private Vector3 correctPlayerPos = Vector3.zero; //We lerp towards this
-        private Quaternion correctPlayerRot = Quaternion.identity; //We lerp towards this
+        private Vector3 _correctPlayerPos = Vector3.zero; //We lerp towards this
+        private Quaternion _correctPlayerRot = Quaternion.identity; //We lerp towards this
 
         public void Update()
         {
             if (!photonView.IsMine)
             {
                 //Update remote player (smooth this, this looks good, at the cost of some accuracy)
-                transform.position = Vector3.Lerp(transform.position, correctPlayerPos, Time.deltaTime * this.SmoothingDelay);
-                transform.rotation = Quaternion.Lerp(transform.rotation, correctPlayerRot, Time.deltaTime * this.SmoothingDelay);
+                transform.position = Vector3.Lerp(transform.position, _correctPlayerPos, Time.deltaTime * SmoothingDelay);
+                // ReSharper disable once Unity.InefficientPropertyAccess
+                transform.rotation = Quaternion.Lerp(transform.rotation, _correctPlayerRot, Time.deltaTime * SmoothingDelay);
             }
         }
 

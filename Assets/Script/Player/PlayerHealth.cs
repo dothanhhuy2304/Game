@@ -8,7 +8,7 @@ using UnityEngine;
 using Script.Enemy;
 namespace Script.Player
 {
-    public class PlayerHealth : MonoBehaviourPun, IHealthSystem
+    public class PlayerHealth : MonoBehaviour, IHealthSystem
     {
         [SerializeField] private CharacterController2D playerCharacter;
         [SerializeField] private PlayerHealthBar playerHealthBar;
@@ -19,10 +19,10 @@ namespace Script.Player
 
         private void Start()
         {
-            if (playerCharacter.photonView.IsMine)
+            if (playerCharacter.View.IsMine)
             {
                 petAi = PetAI.IsLocalPet;
-                playerCharacter.photonView.RPC(playerCharacter.playerData.currentHealth <= 0
+                playerCharacter.View.RPC(playerCharacter.playerData.currentHealth <= 0
                     ? nameof(LoadHeath)
                     : nameof(LoadCurrentHealth), RpcTarget.AllBuffered);
             }
@@ -48,29 +48,22 @@ namespace Script.Player
             playerCharacter.playerData.currentHealth = Mathf.Clamp(playerCharacter.playerData.currentHealth - damage, 0,
                 playerCharacter.playerData.maxHealth);
             if (playerCharacter.playerData.currentHealth > 0)
-            {
                 PlayerHurt();
-            }
             else
-            {
                 Die();
-            }
 
             playerHealthBar.SetHealth(playerCharacter.playerData.currentHealth, playerCharacter.playerData.maxHealth);
-            if (playerCharacter.photonView.IsMine)
-            {
-                var objectDamage = PhotonNetwork.Instantiate(prefabDamagePlayer, transform.position + Vector3.up, Quaternion.identity);
+                var objectDamage = Instantiate(Resources.Load<GameObject>(prefabDamagePlayer), transform.position + Vector3.up, Quaternion.identity);
                 var txtDamage = objectDamage.GetComponentInChildren<TMP_Text>();
                 txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
                 DOTween.Sequence()
                     .AppendInterval(0.5f)
-                    .AppendCallback(() => { PhotonNetwork.Destroy(objectDamage); });
-            }
+                    .AppendCallback(() => { Destroy(objectDamage); });
         }
 
         public void RpcHealing(float value)
         {
-            playerCharacter.photonView.RPC(nameof(Healing), RpcTarget.AllBuffered, value);
+            playerCharacter.View.RPC(nameof(Healing), RpcTarget.AllBuffered, value);
         }
 
         [PunRPC]
@@ -86,7 +79,7 @@ namespace Script.Player
 
         public void Die()
         {
-            if (!playerCharacter.photonView.IsMine)
+            if (!playerCharacter.View.IsMine)
             {
                 return;
             }
@@ -104,7 +97,7 @@ namespace Script.Player
                 }).AppendInterval(3)
                 .AppendCallback(() =>
                 {
-                    playerCharacter.photonView.RPC(nameof(LoadHeath), RpcTarget.AllBuffered);
+                    playerCharacter.View.RPC(nameof(LoadHeath), RpcTarget.AllBuffered);
                     Transform position = transform;
                     position.position = new Vector3(HuyManager.Instance.currentPosition[0],
                         HuyManager.Instance.currentPosition[1], HuyManager.Instance.currentPosition[2]);
@@ -120,7 +113,7 @@ namespace Script.Player
 
         public void DiedFromFalling()
         {
-            if (!playerCharacter.photonView.IsMine)
+            if (!playerCharacter.View.IsMine)
             {
                 return;
             }
@@ -135,7 +128,7 @@ namespace Script.Player
                 }).AppendInterval(3)
                 .AppendCallback(() =>
                 {
-                    playerCharacter.photonView.RPC(nameof(LoadHeath), RpcTarget.AllBuffered);
+                    playerCharacter.View.RPC(nameof(LoadHeath), RpcTarget.AllBuffered);
                     Transform position = transform;
                     position.position = new Vector3(HuyManager.Instance.currentPosition[0],
                         HuyManager.Instance.currentPosition[1], HuyManager.Instance.currentPosition[2]);
@@ -147,11 +140,6 @@ namespace Script.Player
 
         private void PlayerHurt()
         {
-            if (!playerCharacter.photonView.IsMine)
-            {
-                return;
-            }
-
             DOTween.Sequence()
                     .AppendCallback(() =>
                     {

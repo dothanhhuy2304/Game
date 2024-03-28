@@ -346,7 +346,6 @@ MonoBehaviour:
     enemyHeal: {fileID: 7350970975510589207}
     rangeAttack: 6
     canMoving: 0
-  pv: {fileID: 4667490616916348823}
   body: {fileID: 2488203086413059535}
   animator: {fileID: 1062633453580850972}
   projectiles: []
@@ -368,7 +367,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78a9207b57b6c2344a0460272dc8e8b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pv: {fileID: 0}
   canReSpawn: 0
   heathDefault: 40
   currentHealth: 0
@@ -447,7 +445,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
+  m_SynchronizeScale: 1
   m_UseLocal: 1
 --- !u!114 &4667490616916348823
 MonoBehaviour:

@@ -5,7 +5,7 @@ using Script.Core;
 
 namespace Script.Enemy
 {
-    public class Trunk : EnemyController , IPunObservable
+    public class Trunk : EnemyController
     {
         private readonly int _isAttack = Animator.StringToHash("isAttack");
 
@@ -22,12 +22,12 @@ namespace Script.Enemy
                 HuyManager.Instance.SetUpTime(ref currentTime);
                 if ((currentCharacterPos.transform.position - transform.position).magnitude < enemySetting.rangeAttack)
                 {
-                    if (photonView.IsMine)
+                    if (View.IsMine)
                     {
                         Flip();
                     }
 
-                    photonView.RPC(nameof(RpcShot), RpcTarget.AllBuffered);
+                    View.RPC(nameof(RpcShot), RpcTarget.AllBuffered);
                 }
             }
         }

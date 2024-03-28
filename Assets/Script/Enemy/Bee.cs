@@ -5,7 +5,7 @@ using Script.Core;
 
 namespace Script.Enemy
 {
-    public class Bee : EnemyController , IPunObservable
+    public class Bee : EnemyController
     {
         private readonly int _isAttack = Animator.StringToHash("isAttack");
         private bool _canAttack;

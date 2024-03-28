@@ -1,12 +1,11 @@
 using DG.Tweening;
-using Photon.Pun;
 using Script.Core;
 using Script.Player;
 using UnityEngine;
 
 namespace Script.Enemy
 {
-    public class Boom : MonoBehaviourPun
+    public class Boom : MonoBehaviour
     {
         [SerializeField] private GameObject boomObj, explosionObj;
         [SerializeField] private Collider2D colObj;

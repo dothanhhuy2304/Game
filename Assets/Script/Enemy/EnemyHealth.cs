@@ -1,13 +1,12 @@
 using System.Globalization;
 using DG.Tweening;
-using Photon.Pun;
 using UnityEngine;
 using Script.Player;
 using TMPro;
 
 namespace Script.Enemy
 {
-    public class EnemyHealth : MonoBehaviourPun
+    public class EnemyHealth : MonoBehaviour
     {
         [SerializeField] private bool canReSpawn;
         [SerializeField] private float heathDefault;
@@ -32,21 +31,19 @@ namespace Script.Enemy
             currentHealth = maxHealth;
             enemyHealthBar.SetHealth(currentHealth, maxHealth);
         }
-        
+
         public void EnemyGetDamage(float damage)
         {
             currentHealth = Mathf.Clamp(currentHealth - damage, 0f, maxHealth);
             if (currentHealth <= 0) Die();
             enemyHealthBar.SetHealth(currentHealth, maxHealth);
-            if (photonView.IsMine)
-            {
-                var damageInstance = PhotonNetwork.Instantiate(objectDamageEnemy, transform.position + Vector3.up, Quaternion.identity);
-                TMP_Text txtDamage = damageInstance.GetComponentInChildren<TMP_Text>();
-                txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
-                DOTween.Sequence()
-                    .AppendInterval(0.5f)
-                    .AppendCallback(() => { PhotonNetwork.Destroy(damageInstance); });
-            }
+            var damageInstance = Instantiate(Resources.Load<GameObject>(objectDamageEnemy), transform.position + Vector3.up,
+                Quaternion.identity);
+            TMP_Text txtDamage = damageInstance.GetComponentInChildren<TMP_Text>();
+            txtDamage.text = damage.ToString(CultureInfo.CurrentCulture);
+            DOTween.Sequence()
+                .AppendInterval(0.5f)
+                .AppendCallback(() => { Destroy(damageInstance); });
         }
 
         public bool EnemyDeath()

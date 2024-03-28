@@ -744,9 +744,9 @@ GameObject:
   - component: {fileID: 8953777265638131186}
   - component: {fileID: 8953777265638131185}
   - component: {fileID: 5552807323406281275}
-  - component: {fileID: 199058551}
-  - component: {fileID: 199058553}
   - component: {fileID: 6864512265907490839}
+  - component: {fileID: 199058553}
+  - component: {fileID: 5800204031788784876}
   m_Layer: 14
   m_Name: MaskDudes
   m_TagString: Player
@@ -829,7 +829,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06d95b80c6c38704f9cf1ed4799ac333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pv: {fileID: 6864512265907490839}
   body: {fileID: 8953777265638131184}
   col: {fileID: 8953777265638131199}
   playerRenderer:
@@ -894,38 +893,6 @@ MonoBehaviour:
   colorA: {fileID: 2100000, guid: 8947b76312f07e34aabce6d59ef03a5d, type: 2}
   colorB: {fileID: 2100000, guid: f3f2211f65cf0ed429221801562ff53e, type: 2}
   canvas: {fileID: 7450582144724872706}
---- !u!114 &199058551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8953777265638131197}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 1
-  m_UseLocal: 1
---- !u!114 &199058553
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8953777265638131197}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e7cb724808c322458aa4d15f5035fa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizeVelocity: 1
-  m_SynchronizeAngularVelocity: 1
-  m_TeleportEnabled: 1
-  m_TeleportIfDistanceGreaterThan: 3
 --- !u!114 &6864512265907490839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -946,12 +913,44 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 8953777265638131187}
-  - {fileID: 199058551}
   - {fileID: 199058553}
+  - {fileID: 5800204031788784876}
   - {fileID: 3530700456219833522}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &199058553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8953777265638131197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e7cb724808c322458aa4d15f5035fa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizeVelocity: 1
+  m_SynchronizeAngularVelocity: 1
+  m_TeleportEnabled: 1
+  m_TeleportIfDistanceGreaterThan: 10
+--- !u!114 &5800204031788784876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8953777265638131197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 1
+  m_UseLocal: 1
 --- !u!1 &8953777265762801142
 GameObject:
   m_ObjectHideFlags: 0
